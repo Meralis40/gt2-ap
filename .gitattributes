@@ -1,0 +1,15 @@
+# Normalize text files to LF in the repository and working tree
+* text=auto eol=lf
+
+# Windows-only scripts keep CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary data
+*.bin binary
+*.iso binary
+*.img binary
+*.chd binary
+*.png binary
+*.ico binary

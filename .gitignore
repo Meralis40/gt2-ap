@@ -1,0 +1,24 @@
+# Build output
+/build/
+/out/
+CMakeUserPresets.json
+
+# IDE
+/.vs/
+/.vscode/
+/.idea/
+
+# Game data must never be committed
+*.bin
+*.cue
+*.iso
+*.img
+*.chd
+*.ccd
+*.sub
+/extracted/
+
+# Python
+__pycache__/
+*.pyc
+.venv/

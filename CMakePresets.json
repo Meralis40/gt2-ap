@@ -1,0 +1,44 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 24, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": { "GT2AP_WARNINGS_AS_ERRORS": "ON" }
+    },
+    {
+      "name": "debug",
+      "displayName": "Debug (Ninja)",
+      "inherits": "base",
+      "generator": "Ninja",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "release",
+      "displayName": "Release (Ninja)",
+      "inherits": "base",
+      "generator": "Ninja",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo" }
+    },
+    {
+      "name": "vs",
+      "displayName": "Visual Studio (multi-config)",
+      "inherits": "base",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "debug", "configurePreset": "debug" },
+    { "name": "release", "configurePreset": "release" },
+    { "name": "vs-debug", "configurePreset": "vs", "configuration": "Debug" },
+    { "name": "vs-release", "configurePreset": "vs", "configuration": "RelWithDebInfo" }
+  ],
+  "testPresets": [
+    { "name": "debug", "configurePreset": "debug", "output": { "outputOnFailure": true } },
+    { "name": "release", "configurePreset": "release", "output": { "outputOnFailure": true } },
+    { "name": "vs-debug", "configurePreset": "vs", "configuration": "Debug", "output": { "outputOnFailure": true } },
+    { "name": "vs-release", "configurePreset": "vs", "configuration": "RelWithDebInfo", "output": { "outputOnFailure": true } }
+  ]
+}
