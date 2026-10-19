@@ -5,6 +5,8 @@ add_library(discio STATIC
     iso9660.cpp
     sha1.cpp
     game_id.cpp
+    gzip.cpp
+    overlay.cpp
 )
 add_library(gt2ap::discio ALIAS discio)
 target_include_directories(discio PUBLIC include)

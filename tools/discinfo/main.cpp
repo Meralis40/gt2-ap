@@ -5,6 +5,7 @@
 #include "gt2ap/discio/error.hpp"
 #include "gt2ap/discio/game_id.hpp"
 #include "gt2ap/discio/iso9660.hpp"
+#include "gt2ap/discio/overlay.hpp"
 #include "gt2ap/discio/sha1.hpp"
 
 #include <cstdio>
@@ -25,6 +26,7 @@ void usage()
                "  gt2-discinfo ls <image> [dir]\n"
                "  gt2-discinfo extract <image> <path-on-disc> <output-file>\n"
                "  gt2-discinfo extract-all <image> <output-dir>\n"
+               "  gt2-discinfo overlays <image> <output-dir>    decompress GT2.OVL to ovlN.bin\n"
                "\n"
                "Form 2 / interleaved files (XA audio, STR video) are written as stored sectors.\n",
                stderr);
@@ -124,6 +126,31 @@ int cmdExtractAll(const fs::path& imagePath, const fs::path& outDir)
     return 0;
 }
 
+int cmdOverlays(const fs::path& imagePath, const fs::path& outDir)
+{
+    const DiscImage disc = DiscImage::open(imagePath);
+    const Iso9660 iso(disc);
+    const auto entry = iso.find(kOverlayFile);
+    if (!entry || entry->isDirectory) {
+        std::fprintf(stderr, "no such file: %s\n", kOverlayFile);
+        return 1;
+    }
+    const std::vector<std::uint8_t> ovl = iso.readFile(*entry);
+    const std::vector<OverlayEntry> table = parseOverlayTable(ovl);
+
+    fs::create_directories(outDir);
+    std::printf("  #  file offset  packed   unpacked  load range\n");
+    for (std::size_t i = 0; i < table.size(); ++i) {
+        const std::vector<std::uint8_t> data = extractOverlay(ovl, table[i]);
+        const fs::path target = outDir / ("ovl" + std::to_string(i) + ".bin");
+        writeFile(target, data);
+        std::printf("%3zu  0x%06x   0x%06x  0x%06zx  0x%08x-0x%08zx  %s\n", i, table[i].offset,
+                    table[i].compressedSize, data.size(), kOverlayLoadAddress,
+                    kOverlayLoadAddress + data.size() - 1, target.filename().string().c_str());
+    }
+    return 0;
+}
+
 } // namespace
 
 int main(int argc, char** argv)
@@ -138,6 +165,8 @@ int main(int argc, char** argv)
             return cmdExtract(args[1], args[2], args[3]);
         if (args.size() == 3 && args[0] == "extract-all")
             return cmdExtractAll(args[1], args[2]);
+        if (args.size() == 3 && args[0] == "overlays")
+            return cmdOverlays(args[1], args[2]);
     } catch (const std::exception& e) {
         std::fprintf(stderr, "error: %s\n", e.what());
         return 1;

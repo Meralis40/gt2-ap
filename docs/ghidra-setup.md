@@ -57,7 +57,51 @@ gt2-discinfo extract "Arcade.cue" SCUS_944.55 E:/re/gt2/SCUS_944.55
 
 Import `SCUS_944.88` (**File → Import File**). The format should be detected as **PSX executable**. Run auto-analysis with the defaults. The PSX loader applies PsyQ signatures, which names most SDK functions.
 
-Overlays come later, once we know which files they are and where they load.
+### Overlays
+
+All game-mode code is in overlays stored in `GT2.OVL` in the disc root. They all load at the same address: **`0x80010000`**.
+
+`GT2.OVL` starts with a table of little-endian `(offset, compressed size)` u32 pairs; the first offset gives the table length (`0x30`, so 6 entries on both discs). Each entry is a gzip stream. Decompress them with:
+
+```bash
+gt2-discinfo overlays "Simulation.cue" E:/re/gt2/ovl-sim
+gt2-discinfo overlays "Arcade.cue" E:/re/gt2/ovl-arcade
+```
+
+This writes `ovl0.bin` … `ovl5.bin` and prints each overlay's load range.
+
+Memory layout of `SCUS_944.88` (Simulation):
+
+| Range | Contents |
+|---|---|
+| `0x80010000–0x8005d5ff` | Overlay window. In the EXE file this holds boot-only code, overwritten by the first overlay. |
+| `0x8005d600–0x800a8d5b` | Resident code and data (the EXE entry point is `0x8005d600`). |
+| `0x800a8d5c–0x801c93af` | BSS. `GT2.OVL` is read whole into its start, then BSS is cleared after each switch. |
+
+Loader, in the Simulation EXE:
+
+- `FUN_80010000` (boot): looks up `gt2.ovl` and reads its 0x30-byte table to `0x801ef61c`.
+- `FUN_8005da7c`: switches overlays. It inflates entry N to `0x80010000` (inflate core `FUN_800847d0`), then calls `FlushCache` and clears BSS.
+- `0x80091174`: table of overlay entry points, indexed like `GT2.OVL`. At boot, `FUN_8005d6e0` loads overlay 1.
+
+| # | Size | Entry point | Likely contents (from strings, unconfirmed) |
+|---|---|---|---|
+| 0 | `0x4d5f8` | `0x80012254` | Race (`GranTurismoRaceLoop`, `ArcadeRaceLoop`, `QuickMenu`) |
+| 1 | `0x3c8c4` | `0x80011384` | Title / boot (`data-title.txd`) |
+| 2 | `0x43544` | `0x80011750` | Arcade menus, track select |
+| 3 | `0x02cec` | `0x80012c00` | Unknown (small, no strings) |
+| 4 | `0x42a74` | `0x80013628` | GT mode menus (`GTBattleMenu`, `GTLoadingMenu`) |
+| 5 | `0x020e0` | `0x800114b8` | Movie player (`psxMovieLoop`) |
+
+The Arcade disc's `GT2.OVL` has the same 6-entry layout with slightly different sizes. Its loader addresses in `SCUS_944.55` are not checked yet.
+
+To load them into the program, with `SCUS_944.88` open in the Code Browser, do this for each `ovlN.bin`:
+
+1. **File → Add To Program**, pick the file. The format is **Raw Binary**.
+2. **Options…**: tick **Overlay**, set **Base Address** to `80010000` and **Block Name** to e.g. `ovl0`.
+3. Disassemble from the overlay's entry point (table above), or select the block and run auto-analysis.
+
+Each overlay becomes its own address space (`ovl0::80010000`, …), so the overlays don't collide, and their calls into resident code (`0x8005d600`+) still resolve to the main program.
 
 ## 5. Connecting Claude (MCP)
 

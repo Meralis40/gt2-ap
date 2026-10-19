@@ -3,6 +3,7 @@ add_executable(gt2ap-tests
     test_main.cpp
     test_cue.cpp
     test_sha1.cpp
+    test_gzip.cpp
     test_disc.cpp
     synthetic_disc.cpp
 )
