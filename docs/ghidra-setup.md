@@ -110,7 +110,10 @@ To load them into the program, with `SCUS_944.88` open in the Code Browser, do t
 
 1. **File → Add To Program**, pick the file. The format is **Raw Binary**.
 2. **Options…**: tick **Overlay**, set **Base Address** to `80010000` and **Block Name** to e.g. `ovl0`.
-3. Disassemble from the overlay's entry point (table above), or select the block and run auto-analysis.
+3. **Window → Memory Map**: tick **X** (execute) on every `ovlN` block. Raw Binary blocks are added non-executable, and auto-analysis then leaves most overlay code undisassembled.
+4. Run auto-analysis (**Analysis → Auto Analyze**).
+
+ReVa cannot parse overlay-qualified addresses like `OVL0::80059704`. Refer to overlay locations by symbol instead (`FUN_OVL0__80059704`, `LAB_OVL0__80059704`), for example to create a function there.
 
 Each overlay becomes its own address space (`ovl0::80010000`, …), so the overlays don't collide, and their calls into resident code (`0x8005d600`+, or `0x8005d5c0`+ on Arcade) still resolve to the main program.
 
