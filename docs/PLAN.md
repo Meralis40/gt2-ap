@@ -14,6 +14,7 @@ Reference projects: [ctr-native-ap](https://github.com/dowlle/ctr-native-ap) (ta
 | Stepping stone | Embedded emulator core with code hooks (Option B), to validate addresses and AP design early |
 | Option B core | Beetle PSX (forked, with execution hooks added), embedded in our own frontend |
 | Client stack | C++20, CMake, SDL3, Dear ImGui, `apclientpp`. Python for tooling and the AP world. |
+| Licenses | Client GPL-2.0-or-later, AP world MIT. Beetle built without lightrec and Vulkan; mbedTLS, not OpenSSL. See [licensing.md](licensing.md). |
 | RE / prototype tool | PCSX-Redux (debugger + Lua). Test/prototype scripts are generated and kept in the repo. |
 
 ## Architecture principle
