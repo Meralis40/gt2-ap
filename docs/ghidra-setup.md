@@ -93,7 +93,18 @@ Loader, in the Simulation EXE:
 | 4 | `0x42a74` | `0x80013628` | GT mode menus (`GTBattleMenu`, `GTLoadingMenu`) |
 | 5 | `0x020e0` | `0x800114b8` | Movie player (`psxMovieLoop`) |
 
-The Arcade disc's `GT2.OVL` has the same 6-entry layout with slightly different sizes. Its loader addresses in `SCUS_944.55` are not checked yet.
+The Arcade disc (`SCUS_944.55`) uses the same scheme with the same load address `0x80010000`, the same entry points and the same role for each overlay. The resident code shifts down by 0x40:
+
+| | Simulation `SCUS_944.88` | Arcade `SCUS_944.55` |
+|---|---|---|
+| Overlay window | `0x80010000–0x8005d5ff` | `0x80010000–0x8005d5bf` |
+| EXE entry point | `0x8005d600` | `0x8005d5c0` |
+| BSS | `0x800a8d5c–0x801c93af` | `0x800a8b04–0x801c917f` |
+| Overlay switch | `FUN_8005da7c` | `FUN_8005da3c` |
+| Entry-point table | `0x80091174` | `0x80090f58` |
+| Overlay at boot | 1 (title) | 5 (movie) |
+
+Arcade overlay sizes differ slightly; `gt2-discinfo overlays` prints them.
 
 To load them into the program, with `SCUS_944.88` open in the Code Browser, do this for each `ovlN.bin`:
 
@@ -101,7 +112,7 @@ To load them into the program, with `SCUS_944.88` open in the Code Browser, do t
 2. **Options…**: tick **Overlay**, set **Base Address** to `80010000` and **Block Name** to e.g. `ovl0`.
 3. Disassemble from the overlay's entry point (table above), or select the block and run auto-analysis.
 
-Each overlay becomes its own address space (`ovl0::80010000`, …), so the overlays don't collide, and their calls into resident code (`0x8005d600`+) still resolve to the main program.
+Each overlay becomes its own address space (`ovl0::80010000`, …), so the overlays don't collide, and their calls into resident code (`0x8005d600`+, or `0x8005d5c0`+ on Arcade) still resolve to the main program.
 
 ## 5. Connecting Claude (MCP)
 
