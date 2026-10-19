@@ -14,8 +14,8 @@ enum class Gt2Disc { Unknown, Simulation, Arcade };
 const char* toString(Gt2Disc disc);
 
 struct GameInfo {
-    std::string serial;     // e.g. "SCUS-94455"
-    std::string bootFile;   // executable path on the disc, e.g. "SCUS_944.55"
+    std::string serial;     // e.g. "SCUS-94488"
+    std::string bootFile;   // executable path on the disc, e.g. "SCUS_944.88"
     Gt2Disc disc = Gt2Disc::Unknown;
 };
 
@@ -23,7 +23,7 @@ struct GameInfo {
 // or no BOOT line (not a PS1 game disc).
 std::optional<GameInfo> identify(const Iso9660& fs);
 
-// Parses the BOOT line of a SYSTEM.CNF ("BOOT = cdrom:\SCUS_944.55;1").
+// Parses the BOOT line of a SYSTEM.CNF ("BOOT = cdrom:\SCUS_944.88;1").
 std::optional<GameInfo> parseSystemCnf(std::string_view text);
 
 // A dump verified against redump.org: SHA-1 of the data track file (Track 01).

@@ -10,7 +10,7 @@
 namespace synthetic {
 
 // Layout of the synthetic filesystem (LBAs relative to the data track):
-//   /SYSTEM.CNF          "BOOT = cdrom:\SCUS_944.55;1"
+//   /SYSTEM.CNF          "BOOT = cdrom:\SCUS_944.88;1"
 //   /DATA/BIG.BIN        3000 bytes, byte i = i % 251
 //   /DATA/MOVIE.STR      2 sectors, Mode 2 Form 2 (interleaved)
 struct Layout {
@@ -20,7 +20,7 @@ struct Layout {
     static constexpr std::uint32_t kMovieSectors = 2;
 };
 
-inline const char* kSystemCnf = "BOOT = cdrom:\\SCUS_944.55;1\r\nTCB = 4\r\n";
+inline const char* kSystemCnf = "BOOT = cdrom:\\SCUS_944.88;1\r\nTCB = 4\r\n";
 
 // 2048-byte user data sectors.
 std::vector<std::uint8_t> buildIso();

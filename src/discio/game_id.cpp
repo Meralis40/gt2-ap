@@ -8,10 +8,10 @@ namespace gt2ap::discio {
 
 namespace {
 
-// TODO: fill in from redump.org ("Gran Turismo 2 (USA) (Simulation Mode)" and
-// "(Arcade Mode)", the revision matching 1.2) once checked against real discs.
+// Track 01 SHA-1 of the NTSC-U 1.2 discs, checked against real discs.
 constexpr KnownDump kKnownDumps[] = {
-    {"", "", ""}, // placeholder: an empty array is not valid C++
+    {"SCUS-94488", "1.2", "c4813703d2ad440ed36670c1ac2c1a66c9dc673d"}, // Simulation Mode
+    {"SCUS-94455", "1.2", "68f226780ef551b746e1a0964541570ec04c8060"}, // Arcade Mode
 };
 
 std::string upper(std::string_view s)
@@ -56,7 +56,7 @@ std::optional<GameInfo> parseSystemCnf(std::string_view text)
         valueEnd = upperText.size();
     std::string value = upperText.substr(valueStart, valueEnd - valueStart);
 
-    // "cdrom:\SCUS_944.55;1" -> "SCUS_944.55"
+    // "cdrom:\SCUS_944.88;1" -> "SCUS_944.88"
     const std::size_t lastSep = value.find_last_of("\\/:");
     if (lastSep != std::string::npos)
         value = value.substr(lastSep + 1);
@@ -69,7 +69,7 @@ std::optional<GameInfo> parseSystemCnf(std::string_view text)
 
     GameInfo info;
     info.bootFile = value;
-    // "SCUS_944.55" -> "SCUS-94455"
+    // "SCUS_944.88" -> "SCUS-94488"
     std::string serial;
     for (const char c : value) {
         if (c == '_')
@@ -78,9 +78,9 @@ std::optional<GameInfo> parseSystemCnf(std::string_view text)
             serial.push_back(c);
     }
     info.serial = serial;
-    if (serial == "SCUS-94455")
+    if (serial == "SCUS-94488")
         info.disc = Gt2Disc::Simulation;
-    else if (serial == "SCUS-94488")
+    else if (serial == "SCUS-94455")
         info.disc = Gt2Disc::Arcade;
     return info;
 }
@@ -96,11 +96,7 @@ std::optional<GameInfo> identify(const Iso9660& fs)
 
 std::span<const KnownDump> knownDumps()
 {
-    std::span<const KnownDump> all(kKnownDumps);
-    // Drop placeholder entries.
-    while (!all.empty() && all.back().track1Sha1.empty())
-        all = all.first(all.size() - 1);
-    return all;
+    return kKnownDumps;
 }
 
 const KnownDump* findKnownDump(std::string_view track1Sha1)

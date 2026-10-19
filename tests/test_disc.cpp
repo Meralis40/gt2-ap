@@ -20,8 +20,8 @@ void checkFilesystem(const DiscImage& disc)
 
     const auto game = identify(iso);
     REQUIRE(game.has_value());
-    CHECK_EQ(game->serial, std::string("SCUS-94455"));
-    CHECK_EQ(game->bootFile, std::string("SCUS_944.55"));
+    CHECK_EQ(game->serial, std::string("SCUS-94488"));
+    CHECK_EQ(game->bootFile, std::string("SCUS_944.88"));
     CHECK(game->disc == Gt2Disc::Simulation);
 
     const auto big = iso.find("data\\big.bin;1");
@@ -139,13 +139,13 @@ TEST_CASE("disc: rejects unusable images")
 
 TEST_CASE("game id: SYSTEM.CNF parsing")
 {
-    auto sim = parseSystemCnf("BOOT = cdrom:\\SCUS_944.55;1\r\nTCB = 4\r\n");
+    auto sim = parseSystemCnf("BOOT = cdrom:\\SCUS_944.88;1\r\nTCB = 4\r\n");
     REQUIRE(sim.has_value());
     CHECK(sim->disc == Gt2Disc::Simulation);
 
-    auto arcade = parseSystemCnf("boot=cdrom:SCUS_944.88;1");
+    auto arcade = parseSystemCnf("boot=cdrom:SCUS_944.55;1");
     REQUIRE(arcade.has_value());
-    CHECK_EQ(arcade->serial, std::string("SCUS-94488"));
+    CHECK_EQ(arcade->serial, std::string("SCUS-94455"));
     CHECK(arcade->disc == Gt2Disc::Arcade);
 
     auto other = parseSystemCnf("BOOT = cdrom:\\SLUS_123.45;1");
@@ -155,4 +155,10 @@ TEST_CASE("game id: SYSTEM.CNF parsing")
     CHECK(!parseSystemCnf("BOOT2 = cdrom0:\\SLUS_200.00;1").has_value());
     CHECK(!parseSystemCnf("").has_value());
     CHECK(findKnownDump("0000") == nullptr);
+    const KnownDump* simDump = findKnownDump("C4813703D2AD440ED36670C1AC2C1A66C9DC673D");
+    REQUIRE(simDump != nullptr);
+    CHECK(simDump->serial == "SCUS-94488");
+    const KnownDump* arcadeDump = findKnownDump("68f226780ef551b746e1a0964541570ec04c8060");
+    REQUIRE(arcadeDump != nullptr);
+    CHECK(arcadeDump->serial == "SCUS-94455");
 }

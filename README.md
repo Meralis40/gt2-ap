@@ -2,7 +2,7 @@
 
 Gran Turismo 2 (Simulation and Arcade Mode) for [Archipelago](https://github.com/ArchipelagoMW/Archipelago). Early work in progress, not playable yet; see [docs/PLAN.md](docs/PLAN.md).
 
-You need your own NTSC-U 1.2 discs (SCUS-94455 and SCUS-94488). No game data is distributed.
+You need your own NTSC-U 1.2 discs (Simulation SCUS-94488, Arcade SCUS-94455). No game data is distributed.
 
 ## Building
 

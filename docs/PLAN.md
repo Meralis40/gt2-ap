@@ -7,7 +7,7 @@ Reference projects: [ctr-native-ap](https://github.com/dowlle/ctr-native-ap) (ta
 
 | Topic | Decision |
 |---|---|
-| Target version | NTSC-U 1.2 (Simulation SCUS-94455, Arcade SCUS-94488) |
+| Target version | NTSC-U 1.2 (Simulation SCUS-94488, Arcade SCUS-94455) |
 | Assets | User provides CD images; client extracts/verifies them. No assets distributed. |
 | Platforms | Windows, Linux, macOS (macOS covered by CI only) |
 | Final runtime | Static recompilation (Option A) |
