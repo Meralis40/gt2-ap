@@ -7,7 +7,9 @@
 #include "gt2ap/discio/iso9660.hpp"
 #include "gt2ap/discio/overlay.hpp"
 #include "gt2ap/discio/sha1.hpp"
+#include "gt2ap/discio/vol.hpp"
 
+#include <algorithm>
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
@@ -27,6 +29,8 @@ void usage()
                "  gt2-discinfo extract <image> <path-on-disc> <output-file>\n"
                "  gt2-discinfo extract-all <image> <output-dir>\n"
                "  gt2-discinfo overlays <image> <output-dir>    decompress GT2.OVL to ovlN.bin\n"
+               "  gt2-discinfo vol ls <image> [vol-path]\n"
+               "  gt2-discinfo vol extract <image> <output-dir> [vol-path]\n"
                "\n"
                "Form 2 / interleaved files (XA audio, STR video) are written as stored sectors.\n",
                stderr);
@@ -151,6 +155,78 @@ int cmdOverlays(const fs::path& imagePath, const fs::path& outDir)
     return 0;
 }
 
+// GT2.VOL opened on a disc: the ISO entry, its file table and directory.
+struct Vol {
+    FileEntry file;
+    std::vector<VolFileEntry> files;
+};
+
+Vol openVol(const Iso9660& iso)
+{
+    const auto entry = iso.find(kVolFile);
+    if (!entry || entry->isDirectory)
+        throw DiscError(std::string("no such file: ") + kVolFile);
+    const auto header = iso.readFileRange(*entry, 0, std::min<std::size_t>(entry->size, kVolHeaderSize));
+    const std::vector<std::uint32_t> table = parseVolTable(header, entry->size);
+    const VolExtent dir = volExtent(table, kVolDirectoryIndex);
+    return {*entry, parseVolDirectory(iso.readFileRange(*entry, dir.offset, dir.size), table)};
+}
+
+// True if `path` is `filter` or lies below it. An empty filter or "/" matches everything.
+bool underVolPath(const std::string& path, std::string filter)
+{
+    if (filter.empty() || filter.front() != '/')
+        filter.insert(filter.begin(), '/');
+    while (filter.size() > 1 && filter.back() == '/')
+        filter.pop_back();
+    return filter == "/" || path == filter || (path.size() > filter.size() && path.starts_with(filter) &&
+                                                path[filter.size()] == '/');
+}
+
+int cmdVolLs(const fs::path& imagePath, const std::string& filter)
+{
+    const DiscImage disc = DiscImage::open(imagePath);
+    const Iso9660 iso(disc);
+    const Vol vol = openVol(iso);
+    std::size_t count = 0;
+    for (const VolFileEntry& f : vol.files) {
+        if (!underVolPath(f.path, filter))
+            continue;
+        std::printf("%5u  0x%08x %9u  %s\n", f.index, f.extent.offset, f.extent.size, f.path.c_str());
+        ++count;
+    }
+    if (count == 0) {
+        std::fprintf(stderr, "no files under %s\n", filter.c_str());
+        return 1;
+    }
+    return 0;
+}
+
+int cmdVolExtract(const fs::path& imagePath, const fs::path& outDir, const std::string& filter)
+{
+    const DiscImage disc = DiscImage::open(imagePath);
+    const Iso9660 iso(disc);
+    const Vol vol = openVol(iso);
+    std::size_t count = 0;
+    std::uint64_t bytes = 0;
+    for (const VolFileEntry& f : vol.files) {
+        if (!underVolPath(f.path, filter))
+            continue;
+        const fs::path target = outDir / fs::path(f.path.substr(1));
+        fs::create_directories(target.parent_path());
+        writeFile(target, iso.readFileRange(vol.file, f.extent.offset, f.extent.size));
+        ++count;
+        bytes += f.extent.size;
+    }
+    if (count == 0) {
+        std::fprintf(stderr, "no files under %s\n", filter.c_str());
+        return 1;
+    }
+    std::printf("Extracted %zu files (%llu bytes) to %s\n", count, static_cast<unsigned long long>(bytes),
+                outDir.string().c_str());
+    return 0;
+}
+
 } // namespace
 
 int main(int argc, char** argv)
@@ -167,6 +243,10 @@ int main(int argc, char** argv)
             return cmdExtractAll(args[1], args[2]);
         if (args.size() == 3 && args[0] == "overlays")
             return cmdOverlays(args[1], args[2]);
+        if ((args.size() == 3 || args.size() == 4) && args[0] == "vol" && args[1] == "ls")
+            return cmdVolLs(args[2], args.size() == 4 ? args[3] : "/");
+        if ((args.size() == 4 || args.size() == 5) && args[0] == "vol" && args[1] == "extract")
+            return cmdVolExtract(args[2], args[3], args.size() == 5 ? args[4] : "/");
     } catch (const std::exception& e) {
         std::fprintf(stderr, "error: %s\n", e.what());
         return 1;

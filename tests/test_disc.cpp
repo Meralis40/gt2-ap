@@ -7,6 +7,8 @@
 #include "gt2ap/discio/game_id.hpp"
 #include "gt2ap/discio/iso9660.hpp"
 
+#include <utility>
+
 using namespace gt2ap::discio;
 using synthetic::Layout;
 
@@ -34,6 +36,20 @@ void checkFilesystem(const DiscImage& disc)
     for (std::size_t i = 0; i < bytes.size(); ++i)
         contentOk = contentOk && bytes[i] == static_cast<std::uint8_t>(i % 251);
     CHECK(contentOk);
+
+    // Ranged reads: inside one sector, across a sector boundary, a whole sector, the tail.
+    const std::pair<std::uint64_t, std::size_t> ranges[] = {
+        {5, 10}, {2040, 20}, {2048, Layout::kBigSize - 2048}, {0, Layout::kBigSize}, {Layout::kBigSize, 0}};
+    for (const auto& [offset, size] : ranges) {
+        const auto part = iso.readFileRange(*big, offset, size);
+        REQUIRE(part.size() == size);
+        bool partOk = true;
+        for (std::size_t i = 0; i < size; ++i)
+            partOk = partOk && part[i] == bytes[offset + i];
+        CHECK(partOk);
+    }
+    CHECK_THROWS(iso.readFileRange(*big, Layout::kBigSize - 1, 2));
+    CHECK_THROWS(iso.readFileRange(*big, Layout::kBigSize + 1, 0));
 
     const auto movie = iso.find("/DATA/MOVIE.STR");
     REQUIRE(movie.has_value());

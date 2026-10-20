@@ -51,6 +51,8 @@ public:
 
     // File contents as user data (Form 1).
     std::vector<std::uint8_t> readFile(const FileEntry& file) const;
+    // `size` bytes of user data from `offset` in the file. Throws if the range is past the end.
+    std::vector<std::uint8_t> readFileRange(const FileEntry& file, std::uint64_t offset, std::size_t size) const;
     // File contents as stored sectors (2336/2352 bytes each), for Form 2 / interleaved files.
     std::vector<std::uint8_t> readFileStored(const FileEntry& file) const;
 

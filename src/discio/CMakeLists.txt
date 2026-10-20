@@ -7,6 +7,7 @@ add_library(discio STATIC
     game_id.cpp
     gzip.cpp
     overlay.cpp
+    vol.cpp
 )
 add_library(gt2ap::discio ALIAS discio)
 target_include_directories(discio PUBLIC include)

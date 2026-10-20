@@ -106,6 +106,8 @@ The Arcade disc (`SCUS_944.55`) uses the same scheme with the same load address 
 
 Arcade overlay sizes differ slightly; `gt2-discinfo overlays` prints them.
 
+Game assets live in `GT2.VOL`; see [gt2-vol.md](gt2-vol.md) for its format and `gt2-discinfo vol`.
+
 To load them into the program, with `SCUS_944.88` open in the Code Browser, do this for each `ovlN.bin`:
 
 1. **File → Add To Program**, pick the file. The format is **Raw Binary**.

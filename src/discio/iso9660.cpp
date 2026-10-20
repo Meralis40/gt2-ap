@@ -182,6 +182,31 @@ std::vector<std::uint8_t> Iso9660::readFile(const FileEntry& file) const
     return data;
 }
 
+std::vector<std::uint8_t> Iso9660::readFileRange(const FileEntry& file, std::uint64_t offset,
+                                                 std::size_t size) const
+{
+    if (offset > file.size || size > file.size - offset)
+        throw DiscError("iso9660: read past the end of '" + file.path + "'");
+
+    std::vector<std::uint8_t> data(size);
+    std::array<std::uint8_t, kUserDataSize> sector{};
+    std::size_t done = 0;
+    while (done < size) {
+        const std::uint64_t pos = offset + done;
+        const auto lba = file.lba + static_cast<std::uint32_t>(pos / kUserDataSize);
+        const auto skip = static_cast<std::size_t>(pos % kUserDataSize);
+        const std::size_t n = std::min(size - done, std::size_t{kUserDataSize} - skip);
+        if (n == kUserDataSize) {
+            m_disc->readSector(lba, std::span<std::uint8_t, kUserDataSize>(data.data() + done, kUserDataSize));
+        } else {
+            m_disc->readSector(lba, sector);
+            std::memcpy(data.data() + done, sector.data() + skip, n);
+        }
+        done += n;
+    }
+    return data;
+}
+
 std::vector<std::uint8_t> Iso9660::readFileStored(const FileEntry& file) const
 {
     std::vector<std::uint8_t> data;
