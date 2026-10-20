@@ -119,6 +119,29 @@ ReVa cannot parse overlay-qualified addresses like `OVL0::80059704`. Refer to ov
 
 Each overlay becomes its own address space (`ovl0::80010000`, …), so the overlays don't collide, and their calls into resident code (`0x8005d600`+, or `0x8005d5c0`+ on Arcade) still resolve to the main program.
 
+### Per-overlay BSS
+
+Every overlay switch clears the whole BSS (`Overlay_ClearBss`), and each overlay then uses that range for its own variables: the same address can be a menu pointer in one overlay and a race variable in another. In a single main-space BSS, their labels and types collide.
+
+[`scripts/ghidra/overlay_bss.py`](../scripts/ghidra/overlay_bss.py) gives each overlay space its own BSS:
+
+1. It adds an uninitialized `ovlN_bss` block at the BSS range to each overlay space. Code in an overlay then resolves BSS addresses to its own space, both in the listing and in the decompiler.
+2. It moves each overlay's existing references into its block, along with the labels, data and comments at addresses only that overlay uses.
+3. It lists the user labels at addresses that several overlays use. They stay in main space and need moving by hand to the overlay they describe.
+
+Boot code and resident code keep the main-space BSS. That's right for boot, which runs before any overlay. For resident code, BSS state is per overlay anyway.
+
+Run it once the overlays are loaded and analyzed:
+
+1. In the Code Browser: **Window → Script Manager**, then the **Manage Script Directories** button, and add `scripts/ghidra` from this repository.
+2. Run `overlay_bss.py` (category **GT2**). Ghidra must have been started with PyGhidra (`pyghidraRun`). With ReVa, `run-script` with `scriptName: overlay_bss.py` works once the directory is registered.
+
+Running it again does nothing harmful: existing blocks are kept, and only references still pointing at main space are moved. Set `DRY_RUN = True` at the top to see the per-overlay counts first.
+
+The BSS range is `0x800a8d5c–0x801c93af` on Simulation, checked against `Overlay_ClearBss`. The Arcade range in the script comes from the EXE header and hasn't been tried.
+
+In scripts, `getAddressSpace("OVL1").getAddress(offset)` returns a main-space address when the offset is outside the overlay's blocks. `getAddressInThisSpaceOnly(offset)` always stays in the overlay space; the script uses it to create the blocks.
+
 ## 5. Connecting Claude (MCP)
 
 With Ghidra open on the project, ReVa serves MCP at `http://localhost:8080/mcp/message`.
