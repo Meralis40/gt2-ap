@@ -180,7 +180,7 @@ def main():
             "allowedCars": allowed,
             "requiresWon": [],
             "prizes": [struct.unpack_from("<H", e, 0x78 + 2 * i)[0] * 100 for i in range(6)],
-            "bonusPrize": bonus * 100,
+            "championshipPrize": bonus * 100,  # paid for winning the series, set on race 01 only
             "prizeCars": prize_cars,
         }
         if code[:3] in ("PFL", "EPL"):
@@ -216,6 +216,8 @@ def main():
         "- The restriction columns follow `Race_CheckEntry` (OVL4 8001973c), in its check order:",
         "  required leagues, dirt tyres, license, drivetrain, turbo, racing modification, max power",
         "  (PS), allowed cars. An empty cell means no restriction.",
+        "- `championshipPrize` (JSON only) is paid for winning a championship; it is set on race 01",
+        "  of each series and 0 everywhere else.",
         "- Requires: PFL/EPL need every regional league race (GJL, GBL, GFL, GGL, GIL, GUL) won;",
         "  GTW needs every PFL/EPL race won.",
         "",

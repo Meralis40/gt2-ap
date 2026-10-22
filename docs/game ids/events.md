@@ -13,6 +13,8 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 - The restriction columns follow `Race_CheckEntry` (OVL4 8001973c), in its check order:
   required leagues, dirt tyres, license, drivetrain, turbo, racing modification, max power
   (PS), allowed cars. An empty cell means no restriction.
+- `championshipPrize` (JSON only) is paid for winning a championship; it is set on race 01
+  of each series and 0 everywhere else.
 - Requires: PFL/EPL need every regional league race (GJL, GBL, GFL, GGL, GIL, GUL) won;
   GTW needs every PFL/EPL race won.
 
