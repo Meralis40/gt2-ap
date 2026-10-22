@@ -61,7 +61,7 @@ earned(license) = license >= 6 - count
 Every OVL4 license check goes through this function:
 
 - `License_GetHighest` (`0x800191c4`), which `Race_CheckEntry` uses for each event's license requirement.
-- `License_CheckEntry` (`0x80019b88`): a license's tests need the next lower license, so B tests are always open and A tests need 1 Progressive License.
+- `License_CheckEntry` (`0x80019b88`): a license's tests need the next lower license, so B tests are always open and A tests need 1 Progressive License. Decided: keep this gating, so each Progressive License opens the next license's tests.
 - The menu checks for the IA/S-only elements (`FUN_OVL4__8001b680` and `FUN_OVL4__8001b6f0`), and the license icons (`MenuPage_DrawElements`).
 
 It is a whole-function replacement that fits in place (7 of 26 instructions). It reads the count at `0x801f0d86`:
@@ -124,5 +124,4 @@ The hook on `Race_CheckEntry` entry is shared with the manufacturer check above.
 - The stack never reaches `0x801f1d80`: run `stack_watermark.lua` through races, license tests, replays, memory card saves and movies.
 - Message pages `0x8000001e`, `0x8000002f`, `0x80000019`: read their text in game to decide which ones fit.
 - `FUN_80060840(0)` is the error sound (inferred: called with 0 on every refusal, 1 on success).
-- Whether the license tests should stay gated on Progressive Licenses (`License_CheckEntry`), or all be open as locations. To open them, return 1 from `License_CheckEntry` (`0x80019b88`).
 - OVL1 has its own `UsedCar_CanBuy` / `UsedCar_Buy` (`0x8001ead8` / `0x8001eb60`), which adds a car with `Garage_AddCar` from a menu next to memory card calls. Its purpose is unknown. GT mode's used car lots use the OVL4 path above.
