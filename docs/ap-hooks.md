@@ -44,8 +44,8 @@ Suggested layout (base `0x801f0d80`):
 | `+0x05` | u8 | Enabled rules: bit 0 licenses, bit 1 manufacturers, bit 2 parts, bit 3 trophies |
 | `+0x06` | u8 | Progressive License count (0–6) |
 | `+0x07` | u8 | Trophy count |
-| `+0x08` | u8 | Trophies needed for the regional leagues |
-| `+0x09` | u8 | Trophies needed for PFL/EPL |
+| `+0x08` | u8 | Trophies needed for PFL/EPL |
+| `+0x09` | u8 | Trophies needed for GTW |
 | `+0x10` | u8[8] | Unlocked manufacturers, bit = manufacturer ID (0–38 used) |
 | `+0x18` | u8[8] | Buyable parts, bit = `PartId` (same layout as `Car.partsOwned`) |
 | `+0x100` | | Injected code, if any |
@@ -111,17 +111,17 @@ Not affected:
 
 ## Trophies for the leagues
 
-`Race_CheckEntry` currently gates PFL/EPL on `Events_AllRegionalLeaguesWon` (`0x8001847c`, all GJL/GBL/GFL/GGL/GIL/GUL events won) and GTW on `Events_AllProLeaguesWon`. The regional leagues have no requirement of their own beyond their license. Install these hooks only when the trophy setting is on.
+`Race_CheckEntry` gates PFL/EPL on `Events_AllRegionalLeaguesWon` (`0x8001847c`, all GJL/GBL/GFL/GGL/GIL/GUL events won) and GTW on `Events_AllProLeaguesWon` (`0x8001850c`, all PFL/EPL events won). With the trophy setting on, both checks count trophies instead. Install these hooks only when the setting is on.
 
-- **PFL/EPL: `Events_AllRegionalLeaguesWon`.** `Race_CheckEntry` is its only caller. Return early with `v0 = (trophies >= proNeeded)`. On failure, `Race_CheckEntry` returns -9 with message page `0x8000002f`.
-- **Regional leagues (19 events, race codes `GJL*`, `GBL*`, `GFL*`, `GGL*`, `GIL*`, `GUL*`): `Race_CheckEntry` entry, `a0` = race code.** If the first 3 characters are one of those and `trophies < regionalNeeded`, write a message page to `*a1` and return early with `v0 = -9`. `0x8000002f` is the PFL/EPL message; its text probably says to win the regional leagues, so another page may read better.
-- GTW is unchanged and still needs every PFL/EPL race won.
+- **PFL/EPL: `Events_AllRegionalLeaguesWon`.** Return early with `v0 = (trophies >= proNeeded)`. On failure, `Race_CheckEntry` returns -9 with message page `0x8000002f`.
+- **GTW: `Events_AllProLeaguesWon`.** Return early with `v0 = (trophies >= gtwNeeded)`. On failure, `Race_CheckEntry` returns -10 with message page `0x80000030`.
+- The regional leagues are unchanged: they only need their license, and some have a power limit.
 
-The hook on `Race_CheckEntry` entry is shared with the manufacturer check above. Run the trophy check first, since the game checks the leagues before the car.
+`Race_CheckEntry` is the only caller of both functions, so the hooks change nothing else. The game's two messages probably say to win the previous leagues; read them in game to see whether they still fit.
 
 ## To verify
 
 - The stack never reaches `0x801f1d80`: run `stack_watermark.lua` through races, license tests, replays, memory card saves and movies.
-- Message pages `0x8000001e`, `0x8000002f`, `0x80000019`: read their text in game to decide which ones fit.
+- Message pages `0x8000001e`, `0x8000002f`, `0x80000030`, `0x80000019`: read their text in game to decide which ones fit.
 - `FUN_80060840(0)` is the error sound (inferred: called with 0 on every refusal, 1 on success).
 - OVL1 has its own `UsedCar_CanBuy` / `UsedCar_Buy` (`0x8001ead8` / `0x8001eb60`), which adds a car with `Garage_AddCar` from a menu next to memory card calls. Its purpose is unknown. GT mode's used car lots use the OVL4 path above.
