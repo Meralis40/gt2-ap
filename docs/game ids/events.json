@@ -2483,7 +2483,7 @@
   {
    "index": 83,
    "code": "FREECHAMP0501",
-   "kind": "race",
+   "kind": "event_synthesizer",
    "course": null,
    "category": "General01",
    "laps": 2,
@@ -2506,6 +2506,7 @@
    ],
    "championshipPrize": 50000,
    "prizeCars": [],
+   "difficulty": "expert",
    "championship": {
     "first": "FREECHAMP0501",
     "race": 1,
@@ -2515,7 +2516,7 @@
   {
    "index": 84,
    "code": "FREECHAMP0502",
-   "kind": "race",
+   "kind": "event_synthesizer",
    "course": null,
    "category": "General01",
    "laps": 2,
@@ -2538,6 +2539,7 @@
    ],
    "championshipPrize": 0,
    "prizeCars": [],
+   "difficulty": "expert",
    "championship": {
     "first": "FREECHAMP0501",
     "race": 2,
@@ -2547,7 +2549,7 @@
   {
    "index": 85,
    "code": "FREECHAMP0503",
-   "kind": "race",
+   "kind": "event_synthesizer",
    "course": null,
    "category": "General01",
    "laps": 2,
@@ -2570,6 +2572,7 @@
    ],
    "championshipPrize": 0,
    "prizeCars": [],
+   "difficulty": "expert",
    "championship": {
     "first": "FREECHAMP0501",
     "race": 3,
@@ -2579,7 +2582,7 @@
   {
    "index": 86,
    "code": "FREECHAMP0504",
-   "kind": "race",
+   "kind": "event_synthesizer",
    "course": null,
    "category": "General01",
    "laps": 2,
@@ -2602,6 +2605,7 @@
    ],
    "championshipPrize": 0,
    "prizeCars": [],
+   "difficulty": "expert",
    "championship": {
     "first": "FREECHAMP0501",
     "race": 4,
@@ -2611,7 +2615,7 @@
   {
    "index": 87,
    "code": "FREECHAMP0505",
-   "kind": "race",
+   "kind": "event_synthesizer",
    "course": null,
    "category": "General01",
    "laps": 2,
@@ -2634,6 +2638,7 @@
    ],
    "championshipPrize": 0,
    "prizeCars": [],
+   "difficulty": "expert",
    "championship": {
     "first": "FREECHAMP0501",
     "race": 5,
@@ -2643,7 +2648,7 @@
   {
    "index": 88,
    "code": "FREERACE01",
-   "kind": "race",
+   "kind": "event_synthesizer",
    "course": null,
    "category": "General01",
    "laps": 2,
@@ -2665,12 +2670,13 @@
     500
    ],
    "championshipPrize": 0,
-   "prizeCars": []
+   "prizeCars": [],
+   "difficulty": "easy"
   },
   {
    "index": 89,
    "code": "FREERACE02",
-   "kind": "race",
+   "kind": "event_synthesizer",
    "course": null,
    "category": "General01",
    "laps": 2,
@@ -2692,12 +2698,13 @@
     500
    ],
    "championshipPrize": 0,
-   "prizeCars": []
+   "prizeCars": [],
+   "difficulty": "normal"
   },
   {
    "index": 90,
    "code": "FREERACE03",
-   "kind": "race",
+   "kind": "event_synthesizer",
    "course": null,
    "category": "General01",
    "laps": 2,
@@ -2719,7 +2726,8 @@
     500
    ],
    "championshipPrize": 0,
-   "prizeCars": []
+   "prizeCars": [],
+   "difficulty": "hard"
   },
   {
    "index": 91,

@@ -46,6 +46,9 @@ PRO_LEAGUES = ["PFL0001", "PFL0002", "PFL0003", "EPL0001", "EPL0002", "EPL0003"]
 # Machine tests (0-400m, 0-1000m, max speed), run by RaceSetup_InitMachineTest with no event
 # index, so no result is stored
 MACHINE_TESTS = {"G400", "G1000", "GMAX"}
+# Event Synthesizer, shown once the S license is held (checked in game via g_Race_EventIndex)
+EVENT_SYNTHESIZER = {"FREERACE01": "easy", "FREERACE02": "normal", "FREERACE03": "hard",
+                     "FREECHAMP05": "expert"}
 
 
 def decode_car(code):
@@ -162,6 +165,8 @@ def main():
             kind = "license"
         elif code in MACHINE_TESTS:
             kind = "machine_test"
+        elif code.startswith("FREE"):
+            kind = "event_synthesizer"
         else:
             kind = "race"
         ev = {
@@ -188,6 +193,8 @@ def main():
             ev["requiresWon"] = REGIONAL_LEAGUES
         elif code[:3] == "GTW":
             ev["requiresWon"] = PRO_LEAGUES
+        if kind == "event_synthesizer":
+            ev["difficulty"] = EVENT_SYNTHESIZER[code[:-2] if code.startswith("FREECHAMP") else code]
         # Championships: the menu starts xxx0501, which runs xxx0501..xxx0505 in a row
         if len(code) >= 4 and code[-4:-2] == "05":
             ev["championship"] = {"first": code[:-2] + "01", "race": int(code[-2:]), "races": 5}
@@ -211,6 +218,8 @@ def main():
         "  per event, 0 = never finished, 1-6 = best place).",
         "- Kind `license` rows are the per-license entries; their prize car is the license reward.",
         "  `machine_test` events (G400 0-400m, G1000 0-1000m, GMAX max speed) store no result.",
+        "  `event_synthesizer` events appear once the S license is held: FREERACE01/02/03 are",
+        "  Easy/Normal/Hard and the FREECHAMP05xx championship is Expert.",
         "- Course `random` means the game picks a course when the race starts.",
         "- Menu `no` means no menu element starts the event. Championship races 02-05 run after",
         "  01; FPM0001 and FPS0001 have no entry at all.",

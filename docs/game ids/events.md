@@ -7,6 +7,8 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
   per event, 0 = never finished, 1-6 = best place).
 - Kind `license` rows are the per-license entries; their prize car is the license reward.
   `machine_test` events (G400 0-400m, G1000 0-1000m, GMAX max speed) store no result.
+  `event_synthesizer` events appear once the S license is held: FREERACE01/02/03 are
+  Easy/Normal/Hard and the FREECHAMP05xx championship is Expert.
 - Course `random` means the game picks a course when the race starts.
 - Menu `no` means no menu element starts the event. Championship races 02-05 run after
   01; FPM0001 and FPS0001 have no entry at all.
@@ -103,14 +105,14 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 | 80 | FRC0001 | race | shortway | 2 | yes | A | FR |  |  |  | 300 |  |  | 5000 | Nissan Sileighty (J) |
 | 81 | FRC0002 | race | highway | 2 | yes | IC | FR |  |  |  | 450 |  |  | 6000 | Nissan Nismo 270R (J) |
 | 82 | FRC0003 | race | parma | 2 | yes | IB | FR |  |  |  | 500 |  |  | 7000 | Mazda Mazda RX-7 GT-C(J) '99 |
-| 83 | FREECHAMP0501 | race | random | 2 | yes | S |  |  |  |  |  |  |  | 10000 |  |
-| 84 | FREECHAMP0502 | race | random | 2 | no | S |  |  |  |  |  |  |  | 10000 |  |
-| 85 | FREECHAMP0503 | race | random | 2 | no | S |  |  |  |  |  |  |  | 10000 |  |
-| 86 | FREECHAMP0504 | race | random | 2 | no | S |  |  |  |  |  |  |  | 10000 |  |
-| 87 | FREECHAMP0505 | race | random | 2 | no | S |  |  |  |  |  |  |  | 10000 |  |
-| 88 | FREERACE01 | race | random | 2 | yes | S |  |  |  |  |  |  |  | 7000 |  |
-| 89 | FREERACE02 | race | random | 2 | yes | S |  |  |  |  |  |  |  | 8000 |  |
-| 90 | FREERACE03 | race | random | 2 | yes | S |  |  |  |  |  |  |  | 10000 |  |
+| 83 | FREECHAMP0501 | event_synthesizer | random | 2 | yes | S |  |  |  |  |  |  |  | 10000 |  |
+| 84 | FREECHAMP0502 | event_synthesizer | random | 2 | no | S |  |  |  |  |  |  |  | 10000 |  |
+| 85 | FREECHAMP0503 | event_synthesizer | random | 2 | no | S |  |  |  |  |  |  |  | 10000 |  |
+| 86 | FREECHAMP0504 | event_synthesizer | random | 2 | no | S |  |  |  |  |  |  |  | 10000 |  |
+| 87 | FREECHAMP0505 | event_synthesizer | random | 2 | no | S |  |  |  |  |  |  |  | 10000 |  |
+| 88 | FREERACE01 | event_synthesizer | random | 2 | yes | S |  |  |  |  |  |  |  | 7000 |  |
+| 89 | FREERACE02 | event_synthesizer | random | 2 | yes | S |  |  |  |  |  |  |  | 8000 |  |
+| 90 | FREERACE03 | event_synthesizer | random | 2 | yes | S |  |  |  |  |  |  |  | 10000 |  |
 | 91 | FRN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 7000 |  |
 | 92 | FRR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 1 |  | 10000 |  |
 | 93 | G1000 | machine_test | TC_lisence | 1 | yes |  |  |  |  |  |  |  |  | 0 |  |
