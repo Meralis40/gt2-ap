@@ -93,6 +93,8 @@ There are three hooks: buying a car, changing the current car, and entering a ra
 
 **Entering a dealership** isn't blocked by the hooks above. The map tile navigates to the dealer's top page through the generic path in `SimMap_Update` (`pendingPage = element.targetPage`, `0x800147fc`). `MenuPage_Load` sets `g_MenuPageAttr` from the page footer (`0x8002149c`). Blocking entry would need a map from page ID to manufacturer, built from the page data. Blocking the purchase gives the same result with less work.
 
+`Garage_SellCar` and prize cars (`Race_AwardEventPrize`, `Race_AwardChampionshipPrize` in OVL0) don't change `currentCar`.
+
 ### Data Transfer
 
 The title screen's Data Transfer menu (overlay 1) can also put a car in the garage, outside GT mode. The route from the main menu:
@@ -106,8 +108,6 @@ The title screen's Data Transfer menu (overlay 1) can also put a car in the gara
 All addresses are in OVL1. The list holds `Car` records (0xa4 bytes each); car `i` is at `FUN_OVL1__80020cb4() + i * 0xa4 + 4`. `UsedCar_Buy` adds it with `Garage_AddCar` and deducts `Car.value`. It doesn't change `currentCar`. `UsedCar_CanBuy` (`0x8001ead8`) returns 0 (can buy), 1 (garage full) or 2 (not enough credits).
 
 Through this menu, a car of a locked manufacturer can get into the garage. The race entry hook still keeps it from being used. To block the purchase too, hook `UsedCar_CanBuy` (check overlay 1 is loaded: `0x80010014` is `0x03e00008`). Read the manufacturer at `+0x81` of the car record, and return early with `v0 = 2` when it's locked. This is untested.
-
-`Garage_SellCar` and prize cars (`Race_AwardEventPrize`, `Race_AwardChampionshipPrize` in OVL0) don't change `currentCar`.
 
 ## Tuning parts
 
