@@ -1,6 +1,6 @@
 # Archipelago hooks
 
-Where the client hooks or patches the Simulation disc (`SCUS_944.88`, NTSC-U 1.2) for the randomizer rules, and where it keeps its own state in RAM. Found statically in Ghidra; nothing here has been tested in game yet (see [To verify](#to-verify)).
+Where the client hooks or patches the Simulation disc (`SCUS_944.88`, NTSC-U 1.2) for the randomizer rules, and where it keeps its own state in RAM. Found statically in Ghidra. Tested in game so far: the AP state block location and the `License_IsEarned` replacement. The rest is untested (see [To verify](#to-verify)).
 
 ## Common notes
 
@@ -27,13 +27,13 @@ Manufacturer IDs are in [manufacturers.md](game%20ids/manufacturers.md). [cars.j
 
 - `start` clears `0x801c93b0–0x801f0d5f` (resident BSS) at boot. Statically, the last referenced variable is at `0x801f0d5c`.
 - `0x801f0d60` is the PsyQ heap, but `Heap_InitDefault` (`0x8008ddb4`) sizes it as `(sp & ~0xf) - 0x10000 - 0x801f0d60`. With the BIOS stack top `0x801ffff0` that is negative, so the heap is empty: `InitHeap` only writes its 16-byte header at `0x801f0d60–0x801f0d6f`, and the one `malloc` call (`Overlay_OpenFile`, boot) fails.
-- The rest, up to `0x801ffff0`, is stack. The deepest frame found is `Cd_ReadAtAsync` (`0x8007ad20`, 0x7008 bytes of buffers), so the stack probably never gets below about `0x801f7000`. That leaves about 20 KB between the block and the deepest expected stack use.
+- The rest, up to `0x801ffff0`, is stack. In game, the lowest stack write seen was `0x801f3408` (measured with [`stack_watermark.lua`](../scripts/redux/stack_watermark.lua) in PCSX-Redux across GT mode menus, races, license tests, replays, memory card and movies). That leaves 0x1688 bytes (5.6 KB) between the block end and the deepest stack use, so don't grow the block past `0x801f1d7f`. `Cd_ReadAtAsync` (`0x8007ad20`, 0x7008 bytes of buffers) is one of the deep frames.
 
 No other gap in `0x801c93b0–0x801fffff` is safe. The large one at `0x801e360c–0x801ef5f0` is the VOL file table (`g_VolHeader`, 0xc000 bytes), which is full to `0x801ef5e3`.
 
 The block isn't in the save, and nothing clears it after boot. The client writes it after boot and again after loading a save or reconnecting.
 
-To confirm the stack never reaches the block, run [`stack_watermark.lua`](../scripts/redux/stack_watermark.lua) in PCSX-Redux and play through every kind of screen.
+Re-run `stack_watermark.lua` if a later change (injected code calling game functions, for example) could deepen the stack.
 
 Suggested layout (base `0x801f0d80`):
 
@@ -64,7 +64,7 @@ Every OVL4 license check goes through this function:
 - `License_CheckEntry` (`0x80019b88`): a license's tests need the next lower license, so B tests are always open and A tests need 1 Progressive License. Decided: keep this gating, so each Progressive License opens the next license's tests.
 - The menu checks for the IA/S-only elements (`FUN_OVL4__8001b680` and `FUN_OVL4__8001b6f0`), and the license icons (`MenuPage_DrawElements`).
 
-It is a whole-function replacement that fits in place (7 of 26 instructions). It reads the count at `0x801f0d86`:
+It is a whole-function replacement that fits in place (7 of 26 instructions). It reads the count at `0x801f0d86`. Tested in game by writing it with the PCSX-Redux memory editor:
 
 ```
 8001915c  3c02801f  lui   v0, 0x801f
@@ -121,7 +121,6 @@ Not affected:
 
 ## To verify
 
-- The stack never reaches `0x801f1d80`: run `stack_watermark.lua` through races, license tests, replays, memory card saves and movies.
 - Message pages `0x8000001e`, `0x8000002f`, `0x80000030`, `0x80000019`: read their text in game to decide which ones fit.
 - `FUN_80060840(0)` is the error sound (inferred: called with 0 on every refusal, 1 on success).
 - OVL1 has its own `UsedCar_CanBuy` / `UsedCar_Buy` (`0x8001ead8` / `0x8001eb60`), which adds a car with `Garage_AddCar` from a menu next to memory card calls. Its purpose is unknown. GT mode's used car lots use the OVL4 path above.
