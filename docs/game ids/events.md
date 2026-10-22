@@ -11,7 +11,8 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
   Easy/Normal/Hard and the FREECHAMP05xx championship is Expert.
 - Course `random` means the game picks a course when the race starts.
 - Menu `no` means no menu element starts the event. Championship races 02-05 run after
-  01; FPM0001 and FPS0001 have no entry at all.
+  01. Menu `unreachable` marks events the player can never start (`unreachable` in the
+  JSON gives the reason): BVN0001/BVR0001 (Vauxhall Tigra Cup) and FPM0001/FPS0001.
 - The restriction columns follow `Race_CheckEntry` (OVL4 8001973c), in its check order:
   required leagues, dirt tyres, license, drivetrain, turbo, racing modification, max power
   (PS), allowed cars. An empty cell means no restriction.
@@ -21,8 +22,8 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
   GTW needs every PFL/EPL race won.
 - Names are not stored as text in the game (the menus draw them as images). They come from
   the [Gran Turismo Wiki](https://gran-turismo.fandom.com/wiki/Category:GT2_Events),
-  matched on courses, licenses, power limits, prizes and prize cars. A `?` marks a guess;
-  `nameNote` in the JSON says why.
+  matched on courses, licenses, power limits, prizes and prize cars. Dirt race numbers and
+  the unreachable events were checked in game.
 
 | # | Code | Name | Kind | Course | Laps | Menu | License | Drive | Dirt | Turbo | Racing mod | Max PS | Cars | Requires | 1st prize | Prize cars |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -46,8 +47,8 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 | 17 | BMR0001 | MGF Challenge (Racing) | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 1 |  | 7000 |  |
 | 18 | BRN0001 | Mini Challenge (Normal) | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 2 |  | 3000 |  |
 | 19 | BRR0001 | Mini Challenge (Racing) | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 3 |  | 5000 |  |
-| 20 | BVN0001 | Tigra Cup (Vauxhall, Normal) ? | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 3000 |  |
-| 21 | BVR0001 | Tigra Cup (Vauxhall, Racing) ? | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 2 |  | 5000 |  |
+| 20 | BVN0001 | Tigra Cup (Vauxhall, Normal) | race | random | 2 | unreachable |  |  |  |  | no_racing_mod |  | 1 |  | 3000 |  |
+| 21 | BVR0001 | Tigra Cup (Vauxhall, Racing) | race | random | 2 | unreachable |  |  |  |  | racing_mod_required |  | 2 |  | 5000 |  |
 | 22 | CBM0001 | Clubman Cup Race 1 | race | Rome Short Course | 2 | yes |  |  |  |  |  |  |  |  | 5000 |  |
 | 23 | CBM0002 | Clubman Cup Race 2 | race | Grindelwald | 2 | yes |  |  |  |  |  |  |  |  | 6000 |  |
 | 24 | CBM0003 | Clubman Cup Race 3 | race | Rome Circuit | 2 | yes | B |  |  |  |  |  |  |  | 7000 |  |
@@ -61,11 +62,11 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 | 32 | DO30001 | Green Forest Roadway Rally Race 3 | race | Green Forest Roadway | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
 | 33 | DO30002 | Green Forest Roadway Rally Race 2 | race | Green Forest Roadway | 1 | yes | IC |  | yes |  |  |  |  |  | 8000 |  |
 | 34 | DO30003 | Green Forest Roadway Rally Race 1 | race | Green Forest Roadway | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
-| 35 | DO70001 | Tahiti Maze Rally Race 3 ? | race | Tahiti Maze | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
-| 36 | DO70002 | Tahiti Maze Rally Race 2 ? | race | Tahiti Maze | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
+| 35 | DO70001 | Tahiti Maze Rally Race 3 | race | Tahiti Maze | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
+| 36 | DO70002 | Tahiti Maze Rally Race 2 | race | Tahiti Maze | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
 | 37 | DO70003 | Tahiti Maze Rally Race 1 | race | Tahiti Maze | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
-| 38 | DOC0001 | Pikes Peak Hill Climb Rally Race 3 ? | race | Pikes Peak Hill Climb | 1 | yes | IB |  | yes |  |  |  |  |  | 25000 |  |
-| 39 | DOC0002 | Pikes Peak Hill Climb Rally Race 2 ? | race | Pikes Peak Hill Climb | 1 | yes | IB |  | yes |  |  |  |  |  | 25000 |  |
+| 38 | DOC0001 | Pikes Peak Hill Climb Rally Race 2 | race | Pikes Peak Hill Climb | 1 | yes | IB |  | yes |  |  |  |  |  | 25000 |  |
+| 39 | DOC0002 | Pikes Peak Hill Climb Rally Race 3 | race | Pikes Peak Hill Climb | 1 | yes | IB |  | yes |  |  |  |  |  | 25000 |  |
 | 40 | DOC0003 | Pikes Peak Hill Climb Rally Race 1 | race | Pikes Peak Hill Climb | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
 | 41 | DON0001 | Smokey Mountain North Rally Race 3 | race | Smokey Mountain North | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
 | 42 | DON0002 | Smokey Mountain North Rally Race 2 | race | Smokey Mountain North | 1 | yes | IC |  | yes |  |  |  |  |  | 8000 |  |
@@ -80,8 +81,8 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 | 51 | DRN0002 | Smokey Mountain North (reverse) Rally Race 2 | race | Smokey Mountain North (reverse) | 1 | yes | IC |  | yes |  |  |  |  |  | 8000 |  |
 | 52 | DRN0003 | Smokey Mountain North (reverse) Rally Race 1 | race | Smokey Mountain North (reverse) | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
 | 53 | DRT0001 | Tahiti Dirt Route 3 (reverse) Rally Race 3 | race | Tahiti Dirt Route 3 (reverse) | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
-| 54 | DRT0002 | Tahiti Dirt Route 3 (reverse) Rally Race 2 ? | race | Tahiti Dirt Route 3 (reverse) | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
-| 55 | DRT0003 | Tahiti Dirt Route 3 (reverse) Rally Race 1 ? | race | Tahiti Dirt Route 3 (reverse) | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
+| 54 | DRT0002 | Tahiti Dirt Route 3 (reverse) Rally Race 2 | race | Tahiti Dirt Route 3 (reverse) | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
+| 55 | DRT0003 | Tahiti Dirt Route 3 (reverse) Rally Race 1 | race | Tahiti Dirt Route 3 (reverse) | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
 | 56 | DVN0001 | Viper Festival of Speed (Normal) | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 2 |  | 7000 |  |
 | 57 | DVR0001 | Viper Festival of Speed (Racing) | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 5 |  | 10000 |  |
 | 58 | EFM0001 | Focus Challenge | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 2 |  | 5000 |  |
@@ -102,10 +103,10 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 | 73 | FFC0001 | FF Challenge Race 1 | race | Tahiti Road | 2 | yes | B | FF |  |  |  | 300 |  |  | 5000 | Honda Mugen Accord SIR-T(J) |
 | 74 | FFC0002 | FF Challenge Race 2 | race | Midfield Raceway | 2 | yes | A | FF |  |  |  | 350 |  |  | 6000 | Toyota Tom's T111 (J) |
 | 75 | FFC0003 | FF Challenge Race 3 | race | Trial Mountain Circuit | 2 | yes | IC | FF |  |  |  | 400 |  |  | 7000 | Honda Mugen Prelude Type-S(J) |
-| 76 | FPM0001 | 106 & 206 Race (Normal) ? | race | random | 2 | no |  |  |  |  | no_racing_mod |  | 2 |  | 5000 |  |
+| 76 | FPM0001 | 106 & 206 Race (Normal) | race | random | 2 | unreachable |  |  |  |  | no_racing_mod |  | 2 |  | 5000 |  |
 | 77 | FPN0001 | 106 Challenge (Normal) | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 2 |  | 5000 |  |
 | 78 | FPR0001 | 106 Challenge (Racing) | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 2 |  | 7000 |  |
-| 79 | FPS0001 | 106 & 206 Race (Racing) ? | race | random | 2 | no |  |  |  |  | racing_mod_required |  | 4 |  | 7000 |  |
+| 79 | FPS0001 | 106 & 206 Race (Racing) | race | random | 2 | unreachable |  |  |  |  | racing_mod_required |  | 4 |  | 7000 |  |
 | 80 | FRC0001 | FR Challenge Race 1 | race | Clubman Stage Route 5 | 2 | yes | A | FR |  |  |  | 300 |  |  | 5000 | Nissan Sileighty (J) |
 | 81 | FRC0002 | FR Challenge Race 2 | race | Special Stage Route 5 | 2 | yes | IC | FR |  |  |  | 450 |  |  | 6000 | Nissan Nismo 270R (J) |
 | 82 | FRC0003 | FR Challenge Race 3 | race | Midfield Raceway | 2 | yes | IB | FR |  |  |  | 500 |  |  | 7000 | Mazda Mazda RX-7 GT-C(J) '99 |

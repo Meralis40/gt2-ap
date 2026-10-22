@@ -87,7 +87,9 @@ SINGLE_NAMES = {
     "LIA00": "International A License", "LIS00": "S License",  # License_IdFromRaceCode
 }
 # Dirt events (Wiki "Dirt Events (GT2)"): code prefix -> course. Race numbers run backwards
-# (xx0003 is the National A race 1), going by the license and prize of each race.
+# (xx0003 is the National A race 1), going by the license and prize of each race, except
+# Pikes Peak Hill Climb. Races with the same license and prize were checked in game.
+DIRT_RACE_OVERRIDES = {"DOC0001": 2, "DOC0002": 3}
 DIRT_PREFIXES = {"DO2", "DO3", "DO7", "DOC", "DON", "DOT", "DRC", "DRN", "DRT"}
 # One-make races: N/M = normal cars, R/S = racing modification required
 ONE_MAKE_NAMES = {
@@ -108,17 +110,12 @@ ONE_MAKE_NAMES = {
     "TV": "Vitz Trophy", "VT": "Tuscan Speed Challenge", "XA": "Alto Works Cup",
     "XC": "Cappuccino Cup",
 }
-UNCERTAIN_NAMES = {
-    "BVN0001": "Vauxhall Tigra variant, on the dealership with manufacturer ID 35",
-    "BVR0001": "Vauxhall Tigra variant, on the dealership with manufacturer ID 35",
-    "FPM0001": "no menu entry and no wiki page; 106/206 cars, likely an unused 106 & 206 race",
-    "FPS0001": "no menu entry and no wiki page; 106/206 cars, likely an unused 106 & 206 race",
-    "DO70001": "races 2 and 3 have the same license and prize, order guessed",
-    "DO70002": "races 2 and 3 have the same license and prize, order guessed",
-    "DOC0001": "races 2 and 3 have the same license and prize, order guessed",
-    "DOC0002": "races 2 and 3 have the same license and prize, order guessed",
-    "DRT0002": "races 1 and 2 have the same license and prize, order guessed",
-    "DRT0003": "races 1 and 2 have the same license and prize, order guessed",
+# Events the player can never start, although the data and sometimes a menu page exist
+UNREACHABLE = {
+    "BVN0001": "Vauxhall Tigra Cup; the Vauxhall dealership (manufacturer ID 35) is never shown",
+    "BVR0001": "Vauxhall Tigra Cup; the Vauxhall dealership (manufacturer ID 35) is never shown",
+    "FPM0001": "Peugeot 106 & 206 one-make race with no menu entry",
+    "FPS0001": "Peugeot 106 & 206 one-make race with no menu entry",
 }
 
 
@@ -133,7 +130,7 @@ def event_name(code, course_name):
         if code.startswith(prefix):
             return "%s Race %d" % (name, int(code[-2:]))
     if code[:3] in DIRT_PREFIXES:
-        return "%s Rally Race %d" % (course_name, 4 - int(code[-2:]))
+        return "%s Rally Race %d" % (course_name, DIRT_RACE_OVERRIDES.get(code, 4 - int(code[-2:])))
     for key in (code[:3], code[:2]):
         if key in ONE_MAKE_NAMES:
             name = ONE_MAKE_NAMES[key]
@@ -272,7 +269,7 @@ def main():
             "code": code,
             "kind": kind,
             "name": event_name(code, COURSE_NAMES.get(course)),
-            "nameNote": UNCERTAIN_NAMES.get(code),
+            "unreachable": UNREACHABLE.get(code),
             "course": None if course == "none" else course,
             "courseName": COURSE_NAMES.get(course),
             "category": strings[struct.unpack_from("<H", e, 0x94)[0]],
@@ -335,7 +332,8 @@ def main():
         "  Easy/Normal/Hard and the FREECHAMP05xx championship is Expert.",
         "- Course `random` means the game picks a course when the race starts.",
         "- Menu `no` means no menu element starts the event. Championship races 02-05 run after",
-        "  01; FPM0001 and FPS0001 have no entry at all.",
+        "  01. Menu `unreachable` marks events the player can never start (`unreachable` in the",
+        "  JSON gives the reason): BVN0001/BVR0001 (Vauxhall Tigra Cup) and FPM0001/FPS0001.",
         "- The restriction columns follow `Race_CheckEntry` (OVL4 8001973c), in its check order:",
         "  required leagues, dirt tyres, license, drivetrain, turbo, racing modification, max power",
         "  (PS), allowed cars. An empty cell means no restriction.",
@@ -345,8 +343,8 @@ def main():
         "  GTW needs every PFL/EPL race won.",
         "- Names are not stored as text in the game (the menus draw them as images). They come from",
         "  the [Gran Turismo Wiki](https://gran-turismo.fandom.com/wiki/Category:GT2_Events),",
-        "  matched on courses, licenses, power limits, prizes and prize cars. A `?` marks a guess;",
-        "  `nameNote` in the JSON says why.",
+        "  matched on courses, licenses, power limits, prizes and prize cars. Dirt race numbers and",
+        "  the unreachable events were checked in game.",
         "",
         "| # | Code | Name | Kind | Course | Laps | Menu | License | Drive | Dirt | Turbo | Racing mod | Max PS | Cars | Requires | 1st prize | Prize cars |",
         "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|",
@@ -356,8 +354,8 @@ def main():
         if ev["requiresWon"]:
             req = "regional leagues" if ev["requiresWon"] is REGIONAL_LEAGUES else "pro leagues"
         lines.append("| %d | %s | %s | %s | %s | %d | %s | %s | %s | %s | %s | %s | %s | %s | %s | %d | %s |" % (
-            ev["index"], ev["code"], (ev["name"] or "") + (" ?" if ev["nameNote"] else ""), ev["kind"], ev["courseName"] or ev["course"] or "random", ev["laps"],
-            "yes" if ev["inMenu"] else "no", opt(ev["license"]), opt(ev["drivetrain"]),
+            ev["index"], ev["code"], ev["name"], ev["kind"], ev["courseName"] or ev["course"] or "random", ev["laps"],
+            "unreachable" if ev["unreachable"] else "yes" if ev["inMenu"] else "no", opt(ev["license"]), opt(ev["drivetrain"]),
             "yes" if ev["dirtTires"] else "", opt(ev["turbo"]), opt(ev["racingMod"]),
             opt(ev["maxPower"]), len(ev["allowedCars"]) or "", req, ev["prizes"][0],
             ", ".join("%s %s" % (car_table[c]["manufacturer"], car_table[c]["name"])

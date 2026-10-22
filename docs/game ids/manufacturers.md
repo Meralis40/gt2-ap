@@ -1,6 +1,6 @@
 # Map of manufacturers ID (from dealership menu)
 
-The ID is the low byte of `g_MenuPageAttr` (`0x800a8d78`, Simulation disc) while the player is in a dealership menu. It is `0xFF` in every other menu. IDs 12, 15, 20 and 35 were not seen at any dealership.
+The ID is the low byte of `g_MenuPageAttr` (`0x800a8d78`, Simulation disc) while the player is in a dealership menu. It is `0xFF` in every other menu. IDs 12, 15, 20 and 35 were not seen at any dealership. ID 35 is most likely Vauxhall: its dealer pages hold the Vauxhall Tigra Cup (BVN0001/BVR0001), but the dealership is never shown.
 
 | Manufacturer name | ID |
 |---|---|
