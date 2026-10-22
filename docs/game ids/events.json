@@ -1,0 +1,8966 @@
+{
+ "events": [
+  {
+   "index": 0,
+   "code": "4WD0001",
+   "kind": "race",
+   "course": "seatt_s",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": "AWD",
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 350,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    2000,
+    1500,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "slgan"
+   ]
+  },
+  {
+   "index": 1,
+   "code": "4WD0002",
+   "kind": "race",
+   "course": "seattle",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IC",
+   "drivetrain": "AWD",
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 400,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    6000,
+    3000,
+    2000,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n24pn"
+   ]
+  },
+  {
+   "index": 2,
+   "code": "4WD0003",
+   "kind": "race",
+   "course": "laguna",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": "AWD",
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 700,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    15000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n2m2n"
+   ]
+  },
+  {
+   "index": 3,
+   "code": "7LN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "ld7cn",
+    "ld7vn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 4,
+   "code": "7LR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "ld7cn",
+    "ld7vn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 5,
+   "code": "80S0001",
+   "kind": "race",
+   "course": "mountain",
+   "category": "0",
+   "laps": 3,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 200,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h2mfn"
+   ]
+  },
+  {
+   "index": 6,
+   "code": "80S0002",
+   "kind": "race",
+   "course": "highway",
+   "category": "0",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IC",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 350,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h2mdn"
+   ]
+  },
+  {
+   "index": 7,
+   "code": "80S0003",
+   "kind": "race",
+   "course": "test_in2",
+   "category": "0",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 350,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    8000,
+    6000,
+    2500,
+    1500,
+    800,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h2mcn"
+   ]
+  },
+  {
+   "index": 8,
+   "code": "80S0004",
+   "kind": "race",
+   "course": "seattle",
+   "category": "General02",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 400,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    8000,
+    6000,
+    2500,
+    1500,
+    800,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h2min"
+   ]
+  },
+  {
+   "index": 9,
+   "code": "80S0005",
+   "kind": "race",
+   "course": "tahiti_t",
+   "category": "General02",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 400,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n23sr"
+   ]
+  },
+  {
+   "index": 10,
+   "code": "A1N0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "a2azn",
+    "a2aan"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 11,
+   "code": "A7N0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "a222n",
+    "afr7n",
+    "afc7n",
+    "a2spn",
+    "afo7n",
+    "afd7n",
+    "afb7n",
+    "afx7n",
+    "afa7n",
+    "a2rsn",
+    "a2rzn",
+    "a2rbn",
+    "a2rrn",
+    "a28sn",
+    "a28rn",
+    "a28bn",
+    "a2gcn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 12,
+   "code": "ADN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "ademn",
+    "adgln",
+    "adlxn",
+    "a-emn",
+    "a2gsn",
+    "a2gln"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 13,
+   "code": "ADR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "ademn",
+    "adgln",
+    "adlxn",
+    "a-emn",
+    "a2gsn",
+    "a2gln"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 14,
+   "code": "ARN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "an16n",
+    "av16n",
+    "as16n",
+    "aminn",
+    "amivn",
+    "amisn",
+    "arodn",
+    "a2vsn",
+    "a26sn",
+    "a2abn",
+    "a2rcn",
+    "a2ran"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 15,
+   "code": "ARR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "an16n",
+    "av16n",
+    "as16n",
+    "aminn",
+    "amivn",
+    "amisn",
+    "arodn",
+    "a2vsn",
+    "a26sn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 16,
+   "code": "BMN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "bmmgn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 17,
+   "code": "BMR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "bmmgn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 18,
+   "code": "BRN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "brmin",
+    "brmcn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 19,
+   "code": "BRR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "brmin",
+    "brmcn",
+    "brm1r"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 20,
+   "code": "BVN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "bvtin"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 21,
+   "code": "BVR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "bvtin",
+    "bviir"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 22,
+   "code": "CBM0001",
+   "kind": "race",
+   "course": "roma_short",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    2000,
+    1500,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 23,
+   "code": "CBM0002",
+   "kind": "race",
+   "course": "grindel",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    6000,
+    3000,
+    2000,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 24,
+   "code": "CBM0003",
+   "kind": "race",
+   "course": "roma",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": "B",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 25,
+   "code": "CCN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "cc67n",
+    "c427n",
+    "cc82n",
+    "czr1n",
+    "ccrcn",
+    "ccrvn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 26,
+   "code": "CCR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "cc67n",
+    "c427n",
+    "cc82n",
+    "czr1n",
+    "ccrcn",
+    "ccrvn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 27,
+   "code": "DNN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "dcnan",
+    "dcnrn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 28,
+   "code": "DNR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "dcnan",
+    "dcnrn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 29,
+   "code": "DO20001",
+   "kind": "race",
+   "course": "nn_dirt_2",
+   "category": "General02",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 30,
+   "code": "DO20002",
+   "kind": "race",
+   "course": "nn_dirt_2",
+   "category": "General02",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IC",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    8000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 31,
+   "code": "DO20003",
+   "kind": "race",
+   "course": "nn_dirt_2",
+   "category": "General02",
+   "laps": 1,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 32,
+   "code": "DO30001",
+   "kind": "race",
+   "course": "nn_dirt_3",
+   "category": "General02",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 33,
+   "code": "DO30002",
+   "kind": "race",
+   "course": "nn_dirt_3",
+   "category": "General02",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IC",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    8000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 34,
+   "code": "DO30003",
+   "kind": "race",
+   "course": "nn_dirt_3",
+   "category": "General02",
+   "laps": 1,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 35,
+   "code": "DO70001",
+   "kind": "race",
+   "course": "tahiti_test7",
+   "category": "General01",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 36,
+   "code": "DO70002",
+   "kind": "race",
+   "course": "tahiti_test7",
+   "category": "General01",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 37,
+   "code": "DO70003",
+   "kind": "race",
+   "course": "tahiti_test7",
+   "category": "General01",
+   "laps": 1,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 38,
+   "code": "DOC0001",
+   "kind": "race",
+   "course": "pikes",
+   "category": "General02",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    25000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 39,
+   "code": "DOC0002",
+   "kind": "race",
+   "course": "pikes",
+   "category": "General02",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    25000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 40,
+   "code": "DOC0003",
+   "kind": "race",
+   "course": "pikes",
+   "category": "General02",
+   "laps": 1,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 41,
+   "code": "DON0001",
+   "kind": "race",
+   "course": "no_name_dirt",
+   "category": "General01",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 42,
+   "code": "DON0002",
+   "kind": "race",
+   "course": "no_name_dirt",
+   "category": "General01",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IC",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    8000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 43,
+   "code": "DON0003",
+   "kind": "race",
+   "course": "no_name_dirt",
+   "category": "General01",
+   "laps": 1,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 44,
+   "code": "DOT0001",
+   "kind": "race",
+   "course": "tahiti_d_new",
+   "category": "General01",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 45,
+   "code": "DOT0002",
+   "kind": "race",
+   "course": "tahiti_d_new",
+   "category": "General01",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IC",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    8000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 46,
+   "code": "DOT0003",
+   "kind": "race",
+   "course": "tahiti_d_new",
+   "category": "General01",
+   "laps": 1,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 47,
+   "code": "DRC0001",
+   "kind": "race",
+   "course": "pikes_rev",
+   "category": "General01",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 48,
+   "code": "DRC0002",
+   "kind": "race",
+   "course": "pikes_rev",
+   "category": "General01",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IC",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    8000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 49,
+   "code": "DRC0003",
+   "kind": "race",
+   "course": "pikes_rev",
+   "category": "General01",
+   "laps": 1,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 50,
+   "code": "DRN0001",
+   "kind": "race",
+   "course": "no_name_dirt_rev",
+   "category": "General01",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 51,
+   "code": "DRN0002",
+   "kind": "race",
+   "course": "no_name_dirt_rev",
+   "category": "General01",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IC",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    8000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 52,
+   "code": "DRN0003",
+   "kind": "race",
+   "course": "no_name_dirt_rev",
+   "category": "General01",
+   "laps": 1,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 53,
+   "code": "DRT0001",
+   "kind": "race",
+   "course": "tahiti_d_new_rev",
+   "category": "General02",
+   "laps": 1,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 54,
+   "code": "DRT0002",
+   "kind": "race",
+   "course": "tahiti_d_new_rev",
+   "category": "General02",
+   "laps": 1,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 55,
+   "code": "DRT0003",
+   "kind": "race",
+   "course": "tahiti_d_new_rev",
+   "category": "General02",
+   "laps": 1,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 56,
+   "code": "DVN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "dvpgn",
+    "dvprn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 57,
+   "code": "DVR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "dvpgn",
+    "dvprn",
+    "d-pgr",
+    "dvp8r",
+    "d2tvr"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 58,
+   "code": "EFM0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "effgn",
+    "effzn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 59,
+   "code": "EFN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "efkan"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 60,
+   "code": "EFR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "efkan"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 61,
+   "code": "EGV0001",
+   "kind": "race",
+   "course": "circuit",
+   "category": "0",
+   "laps": 60,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 700,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    500000,
+    150000,
+    100000,
+    50000,
+    30000,
+    10000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n239r",
+    "sipxr"
+   ]
+  },
+  {
+   "index": 62,
+   "code": "ELS0001",
+   "kind": "race",
+   "course": "laguna",
+   "category": "General01",
+   "laps": 90,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    350000,
+    200000,
+    150000,
+    100000,
+    50000,
+    10000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "m2tlr",
+    "t2clr"
+   ]
+  },
+  {
+   "index": 63,
+   "code": "EPL0001",
+   "kind": "race",
+   "course": "new_parmaS",
+   "category": "General01",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 600,
+   "allowedCars": [],
+   "requiresWon": [
+    "GJL0001",
+    "GJL0002",
+    "GJL0003",
+    "GBL0001",
+    "GBL0002",
+    "GBL0003",
+    "GFL0001",
+    "GFL0002",
+    "GGL0001",
+    "GGL0002",
+    "GGL0003",
+    "GIL0001",
+    "GIL0002",
+    "GUL0001",
+    "GUL0002",
+    "GUL0003"
+   ],
+   "prizes": [
+    10000,
+    7000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "tsplr"
+   ]
+  },
+  {
+   "index": 64,
+   "code": "EPL0002",
+   "kind": "race",
+   "course": "circuit",
+   "category": "0",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 600,
+   "allowedCars": [],
+   "requiresWon": [
+    "GJL0001",
+    "GJL0002",
+    "GJL0003",
+    "GBL0001",
+    "GBL0002",
+    "GBL0003",
+    "GFL0001",
+    "GFL0002",
+    "GGL0001",
+    "GGL0002",
+    "GGL0003",
+    "GIL0001",
+    "GIL0002",
+    "GUL0001",
+    "GUL0002",
+    "GUL0003"
+   ],
+   "prizes": [
+    10000,
+    7000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n2g7r"
+   ]
+  },
+  {
+   "index": 65,
+   "code": "EPL0003",
+   "kind": "race",
+   "course": "roma",
+   "category": "General01",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 600,
+   "allowedCars": [],
+   "requiresWon": [
+    "GJL0001",
+    "GJL0002",
+    "GJL0003",
+    "GBL0001",
+    "GBL0002",
+    "GBL0003",
+    "GFL0001",
+    "GFL0002",
+    "GGL0001",
+    "GGL0002",
+    "GGL0003",
+    "GIL0001",
+    "GIL0002",
+    "GUL0001",
+    "GUL0002",
+    "GUL0003"
+   ],
+   "prizes": [
+    10000,
+    7000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n2gkr"
+   ]
+  },
+  {
+   "index": 66,
+   "code": "EPS0001",
+   "kind": "race",
+   "course": "new_parmaS",
+   "category": "General01",
+   "laps": 50,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 600,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    500000,
+    150000,
+    100000,
+    50000,
+    30000,
+    10000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "d-pgr",
+    "ilstn"
+   ]
+  },
+  {
+   "index": 67,
+   "code": "ERM0001",
+   "kind": "race",
+   "course": "roma",
+   "category": "General01",
+   "laps": 99,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    300000,
+    200000,
+    150000,
+    100000,
+    50000,
+    10000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "t29lr",
+    "t2cwr"
+   ]
+  },
+  {
+   "index": 68,
+   "code": "ES50001",
+   "kind": "race",
+   "course": "highway",
+   "category": "0",
+   "laps": 50,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    350000,
+    150000,
+    100000,
+    50000,
+    30000,
+    10000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "v-rbr",
+    "m2w6r"
+   ]
+  },
+  {
+   "index": 69,
+   "code": "EST0001",
+   "kind": "race",
+   "course": "seattle",
+   "category": "General01",
+   "laps": 40,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 600,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    150000,
+    100000,
+    50000,
+    30000,
+    20000,
+    10000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "uf90n",
+    "efesr"
+   ]
+  },
+  {
+   "index": 70,
+   "code": "ETM0001",
+   "kind": "race",
+   "course": "mountain",
+   "category": "0",
+   "laps": 30,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 300,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    150000,
+    100000,
+    50000,
+    30000,
+    20000,
+    10000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "t2sdr"
+   ]
+  },
+  {
+   "index": 71,
+   "code": "FCN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "fcs6n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 72,
+   "code": "FCR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "fcs6n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 73,
+   "code": "FFC0001",
+   "kind": "race",
+   "course": "tahiti_t",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": "B",
+   "drivetrain": "FF",
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 300,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    2000,
+    1500,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h2man"
+   ]
+  },
+  {
+   "index": 74,
+   "code": "FFC0002",
+   "kind": "race",
+   "course": "parma",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": "FF",
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 350,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    6000,
+    3000,
+    2000,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "t2t1n"
+   ]
+  },
+  {
+   "index": 75,
+   "code": "FFC0003",
+   "kind": "race",
+   "course": "mountain",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IC",
+   "drivetrain": "FF",
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 400,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h2mpn"
+   ]
+  },
+  {
+   "index": 76,
+   "code": "FPM0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": false,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "fp26n",
+    "fp27n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 77,
+   "code": "FPN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "fp1rn",
+    "fp1sn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 78,
+   "code": "FPR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "fp1rn",
+    "fp1sn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 79,
+   "code": "FPS0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": false,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "fp26n",
+    "fp27n",
+    "fp2wr",
+    "fp2xr"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 80,
+   "code": "FRC0001",
+   "kind": "race",
+   "course": "shortway",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": "FR",
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 300,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    2000,
+    1500,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n-18n"
+   ]
+  },
+  {
+   "index": 81,
+   "code": "FRC0002",
+   "kind": "race",
+   "course": "highway",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IC",
+   "drivetrain": "FR",
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 450,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    6000,
+    3000,
+    2000,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n270n"
+   ]
+  },
+  {
+   "index": 82,
+   "code": "FRC0003",
+   "kind": "race",
+   "course": "parma",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": "FR",
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 500,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "a2gcn"
+   ]
+  },
+  {
+   "index": 83,
+   "code": "FREECHAMP0501",
+   "kind": "race",
+   "course": null,
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": "S",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 50000,
+   "prizeCars": [],
+   "championship": {
+    "first": "FREECHAMP0501",
+    "race": 1,
+    "races": 5
+   }
+  },
+  {
+   "index": 84,
+   "code": "FREECHAMP0502",
+   "kind": "race",
+   "course": null,
+   "category": "General01",
+   "laps": 2,
+   "inMenu": false,
+   "license": "S",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [],
+   "championship": {
+    "first": "FREECHAMP0501",
+    "race": 2,
+    "races": 5
+   }
+  },
+  {
+   "index": 85,
+   "code": "FREECHAMP0503",
+   "kind": "race",
+   "course": null,
+   "category": "General01",
+   "laps": 2,
+   "inMenu": false,
+   "license": "S",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [],
+   "championship": {
+    "first": "FREECHAMP0501",
+    "race": 3,
+    "races": 5
+   }
+  },
+  {
+   "index": 86,
+   "code": "FREECHAMP0504",
+   "kind": "race",
+   "course": null,
+   "category": "General01",
+   "laps": 2,
+   "inMenu": false,
+   "license": "S",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [],
+   "championship": {
+    "first": "FREECHAMP0501",
+    "race": 4,
+    "races": 5
+   }
+  },
+  {
+   "index": 87,
+   "code": "FREECHAMP0505",
+   "kind": "race",
+   "course": null,
+   "category": "General01",
+   "laps": 2,
+   "inMenu": false,
+   "license": "S",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [],
+   "championship": {
+    "first": "FREECHAMP0501",
+    "race": 5,
+    "races": 5
+   }
+  },
+  {
+   "index": 88,
+   "code": "FREERACE01",
+   "kind": "race",
+   "course": null,
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": "S",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 89,
+   "code": "FREERACE02",
+   "kind": "race",
+   "course": null,
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": "S",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    8000,
+    6000,
+    2500,
+    1500,
+    800,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 90,
+   "code": "FREERACE03",
+   "kind": "race",
+   "course": null,
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": "S",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 91,
+   "code": "FRN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "frcsn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 92,
+   "code": "FRR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "frcsn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 93,
+   "code": "G1000",
+   "kind": "special",
+   "course": "TC_lisence",
+   "category": "0",
+   "laps": 1,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 94,
+   "code": "G400",
+   "kind": "special",
+   "course": "TC_lisence",
+   "category": "0",
+   "laps": 1,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 95,
+   "code": "GAN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "gattn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 96,
+   "code": "GAR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "gattn",
+    "gatlr"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 97,
+   "code": "GBL0001",
+   "kind": "race",
+   "course": "mountain",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "B",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 200,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    4000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 98,
+   "code": "GBL0002",
+   "kind": "race",
+   "course": "mountain",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 350,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    2000,
+    1500,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 99,
+   "code": "GBL0003",
+   "kind": "race",
+   "course": "mountain",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 400,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 100,
+   "code": "GBN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "gb0cn",
+    "gbc3n",
+    "gbc8n",
+    "gb28n",
+    "gb2cn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 101,
+   "code": "GCC0001",
+   "kind": "race",
+   "course": "roma_short",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": "B",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 250,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    4000,
+    1500,
+    1000,
+    700,
+    400,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "t2vzn"
+   ]
+  },
+  {
+   "index": 102,
+   "code": "GCC0002",
+   "kind": "race",
+   "course": "seatt_s",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": "B",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 250,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    4000,
+    1500,
+    1000,
+    700,
+    400,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "frc2n"
+   ]
+  },
+  {
+   "index": 103,
+   "code": "GCC0003",
+   "kind": "race",
+   "course": "autumn",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "B",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 300,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    4000,
+    1500,
+    1000,
+    700,
+    400,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "gvlun"
+   ]
+  },
+  {
+   "index": 104,
+   "code": "GFL0001",
+   "kind": "race",
+   "course": "tahiti_t",
+   "category": "FR",
+   "laps": 2,
+   "inMenu": true,
+   "license": "B",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 250,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    4000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 105,
+   "code": "GFL0002",
+   "kind": "race",
+   "course": "tahiti_t",
+   "category": "FR",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 300,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    2000,
+    1500,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 106,
+   "code": "GGL0001",
+   "kind": "race",
+   "course": "test_in2",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "B",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 220,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    4000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 107,
+   "code": "GGL0002",
+   "kind": "race",
+   "course": "test_in2",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 300,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    2000,
+    1500,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 108,
+   "code": "GGL0003",
+   "kind": "race",
+   "course": "test_in2",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 450,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 109,
+   "code": "GIL0001",
+   "kind": "race",
+   "course": "roma_short",
+   "category": "IT",
+   "laps": 2,
+   "inMenu": true,
+   "license": "B",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 200,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    4000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 110,
+   "code": "GIL0002",
+   "kind": "race",
+   "course": "roma",
+   "category": "IT",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 300,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    2000,
+    1500,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 111,
+   "code": "GJL0001",
+   "kind": "race",
+   "course": "parma",
+   "category": "JP",
+   "laps": 2,
+   "inMenu": true,
+   "license": "B",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 200,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    4000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 112,
+   "code": "GJL0002",
+   "kind": "race",
+   "course": "parma",
+   "category": "JP",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 300,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    2000,
+    1500,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 113,
+   "code": "GJL0003",
+   "kind": "race",
+   "course": "parma",
+   "category": "JP",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 350,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 114,
+   "code": "GMAX",
+   "kind": "special",
+   "course": "maxspeed",
+   "category": "0",
+   "laps": 1,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 115,
+   "code": "GMN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "gmsln"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 116,
+   "code": "GMR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "gmsln"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 117,
+   "code": "GON0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "gotin"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 118,
+   "code": "GOR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "gotin",
+    "goiir"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 119,
+   "code": "GT30501",
+   "kind": "race",
+   "course": "short",
+   "category": "0",
+   "laps": 5,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 600,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    15000,
+    8000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 100000,
+   "prizeCars": [
+    "n2xsr",
+    "t2wsr",
+    "t2mmr",
+    "t286r"
+   ],
+   "championship": {
+    "first": "GT30501",
+    "race": 1,
+    "races": 5
+   }
+  },
+  {
+   "index": 120,
+   "code": "GT30502",
+   "kind": "race",
+   "course": "laguna",
+   "category": "General01",
+   "laps": 5,
+   "inMenu": false,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 600,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    15000,
+    8000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [],
+   "championship": {
+    "first": "GT30501",
+    "race": 2,
+    "races": 5
+   }
+  },
+  {
+   "index": 121,
+   "code": "GT30503",
+   "kind": "race",
+   "course": "test_in2",
+   "category": "0",
+   "laps": 5,
+   "inMenu": false,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 600,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    15000,
+    8000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [],
+   "championship": {
+    "first": "GT30501",
+    "race": 3,
+    "races": 5
+   }
+  },
+  {
+   "index": 122,
+   "code": "GT30504",
+   "kind": "race",
+   "course": "parma",
+   "category": "General01",
+   "laps": 5,
+   "inMenu": false,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 600,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    15000,
+    8000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [],
+   "championship": {
+    "first": "GT30501",
+    "race": 4,
+    "races": 5
+   }
+  },
+  {
+   "index": 123,
+   "code": "GT30505",
+   "kind": "race",
+   "course": "new_parmaS",
+   "category": "General01",
+   "laps": 5,
+   "inMenu": false,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 600,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    15000,
+    8000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [],
+   "championship": {
+    "first": "GT30501",
+    "race": 5,
+    "races": 5
+   }
+  },
+  {
+   "index": 124,
+   "code": "GT50501",
+   "kind": "race",
+   "course": "laguna",
+   "category": "General01",
+   "laps": 5,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    50000,
+    15000,
+    5000,
+    4000,
+    3000,
+    1500
+   ],
+   "bonusPrize": 200000,
+   "prizeCars": [
+    "n2gzr",
+    "t2sor",
+    "h2ntr",
+    "d2tvr"
+   ],
+   "championship": {
+    "first": "GT50501",
+    "race": 1,
+    "races": 5
+   }
+  },
+  {
+   "index": 125,
+   "code": "GT50502",
+   "kind": "race",
+   "course": "s_speed",
+   "category": "General01",
+   "laps": 5,
+   "inMenu": false,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    50000,
+    10000,
+    5000,
+    4000,
+    2000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [],
+   "championship": {
+    "first": "GT50501",
+    "race": 2,
+    "races": 5
+   }
+  },
+  {
+   "index": 126,
+   "code": "GT50503",
+   "kind": "race",
+   "course": "roma",
+   "category": "General01",
+   "laps": 5,
+   "inMenu": false,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    50000,
+    10000,
+    5000,
+    4000,
+    2000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [],
+   "championship": {
+    "first": "GT50501",
+    "race": 3,
+    "races": 5
+   }
+  },
+  {
+   "index": 127,
+   "code": "GT50504",
+   "kind": "race",
+   "course": "mountain",
+   "category": "0",
+   "laps": 5,
+   "inMenu": false,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    50000,
+    10000,
+    5000,
+    4000,
+    2000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [],
+   "championship": {
+    "first": "GT50501",
+    "race": 4,
+    "races": 5
+   }
+  },
+  {
+   "index": 128,
+   "code": "GT50505",
+   "kind": "race",
+   "course": "new_parmaS",
+   "category": "General01",
+   "laps": 5,
+   "inMenu": false,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    50000,
+    10000,
+    5000,
+    4000,
+    2000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [],
+   "championship": {
+    "first": "GT50501",
+    "race": 5,
+    "races": 5
+   }
+  },
+  {
+   "index": 129,
+   "code": "GTA0001",
+   "kind": "race",
+   "course": "s_speed",
+   "category": "General01",
+   "laps": 5,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    50000,
+    30000,
+    20000,
+    10000,
+    5000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "m2m5n"
+   ]
+  },
+  {
+   "index": 130,
+   "code": "GTA0002",
+   "kind": "race",
+   "course": "highway",
+   "category": "0",
+   "laps": 5,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    50000,
+    30000,
+    20000,
+    10000,
+    5000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n2m4n"
+   ]
+  },
+  {
+   "index": 131,
+   "code": "GTA0003",
+   "kind": "race",
+   "course": "sprint2",
+   "category": "General01",
+   "laps": 5,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    50000,
+    30000,
+    20000,
+    10000,
+    5000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "vs12n"
+   ]
+  },
+  {
+   "index": 132,
+   "code": "GTA0004",
+   "kind": "race",
+   "course": "roma",
+   "category": "General01",
+   "laps": 5,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    50000,
+    30000,
+    20000,
+    10000,
+    5000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "k2z2n"
+   ]
+  },
+  {
+   "index": 133,
+   "code": "GTA0005",
+   "kind": "race",
+   "course": "laguna",
+   "category": "General01",
+   "laps": 5,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    50000,
+    30000,
+    20000,
+    10000,
+    5000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n23nn"
+   ]
+  },
+  {
+   "index": 134,
+   "code": "GTC0001",
+   "kind": "race",
+   "course": "sprint2",
+   "category": "General02",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IC",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 400,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n2dsr"
+   ]
+  },
+  {
+   "index": 135,
+   "code": "GTC0002",
+   "kind": "race",
+   "course": "circuit",
+   "category": "0",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 500,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    20000,
+    12000,
+    8000,
+    5000,
+    3000,
+    800
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h2cnr"
+   ]
+  },
+  {
+   "index": 136,
+   "code": "GTC0003",
+   "kind": "race",
+   "course": "parma",
+   "category": "General02",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 600,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    30000,
+    20000,
+    10000,
+    7000,
+    5000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n2gur"
+   ]
+  },
+  {
+   "index": 137,
+   "code": "GTW0501",
+   "kind": "race",
+   "course": "mountain",
+   "category": "0",
+   "laps": 5,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [
+    "PFL0001",
+    "PFL0002",
+    "PFL0003",
+    "EPL0001",
+    "EPL0002",
+    "EPL0003"
+   ],
+   "prizes": [
+    25000,
+    10000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 150000,
+   "prizeCars": [
+    "t2g8r",
+    "n240r",
+    "n2gcr",
+    "h2ncr"
+   ],
+   "championship": {
+    "first": "GTW0501",
+    "race": 1,
+    "races": 5
+   }
+  },
+  {
+   "index": 138,
+   "code": "GTW0502",
+   "kind": "race",
+   "course": "laguna",
+   "category": "General02",
+   "laps": 5,
+   "inMenu": false,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [
+    "PFL0001",
+    "PFL0002",
+    "PFL0003",
+    "EPL0001",
+    "EPL0002",
+    "EPL0003"
+   ],
+   "prizes": [
+    25000,
+    10000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [],
+   "championship": {
+    "first": "GTW0501",
+    "race": 2,
+    "races": 5
+   }
+  },
+  {
+   "index": 139,
+   "code": "GTW0503",
+   "kind": "race",
+   "course": "new_parmaS",
+   "category": "General02",
+   "laps": 5,
+   "inMenu": false,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [
+    "PFL0001",
+    "PFL0002",
+    "PFL0003",
+    "EPL0001",
+    "EPL0002",
+    "EPL0003"
+   ],
+   "prizes": [
+    25000,
+    10000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [],
+   "championship": {
+    "first": "GTW0501",
+    "race": 3,
+    "races": 5
+   }
+  },
+  {
+   "index": 140,
+   "code": "GTW0504",
+   "kind": "race",
+   "course": "roma",
+   "category": "General02",
+   "laps": 5,
+   "inMenu": false,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [
+    "PFL0001",
+    "PFL0002",
+    "PFL0003",
+    "EPL0001",
+    "EPL0002",
+    "EPL0003"
+   ],
+   "prizes": [
+    25000,
+    10000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [],
+   "championship": {
+    "first": "GTW0501",
+    "race": 4,
+    "races": 5
+   }
+  },
+  {
+   "index": 141,
+   "code": "GTW0505",
+   "kind": "race",
+   "course": "parma",
+   "category": "General02",
+   "laps": 5,
+   "inMenu": false,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [
+    "PFL0001",
+    "PFL0002",
+    "PFL0003",
+    "EPL0001",
+    "EPL0002",
+    "EPL0003"
+   ],
+   "prizes": [
+    25000,
+    10000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [],
+   "championship": {
+    "first": "GTW0501",
+    "race": 5,
+    "races": 5
+   }
+  },
+  {
+   "index": 142,
+   "code": "GUL0001",
+   "kind": "race",
+   "course": "laguna",
+   "category": "US",
+   "laps": 2,
+   "inMenu": true,
+   "license": "B",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 250,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    4000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 143,
+   "code": "GUL0002",
+   "kind": "race",
+   "course": "laguna",
+   "category": "US",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 300,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    2000,
+    1500,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 144,
+   "code": "GUL0003",
+   "kind": "race",
+   "course": "laguna",
+   "category": "US",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 400,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 145,
+   "code": "GVM0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "gvnbn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 146,
+   "code": "GVN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "gv4gn",
+    "gv45n",
+    "gv48n",
+    "gv46n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 147,
+   "code": "GVR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "gv4gn",
+    "gv45n",
+    "gv48n",
+    "gv46n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 148,
+   "code": "GVS0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "gvnbn",
+    "gvbgr"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 149,
+   "code": "H2N0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "h2s2n",
+    "h2ssn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 150,
+   "code": "H2R0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "h2s2n",
+    "h2l2r"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 151,
+   "code": "HBN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "h2ben",
+    "h2bfn",
+    "h2bzn",
+    "h2mbn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 152,
+   "code": "HCN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "hcvon",
+    "hcfon",
+    "hcvnn",
+    "hcfnn",
+    "hcvrn",
+    "h2cfn",
+    "h2csn",
+    "h2crn",
+    "h2mcn",
+    "h2mfn",
+    "h2scn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 153,
+   "code": "HCR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "hcvon",
+    "hcfon",
+    "hcvnn",
+    "hcfnn",
+    "hcvrn",
+    "h2cfn",
+    "h2csn",
+    "h2crn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 154,
+   "code": "HNN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "hnsxn",
+    "hnsrn",
+    "hnsbn",
+    "hnssn",
+    "hnsnn",
+    "h2a2n",
+    "h2a0n",
+    "hnarn",
+    "hnasn",
+    "hnann"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 155,
+   "code": "HRN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "hnsrn",
+    "hinrn",
+    "hcvrn",
+    "h2irn",
+    "h2crn",
+    "h2arn",
+    "h2mcn",
+    "h2min",
+    "h2sin",
+    "h2scn",
+    "hnarn",
+    "hiarn",
+    "hairn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 156,
+   "code": "HTC0001",
+   "kind": "race",
+   "course": "tahiti_t",
+   "category": "General02",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 250,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h2mdn"
+   ]
+  },
+  {
+   "index": 157,
+   "code": "HTC0002",
+   "kind": "race",
+   "course": "roma",
+   "category": "General02",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 300,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "ioeun"
+   ]
+  },
+  {
+   "index": 158,
+   "code": "HTC0003",
+   "kind": "race",
+   "course": "grindel",
+   "category": "General02",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IC",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 400,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    8000,
+    6000,
+    2500,
+    1500,
+    800,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "t2cdn"
+   ]
+  },
+  {
+   "index": 159,
+   "code": "IAN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "ia56n",
+    "ia54n",
+    "ia55n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 160,
+   "code": "IAR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "ia56n",
+    "ia54n",
+    "ia55n",
+    "ia5dr"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 161,
+   "code": "IIN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "ii50n",
+    "iio5n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 162,
+   "code": "IIR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "ii50n",
+    "iio5n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 163,
+   "code": "ILN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "ilden",
+    "ildvn",
+    "ildcn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 164,
+   "code": "ILR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "ildvn",
+    "ils4r"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 165,
+   "code": "IOM0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "ios2n",
+    "ios4n",
+    "ioe9n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 166,
+   "code": "ION0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "io13n",
+    "io11n",
+    "ioeln",
+    "io19n",
+    "iomsn",
+    "iolln"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 167,
+   "code": "IOR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "io13n",
+    "io11n",
+    "ioeln",
+    "io19n",
+    "iolln"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 168,
+   "code": "IOS0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "ios2n",
+    "ios4n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 169,
+   "code": "KZN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "k2zzn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 170,
+   "code": "KZR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "k2zzn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 171,
+   "code": "LIA00",
+   "kind": "license",
+   "course": "circle80",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "m-tor"
+   ]
+  },
+  {
+   "index": 172,
+   "code": "LIB00",
+   "kind": "license",
+   "course": "SMtN_License1",
+   "category": "General02",
+   "laps": 255,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": true,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h-err"
+   ]
+  },
+  {
+   "index": 173,
+   "code": "LIC00",
+   "kind": "license",
+   "course": "test_j1",
+   "category": "General01",
+   "laps": 255,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "mgtlr"
+   ]
+  },
+  {
+   "index": 174,
+   "code": "LIS00",
+   "kind": "license",
+   "course": "tahiti_t",
+   "category": "General02",
+   "laps": 1,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "t2g9r"
+   ]
+  },
+  {
+   "index": 175,
+   "code": "LJA00",
+   "kind": "license",
+   "course": "TC_lisence",
+   "category": "0",
+   "laps": 255,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "dcphn"
+   ]
+  },
+  {
+   "index": 176,
+   "code": "LJB00",
+   "kind": "license",
+   "course": "TC_lisence",
+   "category": "0",
+   "laps": 255,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h2ssn"
+   ]
+  },
+  {
+   "index": 177,
+   "code": "MEN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "m2g2n",
+    "mlnon",
+    "mlnnn",
+    "m2g5n",
+    "m2r5n",
+    "m2g6n",
+    "m2r6n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 178,
+   "code": "MMN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "mmgon",
+    "mmgrn",
+    "m2m7n",
+    "m2min",
+    "m2man"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 179,
+   "code": "MMR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "mmgon",
+    "mmgrn",
+    "m2m7n",
+    "m2min",
+    "m2man"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 180,
+   "code": "MRC0001",
+   "kind": "race",
+   "course": "short",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IC",
+   "drivetrain": "MR",
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 350,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    2000,
+    1500,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "t22dn"
+   ]
+  },
+  {
+   "index": 181,
+   "code": "MRC0002",
+   "kind": "race",
+   "course": "testline",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": "MR",
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 500,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    6000,
+    3000,
+    2000,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "t2t2n"
+   ]
+  },
+  {
+   "index": 182,
+   "code": "MRC0003",
+   "kind": "race",
+   "course": "sprint2",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": "MR",
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 600,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    15000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "uf4lr"
+   ]
+  },
+  {
+   "index": 183,
+   "code": "MSC0001",
+   "kind": "race",
+   "course": "seatt_s",
+   "category": "General02",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "ulpsn"
+   ]
+  },
+  {
+   "index": 184,
+   "code": "MSC0002",
+   "kind": "race",
+   "course": "seattle",
+   "category": "General02",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    8000,
+    6000,
+    2500,
+    1500,
+    800,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "uscon"
+   ]
+  },
+  {
+   "index": 185,
+   "code": "MSC0003",
+   "kind": "race",
+   "course": "laguna",
+   "category": "General02",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "dcptn"
+   ]
+  },
+  {
+   "index": 186,
+   "code": "N1N0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "nq13n",
+    "ns13n",
+    "nq23n",
+    "ns23n",
+    "nq14n",
+    "ns14n",
+    "nq15n",
+    "ns15n",
+    "n2ksn",
+    "n2skn",
+    "n2sxn",
+    "n2sqn",
+    "n2syn",
+    "n180n",
+    "n18nn",
+    "n18sn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 187,
+   "code": "N1R0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "nq13n",
+    "ns13n",
+    "nq23n",
+    "ns23n",
+    "nq14n",
+    "ns14n",
+    "nq15n",
+    "ns15n",
+    "n2ksn",
+    "n2skn",
+    "n2sxn",
+    "n2sqn",
+    "n2syn",
+    "n180n",
+    "n18nn",
+    "n18sn",
+    "n2xsr",
+    "n2dsr"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 188,
+   "code": "NGN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "nr02n",
+    "nr32n",
+    "nv12n",
+    "nv22n",
+    "nn32n",
+    "nr33n",
+    "nv33n",
+    "nr34n",
+    "nv34n",
+    "n2r4n",
+    "n24rn",
+    "n24vn",
+    "n271n",
+    "nl33n",
+    "n2rnn",
+    "n2m2n",
+    "n2m3n",
+    "n2m4n",
+    "n-00n",
+    "n24pn",
+    "k233n",
+    "k234n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 189,
+   "code": "NGR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "nr02n",
+    "nr32n",
+    "nv12n",
+    "nv22n",
+    "nn32n",
+    "nr33n",
+    "nv33n",
+    "nr34n",
+    "nv34n",
+    "n24rn",
+    "n24vn",
+    "n271n",
+    "nl33n",
+    "n-00n",
+    "n2gpr",
+    "n2gzr",
+    "n2gcr",
+    "n2gur",
+    "n2g7r",
+    "n2gkr",
+    "n2d3r"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 190,
+   "code": "NMN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "n2mtn",
+    "n2man"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 191,
+   "code": "NMR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "n2mtn",
+    "n2man"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 192,
+   "code": "NPN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "n2p1n",
+    "n2pvn",
+    "nplon"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 193,
+   "code": "NSN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "n234n",
+    "n24rn",
+    "n24vn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 194,
+   "code": "PFL0001",
+   "kind": "race",
+   "course": "parma",
+   "category": "General01",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 550,
+   "allowedCars": [],
+   "requiresWon": [
+    "GJL0001",
+    "GJL0002",
+    "GJL0003",
+    "GBL0001",
+    "GBL0002",
+    "GBL0003",
+    "GFL0001",
+    "GFL0002",
+    "GGL0001",
+    "GGL0002",
+    "GGL0003",
+    "GIL0001",
+    "GIL0002",
+    "GUL0001",
+    "GUL0002",
+    "GUL0003"
+   ],
+   "prizes": [
+    10000,
+    7000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n23zr"
+   ]
+  },
+  {
+   "index": 195,
+   "code": "PFL0002",
+   "kind": "race",
+   "course": "seattle",
+   "category": "General01",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 550,
+   "allowedCars": [],
+   "requiresWon": [
+    "GJL0001",
+    "GJL0002",
+    "GJL0003",
+    "GBL0001",
+    "GBL0002",
+    "GBL0003",
+    "GFL0001",
+    "GFL0002",
+    "GGL0001",
+    "GGL0002",
+    "GGL0003",
+    "GIL0001",
+    "GIL0002",
+    "GUL0001",
+    "GUL0002",
+    "GUL0003"
+   ],
+   "prizes": [
+    10000,
+    7000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "afn7r"
+   ]
+  },
+  {
+   "index": 196,
+   "code": "PFL0003",
+   "kind": "race",
+   "course": "laguna",
+   "category": "General01",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 550,
+   "allowedCars": [],
+   "requiresWon": [
+    "GJL0001",
+    "GJL0002",
+    "GJL0003",
+    "GBL0001",
+    "GBL0002",
+    "GBL0003",
+    "GFL0001",
+    "GFL0002",
+    "GGL0001",
+    "GGL0002",
+    "GGL0003",
+    "GIL0001",
+    "GIL0002",
+    "GUL0001",
+    "GUL0002",
+    "GUL0003"
+   ],
+   "prizes": [
+    10000,
+    7000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n2d8r"
+   ]
+  },
+  {
+   "index": 197,
+   "code": "PSC0001",
+   "kind": "race",
+   "course": "laguna",
+   "category": "General02",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 400,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "t2tan"
+   ]
+  },
+  {
+   "index": 198,
+   "code": "PSC0002",
+   "kind": "race",
+   "course": "test_in2",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IC",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 450,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    8000,
+    6000,
+    2500,
+    1500,
+    800,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "k2z3n"
+   ]
+  },
+  {
+   "index": 199,
+   "code": "PSC0003",
+   "kind": "race",
+   "course": "mountain",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 600,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "vst6n"
+   ]
+  },
+  {
+   "index": 200,
+   "code": "Q2N0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "q2min"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 201,
+   "code": "QMN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "q2mon",
+    "q2txn",
+    "q2trn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 202,
+   "code": "QMR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "q2mon",
+    "q2txn",
+    "q2trn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 203,
+   "code": "QSN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "q2stn",
+    "q2s4n",
+    "q2x4n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 204,
+   "code": "QSR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "q2stn",
+    "q2s4n",
+    "q2x4n",
+    "q2sgr"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 205,
+   "code": "SAN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "ssvxn",
+    "ssv4n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 206,
+   "code": "SAR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "ssvxn",
+    "ssv4n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 207,
+   "code": "SIN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "sipzn",
+    "sipwn",
+    "sipsn",
+    "siptn",
+    "siprn",
+    "sipan",
+    "sipbn",
+    "sipcn",
+    "sipdn",
+    "s2wwn",
+    "s2iwn",
+    "s2r4n",
+    "s2w4n",
+    "s2i4n",
+    "s2nwn",
+    "s2nin",
+    "s2r5n",
+    "s2w5n",
+    "s2i5n",
+    "s222n",
+    "s2r6n",
+    "s2a6n",
+    "s2w6n",
+    "s2i6n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 208,
+   "code": "SLS0001",
+   "kind": "race",
+   "course": "roma",
+   "category": "General02",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 400,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    2000,
+    1500,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h2arn"
+   ]
+  },
+  {
+   "index": 209,
+   "code": "SLS0002",
+   "kind": "race",
+   "course": "highway",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IC",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 500,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    6000,
+    3000,
+    2000,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "t2x3n"
+   ]
+  },
+  {
+   "index": 210,
+   "code": "SLS0003",
+   "kind": "race",
+   "course": "testline",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 600,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n2rnn"
+   ]
+  },
+  {
+   "index": 211,
+   "code": "SND0001",
+   "kind": "race",
+   "course": "tahiti_t",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 212,
+   "code": "SND0002",
+   "kind": "race",
+   "course": "testline",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    4000,
+    1500,
+    1000,
+    700,
+    400,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 213,
+   "code": "SND0003",
+   "kind": "race",
+   "course": "sprint2",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    2000,
+    1500,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 214,
+   "code": "STT0001",
+   "kind": "race",
+   "course": "new_parmaS",
+   "category": "General02",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 500,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    15000,
+    7000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "t-rdn",
+    "t2t8n",
+    "c-30n"
+   ]
+  },
+  {
+   "index": 215,
+   "code": "STT0002",
+   "kind": "race",
+   "course": "mountain",
+   "category": "0",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 500,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    15000,
+    7000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "t-rdn",
+    "t2t8n",
+    "c-30n"
+   ]
+  },
+  {
+   "index": 216,
+   "code": "STT0003",
+   "kind": "race",
+   "course": "laguna",
+   "category": "General02",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 500,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    15000,
+    7000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "t-rdn",
+    "t2t8n",
+    "c-30n"
+   ]
+  },
+  {
+   "index": 217,
+   "code": "STT0004",
+   "kind": "race",
+   "course": "test_in2",
+   "category": "0",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 500,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    15000,
+    7000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "t-rdn",
+    "t2t8n",
+    "c-30n"
+   ]
+  },
+  {
+   "index": 218,
+   "code": "STT0005",
+   "kind": "race",
+   "course": "roma",
+   "category": "General02",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 500,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    15000,
+    7000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "t-rdn",
+    "t2t8n",
+    "c-30n"
+   ]
+  },
+  {
+   "index": 219,
+   "code": "TAN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "t291n",
+    "t292n",
+    "t29nn",
+    "t2isn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 220,
+   "code": "TAR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "t291n",
+    "t292n",
+    "t29nn",
+    "t2isn",
+    "t29lr"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 221,
+   "code": "TCN0001",
+   "kind": "race",
+   "course": "autumn",
+   "category": "0",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": "no_turbo",
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    50000,
+    7000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h2scn",
+    "h2sin",
+    "a2abn",
+    "a2rcn"
+   ]
+  },
+  {
+   "index": 222,
+   "code": "TCN0002",
+   "kind": "race",
+   "course": "grindel",
+   "category": "TUNE",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": "no_turbo",
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    50000,
+    7000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h2scn",
+    "h2sin",
+    "a2abn",
+    "a2rcn"
+   ]
+  },
+  {
+   "index": 223,
+   "code": "TCN0003",
+   "kind": "race",
+   "course": "laguna",
+   "category": "TUNE",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": "no_turbo",
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    50000,
+    7000,
+    5000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h2scn",
+    "h2sin",
+    "a2abn",
+    "a2rcn"
+   ]
+  },
+  {
+   "index": 224,
+   "code": "TCT0001",
+   "kind": "race",
+   "course": "highway",
+   "category": "0",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": "turbo_required",
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    50000,
+    10000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n2d3r",
+    "n-00n",
+    "n2m3n"
+   ]
+  },
+  {
+   "index": 225,
+   "code": "TCT0002",
+   "kind": "race",
+   "course": "speed",
+   "category": "0",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": "turbo_required",
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    50000,
+    10000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n2d3r",
+    "n-00n",
+    "n2m3n"
+   ]
+  },
+  {
+   "index": 226,
+   "code": "TCT0003",
+   "kind": "race",
+   "course": "test_in2",
+   "category": "0",
+   "laps": 3,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": "turbo_required",
+   "racingMod": null,
+   "maxPower": null,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    50000,
+    10000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n2d3r",
+    "n-00n",
+    "n2m3n"
+   ]
+  },
+  {
+   "index": 227,
+   "code": "TLN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "tceln",
+    "tcegn",
+    "t2c3n",
+    "t2xxn",
+    "t285n",
+    "t2con",
+    "t2c4n",
+    "t2crn",
+    "t2cyn",
+    "t2cmn",
+    "t2cen",
+    "t2cdn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 228,
+   "code": "TLR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "tceln",
+    "tcegn",
+    "t2c3n",
+    "t2xxn",
+    "t285n",
+    "t2con",
+    "t2c4n",
+    "t2crn",
+    "t2cyn",
+    "t2cmn",
+    "t2cen",
+    "t2clr"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 229,
+   "code": "TMN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "t2msn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 230,
+   "code": "TSN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "tstln",
+    "t2svn",
+    "t271n",
+    "t261n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 231,
+   "code": "TVN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "t2vzn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 232,
+   "code": "TVR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "t2vzn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 233,
+   "code": "VTN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "vst6n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 234,
+   "code": "VTR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "vst6n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    10000,
+    7000,
+    5000,
+    3000,
+    2000,
+    1000
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 235,
+   "code": "WGN0001",
+   "kind": "race",
+   "course": "roma_short",
+   "category": "General02",
+   "laps": 2,
+   "inMenu": true,
+   "license": "B",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 400,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    2000,
+    1500,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "s2w5n"
+   ]
+  },
+  {
+   "index": 236,
+   "code": "WGN0002",
+   "kind": "race",
+   "course": "s_speed",
+   "category": "General02",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 400,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    6000,
+    3000,
+    2000,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h2mwn"
+   ]
+  },
+  {
+   "index": 237,
+   "code": "WGN0003",
+   "kind": "race",
+   "course": "highway",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IC",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 400,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "n260n"
+   ]
+  },
+  {
+   "index": 238,
+   "code": "WLK0001",
+   "kind": "race",
+   "course": "roma_short",
+   "category": "General02",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 150,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    2000,
+    1500,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h2mbn"
+   ]
+  },
+  {
+   "index": 239,
+   "code": "WLK0002",
+   "kind": "race",
+   "course": "seatt_s",
+   "category": "General02",
+   "laps": 2,
+   "inMenu": true,
+   "license": "B",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 100,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    6000,
+    3000,
+    2000,
+    1000,
+    500,
+    300
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "a-emn"
+   ]
+  },
+  {
+   "index": 240,
+   "code": "WLK0003",
+   "kind": "race",
+   "course": "tahiti_t",
+   "category": "General02",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 100,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "h2m2n"
+   ]
+  },
+  {
+   "index": 241,
+   "code": "WOS0001",
+   "kind": "race",
+   "course": "tahiti_t",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": "A",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 250,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    7000,
+    5000,
+    2000,
+    1000,
+    700,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "a2ran"
+   ]
+  },
+  {
+   "index": 242,
+   "code": "WOS0002",
+   "kind": "race",
+   "course": "grindel",
+   "category": "General01",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IB",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 350,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    8000,
+    6000,
+    2500,
+    1500,
+    800,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "t2mtn"
+   ]
+  },
+  {
+   "index": 243,
+   "code": "WOS0003",
+   "kind": "race",
+   "course": "mountain",
+   "category": "0",
+   "laps": 2,
+   "inMenu": true,
+   "license": "IA",
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": null,
+   "maxPower": 600,
+   "allowedCars": [],
+   "requiresWon": [],
+   "prizes": [
+    15000,
+    7000,
+    3000,
+    2000,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": [
+    "d-phr"
+   ]
+  },
+  {
+   "index": 244,
+   "code": "XAN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "x2aln",
+    "x2azn",
+    "x2asn",
+    "x2a8n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 245,
+   "code": "XAR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "x2aln",
+    "x2azn",
+    "x2asn",
+    "x2a8n"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 246,
+   "code": "XCN0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "no_racing_mod",
+   "maxPower": null,
+   "allowedCars": [
+    "x2cpn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    3000,
+    1000,
+    500,
+    400,
+    300,
+    200
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  },
+  {
+   "index": 247,
+   "code": "XCR0001",
+   "kind": "race",
+   "course": null,
+   "category": "One-Make",
+   "laps": 2,
+   "inMenu": true,
+   "license": null,
+   "drivetrain": null,
+   "dirtTires": false,
+   "turbo": null,
+   "racingMod": "racing_mod_required",
+   "maxPower": null,
+   "allowedCars": [
+    "x2cpn"
+   ],
+   "requiresWon": [],
+   "prizes": [
+    5000,
+    3000,
+    2000,
+    1500,
+    1000,
+    500
+   ],
+   "bonusPrize": 0,
+   "prizeCars": []
+  }
+ ],
+ "cars": {
+  "a-emn": {
+   "manufacturer": "Mazda",
+   "name": "Mazda Demio A-spec(J) '97"
+  },
+  "a222n": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 GT-Turbo(J) '83"
+  },
+  "a26sn": {
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata 1.6 S Package(J) '98"
+  },
+  "a28bn": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type RB(J) '98"
+  },
+  "a28rn": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type R(J) '98"
+  },
+  "a28sn": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type RS(J) '98"
+  },
+  "a2aan": {
+   "manufacturer": "Mazda",
+   "name": "Mazda AZ-1 A-spec(J) '91"
+  },
+  "a2abn": {
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata B Spec(J)"
+  },
+  "a2azn": {
+   "manufacturer": "Mazda",
+   "name": "Mazda AZ-1 (J) '91"
+  },
+  "a2gcn": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 GT-C(J) '99"
+  },
+  "a2gln": {
+   "manufacturer": "Mazda",
+   "name": "Demio GL-X(J) '99"
+  },
+  "a2gsn": {
+   "manufacturer": "Mazda",
+   "name": "Demio GL-X Special(J) '98"
+  },
+  "a2ran": {
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata A Spec(J)"
+  },
+  "a2rbn": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type RB(J) '97"
+  },
+  "a2rcn": {
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata C Spec(J)"
+  },
+  "a2rrn": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 RS-R(J) '97"
+  },
+  "a2rsn": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type RS(J) '97"
+  },
+  "a2rzn": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type RZ(J) '97"
+  },
+  "a2spn": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Cabriolet(J) '90"
+  },
+  "a2vsn": {
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata 1.8 VS(J) '98"
+  },
+  "ademn": {
+   "manufacturer": "Mazda",
+   "name": "Demio GL-X(J) '97"
+  },
+  "adgln": {
+   "manufacturer": "Mazda",
+   "name": "Demio GL(J) '97"
+  },
+  "adlxn": {
+   "manufacturer": "Mazda",
+   "name": "Demio LX G Package(J) '97"
+  },
+  "afa7n": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 A-spec(J) '96"
+  },
+  "afb7n": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type RB(J) '96"
+  },
+  "afc7n": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Infini III(J) '90"
+  },
+  "afd7n": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type RZ(J) '96"
+  },
+  "afn7r": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 LM Edition"
+  },
+  "afo7n": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type R(J) '91"
+  },
+  "afr7n": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 GT-X(J) '90"
+  },
+  "afx7n": {
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Touring X(J) '96"
+  },
+  "aminn": {
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata (J) '93"
+  },
+  "amisn": {
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata S-Special(J) '93"
+  },
+  "amivn": {
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata V-Special(J) '93"
+  },
+  "an16n": {
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata (J) '89"
+  },
+  "arodn": {
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata 1.8 RS(J) '98"
+  },
+  "as16n": {
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata S-Special(J) '92"
+  },
+  "av16n": {
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata V-Special(J) '90"
+  },
+  "bmmgn": {
+   "manufacturer": "Mini & MG",
+   "name": "MGF 1.8i VVC"
+  },
+  "brm1r": {
+   "manufacturer": "Mini & MG",
+   "name": "MiniCooperMK1"
+  },
+  "brmcn": {
+   "manufacturer": "Mini & MG",
+   "name": "Mini Cooper 1.3i"
+  },
+  "brmin": {
+   "manufacturer": "Mini & MG",
+   "name": "Mini 1.3"
+  },
+  "bviir": {
+   "manufacturer": "#35",
+   "name": "Tigra Ice Race Car"
+  },
+  "bvtin": {
+   "manufacturer": "#35",
+   "name": "Tigra 1.6i"
+  },
+  "c-30n": {
+   "manufacturer": "Chevrolet",
+   "name": "Camaro Z28 30th Anniversary '96"
+  },
+  "c427n": {
+   "manufacturer": "Chevrolet",
+   "name": "Corvette 427 Stingray '69"
+  },
+  "cc67n": {
+   "manufacturer": "Chevrolet",
+   "name": "Corvette Sting Ray '67"
+  },
+  "cc82n": {
+   "manufacturer": "Chevrolet",
+   "name": "Corvette Stingray '82"
+  },
+  "ccrcn": {
+   "manufacturer": "Chevrolet",
+   "name": "Corvette Coupe '96"
+  },
+  "ccrvn": {
+   "manufacturer": "Chevrolet",
+   "name": "Corvette Grand Sport '96"
+  },
+  "czr1n": {
+   "manufacturer": "Chevrolet",
+   "name": "Corvette ZR-1 '95"
+  },
+  "d-pgr": {
+   "manufacturer": "Dodge",
+   "name": "Viper GTS-R"
+  },
+  "d-phr": {
+   "manufacturer": "Dodge",
+   "name": "Concept Car LM Edition"
+  },
+  "d2tvr": {
+   "manufacturer": "Dodge",
+   "name": "STP Viper GT"
+  },
+  "dcnan": {
+   "manufacturer": "Dodge",
+   "name": "Neon ACR"
+  },
+  "dcnrn": {
+   "manufacturer": "Dodge",
+   "name": "Neon R/T"
+  },
+  "dcphn": {
+   "manufacturer": "Dodge",
+   "name": "Concept Car"
+  },
+  "dcptn": {
+   "manufacturer": "Dodge",
+   "name": "Phaeton"
+  },
+  "dvp8r": {
+   "manufacturer": "Dodge",
+   "name": "Viper GTS-R Team Oreca"
+  },
+  "dvpgn": {
+   "manufacturer": "Dodge",
+   "name": "Viper GTS"
+  },
+  "dvprn": {
+   "manufacturer": "Dodge",
+   "name": "Viper RT/10"
+  },
+  "efesr": {
+   "manufacturer": "Ford",
+   "name": "Escort Rally Car"
+  },
+  "effgn": {
+   "manufacturer": "Ford",
+   "name": "Focus Ghia 2.0i Zetec"
+  },
+  "effzn": {
+   "manufacturer": "Ford",
+   "name": "Focus 1.8i Zetec"
+  },
+  "efkan": {
+   "manufacturer": "Ford",
+   "name": "Ka"
+  },
+  "fcs6n": {
+   "manufacturer": "Citroen",
+   "name": "Saxo 1.6i VTS"
+  },
+  "fp1rn": {
+   "manufacturer": "Peugeot",
+   "name": "106 1.6 Rallye"
+  },
+  "fp1sn": {
+   "manufacturer": "Peugeot",
+   "name": "106 1.6 S16"
+  },
+  "fp26n": {
+   "manufacturer": "Peugeot",
+   "name": "106 1.6 S16"
+  },
+  "fp27n": {
+   "manufacturer": "Peugeot",
+   "name": "206 S16"
+  },
+  "fp2wr": {
+   "manufacturer": "Peugeot",
+   "name": "206 S16"
+  },
+  "fp2xr": {
+   "manufacturer": "Peugeot",
+   "name": "206 Rally Car"
+  },
+  "frc2n": {
+   "manufacturer": "Renault",
+   "name": "Clio 16V"
+  },
+  "frcsn": {
+   "manufacturer": "Renault",
+   "name": "Clio Sport V6"
+  },
+  "gatlr": {
+   "manufacturer": "Audi",
+   "name": "TT LM Edition"
+  },
+  "gattn": {
+   "manufacturer": "Audi",
+   "name": "TT 1.8T quattro"
+  },
+  "gb0cn": {
+   "manufacturer": "BMW",
+   "name": "320Ci"
+  },
+  "gb28n": {
+   "manufacturer": "BMW",
+   "name": "328i"
+  },
+  "gb2cn": {
+   "manufacturer": "BMW",
+   "name": "323ti Compact"
+  },
+  "gbc3n": {
+   "manufacturer": "BMW",
+   "name": "323Ci"
+  },
+  "gbc8n": {
+   "manufacturer": "BMW",
+   "name": "328Ci"
+  },
+  "gmsln": {
+   "manufacturer": "Mercedes-Benz",
+   "name": "SLK 230 Kompressor"
+  },
+  "goiir": {
+   "manufacturer": "Opel",
+   "name": "Tigra Ice Race Car"
+  },
+  "gotin": {
+   "manufacturer": "Opel",
+   "name": "Tigra 1.6i"
+  },
+  "gv45n": {
+   "manufacturer": "Volkswagen",
+   "name": "Golf IV 2.3 V5"
+  },
+  "gv46n": {
+   "manufacturer": "Volkswagen",
+   "name": "Golf IV V6"
+  },
+  "gv48n": {
+   "manufacturer": "Volkswagen",
+   "name": "Golf IV GTI 1.8T"
+  },
+  "gv4gn": {
+   "manufacturer": "Volkswagen",
+   "name": "Golf IV GTI"
+  },
+  "gvbgr": {
+   "manufacturer": "Volkswagen",
+   "name": "New Beetle GT"
+  },
+  "gvlun": {
+   "manufacturer": "Volkswagen",
+   "name": "Lupo 1.4"
+  },
+  "gvnbn": {
+   "manufacturer": "Volkswagen",
+   "name": "New Beetle GLS 2.0L"
+  },
+  "h-err": {
+   "manufacturer": "Honda",
+   "name": "del Sol LM Edition"
+  },
+  "h2a0n": {
+   "manufacturer": "Acura",
+   "name": "Acura NSX  '91"
+  },
+  "h2a2n": {
+   "manufacturer": "Acura",
+   "name": "Acura NSX  '97"
+  },
+  "h2arn": {
+   "manufacturer": "Honda",
+   "name": "Accord Type-R"
+  },
+  "h2ben": {
+   "manufacturer": "Honda",
+   "name": "Beat (J) '91"
+  },
+  "h2bfn": {
+   "manufacturer": "Honda",
+   "name": "Beat ver.F(J) '92"
+  },
+  "h2bzn": {
+   "manufacturer": "Honda",
+   "name": "Beat ver.Z(J) '94"
+  },
+  "h2cfn": {
+   "manufacturer": "Honda",
+   "name": "Civic Sedan"
+  },
+  "h2cnr": {
+   "manufacturer": "Honda",
+   "name": "Mugen NSX GT(J)"
+  },
+  "h2crn": {
+   "manufacturer": "Honda",
+   "name": "Civic Type R(J) '98"
+  },
+  "h2csn": {
+   "manufacturer": "Honda",
+   "name": "Civic 3 Door Si"
+  },
+  "h2irn": {
+   "manufacturer": "Honda",
+   "name": "Integra Type R 98 spec"
+  },
+  "h2l2r": {
+   "manufacturer": "Honda",
+   "name": "S2000 GT1"
+  },
+  "h2m2n": {
+   "manufacturer": "Honda",
+   "name": "Mugen CR-X II (J)"
+  },
+  "h2man": {
+   "manufacturer": "Honda",
+   "name": "Mugen Accord SIR-T(J)"
+  },
+  "h2mbn": {
+   "manufacturer": "Honda",
+   "name": "Mugen Beat (J)"
+  },
+  "h2mcn": {
+   "manufacturer": "Honda",
+   "name": "Mugen Civic Type-R(J)"
+  },
+  "h2mdn": {
+   "manufacturer": "Honda",
+   "name": "Mugen CR-X III (J)"
+  },
+  "h2mfn": {
+   "manufacturer": "Honda",
+   "name": "Mugen Ferio (J)"
+  },
+  "h2min": {
+   "manufacturer": "Honda",
+   "name": "Mugen Integra Type-R(J)"
+  },
+  "h2mpn": {
+   "manufacturer": "Honda",
+   "name": "Mugen Prelude Type-S(J)"
+  },
+  "h2mwn": {
+   "manufacturer": "Honda",
+   "name": "Mugen Accord Wagon(J)"
+  },
+  "h2ncr": {
+   "manufacturer": "Honda",
+   "name": "Mugen NSX GT(J) '99"
+  },
+  "h2ntr": {
+   "manufacturer": "Honda",
+   "name": "Takata NSX GT(J) '99"
+  },
+  "h2s2n": {
+   "manufacturer": "Honda",
+   "name": "S2000"
+  },
+  "h2scn": {
+   "manufacturer": "Honda",
+   "name": "Spoon Civic Type-R(J)"
+  },
+  "h2sin": {
+   "manufacturer": "Honda",
+   "name": "Spoon Integra Type-R(J)"
+  },
+  "h2ssn": {
+   "manufacturer": "Honda",
+   "name": "Spoon S2000 (J)"
+  },
+  "hairn": {
+   "manufacturer": "Acura",
+   "name": "Acura Integra Type R"
+  },
+  "hcfnn": {
+   "manufacturer": "Honda",
+   "name": "Civic Sedan '96"
+  },
+  "hcfon": {
+   "manufacturer": "Honda",
+   "name": "Civic Sedan '93"
+  },
+  "hcvnn": {
+   "manufacturer": "Honda",
+   "name": "Civic 3 Door '95"
+  },
+  "hcvon": {
+   "manufacturer": "Honda",
+   "name": "Civic 3 Door Si '93"
+  },
+  "hcvrn": {
+   "manufacturer": "Honda",
+   "name": "Civic Type R(J) '97"
+  },
+  "hiarn": {
+   "manufacturer": "Acura",
+   "name": "Acura Integra Type-R '95"
+  },
+  "hinrn": {
+   "manufacturer": "Honda",
+   "name": "Integra Type R"
+  },
+  "hnann": {
+   "manufacturer": "Acura",
+   "name": "Acura NSX Type S Zero(J)"
+  },
+  "hnarn": {
+   "manufacturer": "Acura",
+   "name": "Acura NSX  '93"
+  },
+  "hnasn": {
+   "manufacturer": "Acura",
+   "name": "Acura NSX Type S(J)"
+  },
+  "hnsbn": {
+   "manufacturer": "Honda",
+   "name": "NSX"
+  },
+  "hnsnn": {
+   "manufacturer": "Honda",
+   "name": "NSX  Type S Zero"
+  },
+  "hnsrn": {
+   "manufacturer": "Honda",
+   "name": "NSX Type R '92"
+  },
+  "hnssn": {
+   "manufacturer": "Honda",
+   "name": "NSX  Type S"
+  },
+  "hnsxn": {
+   "manufacturer": "Honda",
+   "name": "NSX  '90"
+  },
+  "ia54n": {
+   "manufacturer": "Alfa Romeo",
+   "name": "156 2.5 V6 24V"
+  },
+  "ia55n": {
+   "manufacturer": "Alfa Romeo",
+   "name": "155 2.0 TS 16V"
+  },
+  "ia56n": {
+   "manufacturer": "Alfa Romeo",
+   "name": "156 2.0 TS 16V"
+  },
+  "ia5dr": {
+   "manufacturer": "Alfa Romeo",
+   "name": "155 Touring Car"
+  },
+  "ii50n": {
+   "manufacturer": "FIAT",
+   "name": "500 Sporting"
+  },
+  "iio5n": {
+   "manufacturer": "FIAT",
+   "name": "500R"
+  },
+  "ildcn": {
+   "manufacturer": "Lancia",
+   "name": "Delta HF Integrale Collezione"
+  },
+  "ilden": {
+   "manufacturer": "Lancia",
+   "name": "Delta HF Integrale"
+  },
+  "ildvn": {
+   "manufacturer": "Lancia",
+   "name": "Delta HF Integrale Evoluzione"
+  },
+  "ils4r": {
+   "manufacturer": "Lancia",
+   "name": "Delta S4"
+  },
+  "ilstn": {
+   "manufacturer": "Lancia",
+   "name": "Stratos"
+  },
+  "io11n": {
+   "manufacturer": "Lotus",
+   "name": "Elise 111S"
+  },
+  "io13n": {
+   "manufacturer": "Lotus",
+   "name": "Elise 135"
+  },
+  "io19n": {
+   "manufacturer": "Lotus",
+   "name": "Elise 190"
+  },
+  "ioe9n": {
+   "manufacturer": "Lotus",
+   "name": "Elan S2 '90"
+  },
+  "ioeln": {
+   "manufacturer": "Lotus",
+   "name": "Elise"
+  },
+  "ioeun": {
+   "manufacturer": "Lotus",
+   "name": "Europa"
+  },
+  "iolln": {
+   "manufacturer": "Lotus",
+   "name": "Elise GT1"
+  },
+  "iomsn": {
+   "manufacturer": "Lotus",
+   "name": "MotorsportElise"
+  },
+  "ios2n": {
+   "manufacturer": "Lotus",
+   "name": "Elan S2 '64"
+  },
+  "ios4n": {
+   "manufacturer": "Lotus",
+   "name": "Elan S4 Sprint '71"
+  },
+  "k233n": {
+   "manufacturer": "Tommy kaira",
+   "name": "Tommykaira R (J) '95"
+  },
+  "k234n": {
+   "manufacturer": "Tommy kaira",
+   "name": "Tommykaira R (J) '99"
+  },
+  "k2z2n": {
+   "manufacturer": "Tommy kaira",
+   "name": "ZZII (J)"
+  },
+  "k2z3n": {
+   "manufacturer": "Tommy kaira",
+   "name": "ZZIII (J)"
+  },
+  "k2zzn": {
+   "manufacturer": "Tommy kaira",
+   "name": "ZZ-S Coupe(J)"
+  },
+  "ld7cn": {
+   "manufacturer": "Aston Martin",
+   "name": "DB7 Coupe"
+  },
+  "ld7vn": {
+   "manufacturer": "Aston Martin",
+   "name": "DB7 Volante"
+  },
+  "m-tor": {
+   "manufacturer": "Mitsubishi",
+   "name": "FTO LM Edition"
+  },
+  "m2g2n": {
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer Evolution II(J) '94"
+  },
+  "m2g5n": {
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer Evolution V GSR (J) '98"
+  },
+  "m2g6n": {
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer Evolution VI GSR (J) '99"
+  },
+  "m2m5n": {
+   "manufacturer": "Mitsubishi",
+   "name": "Mine's Lancer Evolution V(J)"
+  },
+  "m2m7n": {
+   "manufacturer": "Mitsubishi",
+   "name": "Mirage Asti ZR(J) '97"
+  },
+  "m2man": {
+   "manufacturer": "Mitsubishi",
+   "name": "Mirage Asti RX-R(J) '98"
+  },
+  "m2min": {
+   "manufacturer": "Mitsubishi",
+   "name": "Mirage Cyborg-ZR(J) '97"
+  },
+  "m2r5n": {
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer Evolution V RS (J) '98"
+  },
+  "m2r6n": {
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer Evolution VI RS (J) '99"
+  },
+  "m2tlr": {
+   "manufacturer": "Mitsubishi",
+   "name": "3000GT LM Edition '99"
+  },
+  "m2w6r": {
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer Evolution VI Rally Car '99"
+  },
+  "mgtlr": {
+   "manufacturer": "Mitsubishi",
+   "name": "3000GT LM Edition"
+  },
+  "mlnnn": {
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer EvolutionIV GSR(J) '96"
+  },
+  "mlnon": {
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer EvolutionIII GSR(J) '95"
+  },
+  "mmgon": {
+   "manufacturer": "Mitsubishi",
+   "name": "Mirage Cyborg R(J) '92"
+  },
+  "mmgrn": {
+   "manufacturer": "Mitsubishi",
+   "name": "Mirage Asti RX(J) '96"
+  },
+  "n-00n": {
+   "manufacturer": "Nissan",
+   "name": "Nismo 400R (J)"
+  },
+  "n-18n": {
+   "manufacturer": "Nissan",
+   "name": "Sileighty (J)"
+  },
+  "n180n": {
+   "manufacturer": "Nissan",
+   "name": "240SX Fastback Type X(J) '96"
+  },
+  "n18nn": {
+   "manufacturer": "Nissan",
+   "name": "240SX Fastback Type X(J) '96"
+  },
+  "n18sn": {
+   "manufacturer": "Nissan",
+   "name": "240SX Fastback Type S(J) '96"
+  },
+  "n234n": {
+   "manufacturer": "Nissan",
+   "name": "Skyline 25GT Turbo(R34,J) '98"
+  },
+  "n239r": {
+   "manufacturer": "Nissan",
+   "name": "R390 GT1 LM Race Car '97"
+  },
+  "n23nn": {
+   "manufacturer": "Nissan",
+   "name": "R390 GT1 Road Car '97"
+  },
+  "n23sr": {
+   "manufacturer": "Nissan",
+   "name": "Skyline Silhouette Foumula (R30)"
+  },
+  "n23zr": {
+   "manufacturer": "Nissan",
+   "name": "Nissan 300ZX GT(J) '97"
+  },
+  "n240r": {
+   "manufacturer": "Nissan",
+   "name": "R390 GT1 LM Race Car '98"
+  },
+  "n24pn": {
+   "manufacturer": "Nissan",
+   "name": "Nismo 400R Preceiding Model(J)"
+  },
+  "n24rn": {
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R(R34,J) '99"
+  },
+  "n24vn": {
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R V-spec(R34,J) '99"
+  },
+  "n260n": {
+   "manufacturer": "Nissan",
+   "name": "Stagea 260RS Tuned by Nismo(J)"
+  },
+  "n270n": {
+   "manufacturer": "Nissan",
+   "name": "Nismo 270R (J)"
+  },
+  "n271n": {
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R(KPGC10,J) '71"
+  },
+  "n2d3r": {
+   "manufacturer": "Nissan",
+   "name": "R33 Drag GT-R (J)"
+  },
+  "n2d8r": {
+   "manufacturer": "Nissan",
+   "name": "Drag 180SX (J)"
+  },
+  "n2dsr": {
+   "manufacturer": "Nissan",
+   "name": "Daisin Silvia GT(J) '99"
+  },
+  "n2g7r": {
+   "manufacturer": "Nissan",
+   "name": "Zexel Skyline GT(J) '97"
+  },
+  "n2gcr": {
+   "manufacturer": "Nissan",
+   "name": "Calsonic GT-R GT(J) '99"
+  },
+  "n2gkr": {
+   "manufacturer": "Nissan",
+   "name": "Kure R33 GT(J) '97"
+  },
+  "n2gpr": {
+   "manufacturer": "Nissan",
+   "name": "Pennzoil GT-R GT(J) '99"
+  },
+  "n2gur": {
+   "manufacturer": "Nissan",
+   "name": "Unisia GT-R GT(J) '99"
+  },
+  "n2gzr": {
+   "manufacturer": "Nissan",
+   "name": "Arta GT-R GT(J) '99"
+  },
+  "n2ksn": {
+   "manufacturer": "Nissan",
+   "name": "240SX K's Aero(J) '98"
+  },
+  "n2m2n": {
+   "manufacturer": "Nissan",
+   "name": "Mine's R32.5 Skyline GT-R(J)"
+  },
+  "n2m3n": {
+   "manufacturer": "Nissan",
+   "name": "Mine's R33 Skyline GT-R(J)"
+  },
+  "n2m4n": {
+   "manufacturer": "Nissan",
+   "name": "Mine's R34 Skyline GT-R(J)"
+  },
+  "n2man": {
+   "manufacturer": "Nissan",
+   "name": "March G#(J) '97"
+  },
+  "n2mtn": {
+   "manufacturer": "Nissan",
+   "name": "March Super Turbo(J) '89"
+  },
+  "n2p1n": {
+   "manufacturer": "Nissan",
+   "name": "Pulsar Serie VZ-R N1(J) '97"
+  },
+  "n2pvn": {
+   "manufacturer": "Nissan",
+   "name": "Pulsar Serie VZ-R(J) '97"
+  },
+  "n2r4n": {
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R 4Door(R33,J) '97"
+  },
+  "n2rnn": {
+   "manufacturer": "Nissan",
+   "name": "GT-R 4Door Tuned by Nismo(J)"
+  },
+  "n2skn": {
+   "manufacturer": "Nissan",
+   "name": "Silvia Spec R(J) '99"
+  },
+  "n2sqn": {
+   "manufacturer": "Nissan",
+   "name": "Silvia Spec S(J) '99"
+  },
+  "n2sxn": {
+   "manufacturer": "Nissan",
+   "name": "Silvia Spec R Aero(J) '99"
+  },
+  "n2syn": {
+   "manufacturer": "Nissan",
+   "name": "Silvia Spec S Aero(J) '99"
+  },
+  "n2xsr": {
+   "manufacturer": "Nissan",
+   "name": "Zanavi Silvia GT(J) '99"
+  },
+  "nl33n": {
+   "manufacturer": "Nissan",
+   "name": "NismoGT-R LM Road Car(R33,J)"
+  },
+  "nn32n": {
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R NISMO(R32,J) '90"
+  },
+  "nplon": {
+   "manufacturer": "Nissan",
+   "name": "Pulsar GTi-R(J) '91"
+  },
+  "nq13n": {
+   "manufacturer": "Nissan",
+   "name": "Silvia Q's 1800cc (J) '88"
+  },
+  "nq14n": {
+   "manufacturer": "Nissan",
+   "name": "240SX Q's (J) '95"
+  },
+  "nq15n": {
+   "manufacturer": "Nissan",
+   "name": "240SX Q's Aero(J) '97"
+  },
+  "nq23n": {
+   "manufacturer": "Nissan",
+   "name": "Silvia Q's 2000cc (J) '91"
+  },
+  "nr02n": {
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R(R32,J) '89"
+  },
+  "nr32n": {
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R(R32,J) '91"
+  },
+  "nr33n": {
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R(R33,J) '95"
+  },
+  "nr34n": {
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R(R33,J) '97"
+  },
+  "ns13n": {
+   "manufacturer": "Nissan",
+   "name": "Silvia K's 1800cc (J) '88"
+  },
+  "ns14n": {
+   "manufacturer": "Nissan",
+   "name": "240SX K's (J) '95"
+  },
+  "ns15n": {
+   "manufacturer": "Nissan",
+   "name": "240SX K's Aero(J) '96"
+  },
+  "ns23n": {
+   "manufacturer": "Nissan",
+   "name": "Silvia K's 2000cc (J) '91"
+  },
+  "nv12n": {
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R Vspec(R32,J) '93"
+  },
+  "nv22n": {
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R Vspec II(R32,J) '94"
+  },
+  "nv33n": {
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R Vspec(R33,J) '95"
+  },
+  "nv34n": {
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R Vspec(R33,J) '97"
+  },
+  "q2min": {
+   "manufacturer": "Daihatsu",
+   "name": "Midget II D-type(J)"
+  },
+  "q2mon": {
+   "manufacturer": "Daihatsu",
+   "name": "Mira TR-XX(J) '90"
+  },
+  "q2s4n": {
+   "manufacturer": "Daihatsu",
+   "name": "Storia CX(4WD,J) '98"
+  },
+  "q2sgr": {
+   "manufacturer": "Daihatsu",
+   "name": "Storia Rally Car"
+  },
+  "q2stn": {
+   "manufacturer": "Daihatsu",
+   "name": "Storia CX(2WD,J) '98"
+  },
+  "q2trn": {
+   "manufacturer": "Daihatsu",
+   "name": "Mira TR(4WD,J) '98"
+  },
+  "q2txn": {
+   "manufacturer": "Daihatsu",
+   "name": "Mira TX(4WD,J) '98"
+  },
+  "q2x4n": {
+   "manufacturer": "Daihatsu",
+   "name": "Storia X4(J) '98"
+  },
+  "s222n": {
+   "manufacturer": "Subaru",
+   "name": "Impreza 22B STi Version(J) '98"
+  },
+  "s2a6n": {
+   "manufacturer": "Subaru",
+   "name": "Impreza typeRA STi Ver.VI(J)'99"
+  },
+  "s2i4n": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan STi Ver.IV(J)'97"
+  },
+  "s2i5n": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan STi Ver.V(J)'98"
+  },
+  "s2i6n": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan STi Ver. VI(J) '99"
+  },
+  "s2iwn": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan(J)'97"
+  },
+  "s2nin": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan (J)'98"
+  },
+  "s2nwn": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon (J)'98"
+  },
+  "s2r4n": {
+   "manufacturer": "Subaru",
+   "name": "Impreza typeR  STi Ver.IV(J)'97"
+  },
+  "s2r5n": {
+   "manufacturer": "Subaru",
+   "name": "Impreza typeR STi Ver.V(J)'98"
+  },
+  "s2r6n": {
+   "manufacturer": "Subaru",
+   "name": "Impreza typeR STi Ver.VI(J)'99"
+  },
+  "s2w4n": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon STi Ver.IV(J)'97"
+  },
+  "s2w5n": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon STi Ver.V (J)'98"
+  },
+  "s2w6n": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon STi Ver.VI (J) '99"
+  },
+  "s2wwn": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon(J)'97"
+  },
+  "sipan": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan WRX(J) '96"
+  },
+  "sipbn": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan STi versionIII(J) '96"
+  },
+  "sipcn": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon (J) '96"
+  },
+  "sipdn": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon STi versionIII(J)'96"
+  },
+  "siprn": {
+   "manufacturer": "Subaru",
+   "name": "Impreza typeR STi Ver.(J) '96"
+  },
+  "sipsn": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan STi versionII(J)'95"
+  },
+  "siptn": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon STi versionII(J)'95"
+  },
+  "sipwn": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon(J)'94"
+  },
+  "sipxr": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Rally Car"
+  },
+  "sipzn": {
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan(J)'94"
+  },
+  "slgan": {
+   "manufacturer": "Subaru",
+   "name": "Legacy Wagon GT-B(J) '96"
+  },
+  "ssv4n": {
+   "manufacturer": "Subaru",
+   "name": "SVX S4(J) '95"
+  },
+  "ssvxn": {
+   "manufacturer": "Subaru",
+   "name": "SVX Lsi '95"
+  },
+  "t-rdn": {
+   "manufacturer": "Toyota",
+   "name": "TRD3000GT (J)"
+  },
+  "t22dn": {
+   "manufacturer": "Toyota",
+   "name": "TRD2000GT (J)"
+  },
+  "t261n": {
+   "manufacturer": "Toyota",
+   "name": "Starlet 3 Door Turbo S(J) '82"
+  },
+  "t271n": {
+   "manufacturer": "Toyota",
+   "name": "Starlet 3 Door Turbo S(J) '87"
+  },
+  "t285n": {
+   "manufacturer": "Toyota",
+   "name": "Celica GT-Four(J) '88"
+  },
+  "t286r": {
+   "manufacturer": "Toyota",
+   "name": "BP Trueno GT(J) '99"
+  },
+  "t291n": {
+   "manufacturer": "Toyota",
+   "name": "Altezza RS200(J) '98"
+  },
+  "t292n": {
+   "manufacturer": "Toyota",
+   "name": "Lexus IS"
+  },
+  "t29lr": {
+   "manufacturer": "Toyota",
+   "name": "Altezza LM Edition"
+  },
+  "t29nn": {
+   "manufacturer": "Toyota",
+   "name": "Altezza 280T(Tuned by Tom's,J)"
+  },
+  "t2c3n": {
+   "manufacturer": "Toyota",
+   "name": "Celica  '97"
+  },
+  "t2c4n": {
+   "manufacturer": "Toyota",
+   "name": "Celica GT-Four(J) '91"
+  },
+  "t2cdn": {
+   "manufacturer": "Toyota",
+   "name": "XYR  '99"
+  },
+  "t2cen": {
+   "manufacturer": "Toyota",
+   "name": "Celica Elegant Version(J) '99"
+  },
+  "t2clr": {
+   "manufacturer": "Toyota",
+   "name": "Celica Rally Car"
+  },
+  "t2cmn": {
+   "manufacturer": "Toyota",
+   "name": "Celica Mecanical Version(J) '99"
+  },
+  "t2con": {
+   "manufacturer": "Toyota",
+   "name": "Celica GT-R(J) '91"
+  },
+  "t2crn": {
+   "manufacturer": "Toyota",
+   "name": "Celica GT-Four RC(J) '91"
+  },
+  "t2cwr": {
+   "manufacturer": "Toyota",
+   "name": "Corolla Rally Car '97"
+  },
+  "t2cyn": {
+   "manufacturer": "Toyota",
+   "name": "Celica SS-II(J) '99"
+  },
+  "t2g8r": {
+   "manufacturer": "Toyota",
+   "name": "GT-ONE Race Car '98"
+  },
+  "t2g9r": {
+   "manufacturer": "Toyota",
+   "name": "GT-ONE Race Car '99"
+  },
+  "t2isn": {
+   "manufacturer": "Toyota",
+   "name": "Lexus IS 200"
+  },
+  "t2mmr": {
+   "manufacturer": "Toyota",
+   "name": "Momo MR2 GT(J) '99"
+  },
+  "t2msn": {
+   "manufacturer": "Toyota",
+   "name": "MR-S S Edition(J) '99"
+  },
+  "t2mtn": {
+   "manufacturer": "Toyota",
+   "name": "MR-S Show Version(J) '97"
+  },
+  "t2sdr": {
+   "manufacturer": "Toyota",
+   "name": "Denso Supra GT(J) '99"
+  },
+  "t2sor": {
+   "manufacturer": "Toyota",
+   "name": "Cerumo Supra GT(J) '99"
+  },
+  "t2svn": {
+   "manufacturer": "Toyota",
+   "name": "Starlet Glanza V(J) '98"
+  },
+  "t2t1n": {
+   "manufacturer": "Toyota",
+   "name": "Tom's T111 (J)"
+  },
+  "t2t2n": {
+   "manufacturer": "Toyota",
+   "name": "Tom's T020 (J)"
+  },
+  "t2t8n": {
+   "manufacturer": "Toyota",
+   "name": "Tom's Supra (J)"
+  },
+  "t2tan": {
+   "manufacturer": "Toyota",
+   "name": "Angel T01 (J)"
+  },
+  "t2vzn": {
+   "manufacturer": "Toyota",
+   "name": "Vitz F(J) '99"
+  },
+  "t2wsr": {
+   "manufacturer": "Toyota",
+   "name": "Weds Celica GT(J) '99"
+  },
+  "t2x3n": {
+   "manufacturer": "Toyota",
+   "name": "Chaser TRD Sports X30(J)"
+  },
+  "t2xxn": {
+   "manufacturer": "Toyota",
+   "name": "Celica  '84"
+  },
+  "tcegn": {
+   "manufacturer": "Toyota",
+   "name": "Celica GT-Four(J) '95"
+  },
+  "tceln": {
+   "manufacturer": "Toyota",
+   "name": "Celica  '96"
+  },
+  "tsplr": {
+   "manufacturer": "Toyota",
+   "name": "Castrol Supra GT(J) '96"
+  },
+  "tstln": {
+   "manufacturer": "Toyota",
+   "name": "Starlet Glanza V(J) '96"
+  },
+  "uf4lr": {
+   "manufacturer": "Ford",
+   "name": "GT40 Race Car"
+  },
+  "uf90n": {
+   "manufacturer": "Ford",
+   "name": "GT90"
+  },
+  "ulpsn": {
+   "manufacturer": "Plymouth",
+   "name": "PT Spyder"
+  },
+  "uscon": {
+   "manufacturer": "Shelby",
+   "name": "Cobra 427 '67"
+  },
+  "v-rbr": {
+   "manufacturer": "TVR",
+   "name": "Cerbera LM Edition"
+  },
+  "vs12n": {
+   "manufacturer": "TVR",
+   "name": "Speed 12"
+  },
+  "vst6n": {
+   "manufacturer": "TVR",
+   "name": "Tuscan Speed 6"
+  },
+  "x2a8n": {
+   "manufacturer": "Suzuki",
+   "name": "Alto Works RS/Z(J) '98"
+  },
+  "x2aln": {
+   "manufacturer": "Suzuki",
+   "name": "Alto Works RS/X(J) '90"
+  },
+  "x2asn": {
+   "manufacturer": "Suzuki",
+   "name": "Alto Works Limited(J) '97"
+  },
+  "x2azn": {
+   "manufacturer": "Suzuki",
+   "name": "Alto Works RS/Z(J) '97"
+  },
+  "x2cpn": {
+   "manufacturer": "Suzuki",
+   "name": "Capcino (J) '95"
+  }
+ }
+}
