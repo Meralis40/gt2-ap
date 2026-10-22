@@ -1,0 +1,6184 @@
+{
+ "cars": [
+  {
+   "code": "a-a7r",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 A-spec LM Edition",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 549,
+   "maxPower": 549,
+   "maxPowerKit": null
+  },
+  {
+   "code": "a-emn",
+   "manufacturer": "Mazda",
+   "name": "Mazda Demio A-spec(J) '97",
+   "drivetrain": "FF",
+   "engine": "I4 SOHC NA",
+   "stockPower": 101,
+   "maxPower": 274,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "a222n",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 GT-Turbo(J) '83",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 164,
+   "maxPower": 440,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "a26sn",
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata 1.6 S Package(J) '98",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 124,
+   "maxPower": 244,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "a28bn",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type RB(J) '98",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 263,
+   "maxPower": 549,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "a28rn",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type R(J) '98",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 278,
+   "maxPower": 619,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "a28sn",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type RS(J) '98",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 290,
+   "maxPower": 643,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "a2aan",
+   "manufacturer": "Mazda",
+   "name": "Mazda AZ-1 A-spec(J) '91",
+   "drivetrain": "MR",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 62,
+   "maxPower": 180,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "a2abn",
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata B Spec(J)",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 168,
+   "maxPower": 310,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "a2azn",
+   "manufacturer": "Mazda",
+   "name": "Mazda AZ-1 (J) '91",
+   "drivetrain": "MR",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 62,
+   "maxPower": 180,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "a2bgn",
+   "manufacturer": "Mazda",
+   "name": "Mazda Protegé GT-R(J) '92",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 208,
+   "maxPower": 358,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "a2bin",
+   "manufacturer": "Mazda",
+   "name": "Mazda Protegé 4Door Sedan(J) '89",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 111,
+   "maxPower": 376,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "a2bsn",
+   "manufacturer": "Mazda",
+   "name": "Mazda Protegé GT-X(J) '92",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 178,
+   "maxPower": 331,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "a2gcn",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 GT-C(J) '99",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 298,
+   "maxPower": 692,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "a2gln",
+   "manufacturer": "Mazda",
+   "name": "Demio GL-X(J) '99",
+   "drivetrain": "FF",
+   "engine": "I4 SOHC NA",
+   "stockPower": 98,
+   "maxPower": 254,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "a2gsn",
+   "manufacturer": "Mazda",
+   "name": "Demio GL-X Special(J) '98",
+   "drivetrain": "FF",
+   "engine": "I4 SOHC NA",
+   "stockPower": 98,
+   "maxPower": 254,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "a2l7r",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 GT-C LM Edition",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 566,
+   "maxPower": 566,
+   "maxPowerKit": null
+  },
+  {
+   "code": "a2mkr",
+   "manufacturer": "Mazda",
+   "name": "Amemiya RX-7 (J) '99",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 453,
+   "maxPower": 453,
+   "maxPowerKit": null
+  },
+  {
+   "code": "a2ran",
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata A Spec(J)",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 143,
+   "maxPower": 274,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "a2rbn",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type RB(J) '97",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 263,
+   "maxPower": 532,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "a2rcn",
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata C Spec(J)",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 200,
+   "maxPower": 344,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "a2rrn",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 RS-R(J) '97",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 263,
+   "maxPower": 532,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "a2rsn",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type RS(J) '97",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 263,
+   "maxPower": 532,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "a2rzn",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type RZ(J) '97",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 263,
+   "maxPower": 532,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "a2spn",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Cabriolet(J) '90",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 205,
+   "maxPower": 380,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "a2swn",
+   "manufacturer": "Mazda",
+   "name": "Mazda 323F S-Wagon(J) '99",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC NA",
+   "stockPower": 170,
+   "maxPower": 394,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "a2vsn",
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata 1.8 VS(J) '98",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 143,
+   "maxPower": 274,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "acoen",
+   "manufacturer": "Mazda",
+   "name": "Mazda Cosmo Type-E(J) '94",
+   "drivetrain": "FR",
+   "engine": "Rotar3 Rotary TURBO",
+   "stockPower": 278,
+   "maxPower": 643,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "acosn",
+   "manufacturer": "Mazda",
+   "name": "Mazda Cosmo Type-S(J) '94",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 228,
+   "maxPower": 423,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "ademn",
+   "manufacturer": "Mazda",
+   "name": "Demio GL-X(J) '97",
+   "drivetrain": "FF",
+   "engine": "I4 SOHC NA",
+   "stockPower": 98,
+   "maxPower": 254,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "adgln",
+   "manufacturer": "Mazda",
+   "name": "Demio GL(J) '97",
+   "drivetrain": "FF",
+   "engine": "I4 SOHC NA",
+   "stockPower": 98,
+   "maxPower": 254,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "adlxn",
+   "manufacturer": "Mazda",
+   "name": "Demio LX G Package(J) '97",
+   "drivetrain": "FF",
+   "engine": "I4 SOHC NA",
+   "stockPower": 82,
+   "maxPower": 201,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "afa7n",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 A-spec(J) '96",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 264,
+   "maxPower": 500,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "afb7n",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type RB(J) '96",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 264,
+   "maxPower": 474,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "afc7n",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Infini III(J) '90",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 210,
+   "maxPower": 397,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "afd7n",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type RZ(J) '96",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 264,
+   "maxPower": 474,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "afn7r",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 LM Edition",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 559,
+   "maxPower": 559,
+   "maxPowerKit": null
+  },
+  {
+   "code": "afo7n",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Type R(J) '91",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 264,
+   "maxPower": 440,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "afr7n",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 GT-X(J) '90",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 205,
+   "maxPower": 380,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "afx7n",
+   "manufacturer": "Mazda",
+   "name": "Mazda RX-7 Touring X(J) '96",
+   "drivetrain": "FR",
+   "engine": "Rotar2 Rotary TURBO",
+   "stockPower": 264,
+   "maxPower": 474,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "altsn",
+   "manufacturer": "Mazda",
+   "name": "Mazda 323F Coupe Type-R(J)'93",
+   "drivetrain": "FF",
+   "engine": "V6 DOHC NA",
+   "stockPower": 174,
+   "maxPower": 316,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "aminn",
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata (J) '93",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 131,
+   "maxPower": 301,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "amisn",
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata S-Special(J) '93",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 131,
+   "maxPower": 301,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "amivn",
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata V-Special(J) '93",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 131,
+   "maxPower": 301,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "an16n",
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata (J) '89",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 118,
+   "maxPower": 241,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "arodn",
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata 1.8 RS(J) '98",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 143,
+   "maxPower": 274,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "as16n",
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata S-Special(J) '92",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 118,
+   "maxPower": 241,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "av16n",
+   "manufacturer": "Mazda",
+   "name": "MX-5 Miata V-Special(J) '90",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 118,
+   "maxPower": 241,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "bistn",
+   "manufacturer": "Lister",
+   "name": "Storm V12",
+   "drivetrain": "FR",
+   "engine": "V12 NA",
+   "stockPower": 600,
+   "maxPower": 719,
+   "maxPowerKit": null
+  },
+  {
+   "code": "bj15n",
+   "manufacturer": "Jaguar",
+   "name": "XJR XJR Vehicle",
+   "drivetrain": "FR",
+   "engine": "V8 DOHC MA",
+   "stockPower": 400,
+   "maxPower": 559,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "bj22n",
+   "manufacturer": "Jaguar",
+   "name": "XJ220 GT Race Car",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 549,
+   "maxPower": 959,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "bjjrr",
+   "manufacturer": "Jaguar",
+   "name": "XJR15 GT Race Car",
+   "drivetrain": "MR",
+   "engine": "V12 SOHC NA",
+   "stockPower": 477,
+   "maxPower": 477,
+   "maxPowerKit": null
+  },
+  {
+   "code": "bjk8n",
+   "manufacturer": "Jaguar",
+   "name": "XK8 Coupe",
+   "drivetrain": "FR",
+   "engine": "V8 DOHC NA",
+   "stockPower": 291,
+   "maxPower": 557,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "bjkrn",
+   "manufacturer": "Jaguar",
+   "name": "XKR",
+   "drivetrain": "FR",
+   "engine": "V8 DOHC MA",
+   "stockPower": 400,
+   "maxPower": 559,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "bjxjn",
+   "manufacturer": "Jaguar",
+   "name": "XJ Sport 3.2",
+   "drivetrain": "FR",
+   "engine": "V8 DOHC NA",
+   "stockPower": 241,
+   "maxPower": 517,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "bmmgn",
+   "manufacturer": "Mini & MG",
+   "name": "MGF 1.8i VVC",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 147,
+   "maxPower": 248,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "brm1r",
+   "manufacturer": "Mini & MG",
+   "name": "MiniCooperMK1",
+   "drivetrain": "FF",
+   "engine": "I4 OHV NA",
+   "stockPower": 243,
+   "maxPower": 243,
+   "maxPowerKit": null
+  },
+  {
+   "code": "brmcn",
+   "manufacturer": "Mini & MG",
+   "name": "Mini Cooper 1.3i",
+   "drivetrain": "FF",
+   "engine": "I4 OHV NA",
+   "stockPower": 61,
+   "maxPower": 183,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "brmin",
+   "manufacturer": "Mini & MG",
+   "name": "Mini 1.3",
+   "drivetrain": "FF",
+   "engine": "I4 OHV NA",
+   "stockPower": 60,
+   "maxPower": 144,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "bu41n",
+   "manufacturer": "RUF",
+   "name": "RUF BTR TypeI",
+   "drivetrain": "RR",
+   "engine": "Boxer6 SOHC TURBO",
+   "stockPower": 371,
+   "maxPower": 637,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "bu42n",
+   "manufacturer": "RUF",
+   "name": "RUF BTR TypeII",
+   "drivetrain": "RR",
+   "engine": "Boxer6 SOHC TURBO",
+   "stockPower": 401,
+   "maxPower": 520,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "bub2n",
+   "manufacturer": "RUF",
+   "name": "RUF BTR2",
+   "drivetrain": "RR",
+   "engine": "Boxer6 SOHC TURBO",
+   "stockPower": 426,
+   "maxPower": 544,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "buc1n",
+   "manufacturer": "RUF",
+   "name": "RUF CTR Yellow Bird",
+   "drivetrain": "RR",
+   "engine": "Boxer6 SOHC TURBO",
+   "stockPower": 470,
+   "maxPower": 607,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "buc9n",
+   "manufacturer": "RUF",
+   "name": "RUF CTR2",
+   "drivetrain": "AWD",
+   "engine": "Boxer6 SOHC TURBO",
+   "stockPower": 520,
+   "maxPower": 629,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "bucrn",
+   "manufacturer": "RUF",
+   "name": "RUF CTR2 Sport",
+   "drivetrain": "AWD",
+   "engine": "Boxer6 SOHC TURBO",
+   "stockPower": 537,
+   "maxPower": 666,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "buctn",
+   "manufacturer": "RUF",
+   "name": "RUF RCT",
+   "drivetrain": "RR",
+   "engine": "Boxer6 SOHC TURBO",
+   "stockPower": 384,
+   "maxPower": 665,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "buthn",
+   "manufacturer": "RUF",
+   "name": "RUF Turbo-R",
+   "drivetrain": "AWD",
+   "engine": "Boxer6 SOHC TURBO",
+   "stockPower": 537,
+   "maxPower": 666,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "bvasn",
+   "manufacturer": "#35",
+   "name": "Astra SRi 2.0i 16V",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 137,
+   "maxPower": 310,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "bvcdr",
+   "manufacturer": "#35",
+   "name": "Calibra Touring Car",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC NA",
+   "stockPower": 563,
+   "maxPower": 563,
+   "maxPowerKit": null
+  },
+  {
+   "code": "bvcon",
+   "manufacturer": "#35",
+   "name": "Corsa Sport 1.6i 16V",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 104,
+   "maxPower": 124,
+   "maxPowerKit": null
+  },
+  {
+   "code": "bviir",
+   "manufacturer": "#35",
+   "name": "Tigra Ice Race Car",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC NA",
+   "stockPower": 532,
+   "maxPower": 532,
+   "maxPowerKit": null
+  },
+  {
+   "code": "bvtin",
+   "manufacturer": "#35",
+   "name": "Tigra 1.6i",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 104,
+   "maxPower": 240,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "bvven",
+   "manufacturer": "#35",
+   "name": "Vectra GSi 2.5 V6",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 194,
+   "maxPower": 326,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "c-30n",
+   "manufacturer": "Chevrolet",
+   "name": "Camaro Z28 30th Anniversary '96",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 290,
+   "maxPower": 624,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "c427n",
+   "manufacturer": "Chevrolet",
+   "name": "Corvette 427 Stingray '69",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 440,
+   "maxPower": 626,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "cc67n",
+   "manufacturer": "Chevrolet",
+   "name": "Corvette Sting Ray '67",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 440,
+   "maxPower": 639,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "cc69n",
+   "manufacturer": "Chevrolet",
+   "name": "Camaro Z28 '69",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 303,
+   "maxPower": 439,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "cc82n",
+   "manufacturer": "Chevrolet",
+   "name": "Corvette Stingray '82",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 224,
+   "maxPower": 401,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ccamn",
+   "manufacturer": "Chevrolet",
+   "name": "Camaro Z28 Coupe '97",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 290,
+   "maxPower": 624,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ccrcn",
+   "manufacturer": "Chevrolet",
+   "name": "Corvette Coupe '96",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 338,
+   "maxPower": 677,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ccrvn",
+   "manufacturer": "Chevrolet",
+   "name": "Corvette Grand Sport '96",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 338,
+   "maxPower": 677,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ccssn",
+   "manufacturer": "Chevrolet",
+   "name": "Camaro SS '97",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 316,
+   "maxPower": 622,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "czr1n",
+   "manufacturer": "Chevrolet",
+   "name": "Corvette ZR-1 '95",
+   "drivetrain": "FR",
+   "engine": "V8 DOHC NA",
+   "stockPower": 410,
+   "maxPower": 652,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "d-pgr",
+   "manufacturer": "Dodge",
+   "name": "Viper GTS-R",
+   "drivetrain": "FR",
+   "engine": "V10 OHV NA",
+   "stockPower": 700,
+   "maxPower": 700,
+   "maxPowerKit": null
+  },
+  {
+   "code": "d-phr",
+   "manufacturer": "Dodge",
+   "name": "Concept Car LM Edition",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 534,
+   "maxPower": 534,
+   "maxPowerKit": null
+  },
+  {
+   "code": "d2tvr",
+   "manufacturer": "Dodge",
+   "name": "STP Viper GT",
+   "drivetrain": "FR",
+   "engine": "V10 OHV NA",
+   "stockPower": 655,
+   "maxPower": 655,
+   "maxPowerKit": null
+  },
+  {
+   "code": "dcaen",
+   "manufacturer": "Dodge",
+   "name": "Avenger ES",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 140,
+   "maxPower": 340,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "dcc1n",
+   "manufacturer": "Dodge",
+   "name": "Charger  '71",
+   "drivetrain": "FR",
+   "engine": "V8 NA",
+   "stockPower": 389,
+   "maxPower": 567,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "dcchn",
+   "manufacturer": "Dodge",
+   "name": "Challenger",
+   "drivetrain": "FR",
+   "engine": "V8 NA",
+   "stockPower": 293,
+   "maxPower": 447,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "dcien",
+   "manufacturer": "Dodge",
+   "name": "Intrepid ES",
+   "drivetrain": "FF",
+   "engine": "V6 SOHC NA",
+   "stockPower": 227,
+   "maxPower": 513,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "dcnan",
+   "manufacturer": "Dodge",
+   "name": "Neon ACR",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 151,
+   "maxPower": 287,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "dcnrn",
+   "manufacturer": "Dodge",
+   "name": "Neon R/T",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 151,
+   "maxPower": 287,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "dcphn",
+   "manufacturer": "Dodge",
+   "name": "Concept Car",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 220,
+   "maxPower": 358,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "dcptn",
+   "manufacturer": "Dodge",
+   "name": "Phaeton",
+   "drivetrain": "FR",
+   "engine": "V12 NA",
+   "stockPower": 510,
+   "maxPower": 612,
+   "maxPowerKit": null
+  },
+  {
+   "code": "dcsen",
+   "manufacturer": "Dodge",
+   "name": "Stratus ES",
+   "drivetrain": "FF",
+   "engine": "V6 SOHC NA",
+   "stockPower": 102,
+   "maxPower": 377,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "dvp8r",
+   "manufacturer": "Dodge",
+   "name": "Viper GTS-R Team Oreca",
+   "drivetrain": "FR",
+   "engine": "V10 OHV NA",
+   "stockPower": 700,
+   "maxPower": 700,
+   "maxPowerKit": null
+  },
+  {
+   "code": "dvpgn",
+   "manufacturer": "Dodge",
+   "name": "Viper GTS",
+   "drivetrain": "FR",
+   "engine": "V10 OHV NA",
+   "stockPower": 470,
+   "maxPower": 716,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "dvprn",
+   "manufacturer": "Dodge",
+   "name": "Viper RT/10",
+   "drivetrain": "FR",
+   "engine": "V10 OHV NA",
+   "stockPower": 470,
+   "maxPower": 716,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "efcon",
+   "manufacturer": "Ford",
+   "name": "Cougar 2.5i 24V",
+   "drivetrain": "FF",
+   "engine": "V6 DOHC NA",
+   "stockPower": 175,
+   "maxPower": 520,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "efe2n",
+   "manufacturer": "Ford",
+   "name": "RS200 Rally Car",
+   "drivetrain": "AWD",
+   "engine": "DOHC TURBO",
+   "stockPower": 384,
+   "maxPower": 491,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "efesr",
+   "manufacturer": "Ford",
+   "name": "Escort Rally Car",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 467,
+   "maxPower": 467,
+   "maxPowerKit": null
+  },
+  {
+   "code": "effgn",
+   "manufacturer": "Ford",
+   "name": "Focus Ghia 2.0i Zetec",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 125,
+   "maxPower": 394,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "effwr",
+   "manufacturer": "Ford",
+   "name": "Focus Rally Car",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 467,
+   "maxPower": 467,
+   "maxPowerKit": null
+  },
+  {
+   "code": "effzn",
+   "manufacturer": "Ford",
+   "name": "Focus 1.8i Zetec",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 114,
+   "maxPower": 260,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "efkan",
+   "manufacturer": "Ford",
+   "name": "Ka",
+   "drivetrain": "FF",
+   "engine": "I4 SOHC NA",
+   "stockPower": 60,
+   "maxPower": 177,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "efmon",
+   "manufacturer": "Ford",
+   "name": "Mondeo Ghia X 2.5i 24V",
+   "drivetrain": "FF",
+   "engine": "V6 DOHC NA",
+   "stockPower": 175,
+   "maxPower": 337,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "efpun",
+   "manufacturer": "Ford",
+   "name": "Puma 1.7 Zetec-SE VCT",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 122,
+   "maxPower": 256,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "fcr8r",
+   "manufacturer": "Citroen",
+   "name": "Xsara Rally Car",
+   "drivetrain": "AWD",
+   "engine": "DOHC TURBO",
+   "stockPower": 384,
+   "maxPower": 384,
+   "maxPowerKit": null
+  },
+  {
+   "code": "fcs6n",
+   "manufacturer": "Citroen",
+   "name": "Saxo 1.6i VTS",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 120,
+   "maxPower": 268,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "fcx3n",
+   "manufacturer": "Citroen",
+   "name": "Xantia 3.0i V6 Exclusive",
+   "drivetrain": "FF",
+   "engine": "V6 DOHC NA",
+   "stockPower": 193,
+   "maxPower": 361,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "fcx8n",
+   "manufacturer": "Citroen",
+   "name": "Xsara 1.8i 16V Exclusive",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 110,
+   "maxPower": 266,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "fp1rn",
+   "manufacturer": "Peugeot",
+   "name": "106 1.6 Rallye",
+   "drivetrain": "FF",
+   "engine": "I4 SOHC NA",
+   "stockPower": 101,
+   "maxPower": 190,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "fp1sn",
+   "manufacturer": "Peugeot",
+   "name": "106 1.6 S16",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 125,
+   "maxPower": 211,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "fp26n",
+   "manufacturer": "Peugeot",
+   "name": "106 1.6 S16",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 137,
+   "maxPower": 378,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "fp27n",
+   "manufacturer": "Peugeot",
+   "name": "206 S16",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 137,
+   "maxPower": 378,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "fp2wr",
+   "manufacturer": "Peugeot",
+   "name": "206 S16",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 467,
+   "maxPower": 467,
+   "maxPowerKit": null
+  },
+  {
+   "code": "fp2xr",
+   "manufacturer": "Peugeot",
+   "name": "206 Rally Car",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 467,
+   "maxPower": 467,
+   "maxPowerKit": null
+  },
+  {
+   "code": "fp36n",
+   "manufacturer": "Peugeot",
+   "name": "306 S16",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 171,
+   "maxPower": 314,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "fp46n",
+   "manufacturer": "Peugeot",
+   "name": "406 3.0 V6 Coupe",
+   "drivetrain": "FF",
+   "engine": "V6 DOHC NA",
+   "stockPower": 194,
+   "maxPower": 373,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "fp4tn",
+   "manufacturer": "Peugeot",
+   "name": "406 Sedan",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 141,
+   "maxPower": 324,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "fp4un",
+   "manufacturer": "Peugeot",
+   "name": "406 Sedan",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 141,
+   "maxPower": 324,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "frc2n",
+   "manufacturer": "Renault",
+   "name": "Clio 16V",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 108,
+   "maxPower": 128,
+   "maxPowerKit": null
+  },
+  {
+   "code": "frcsn",
+   "manufacturer": "Renault",
+   "name": "Clio Sport V6",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 251,
+   "maxPower": 513,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "frf1n",
+   "manufacturer": "Renault",
+   "name": "Espace F1",
+   "drivetrain": "MR",
+   "engine": "V10 DOHC NA",
+   "stockPower": 830,
+   "maxPower": 830,
+   "maxPowerKit": null
+  },
+  {
+   "code": "frl6n",
+   "manufacturer": "Renault",
+   "name": "Laguna V6",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 193,
+   "maxPower": 386,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "frmgn",
+   "manufacturer": "Renault",
+   "name": "Megane 2.0 16V Coupe",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 145,
+   "maxPower": 298,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "fv30n",
+   "manufacturer": "Venturi",
+   "name": "Atlantique 300",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 213,
+   "maxPower": 640,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "fv4gn",
+   "manufacturer": "Venturi",
+   "name": "Atlantique 400GT",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC MA",
+   "stockPower": 411,
+   "maxPower": 483,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "fv60r",
+   "manufacturer": "Venturi",
+   "name": "Atlantique 600 LM",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 715,
+   "maxPower": 715,
+   "maxPowerKit": null
+  },
+  {
+   "code": "gaa3n",
+   "manufacturer": "Audi",
+   "name": "A3",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 151,
+   "maxPower": 348,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "gaa4n",
+   "manufacturer": "Audi",
+   "name": "A4 2.8 quattro",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC NA",
+   "stockPower": 194,
+   "maxPower": 347,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "gas3n",
+   "manufacturer": "Audi",
+   "name": "S3",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 211,
+   "maxPower": 389,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "gas4n",
+   "manufacturer": "Audi",
+   "name": "S4",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 273,
+   "maxPower": 610,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "gatlr",
+   "manufacturer": "Audi",
+   "name": "TT LM Edition",
+   "drivetrain": "AWD",
+   "engine": "DOHC TURBO",
+   "stockPower": 552,
+   "maxPower": 552,
+   "maxPowerKit": null
+  },
+  {
+   "code": "gattn",
+   "manufacturer": "Audi",
+   "name": "TT 1.8T quattro",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 223,
+   "maxPower": 403,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "gb0cn",
+   "manufacturer": "BMW",
+   "name": "320Ci",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 148,
+   "maxPower": 313,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "gb28n",
+   "manufacturer": "BMW",
+   "name": "328i",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 191,
+   "maxPower": 376,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "gb2cn",
+   "manufacturer": "BMW",
+   "name": "323ti Compact",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 168,
+   "maxPower": 363,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "gb52n",
+   "manufacturer": "BMW",
+   "name": "528i",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 140,
+   "maxPower": 320,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "gb74n",
+   "manufacturer": "BMW",
+   "name": "740i",
+   "drivetrain": "FR",
+   "engine": "V8 DOHC NA",
+   "stockPower": 280,
+   "maxPower": 427,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "gb84n",
+   "manufacturer": "BMW",
+   "name": "840Ci",
+   "drivetrain": "FR",
+   "engine": "V8 DOHC NA",
+   "stockPower": 281,
+   "maxPower": 421,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "gbc3n",
+   "manufacturer": "BMW",
+   "name": "323Ci",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 173,
+   "maxPower": 449,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "gbc8n",
+   "manufacturer": "BMW",
+   "name": "328Ci",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 191,
+   "maxPower": 480,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "gm16n",
+   "manufacturer": "Mercedes-Benz",
+   "name": "A160 Avantgarde",
+   "drivetrain": "FF",
+   "engine": "I4 SOHC NA",
+   "stockPower": 102,
+   "maxPower": 251,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "gm20n",
+   "manufacturer": "Mercedes-Benz",
+   "name": "CLK 200 Sport",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 135,
+   "maxPower": 394,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "gm32n",
+   "manufacturer": "Mercedes-Benz",
+   "name": "CLK 320 Sport",
+   "drivetrain": "FR",
+   "engine": "V6 SOHC NA",
+   "stockPower": 228,
+   "maxPower": 469,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "gmc4n",
+   "manufacturer": "Mercedes-Benz",
+   "name": "AMG C 43",
+   "drivetrain": "FR",
+   "engine": "V8 SOHC NA",
+   "stockPower": 307,
+   "maxPower": 530,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "gmd2r",
+   "manufacturer": "Mercedes-Benz",
+   "name": "- -",
+   "drivetrain": "AWD",
+   "engine": "DOHC NA",
+   "stockPower": 547,
+   "maxPower": 547,
+   "maxPowerKit": null
+  },
+  {
+   "code": "gme5n",
+   "manufacturer": "Mercedes-Benz",
+   "name": "AMG E 55",
+   "drivetrain": "FR",
+   "engine": "V8 SOHC NA",
+   "stockPower": 368,
+   "maxPower": 504,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "gmsln",
+   "manufacturer": "Mercedes-Benz",
+   "name": "SLK 230 Kompressor",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC MA",
+   "stockPower": 198,
+   "maxPower": 430,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "goasn",
+   "manufacturer": "Opel",
+   "name": "Astra SRi 2.0i 16V",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 137,
+   "maxPower": 310,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "gocdr",
+   "manufacturer": "Opel",
+   "name": "Calibra Touring Car",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC NA",
+   "stockPower": 563,
+   "maxPower": 563,
+   "maxPowerKit": null
+  },
+  {
+   "code": "gocon",
+   "manufacturer": "Opel",
+   "name": "Corsa Sport 1.6i 16V",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 104,
+   "maxPower": 223,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "goiir",
+   "manufacturer": "Opel",
+   "name": "Tigra Ice Race Car",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC NA",
+   "stockPower": 532,
+   "maxPower": 532,
+   "maxPowerKit": null
+  },
+  {
+   "code": "gotin",
+   "manufacturer": "Opel",
+   "name": "Tigra 1.6i",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 104,
+   "maxPower": 240,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "goven",
+   "manufacturer": "Opel",
+   "name": "Vectra GSi 2.5 V6",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 194,
+   "maxPower": 326,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "gv45n",
+   "manufacturer": "Volkswagen",
+   "name": "Golf IV 2.3 V5",
+   "drivetrain": "FF",
+   "engine": "V5 NA",
+   "stockPower": 150,
+   "maxPower": 354,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "gv46n",
+   "manufacturer": "Volkswagen",
+   "name": "Golf IV V6",
+   "drivetrain": "FF",
+   "engine": "V6 NA",
+   "stockPower": 150,
+   "maxPower": 354,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "gv48n",
+   "manufacturer": "Volkswagen",
+   "name": "Golf IV GTI 1.8T",
+   "drivetrain": "FF",
+   "engine": "I4 SOHC TURBO",
+   "stockPower": 155,
+   "maxPower": 390,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "gv4gn",
+   "manufacturer": "Volkswagen",
+   "name": "Golf IV GTI",
+   "drivetrain": "FF",
+   "engine": "I4 SOHC NA",
+   "stockPower": 122,
+   "maxPower": 310,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "gvbgr",
+   "manufacturer": "Volkswagen",
+   "name": "New Beetle GT",
+   "drivetrain": "AWD",
+   "engine": "DOHC TURBO",
+   "stockPower": 456,
+   "maxPower": 456,
+   "maxPowerKit": null
+  },
+  {
+   "code": "gvlun",
+   "manufacturer": "Volkswagen",
+   "name": "Lupo 1.4",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 75,
+   "maxPower": 178,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "gvnbn",
+   "manufacturer": "Volkswagen",
+   "name": "New Beetle GLS 2.0L",
+   "drivetrain": "FF",
+   "engine": "I4 NA",
+   "stockPower": 114,
+   "maxPower": 376,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "gvp6n",
+   "manufacturer": "Volkswagen",
+   "name": "- -",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 100,
+   "maxPower": 185,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "h-err",
+   "manufacturer": "Honda",
+   "name": "del Sol LM Edition",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 626,
+   "maxPower": 626,
+   "maxPowerKit": null
+  },
+  {
+   "code": "h28cn",
+   "manufacturer": "Honda",
+   "name": "Accord SiR-T(J) '98",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 193,
+   "maxPower": 344,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "h28wn",
+   "manufacturer": "Honda",
+   "name": "Accord Wagon SiR(J) '98",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 200,
+   "maxPower": 307,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "h2a0n",
+   "manufacturer": "Acura",
+   "name": "Acura NSX  '91",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 253,
+   "maxPower": 401,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "h2a2n",
+   "manufacturer": "Acura",
+   "name": "Acura NSX  '97",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 293,
+   "maxPower": 437,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "h2acn",
+   "manufacturer": "Honda",
+   "name": "Accord SiR-T(J) '97",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 193,
+   "maxPower": 344,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "h2ain",
+   "manufacturer": "Acura",
+   "name": "Acura Integra GS-R",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 170,
+   "maxPower": 290,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "h2arn",
+   "manufacturer": "Honda",
+   "name": "Accord Type-R",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 210,
+   "maxPower": 328,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "h2awn",
+   "manufacturer": "Honda",
+   "name": "Accord Wagon 2300VTL(J) '97",
+   "drivetrain": "AWD",
+   "engine": "I4 SOHC NA",
+   "stockPower": 167,
+   "maxPower": 286,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "h2ben",
+   "manufacturer": "Honda",
+   "name": "Beat (J) '91",
+   "drivetrain": "MR",
+   "engine": "I3 SOHC NA",
+   "stockPower": 62,
+   "maxPower": 130,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "h2bfn",
+   "manufacturer": "Honda",
+   "name": "Beat ver.F(J) '92",
+   "drivetrain": "MR",
+   "engine": "I3 SOHC NA",
+   "stockPower": 62,
+   "maxPower": 130,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "h2bzn",
+   "manufacturer": "Honda",
+   "name": "Beat ver.Z(J) '94",
+   "drivetrain": "MR",
+   "engine": "I3 SOHC NA",
+   "stockPower": 62,
+   "maxPower": 130,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "h2cfn",
+   "manufacturer": "Honda",
+   "name": "Civic Sedan",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 167,
+   "maxPower": 248,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "h2cnr",
+   "manufacturer": "Honda",
+   "name": "Mugen NSX GT(J)",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 617,
+   "maxPower": 617,
+   "maxPowerKit": null
+  },
+  {
+   "code": "h2crn",
+   "manufacturer": "Honda",
+   "name": "Civic Type R(J) '98",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 181,
+   "maxPower": 341,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "h2csn",
+   "manufacturer": "Honda",
+   "name": "Civic 3 Door Si",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 167,
+   "maxPower": 331,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "h2ign",
+   "manufacturer": "Honda",
+   "name": "Integra SiR-G",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 177,
+   "maxPower": 251,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "h2irn",
+   "manufacturer": "Honda",
+   "name": "Integra Type R 98 spec",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 197,
+   "maxPower": 376,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "h2l2r",
+   "manufacturer": "Honda",
+   "name": "S2000 GT1",
+   "drivetrain": "FR",
+   "engine": "DOHC NA",
+   "stockPower": 586,
+   "maxPower": 586,
+   "maxPowerKit": null
+  },
+  {
+   "code": "h2l8n",
+   "manufacturer": "Honda",
+   "name": "Life T(J) '98",
+   "drivetrain": "FF",
+   "engine": "I3 SOHC NA",
+   "stockPower": 48,
+   "maxPower": 120,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "h2lin",
+   "manufacturer": "Honda",
+   "name": "Life T (J) '97",
+   "drivetrain": "FF",
+   "engine": "I3 SOHC NA",
+   "stockPower": 45,
+   "maxPower": 121,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "h2lon",
+   "manufacturer": "Honda",
+   "name": "Logo TS(J) '98",
+   "drivetrain": "FF",
+   "engine": "I4 SOHC NA",
+   "stockPower": 90,
+   "maxPower": 194,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "h2m2n",
+   "manufacturer": "Honda",
+   "name": "Mugen CR-X II (J)",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 158,
+   "maxPower": 208,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "h2man",
+   "manufacturer": "Honda",
+   "name": "Mugen Accord SIR-T(J)",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 193,
+   "maxPower": 306,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "h2mbn",
+   "manufacturer": "Honda",
+   "name": "Mugen Beat (J)",
+   "drivetrain": "MR",
+   "engine": "I3 SOHC NA",
+   "stockPower": 62,
+   "maxPower": 130,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "h2mcn",
+   "manufacturer": "Honda",
+   "name": "Mugen Civic Type-R(J)",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 181,
+   "maxPower": 344,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "h2mdn",
+   "manufacturer": "Honda",
+   "name": "Mugen CR-X III (J)",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 167,
+   "maxPower": 248,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "h2mfn",
+   "manufacturer": "Honda",
+   "name": "Mugen Ferio (J)",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 167,
+   "maxPower": 248,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "h2min",
+   "manufacturer": "Honda",
+   "name": "Mugen Integra Type-R(J)",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 197,
+   "maxPower": 364,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "h2mpn",
+   "manufacturer": "Honda",
+   "name": "Mugen Prelude Type-S(J)",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 214,
+   "maxPower": 328,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "h2mwn",
+   "manufacturer": "Honda",
+   "name": "Mugen Accord Wagon(J)",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 200,
+   "maxPower": 283,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "h2n1r",
+   "manufacturer": "Honda",
+   "name": "Mobil 1 NSX GT(J) '99",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 617,
+   "maxPower": 617,
+   "maxPowerKit": null
+  },
+  {
+   "code": "h2ncr",
+   "manufacturer": "Honda",
+   "name": "Mugen NSX GT(J) '99",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 617,
+   "maxPower": 617,
+   "maxPowerKit": null
+  },
+  {
+   "code": "h2nrr",
+   "manufacturer": "Honda",
+   "name": "Raybrig NSX GT(J) '99",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 617,
+   "maxPower": 617,
+   "maxPowerKit": null
+  },
+  {
+   "code": "h2ntr",
+   "manufacturer": "Honda",
+   "name": "Takata NSX GT(J) '99",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 617,
+   "maxPower": 617,
+   "maxPowerKit": null
+  },
+  {
+   "code": "h2prn",
+   "manufacturer": "Honda",
+   "name": "Prelude",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 197,
+   "maxPower": 326,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "h2psn",
+   "manufacturer": "Honda",
+   "name": "Prelude SiR S spec(J) '98",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 217,
+   "maxPower": 347,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "h2s2n",
+   "manufacturer": "Honda",
+   "name": "S2000",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 245,
+   "maxPower": 370,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "h2scn",
+   "manufacturer": "Honda",
+   "name": "Spoon Civic Type-R(J)",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 215,
+   "maxPower": 254,
+   "maxPowerKit": "PART_NA_TUNE_1"
+  },
+  {
+   "code": "h2sin",
+   "manufacturer": "Honda",
+   "name": "Spoon Integra Type-R(J)",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 263,
+   "maxPower": 317,
+   "maxPowerKit": null
+  },
+  {
+   "code": "h2ssn",
+   "manufacturer": "Honda",
+   "name": "Spoon S2000 (J)",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 273,
+   "maxPower": 313,
+   "maxPowerKit": null
+  },
+  {
+   "code": "h2ztn",
+   "manufacturer": "Honda",
+   "name": "Z Turbo(J) '98",
+   "drivetrain": "AWD",
+   "engine": "I3 SOHC TURBO",
+   "stockPower": 62,
+   "maxPower": 187,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "hacsn",
+   "manufacturer": "Honda",
+   "name": "Accord Sedan '96",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 187,
+   "maxPower": 323,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "hacwn",
+   "manufacturer": "Honda",
+   "name": "Accord Wagon '96",
+   "drivetrain": "FF",
+   "engine": "I4 SOHC NA",
+   "stockPower": 187,
+   "maxPower": 280,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "hairn",
+   "manufacturer": "Acura",
+   "name": "Acura Integra Type R",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 197,
+   "maxPower": 376,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "hcfnn",
+   "manufacturer": "Honda",
+   "name": "Civic Sedan '96",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 167,
+   "maxPower": 248,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "hcfon",
+   "manufacturer": "Honda",
+   "name": "Civic Sedan '93",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 157,
+   "maxPower": 243,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "hcrxn",
+   "manufacturer": "Honda",
+   "name": "Civic CRX Si '91",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 158,
+   "maxPower": 208,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "hcvnn",
+   "manufacturer": "Honda",
+   "name": "Civic 3 Door '95",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 167,
+   "maxPower": 304,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "hcvon",
+   "manufacturer": "Honda",
+   "name": "Civic 3 Door Si '93",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 157,
+   "maxPower": 298,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "hcvrn",
+   "manufacturer": "Honda",
+   "name": "Civic Type R(J) '97",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 181,
+   "maxPower": 311,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "hdegn",
+   "manufacturer": "Honda",
+   "name": "del Sol VGi(J) '95",
+   "drivetrain": "FF",
+   "engine": "I4 SOHC NA",
+   "stockPower": 131,
+   "maxPower": 187,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "hdeln",
+   "manufacturer": "Honda",
+   "name": "del Sol S '93",
+   "drivetrain": "FF",
+   "engine": "I4 SOHC NA",
+   "stockPower": 127,
+   "maxPower": 187,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "hdern",
+   "manufacturer": "Honda",
+   "name": "del Sol Si '93",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 165,
+   "maxPower": 251,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "hdesn",
+   "manufacturer": "Honda",
+   "name": "del Sol SiR(J) '95",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 167,
+   "maxPower": 248,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "hiarn",
+   "manufacturer": "Acura",
+   "name": "Acura Integra Type-R '95",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 195,
+   "maxPower": 368,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "hiasn",
+   "manufacturer": "Acura",
+   "name": "Acura Integra GS-R '95",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 170,
+   "maxPower": 290,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "hinrn",
+   "manufacturer": "Honda",
+   "name": "Integra Type R",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 195,
+   "maxPower": 368,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "hinsn",
+   "manufacturer": "Honda",
+   "name": "Integra SiR-G",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 177,
+   "maxPower": 251,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "hnann",
+   "manufacturer": "Acura",
+   "name": "Acura NSX Type S Zero(J)",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 288,
+   "maxPower": 460,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "hnarn",
+   "manufacturer": "Acura",
+   "name": "Acura NSX  '93",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 276,
+   "maxPower": 429,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "hnasn",
+   "manufacturer": "Acura",
+   "name": "Acura NSX Type S(J)",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 288,
+   "maxPower": 460,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "hnsbn",
+   "manufacturer": "Honda",
+   "name": "NSX",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 294,
+   "maxPower": 460,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "hnsnn",
+   "manufacturer": "Honda",
+   "name": "NSX  Type S Zero",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 288,
+   "maxPower": 451,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "hnsrn",
+   "manufacturer": "Honda",
+   "name": "NSX Type R '92",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 276,
+   "maxPower": 429,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "hnssn",
+   "manufacturer": "Honda",
+   "name": "NSX  Type S",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 288,
+   "maxPower": 451,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "hnsxn",
+   "manufacturer": "Honda",
+   "name": "NSX  '90",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 276,
+   "maxPower": 420,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "hpnen",
+   "manufacturer": "Honda",
+   "name": "Prelude  '96",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 194,
+   "maxPower": 323,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "hpnvn",
+   "manufacturer": "Honda",
+   "name": "Prelude Type-SH",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 214,
+   "maxPower": 338,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "hpren",
+   "manufacturer": "Honda",
+   "name": "Prelude Si '93",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 158,
+   "maxPower": 283,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "hprvn",
+   "manufacturer": "Honda",
+   "name": "Prelude VTEC '94",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 211,
+   "maxPower": 307,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ia45n",
+   "manufacturer": "Alfa Romeo",
+   "name": "145 2.0 Cloverleaf",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 151,
+   "maxPower": 340,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "ia54n",
+   "manufacturer": "Alfa Romeo",
+   "name": "156 2.5 V6 24V",
+   "drivetrain": "FF",
+   "engine": "V6 DOHC NA",
+   "stockPower": 198,
+   "maxPower": 470,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "ia55n",
+   "manufacturer": "Alfa Romeo",
+   "name": "155 2.0 TS 16V",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 151,
+   "maxPower": 274,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ia56n",
+   "manufacturer": "Alfa Romeo",
+   "name": "156 2.0 TS 16V",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 151,
+   "maxPower": 356,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "ia5dr",
+   "manufacturer": "Alfa Romeo",
+   "name": "155 Touring Car",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC NA",
+   "stockPower": 552,
+   "maxPower": 552,
+   "maxPowerKit": null
+  },
+  {
+   "code": "ia63n",
+   "manufacturer": "Alfa Romeo",
+   "name": "166 3.0 V6 24V",
+   "drivetrain": "FF",
+   "engine": "V6 DOHC NA",
+   "stockPower": 247,
+   "maxPower": 416,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ia65n",
+   "manufacturer": "Alfa Romeo",
+   "name": "166 2.5 V6 24V",
+   "drivetrain": "FF",
+   "engine": "V6 DOHC NA",
+   "stockPower": 211,
+   "maxPower": 390,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ia66n",
+   "manufacturer": "Alfa Romeo",
+   "name": "166 2.0 TS 16V",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 151,
+   "maxPower": 356,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "iag4n",
+   "manufacturer": "Alfa Romeo",
+   "name": "GTV 3.0 V6 24V",
+   "drivetrain": "FF",
+   "engine": "V6 DOHC NA",
+   "stockPower": 247,
+   "maxPower": 416,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "iag6n",
+   "manufacturer": "Alfa Romeo",
+   "name": "GTV 2.0 TS 16V",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 151,
+   "maxPower": 356,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "iaspn",
+   "manufacturer": "Alfa Romeo",
+   "name": "Spider 2.0 TS",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 151,
+   "maxPower": 356,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "ii50n",
+   "manufacturer": "FIAT",
+   "name": "500 Sporting",
+   "drivetrain": "FF",
+   "engine": "I4 NA",
+   "stockPower": 54,
+   "maxPower": 190,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "ii60n",
+   "manufacturer": "FIAT",
+   "name": "600(Seicento) Sporting",
+   "drivetrain": "FF",
+   "engine": "I4 NA",
+   "stockPower": 54,
+   "maxPower": 190,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "iiban",
+   "manufacturer": "FIAT",
+   "name": "Barchetta",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 124,
+   "maxPower": 250,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "iictn",
+   "manufacturer": "FIAT",
+   "name": "Coupe 2.0 20V Turbo",
+   "drivetrain": "FF",
+   "engine": "I5 DOHC TURBO",
+   "stockPower": 214,
+   "maxPower": 397,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "iio5n",
+   "manufacturer": "FIAT",
+   "name": "500R",
+   "drivetrain": "RR",
+   "engine": "I2 NA",
+   "stockPower": 22,
+   "maxPower": 140,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "iipun",
+   "manufacturer": "FIAT",
+   "name": "Punto GT",
+   "drivetrain": "FF",
+   "engine": "I4 TURBO",
+   "stockPower": 130,
+   "maxPower": 217,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "ildcn",
+   "manufacturer": "Lancia",
+   "name": "Delta HF Integrale Collezione",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 217,
+   "maxPower": 480,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "ilden",
+   "manufacturer": "Lancia",
+   "name": "Delta HF Integrale",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 184,
+   "maxPower": 330,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "ildvn",
+   "manufacturer": "Lancia",
+   "name": "Delta HF Integrale Evoluzione",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 208,
+   "maxPower": 407,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "ils4r",
+   "manufacturer": "Lancia",
+   "name": "Delta S4",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 393,
+   "maxPower": 393,
+   "maxPowerKit": null
+  },
+  {
+   "code": "ilstn",
+   "manufacturer": "Lancia",
+   "name": "Stratos",
+   "drivetrain": "MR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 193,
+   "maxPower": 360,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "ily3n",
+   "manufacturer": "Lancia",
+   "name": "Y 1.2 16V",
+   "drivetrain": "FF",
+   "engine": "I4 NA",
+   "stockPower": 88,
+   "maxPower": 211,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "io11n",
+   "manufacturer": "Lotus",
+   "name": "Elise 111S",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 144,
+   "maxPower": 258,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "io13n",
+   "manufacturer": "Lotus",
+   "name": "Elise 135",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 133,
+   "maxPower": 247,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "io19n",
+   "manufacturer": "Lotus",
+   "name": "Elise 190",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 187,
+   "maxPower": 267,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "ioe9n",
+   "manufacturer": "Lotus",
+   "name": "Elan S2 '90",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 133,
+   "maxPower": 237,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "ioeln",
+   "manufacturer": "Lotus",
+   "name": "Elise",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 122,
+   "maxPower": 266,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "ioesn",
+   "manufacturer": "Lotus",
+   "name": "Esprit Sport 350",
+   "drivetrain": "MR",
+   "engine": "V8 DOHC TURBO",
+   "stockPower": 356,
+   "maxPower": 669,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "ioeun",
+   "manufacturer": "Lotus",
+   "name": "Europa",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 127,
+   "maxPower": 304,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "iogtn",
+   "manufacturer": "Lotus",
+   "name": "Esprit V8 GT",
+   "drivetrain": "MR",
+   "engine": "V8 DOHC TURBO",
+   "stockPower": 356,
+   "maxPower": 669,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "ioisr",
+   "manufacturer": "Lotus",
+   "name": "Esprit GT1",
+   "drivetrain": "MR",
+   "engine": "V8 DOHC TURBO",
+   "stockPower": 586,
+   "maxPower": 586,
+   "maxPowerKit": null
+  },
+  {
+   "code": "iolln",
+   "manufacturer": "Lotus",
+   "name": "Elise GT1",
+   "drivetrain": "MR",
+   "engine": "V8 DOHC TURBO",
+   "stockPower": 622,
+   "maxPower": 622,
+   "maxPowerKit": null
+  },
+  {
+   "code": "iomsn",
+   "manufacturer": "Lotus",
+   "name": "MotorsportElise",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 203,
+   "maxPower": 333,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "ios2n",
+   "manufacturer": "Lotus",
+   "name": "Elan S2 '64",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 104,
+   "maxPower": 213,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ios4n",
+   "manufacturer": "Lotus",
+   "name": "Elan S4 Sprint '71",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 127,
+   "maxPower": 213,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "iosen",
+   "manufacturer": "Lotus",
+   "name": "Esprit V8 SE",
+   "drivetrain": "MR",
+   "engine": "V8 DOHC TURBO",
+   "stockPower": 356,
+   "maxPower": 669,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "k213n",
+   "manufacturer": "Tommy kaira",
+   "name": "m13(StageII) (J)",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 88,
+   "maxPower": 185,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "k231n",
+   "manufacturer": "Tommy kaira",
+   "name": "M30 (GTS,J) '87",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 251,
+   "maxPower": 414,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "k232n",
+   "manufacturer": "Tommy kaira",
+   "name": "M30 (GTS-R,J) '91",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 280,
+   "maxPower": 659,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "k233n",
+   "manufacturer": "Tommy kaira",
+   "name": "Tommykaira R (J) '95",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 417,
+   "maxPower": 665,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "k234n",
+   "manufacturer": "Tommy kaira",
+   "name": "Tommykaira R (J) '99",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 371,
+   "maxPower": 675,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "k2z2n",
+   "manufacturer": "Tommy kaira",
+   "name": "ZZII (J)",
+   "drivetrain": "MR",
+   "engine": "DOHC TURBO",
+   "stockPower": 597,
+   "maxPower": 597,
+   "maxPowerKit": null
+  },
+  {
+   "code": "k2z3n",
+   "manufacturer": "Tommy kaira",
+   "name": "ZZIII (J)",
+   "drivetrain": "MR",
+   "engine": "DOHC NA",
+   "stockPower": 187,
+   "maxPower": 280,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "k2zzn",
+   "manufacturer": "Tommy kaira",
+   "name": "ZZ-S Coupe(J)",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 193,
+   "maxPower": 283,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "ld6cn",
+   "manufacturer": "Aston Martin",
+   "name": "DB6",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 328,
+   "maxPower": 394,
+   "maxPowerKit": null
+  },
+  {
+   "code": "ld7cn",
+   "manufacturer": "Aston Martin",
+   "name": "DB7 Coupe",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC MA",
+   "stockPower": 386,
+   "maxPower": 539,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "ld7vn",
+   "manufacturer": "Aston Martin",
+   "name": "DB7 Volante",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC MA",
+   "stockPower": 386,
+   "maxPower": 539,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "ldvan",
+   "manufacturer": "Aston Martin",
+   "name": "V8 Vantage",
+   "drivetrain": "FR",
+   "engine": "V8 DOHC MA",
+   "stockPower": 590,
+   "maxPower": 737,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "m-tor",
+   "manufacturer": "Mitsubishi",
+   "name": "FTO LM Edition",
+   "drivetrain": "AWD",
+   "engine": "DOHC TURBO",
+   "stockPower": 557,
+   "maxPower": 557,
+   "maxPowerKit": null
+  },
+  {
+   "code": "m2a5r",
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer Evolution V Rally Car '98",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 434,
+   "maxPower": 434,
+   "maxPowerKit": null
+  },
+  {
+   "code": "m2agn",
+   "manufacturer": "Mitsubishi",
+   "name": "Galant VR-G(J) '99",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 143,
+   "maxPower": 200,
+   "maxPowerKit": "PART_NA_TUNE_1"
+  },
+  {
+   "code": "m2aln",
+   "manufacturer": "Mitsubishi",
+   "name": "Galant VR-4(J) '99",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 271,
+   "maxPower": 459,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "m2g2n",
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer Evolution II(J) '94",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 258,
+   "maxPower": 441,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "m2g4n",
+   "manufacturer": "Mitsubishi",
+   "name": "Galant Super VR4(J) '98",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 263,
+   "maxPower": 476,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "m2g5n",
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer Evolution V GSR (J) '98",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 298,
+   "maxPower": 529,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "m2g6n",
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer Evolution VI GSR (J) '99",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 310,
+   "maxPower": 602,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "m2l4n",
+   "manufacturer": "Mitsubishi",
+   "name": "Legnum Super VR4(J) '98",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 263,
+   "maxPower": 441,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "m2lgn",
+   "manufacturer": "Mitsubishi",
+   "name": "Legnum VR-4 type-S(J) '97",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 263,
+   "maxPower": 427,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "m2lsn",
+   "manufacturer": "Mitsubishi",
+   "name": "Legnum ST(J) '97",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 147,
+   "maxPower": 188,
+   "maxPowerKit": "PART_NA_TUNE_1"
+  },
+  {
+   "code": "m2m5n",
+   "manufacturer": "Mitsubishi",
+   "name": "Mine's Lancer Evolution V(J)",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 419,
+   "maxPower": 526,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "m2m7n",
+   "manufacturer": "Mitsubishi",
+   "name": "Mirage Asti ZR(J) '97",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 173,
+   "maxPower": 233,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "m2m8n",
+   "manufacturer": "Mitsubishi",
+   "name": "Minica Pj(J) '98",
+   "drivetrain": "AWD",
+   "engine": "I3 SOHC TURBO",
+   "stockPower": 50,
+   "maxPower": 148,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "m2man",
+   "manufacturer": "Mitsubishi",
+   "name": "Mirage Asti RX-R(J) '98",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 171,
+   "maxPower": 243,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "m2min",
+   "manufacturer": "Mitsubishi",
+   "name": "Mirage Cyborg-ZR(J) '97",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 173,
+   "maxPower": 237,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "m2mon",
+   "manufacturer": "Mitsubishi",
+   "name": "Minica Dangan ZZ(J) '90",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 65,
+   "maxPower": 177,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "m2mrn",
+   "manufacturer": "Mitsubishi",
+   "name": "3000GT Twin Turbo MR(J)",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 307,
+   "maxPower": 705,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "m2ngn",
+   "manufacturer": "Mitsubishi",
+   "name": "Legnum VR-4 type-S(J) '99",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 271,
+   "maxPower": 411,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "m2nsn",
+   "manufacturer": "Mitsubishi",
+   "name": "Legnum ST(J) '99",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 173,
+   "maxPower": 220,
+   "maxPowerKit": "PART_NA_TUNE_1"
+  },
+  {
+   "code": "m2p8n",
+   "manufacturer": "Mitsubishi",
+   "name": "Pajero Mini Sport(J) '98",
+   "drivetrain": "AWD",
+   "engine": "V4 DOHC TURBO",
+   "stockPower": 65,
+   "maxPower": 175,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "m2pjn",
+   "manufacturer": "Mitsubishi",
+   "name": "Pajero Mini VR-II(J) '97",
+   "drivetrain": "AWD",
+   "engine": "V4 SOHC TURBO",
+   "stockPower": 64,
+   "maxPower": 180,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "m2r5n",
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer Evolution V RS (J) '98",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 298,
+   "maxPower": 529,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "m2r6n",
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer Evolution VI RS (J) '99",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 310,
+   "maxPower": 602,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "m2srn",
+   "manufacturer": "Mitsubishi",
+   "name": "3000GT SL",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC NA",
+   "stockPower": 221,
+   "maxPower": 397,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "m2tfr",
+   "manufacturer": "Mitsubishi",
+   "name": "Taeivon FTO GT(J) '99",
+   "drivetrain": "FF",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 384,
+   "maxPower": 384,
+   "maxPowerKit": null
+  },
+  {
+   "code": "m2tlr",
+   "manufacturer": "Mitsubishi",
+   "name": "3000GT LM Edition '99",
+   "drivetrain": "AWD",
+   "engine": "DOHC TURBO",
+   "stockPower": 699,
+   "maxPower": 699,
+   "maxPowerKit": null
+  },
+  {
+   "code": "m2ttn",
+   "manufacturer": "Mitsubishi",
+   "name": "3000GT VR-4",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 318,
+   "maxPower": 730,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "m2w5r",
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer Evolution V Rally Car '98",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 434,
+   "maxPower": 434,
+   "maxPowerKit": null
+  },
+  {
+   "code": "m2w6r",
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer Evolution VI Rally Car '99",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 467,
+   "maxPower": 467,
+   "maxPowerKit": null
+  },
+  {
+   "code": "mecln",
+   "manufacturer": "Mitsubishi",
+   "name": "Eclipse GS-T",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 224,
+   "maxPower": 406,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "mftgn",
+   "manufacturer": "Mitsubishi",
+   "name": "FTO GR(J) '97",
+   "drivetrain": "FF",
+   "engine": "V6 DOHC NA",
+   "stockPower": 177,
+   "maxPower": 257,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "mftnn",
+   "manufacturer": "Mitsubishi",
+   "name": "FTO GP Version R(J) '97",
+   "drivetrain": "FF",
+   "engine": "V6 DOHC NA",
+   "stockPower": 195,
+   "maxPower": 327,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "mfton",
+   "manufacturer": "Mitsubishi",
+   "name": "FTO GPX(J) '94",
+   "drivetrain": "FF",
+   "engine": "V6 DOHC NA",
+   "stockPower": 195,
+   "maxPower": 333,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "mftrn",
+   "manufacturer": "Mitsubishi",
+   "name": "FTO GR(J) '94",
+   "drivetrain": "FF",
+   "engine": "V6 DOHC NA",
+   "stockPower": 167,
+   "maxPower": 256,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "mftxn",
+   "manufacturer": "Mitsubishi",
+   "name": "FTO GPX(J) '97",
+   "drivetrain": "FF",
+   "engine": "V6 DOHC NA",
+   "stockPower": 195,
+   "maxPower": 327,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "mgagn",
+   "manufacturer": "Mitsubishi",
+   "name": "Galant VR-G Touring(J) '96",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 147,
+   "maxPower": 188,
+   "maxPowerKit": "PART_NA_TUNE_1"
+  },
+  {
+   "code": "mgaln",
+   "manufacturer": "Mitsubishi",
+   "name": "Galant VR-4(J) '96",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 274,
+   "maxPower": 409,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "mgnon",
+   "manufacturer": "Mitsubishi",
+   "name": "3000GT SL",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC NA",
+   "stockPower": 221,
+   "maxPower": 397,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "mgntn",
+   "manufacturer": "Mitsubishi",
+   "name": "3000GT VR-4 Turbo",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 307,
+   "maxPower": 705,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "mgoon",
+   "manufacturer": "Mitsubishi",
+   "name": "3000GT (J) '92",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC NA",
+   "stockPower": 221,
+   "maxPower": 397,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "mgotn",
+   "manufacturer": "Mitsubishi",
+   "name": "3000GT VR-4",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 298,
+   "maxPower": 686,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "mgtlr",
+   "manufacturer": "Mitsubishi",
+   "name": "3000GT LM Edition",
+   "drivetrain": "AWD",
+   "engine": "DOHC TURBO",
+   "stockPower": 623,
+   "maxPower": 623,
+   "maxPowerKit": null
+  },
+  {
+   "code": "mgtmn",
+   "manufacturer": "Mitsubishi",
+   "name": "3000GT MR(J) '95",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 287,
+   "maxPower": 659,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "mgton",
+   "manufacturer": "Mitsubishi",
+   "name": "3000GT SL",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC NA",
+   "stockPower": 221,
+   "maxPower": 397,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "mgttn",
+   "manufacturer": "Mitsubishi",
+   "name": "3000GT VR-4 Turbo",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 298,
+   "maxPower": 686,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "mlnnn",
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer EvolutionIV GSR(J) '96",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 276,
+   "maxPower": 461,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "mlnon",
+   "manufacturer": "Mitsubishi",
+   "name": "Lancer EvolutionIII GSR(J) '95",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 267,
+   "maxPower": 411,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "mmgon",
+   "manufacturer": "Mitsubishi",
+   "name": "Mirage Cyborg R(J) '92",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 173,
+   "maxPower": 233,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "mmgrn",
+   "manufacturer": "Mitsubishi",
+   "name": "Mirage Asti RX(J) '96",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 173,
+   "maxPower": 233,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "n-00n",
+   "manufacturer": "Nissan",
+   "name": "Nismo 400R (J)",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 399,
+   "maxPower": 652,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "n-18n",
+   "manufacturer": "Nissan",
+   "name": "Sileighty (J)",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 204,
+   "maxPower": 393,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "n180n",
+   "manufacturer": "Nissan",
+   "name": "240SX Fastback Type X(J) '96",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 198,
+   "maxPower": 373,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "n18nn",
+   "manufacturer": "Nissan",
+   "name": "240SX Fastback Type X(J) '96",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 204,
+   "maxPower": 377,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "n18sn",
+   "manufacturer": "Nissan",
+   "name": "240SX Fastback Type S(J) '96",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 137,
+   "maxPower": 340,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "n230n",
+   "manufacturer": "Nissan",
+   "name": "Skyline 2000 RS-X (DR30,J) '84",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 185,
+   "maxPower": 427,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "n231n",
+   "manufacturer": "Nissan",
+   "name": "Skyline GTS-R(R31,J) '87",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 211,
+   "maxPower": 427,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "n234n",
+   "manufacturer": "Nissan",
+   "name": "Skyline 25GT Turbo(R34,J) '98",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 274,
+   "maxPower": 476,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "n239r",
+   "manufacturer": "Nissan",
+   "name": "R390 GT1 LM Race Car '97",
+   "drivetrain": "MR",
+   "engine": "V8 DOHC TURBO",
+   "stockPower": 642,
+   "maxPower": 642,
+   "maxPowerKit": null
+  },
+  {
+   "code": "n23nn",
+   "manufacturer": "Nissan",
+   "name": "R390 GT1 Road Car '97",
+   "drivetrain": "MR",
+   "engine": "V8 DOHC TURBO",
+   "stockPower": 356,
+   "maxPower": 845,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "n23sr",
+   "manufacturer": "Nissan",
+   "name": "Skyline Silhouette Foumula (R30)",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 563,
+   "maxPower": 563,
+   "maxPowerKit": null
+  },
+  {
+   "code": "n23zr",
+   "manufacturer": "Nissan",
+   "name": "Nissan 300ZX GT(J) '97",
+   "drivetrain": "FR",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 682,
+   "maxPower": 682,
+   "maxPowerKit": null
+  },
+  {
+   "code": "n240r",
+   "manufacturer": "Nissan",
+   "name": "R390 GT1 LM Race Car '98",
+   "drivetrain": "MR",
+   "engine": "V8 DOHC TURBO",
+   "stockPower": 673,
+   "maxPower": 673,
+   "maxPowerKit": null
+  },
+  {
+   "code": "n24nn",
+   "manufacturer": "Nissan",
+   "name": "R390 GT1 Road Car '98",
+   "drivetrain": "MR",
+   "engine": "V8 DOHC TURBO",
+   "stockPower": 377,
+   "maxPower": 849,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "n24pn",
+   "manufacturer": "Nissan",
+   "name": "Nismo 400R Preceiding Model(J)",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 399,
+   "maxPower": 649,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "n24rn",
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R(R34,J) '99",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 328,
+   "maxPower": 785,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "n24vn",
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R V-spec(R34,J) '99",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 328,
+   "maxPower": 785,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "n24zn",
+   "manufacturer": "Nissan",
+   "name": "Datsun 240Z 240ZG(HS30,J) '71",
+   "drivetrain": "FR",
+   "engine": "I6 OHC NA",
+   "stockPower": 155,
+   "maxPower": 324,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "n260n",
+   "manufacturer": "Nissan",
+   "name": "Stagea 260RS Tuned by Nismo(J)",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 348,
+   "maxPower": 609,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "n270n",
+   "manufacturer": "Nissan",
+   "name": "Nismo 270R (J)",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 268,
+   "maxPower": 439,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "n271n",
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R(KPGC10,J) '71",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 160,
+   "maxPower": 344,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "n280n",
+   "manufacturer": "Nissan",
+   "name": "Skyline 280 Type MR(J)",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 298,
+   "maxPower": 559,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "n284n",
+   "manufacturer": "Nissan",
+   "name": "Stagea 25t RS Four V(J) '98",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 298,
+   "maxPower": 470,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "n28gn",
+   "manufacturer": "Nissan",
+   "name": "Stagea Autech Ver. 260RS (J) '98",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 291,
+   "maxPower": 636,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "n2cun",
+   "manufacturer": "Nissan",
+   "name": "Cube X(J) '98",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 81,
+   "maxPower": 191,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "n2d3r",
+   "manufacturer": "Nissan",
+   "name": "R33 Drag GT-R (J)",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 1026,
+   "maxPower": 1026,
+   "maxPowerKit": null
+  },
+  {
+   "code": "n2d8r",
+   "manufacturer": "Nissan",
+   "name": "Drag 180SX (J)",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 1026,
+   "maxPower": 1026,
+   "maxPowerKit": null
+  },
+  {
+   "code": "n2dsr",
+   "manufacturer": "Nissan",
+   "name": "Daisin Silvia GT(J) '99",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 419,
+   "maxPower": 419,
+   "maxPowerKit": null
+  },
+  {
+   "code": "n2g7r",
+   "manufacturer": "Nissan",
+   "name": "Zexel Skyline GT(J) '97",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 680,
+   "maxPower": 680,
+   "maxPowerKit": null
+  },
+  {
+   "code": "n2gcr",
+   "manufacturer": "Nissan",
+   "name": "Calsonic GT-R GT(J) '99",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 712,
+   "maxPower": 712,
+   "maxPowerKit": null
+  },
+  {
+   "code": "n2gkr",
+   "manufacturer": "Nissan",
+   "name": "Kure R33 GT(J) '97",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 680,
+   "maxPower": 680,
+   "maxPowerKit": null
+  },
+  {
+   "code": "n2gpr",
+   "manufacturer": "Nissan",
+   "name": "Pennzoil GT-R GT(J) '99",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 712,
+   "maxPower": 712,
+   "maxPowerKit": null
+  },
+  {
+   "code": "n2gur",
+   "manufacturer": "Nissan",
+   "name": "Unisia GT-R GT(J) '99",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 712,
+   "maxPower": 712,
+   "maxPowerKit": null
+  },
+  {
+   "code": "n2gzr",
+   "manufacturer": "Nissan",
+   "name": "Arta GT-R GT(J) '99",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 712,
+   "maxPower": 712,
+   "maxPowerKit": null
+  },
+  {
+   "code": "n2ksn",
+   "manufacturer": "Nissan",
+   "name": "240SX K's Aero(J) '98",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 214,
+   "maxPower": 446,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "n2m2n",
+   "manufacturer": "Nissan",
+   "name": "Mine's R32.5 Skyline GT-R(J)",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 627,
+   "maxPower": 687,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "n2m3n",
+   "manufacturer": "Nissan",
+   "name": "Mine's R33 Skyline GT-R(J)",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 627,
+   "maxPower": 693,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "n2m4n",
+   "manufacturer": "Nissan",
+   "name": "Mine's R34 Skyline GT-R(J)",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 627,
+   "maxPower": 693,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "n2man",
+   "manufacturer": "Nissan",
+   "name": "March G#(J) '97",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 77,
+   "maxPower": 185,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "n2mtn",
+   "manufacturer": "Nissan",
+   "name": "March Super Turbo(J) '89",
+   "drivetrain": "FF",
+   "engine": "I4 OHC MA+TURBO",
+   "stockPower": 110,
+   "maxPower": 218,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "n2p1n",
+   "manufacturer": "Nissan",
+   "name": "Pulsar Serie VZ-R N1(J) '97",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 197,
+   "maxPower": 268,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "n2p2n",
+   "manufacturer": "Nissan",
+   "name": "Infiniti G20 2.0Te-V(J) '98",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 187,
+   "maxPower": 333,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "n2pvn",
+   "manufacturer": "Nissan",
+   "name": "Pulsar Serie VZ-R(J) '97",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 170,
+   "maxPower": 251,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "n2pwn",
+   "manufacturer": "Nissan",
+   "name": "Primera Wagon 2.0G-V(J) '98",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 187,
+   "maxPower": 333,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "n2r4n",
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R 4Door(R33,J) '97",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 298,
+   "maxPower": 727,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "n2rnn",
+   "manufacturer": "Nissan",
+   "name": "GT-R 4Door Tuned by Nismo(J)",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 298,
+   "maxPower": 646,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "n2rtn",
+   "manufacturer": "Nissan",
+   "name": "300ZX 2by2 Twin Turbo(J) '98",
+   "drivetrain": "FR",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 278,
+   "maxPower": 669,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "n2s4n",
+   "manufacturer": "Nissan",
+   "name": "Stagea RS Four V(J) '97",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 240,
+   "maxPower": 446,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "n2sgn",
+   "manufacturer": "Nissan",
+   "name": "Stagea Autech Ver. 260RS (J) '97",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 291,
+   "maxPower": 636,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "n2skn",
+   "manufacturer": "Nissan",
+   "name": "Silvia Spec R(J) '99",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 248,
+   "maxPower": 474,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "n2snn",
+   "manufacturer": "Nissan",
+   "name": "Sunny VZ-R(J) '98",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 170,
+   "maxPower": 248,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "n2sqn",
+   "manufacturer": "Nissan",
+   "name": "Silvia Spec S(J) '99",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 163,
+   "maxPower": 356,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "n2stn",
+   "manufacturer": "Nissan",
+   "name": "300ZX 2seater Twin Turbo(J) '98",
+   "drivetrain": "FR",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 278,
+   "maxPower": 669,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "n2sxn",
+   "manufacturer": "Nissan",
+   "name": "Silvia Spec R Aero(J) '99",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 248,
+   "maxPower": 474,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "n2syn",
+   "manufacturer": "Nissan",
+   "name": "Silvia Spec S Aero(J) '99",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 163,
+   "maxPower": 356,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "n2xsr",
+   "manufacturer": "Nissan",
+   "name": "Zanavi Silvia GT(J) '99",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 419,
+   "maxPower": 419,
+   "maxPowerKit": null
+  },
+  {
+   "code": "n2zrn",
+   "manufacturer": "Nissan",
+   "name": "300ZX Version R 2by2(J) '98",
+   "drivetrain": "FR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 233,
+   "maxPower": 399,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "n2zsn",
+   "manufacturer": "Nissan",
+   "name": "300ZX Version S 2seater(J) '98",
+   "drivetrain": "FR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 233,
+   "maxPower": 399,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "n432n",
+   "manufacturer": "Nissan",
+   "name": "Skyline GTS4(R32,J) '91",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 214,
+   "maxPower": 390,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "nax3n",
+   "manufacturer": "Nissan",
+   "name": "300ZX 2-seater",
+   "drivetrain": "FR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 233,
+   "maxPower": 399,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "naxsn",
+   "manufacturer": "Nissan",
+   "name": "300ZX Turbo",
+   "drivetrain": "FR",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 280,
+   "maxPower": 643,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "naxvn",
+   "manufacturer": "Nissan",
+   "name": "300ZX 2+2",
+   "drivetrain": "FR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 233,
+   "maxPower": 399,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "nl33n",
+   "manufacturer": "Nissan",
+   "name": "NismoGT-R LM Road Car(R33,J)",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 311,
+   "maxPower": 700,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "nm32n",
+   "manufacturer": "Nissan",
+   "name": "Skyline GTS25 Type S(R32,J) '91",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 188,
+   "maxPower": 323,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "nn32n",
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R NISMO(R32,J) '90",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 300,
+   "maxPower": 646,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "nplon",
+   "manufacturer": "Nissan",
+   "name": "Pulsar GTi-R(J) '91",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 231,
+   "maxPower": 420,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "nprin",
+   "manufacturer": "Nissan",
+   "name": "Infiniti G20 2.0Te(J) '96",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 148,
+   "maxPower": 296,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "npron",
+   "manufacturer": "Nissan",
+   "name": "Infiniti G20 2.0Te(J) '91",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 148,
+   "maxPower": 297,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "nq13n",
+   "manufacturer": "Nissan",
+   "name": "Silvia Q's 1800cc (J) '88",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 133,
+   "maxPower": 231,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "nq14n",
+   "manufacturer": "Nissan",
+   "name": "240SX Q's (J) '95",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 160,
+   "maxPower": 356,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "nq15n",
+   "manufacturer": "Nissan",
+   "name": "240SX Q's Aero(J) '97",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 158,
+   "maxPower": 343,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "nq23n",
+   "manufacturer": "Nissan",
+   "name": "Silvia Q's 2000cc (J) '91",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 137,
+   "maxPower": 310,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "nr02n",
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R(R32,J) '89",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 300,
+   "maxPower": 646,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "nr32n",
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R(R32,J) '91",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 300,
+   "maxPower": 646,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "nr33n",
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R(R33,J) '95",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 314,
+   "maxPower": 685,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "nr34n",
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R(R33,J) '97",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 314,
+   "maxPower": 672,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "ns13n",
+   "manufacturer": "Nissan",
+   "name": "Silvia K's 1800cc (J) '88",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 174,
+   "maxPower": 366,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "ns14n",
+   "manufacturer": "Nissan",
+   "name": "240SX K's (J) '95",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 215,
+   "maxPower": 403,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "ns15n",
+   "manufacturer": "Nissan",
+   "name": "240SX K's Aero(J) '96",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 214,
+   "maxPower": 400,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "ns23n",
+   "manufacturer": "Nissan",
+   "name": "Silvia K's 2000cc (J) '91",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 204,
+   "maxPower": 386,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "nt32n",
+   "manufacturer": "Nissan",
+   "name": "Skyline GTS-t Type M(R32,J) '91",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 214,
+   "maxPower": 390,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "nt33n",
+   "manufacturer": "Nissan",
+   "name": "Skyline GTS25t Type M(R33,J) '96",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 245,
+   "maxPower": 441,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "nv12n",
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R Vspec(R32,J) '93",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 300,
+   "maxPower": 646,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "nv22n",
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R Vspec II(R32,J) '94",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 300,
+   "maxPower": 646,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "nv33n",
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R Vspec(R33,J) '95",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 314,
+   "maxPower": 672,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "nv34n",
+   "manufacturer": "Nissan",
+   "name": "Skyline GT-R Vspec(R33,J) '97",
+   "drivetrain": "AWD",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 314,
+   "maxPower": 672,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "nzx2n",
+   "manufacturer": "Nissan",
+   "name": "300ZX 2by2 Twin Turbo(J) '94",
+   "drivetrain": "FR",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 280,
+   "maxPower": 643,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "nzx3n",
+   "manufacturer": "Nissan",
+   "name": "300ZX 2-seater",
+   "drivetrain": "FR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 233,
+   "maxPower": 399,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "nzxsn",
+   "manufacturer": "Nissan",
+   "name": "300ZX Turbo",
+   "drivetrain": "FR",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 280,
+   "maxPower": 643,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "nzxvn",
+   "manufacturer": "Nissan",
+   "name": "300ZX 2+2",
+   "drivetrain": "FR",
+   "engine": "V6 DOHC NA",
+   "stockPower": 233,
+   "maxPower": 399,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "q2m2n",
+   "manufacturer": "Daihatsu",
+   "name": "Move SR-XX(2WD,J) '97",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 61,
+   "maxPower": 193,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "q2m4n",
+   "manufacturer": "Daihatsu",
+   "name": "Move SR-XX(4WD,J) '97",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 61,
+   "maxPower": 193,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "q2m8n",
+   "manufacturer": "Daihatsu",
+   "name": "Move SR-XX(4WD,J) '98",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 61,
+   "maxPower": 193,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "q2mcn",
+   "manufacturer": "Daihatsu",
+   "name": "Move Custom (4WD,J) '98",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 61,
+   "maxPower": 193,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "q2min",
+   "manufacturer": "Daihatsu",
+   "name": "Midget II D-type(J)",
+   "drivetrain": "FR",
+   "engine": "I3 SOHC NA",
+   "stockPower": 32,
+   "maxPower": 84,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "q2mon",
+   "manufacturer": "Daihatsu",
+   "name": "Mira TR-XX(J) '90",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 64,
+   "maxPower": 185,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "q2mvn",
+   "manufacturer": "Daihatsu",
+   "name": "Move CX(J) '95",
+   "drivetrain": "FF",
+   "engine": "I3 DOHC NA",
+   "stockPower": 54,
+   "maxPower": 90,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "q2o4n",
+   "manufacturer": "Daihatsu",
+   "name": "Opti Club Sport(4WD,J) '97",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC NA",
+   "stockPower": 54,
+   "maxPower": 84,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "q2oen",
+   "manufacturer": "Daihatsu",
+   "name": "Opti Aerodown Beex(4WD,J) '98",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 61,
+   "maxPower": 193,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "q2opn",
+   "manufacturer": "Daihatsu",
+   "name": "Opti Club Sport(2WD,J) '97",
+   "drivetrain": "FF",
+   "engine": "I3 DOHC NA",
+   "stockPower": 54,
+   "maxPower": 84,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "q2s4n",
+   "manufacturer": "Daihatsu",
+   "name": "Storia CX(4WD,J) '98",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC NA",
+   "stockPower": 58,
+   "maxPower": 177,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "q2sgr",
+   "manufacturer": "Daihatsu",
+   "name": "Storia Rally Car",
+   "drivetrain": "AWD",
+   "engine": "DOHC TURBO",
+   "stockPower": 433,
+   "maxPower": 433,
+   "maxPowerKit": null
+  },
+  {
+   "code": "q2stn",
+   "manufacturer": "Daihatsu",
+   "name": "Storia CX(2WD,J) '98",
+   "drivetrain": "FF",
+   "engine": "I3 DOHC NA",
+   "stockPower": 58,
+   "maxPower": 177,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "q2ten",
+   "manufacturer": "Daihatsu",
+   "name": "Terios Kid Aerodown(J) '98",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 61,
+   "maxPower": 193,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "q2trn",
+   "manufacturer": "Daihatsu",
+   "name": "Mira TR(4WD,J) '98",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 61,
+   "maxPower": 193,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "q2txn",
+   "manufacturer": "Daihatsu",
+   "name": "Mira TX(4WD,J) '98",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 61,
+   "maxPower": 193,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "q2x4n",
+   "manufacturer": "Daihatsu",
+   "name": "Storia X4(J) '98",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 118,
+   "maxPower": 198,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "s222n",
+   "manufacturer": "Subaru",
+   "name": "Impreza 22B STi Version(J) '98",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 298,
+   "maxPower": 539,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "s236n",
+   "manufacturer": "Subaru",
+   "name": "Subaru 360",
+   "drivetrain": "RR",
+   "engine": "I2 NA",
+   "stockPower": 35,
+   "maxPower": 145,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "s2a6n",
+   "manufacturer": "Subaru",
+   "name": "Impreza typeRA STi Ver.VI(J)'99",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 284,
+   "maxPower": 473,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "s2cir",
+   "manufacturer": "Subaru",
+   "name": "Cusco Impreza GT(J) '99",
+   "drivetrain": "FR",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 460,
+   "maxPower": 460,
+   "maxPowerKit": null
+  },
+  {
+   "code": "s2fon",
+   "manufacturer": "Subaru",
+   "name": "Forester S/tb(J) '97",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 248,
+   "maxPower": 389,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "s2i4n",
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan STi Ver.IV(J)'97",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 284,
+   "maxPower": 436,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "s2i5n",
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan STi Ver.V(J)'98",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 287,
+   "maxPower": 479,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "s2i6n",
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan STi Ver. VI(J) '99",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 300,
+   "maxPower": 497,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "s2irr",
+   "manufacturer": "Subaru",
+   "name": "Impreza Rally Car(J) '99",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 483,
+   "maxPower": 483,
+   "maxPowerKit": null
+  },
+  {
+   "code": "s2iwn",
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan(J)'97",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 267,
+   "maxPower": 380,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "s2lbn",
+   "manufacturer": "Subaru",
+   "name": "Legacy Wagon GT-B(J) '97",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 278,
+   "maxPower": 461,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "s2lgn",
+   "manufacturer": "Subaru",
+   "name": "Legacy B4 RSK(J) '98",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 290,
+   "maxPower": 497,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "s2lwn",
+   "manufacturer": "Subaru",
+   "name": "Legacy Wagon GT-B(J) '98",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 287,
+   "maxPower": 524,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "s2nin",
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan (J)'98",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 267,
+   "maxPower": 389,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "s2nwn",
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon (J)'98",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 257,
+   "maxPower": 407,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "s2pmn",
+   "manufacturer": "Subaru",
+   "name": "Pleo RM(J) '98",
+   "drivetrain": "AWD",
+   "engine": "I4 SOHC MA",
+   "stockPower": 61,
+   "maxPower": 190,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "s2psn",
+   "manufacturer": "Subaru",
+   "name": "Pleo RS(J) '98",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC MA",
+   "stockPower": 61,
+   "maxPower": 187,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "s2r4n",
+   "manufacturer": "Subaru",
+   "name": "Impreza typeR  STi Ver.IV(J)'97",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 284,
+   "maxPower": 436,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "s2r5n",
+   "manufacturer": "Subaru",
+   "name": "Impreza typeR STi Ver.V(J)'98",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 287,
+   "maxPower": 479,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "s2r6n",
+   "manufacturer": "Subaru",
+   "name": "Impreza typeR STi Ver.VI(J)'99",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 300,
+   "maxPower": 497,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "s2v4n",
+   "manufacturer": "Subaru",
+   "name": "Vivio RX-RA(J) '97",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC MA",
+   "stockPower": 64,
+   "maxPower": 177,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "s2vin",
+   "manufacturer": "Subaru",
+   "name": "Vivio RX-R(J) '97",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC MA",
+   "stockPower": 64,
+   "maxPower": 177,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "s2w4n",
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon STi Ver.IV(J)'97",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 284,
+   "maxPower": 436,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "s2w5n",
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon STi Ver.V (J)'98",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 287,
+   "maxPower": 479,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "s2w6n",
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon STi Ver.VI (J) '99",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 300,
+   "maxPower": 497,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "s2wwn",
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon(J)'97",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 268,
+   "maxPower": 394,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "sipan",
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan WRX(J) '96",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 274,
+   "maxPower": 381,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "sipbn",
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan STi versionIII(J) '96",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 274,
+   "maxPower": 409,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "sipcn",
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon (J) '96",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 244,
+   "maxPower": 387,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "sipdn",
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon STi versionIII(J)'96",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 274,
+   "maxPower": 409,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "siprn",
+   "manufacturer": "Subaru",
+   "name": "Impreza typeR STi Ver.(J) '96",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 274,
+   "maxPower": 409,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "sipsn",
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan STi versionII(J)'95",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 267,
+   "maxPower": 383,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "siptn",
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon STi versionII(J)'95",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 258,
+   "maxPower": 396,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "sipwn",
+   "manufacturer": "Subaru",
+   "name": "Impreza Wagon(J)'94",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 258,
+   "maxPower": 399,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "sipxr",
+   "manufacturer": "Subaru",
+   "name": "Impreza Rally Car",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 410,
+   "maxPower": 410,
+   "maxPowerKit": null
+  },
+  {
+   "code": "sipzn",
+   "manufacturer": "Subaru",
+   "name": "Impreza Sedan(J)'94",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 218,
+   "maxPower": 370,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "slgan",
+   "manufacturer": "Subaru",
+   "name": "Legacy Wagon GT-B(J) '96",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 278,
+   "maxPower": 461,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "slgbn",
+   "manufacturer": "Subaru",
+   "name": "Legacy Sedan RS(J) '96",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 278,
+   "maxPower": 461,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "slgnn",
+   "manufacturer": "Subaru",
+   "name": "Legacy Sports RS(J) '93",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 266,
+   "maxPower": 423,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "slgwn",
+   "manufacturer": "Subaru",
+   "name": "Legacy Wagon GT(J) '93",
+   "drivetrain": "AWD",
+   "engine": "Boxer4 DOHC TURBO",
+   "stockPower": 266,
+   "maxPower": 423,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "ssv4n",
+   "manufacturer": "Subaru",
+   "name": "SVX S4(J) '95",
+   "drivetrain": "AWD",
+   "engine": "Boxer6 DOHC NA",
+   "stockPower": 235,
+   "maxPower": 389,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ssvxn",
+   "manufacturer": "Subaru",
+   "name": "SVX Lsi '95",
+   "drivetrain": "AWD",
+   "engine": "Boxer6 DOHC NA",
+   "stockPower": 235,
+   "maxPower": 389,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "t-rdn",
+   "manufacturer": "Toyota",
+   "name": "TRD3000GT (J)",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 323,
+   "maxPower": 720,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "t211n",
+   "manufacturer": "Toyota",
+   "name": "MR2 1600G-Limited(J) '86",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC MA",
+   "stockPower": 137,
+   "maxPower": 283,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "t22dn",
+   "manufacturer": "Toyota",
+   "name": "TRD2000GT (J)",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 270,
+   "maxPower": 514,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "t22gn",
+   "manufacturer": "Toyota",
+   "name": "2000GT GT '68",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 155,
+   "maxPower": 330,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "t22hn",
+   "manufacturer": "Toyota",
+   "name": "2000GT GT '68",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 155,
+   "maxPower": 330,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "t261n",
+   "manufacturer": "Toyota",
+   "name": "Starlet 3 Door Turbo S(J) '82",
+   "drivetrain": "FR",
+   "engine": "I4 OHV NA",
+   "stockPower": 71,
+   "maxPower": 177,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "t271n",
+   "manufacturer": "Toyota",
+   "name": "Starlet 3 Door Turbo S(J) '87",
+   "drivetrain": "FF",
+   "engine": "I4 OHC TURBO",
+   "stockPower": 101,
+   "maxPower": 227,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "t285n",
+   "manufacturer": "Toyota",
+   "name": "Celica GT-Four(J) '88",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 183,
+   "maxPower": 351,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "t286r",
+   "manufacturer": "Toyota",
+   "name": "BP Trueno GT(J) '99",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 364,
+   "maxPower": 364,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t291n",
+   "manufacturer": "Toyota",
+   "name": "Altezza RS200(J) '98",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 205,
+   "maxPower": 420,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "t292n",
+   "manufacturer": "Toyota",
+   "name": "Lexus IS",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 158,
+   "maxPower": 360,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "t29lr",
+   "manufacturer": "Toyota",
+   "name": "Altezza LM Edition",
+   "drivetrain": "FR",
+   "engine": "DOHC TURBO",
+   "stockPower": 599,
+   "maxPower": 599,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t29nn",
+   "manufacturer": "Toyota",
+   "name": "Altezza 280T(Tuned by Tom's,J)",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 270,
+   "maxPower": 417,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "t2a1n",
+   "manufacturer": "Toyota",
+   "name": "Aristo 3.0V(J) '91",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 288,
+   "maxPower": 553,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "t2a3n",
+   "manufacturer": "Toyota",
+   "name": "Aristo V300(J) '97",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 311,
+   "maxPower": 713,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "t2c3n",
+   "manufacturer": "Toyota",
+   "name": "Celica  '97",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 183,
+   "maxPower": 317,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "t2c4n",
+   "manufacturer": "Toyota",
+   "name": "Celica GT-Four(J) '91",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 224,
+   "maxPower": 380,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "t2can",
+   "manufacturer": "Toyota",
+   "name": "Caldina GT-T(J) '97",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 261,
+   "maxPower": 391,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "t2cdn",
+   "manufacturer": "Toyota",
+   "name": "XYR  '99",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 185,
+   "maxPower": 225,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t2cen",
+   "manufacturer": "Toyota",
+   "name": "Celica Elegant Version(J) '99",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 185,
+   "maxPower": 268,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "t2clr",
+   "manufacturer": "Toyota",
+   "name": "Celica Rally Car",
+   "drivetrain": "AWD",
+   "engine": "DOHC TURBO",
+   "stockPower": 577,
+   "maxPower": 577,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t2cmn",
+   "manufacturer": "Toyota",
+   "name": "Celica Mecanical Version(J) '99",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 185,
+   "maxPower": 288,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "t2con",
+   "manufacturer": "Toyota",
+   "name": "Celica GT-R(J) '91",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 165,
+   "maxPower": 267,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "t2crn",
+   "manufacturer": "Toyota",
+   "name": "Celica GT-Four RC(J) '91",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 238,
+   "maxPower": 417,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "t2cwr",
+   "manufacturer": "Toyota",
+   "name": "Corolla Rally Car '97",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 403,
+   "maxPower": 403,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t2cxr",
+   "manufacturer": "Toyota",
+   "name": "Corolla Rally Car '98",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 426,
+   "maxPower": 426,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t2cyn",
+   "manufacturer": "Toyota",
+   "name": "Celica SS-II(J) '99",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 185,
+   "maxPower": 288,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "t2g1n",
+   "manufacturer": "Toyota",
+   "name": "GT-ONE Road Car '98",
+   "drivetrain": "MR",
+   "engine": "V8 DOHC TURBO",
+   "stockPower": 602,
+   "maxPower": 989,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "t2g8r",
+   "manufacturer": "Toyota",
+   "name": "GT-ONE Race Car '98",
+   "drivetrain": "MR",
+   "engine": "V8 DOHC TURBO",
+   "stockPower": 682,
+   "maxPower": 682,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t2g9r",
+   "manufacturer": "Toyota",
+   "name": "GT-ONE Race Car '99",
+   "drivetrain": "MR",
+   "engine": "V8 DOHC TURBO",
+   "stockPower": 682,
+   "maxPower": 682,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t2h8r",
+   "manufacturer": "Toyota",
+   "name": "GT-ONE Race Car '98",
+   "drivetrain": "MR",
+   "engine": "V8 DOHC TURBO",
+   "stockPower": 682,
+   "maxPower": 682,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t2h9r",
+   "manufacturer": "Toyota",
+   "name": "GT-ONE Race Car '99",
+   "drivetrain": "MR",
+   "engine": "V8 DOHC TURBO",
+   "stockPower": 682,
+   "maxPower": 682,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t2isn",
+   "manufacturer": "Toyota",
+   "name": "Lexus IS 200",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 161,
+   "maxPower": 391,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "t2lgn",
+   "manufacturer": "Toyota",
+   "name": "Lexus GS 400",
+   "drivetrain": "FR",
+   "engine": "V8 DOHC NA",
+   "stockPower": 303,
+   "maxPower": 427,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "t2lsn",
+   "manufacturer": "Toyota",
+   "name": "Lexus SC 400",
+   "drivetrain": "FR",
+   "engine": "V8 DOHC NA",
+   "stockPower": 293,
+   "maxPower": 423,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "t2lvn",
+   "manufacturer": "Toyota",
+   "name": "Levin BZR(J) '98",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 175,
+   "maxPower": 260,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "t2m2n",
+   "manufacturer": "Toyota",
+   "name": "MR2 GT-S(J) '98",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 270,
+   "maxPower": 514,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "t2mgn",
+   "manufacturer": "Toyota",
+   "name": "MR2 G-Limited(J) '98",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 201,
+   "maxPower": 320,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "t2mmr",
+   "manufacturer": "Toyota",
+   "name": "Momo MR2 GT(J) '99",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 380,
+   "maxPower": 380,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t2msn",
+   "manufacturer": "Toyota",
+   "name": "MR-S S Edition(J) '99",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 137,
+   "maxPower": 258,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "t2mtn",
+   "manufacturer": "Toyota",
+   "name": "MR-S Show Version(J) '97",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 137,
+   "maxPower": 165,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t2o3n",
+   "manufacturer": "Toyota",
+   "name": "Lexus SC 300",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 234,
+   "maxPower": 579,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "t2prn",
+   "manufacturer": "Toyota",
+   "name": "PRIUS (J) '97",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 64,
+   "maxPower": 64,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t2s3n",
+   "manufacturer": "Toyota",
+   "name": "Lexus GS 300",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 234,
+   "maxPower": 413,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "t2scr",
+   "manufacturer": "Toyota",
+   "name": "Castrol Supra GT(J) '99",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 696,
+   "maxPower": 696,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t2sdr",
+   "manufacturer": "Toyota",
+   "name": "Denso Supra GT(J) '99",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 696,
+   "maxPower": 696,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t2sor",
+   "manufacturer": "Toyota",
+   "name": "Cerumo Supra GT(J) '99",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 696,
+   "maxPower": 696,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t2spn",
+   "manufacturer": "Toyota",
+   "name": "MR Spider (J) '96",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 201,
+   "maxPower": 320,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "t2srn",
+   "manufacturer": "Toyota",
+   "name": "Supra SZ-R(J) '97",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 223,
+   "maxPower": 393,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "t2ssn",
+   "manufacturer": "Toyota",
+   "name": "Supra RZ(J) '97",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 330,
+   "maxPower": 752,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "t2svn",
+   "manufacturer": "Toyota",
+   "name": "Starlet Glanza V(J) '98",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 133,
+   "maxPower": 231,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "t2t1n",
+   "manufacturer": "Toyota",
+   "name": "Tom's T111 (J)",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 175,
+   "maxPower": 291,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "t2t2n",
+   "manufacturer": "Toyota",
+   "name": "Tom's T020 (J)",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 234,
+   "maxPower": 367,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "t2t8n",
+   "manufacturer": "Toyota",
+   "name": "Tom's Supra (J)",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 314,
+   "maxPower": 762,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "t2tan",
+   "manufacturer": "Toyota",
+   "name": "Angel T01 (J)",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 158,
+   "maxPower": 248,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "t2trn",
+   "manufacturer": "Toyota",
+   "name": "Trueno BZR(J) '98",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 175,
+   "maxPower": 260,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "t2vzn",
+   "manufacturer": "Toyota",
+   "name": "Vitz F(J) '99",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 68,
+   "maxPower": 194,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "t2wsr",
+   "manufacturer": "Toyota",
+   "name": "Weds Celica GT(J) '99",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 400,
+   "maxPower": 400,
+   "maxPowerKit": null
+  },
+  {
+   "code": "t2x3n",
+   "manufacturer": "Toyota",
+   "name": "Chaser TRD Sports X30(J)",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 317,
+   "maxPower": 687,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "t2xxn",
+   "manufacturer": "Toyota",
+   "name": "Celica  '84",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 168,
+   "maxPower": 363,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "tcegn",
+   "manufacturer": "Toyota",
+   "name": "Celica GT-Four(J) '95",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 253,
+   "maxPower": 471,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "tceln",
+   "manufacturer": "Toyota",
+   "name": "Celica  '96",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 183,
+   "maxPower": 290,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "tchsn",
+   "manufacturer": "Toyota",
+   "name": "Chaser Tourer S(J) '96",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 198,
+   "maxPower": 346,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "tchvn",
+   "manufacturer": "Toyota",
+   "name": "Chaser Tourer V(J) '96",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 278,
+   "maxPower": 457,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "texvn",
+   "manufacturer": "Toyota",
+   "name": "Corona Exiv 200GT(J) '96",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 183,
+   "maxPower": 307,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "tlevn",
+   "manufacturer": "Toyota",
+   "name": "Levin BZG(J) '96",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 175,
+   "maxPower": 260,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "tlv1n",
+   "manufacturer": "Toyota",
+   "name": "Levin GT-APEX(TypeII,J) '85",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 127,
+   "maxPower": 264,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "tlvon",
+   "manufacturer": "Toyota",
+   "name": "Levin GT-APEX(TypeI,J) '83",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 127,
+   "maxPower": 264,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "tm2sn",
+   "manufacturer": "Toyota",
+   "name": "Mark II Tourer S(J) '92",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 183,
+   "maxPower": 351,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "tm2vn",
+   "manufacturer": "Toyota",
+   "name": "Mark II Tourer V(J) '92",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 274,
+   "maxPower": 433,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "tmr2n",
+   "manufacturer": "Toyota",
+   "name": "MR2 GT-S(J) '96",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 251,
+   "maxPower": 467,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "tmrln",
+   "manufacturer": "Toyota",
+   "name": "MR2 G-Limited(J) '96",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 173,
+   "maxPower": 304,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "tsgtn",
+   "manufacturer": "Toyota",
+   "name": "Supra (Turbo) '93",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 238,
+   "maxPower": 429,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "tsoan",
+   "manufacturer": "Toyota",
+   "name": "Soarer 2.5GT-T VVT-i(J) '96",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 278,
+   "maxPower": 433,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "tsonn",
+   "manufacturer": "Toyota",
+   "name": "Supra (Turbo) '96",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 298,
+   "maxPower": 667,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "tsoon",
+   "manufacturer": "Toyota",
+   "name": "Soarer 2.5GT-T(J) '95",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 274,
+   "maxPower": 424,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "tsorn",
+   "manufacturer": "Toyota",
+   "name": "Supra  '96",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 220,
+   "maxPower": 393,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "tsplr",
+   "manufacturer": "Toyota",
+   "name": "Castrol Supra GT(J) '96",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 695,
+   "maxPower": 695,
+   "maxPowerKit": null
+  },
+  {
+   "code": "tspnn",
+   "manufacturer": "Toyota",
+   "name": "Supra (Turbo) '97",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 301,
+   "maxPower": 675,
+   "maxPowerKit": "PART_TURBO_4"
+  },
+  {
+   "code": "tspon",
+   "manufacturer": "Toyota",
+   "name": "Supra Twinturbo-R(J) '91",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC TURBO",
+   "stockPower": 276,
+   "maxPower": 450,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "tsprn",
+   "manufacturer": "Toyota",
+   "name": "Supra  '97",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 220,
+   "maxPower": 393,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "tstln",
+   "manufacturer": "Toyota",
+   "name": "Starlet Glanza V(J) '96",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 135,
+   "maxPower": 240,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "ttr1n",
+   "manufacturer": "Toyota",
+   "name": "Trueno GT-APEX(TypeII,J) '85",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 127,
+   "maxPower": 264,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "ttrnn",
+   "manufacturer": "Toyota",
+   "name": "Trueno BZG(J) '96",
+   "drivetrain": "FF",
+   "engine": "I4 DOHC NA",
+   "stockPower": 175,
+   "maxPower": 260,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "ttron",
+   "manufacturer": "Toyota",
+   "name": "Trueno GT-APEX(TypeI,J) '83",
+   "drivetrain": "FR",
+   "engine": "I4 DOHC NA",
+   "stockPower": 127,
+   "maxPower": 264,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "uf40n",
+   "manufacturer": "Ford",
+   "name": "GT40",
+   "drivetrain": "MR",
+   "engine": "V8 NA",
+   "stockPower": 310,
+   "maxPower": 662,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "uf4lr",
+   "manufacturer": "Ford",
+   "name": "GT40 Race Car",
+   "drivetrain": "MR",
+   "engine": "NA",
+   "stockPower": 499,
+   "maxPower": 499,
+   "maxPowerKit": null
+  },
+  {
+   "code": "uf90n",
+   "manufacturer": "Ford",
+   "name": "GT90",
+   "drivetrain": "MR",
+   "engine": "V12 DOHC TURBO",
+   "stockPower": 727,
+   "maxPower": 727,
+   "maxPowerKit": null
+  },
+  {
+   "code": "ufc9n",
+   "manufacturer": "Ford",
+   "name": "Mustang SVT Cobra  '99",
+   "drivetrain": "FR",
+   "engine": "V8 DOHC NA",
+   "stockPower": 323,
+   "maxPower": 471,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ufcrn",
+   "manufacturer": "Ford",
+   "name": "Mustang SVT Cobra  '98",
+   "drivetrain": "FR",
+   "engine": "V8 DOHC NA",
+   "stockPower": 307,
+   "maxPower": 467,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ufm9n",
+   "manufacturer": "Ford",
+   "name": "Mustang GT '99",
+   "drivetrain": "FR",
+   "engine": "V8 SOHC NA",
+   "stockPower": 210,
+   "maxPower": 374,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ufmun",
+   "manufacturer": "Ford",
+   "name": "Mustang GT '98",
+   "drivetrain": "FR",
+   "engine": "V8 SOHC NA",
+   "stockPower": 210,
+   "maxPower": 374,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ufs9r",
+   "manufacturer": "Ford",
+   "name": "SR Widebody",
+   "drivetrain": "FR",
+   "engine": "DOHC NA",
+   "stockPower": 649,
+   "maxPower": 649,
+   "maxPowerKit": null
+  },
+  {
+   "code": "uftan",
+   "manufacturer": "Ford",
+   "name": "Taurus SHO '99",
+   "drivetrain": "FF",
+   "engine": "V8 DOHC NA",
+   "stockPower": 235,
+   "maxPower": 370,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "ulcun",
+   "manufacturer": "Plymouth",
+   "name": "Cuda  '70",
+   "drivetrain": "FR",
+   "engine": "V8 NA",
+   "stockPower": 293,
+   "maxPower": 447,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ulgxn",
+   "manufacturer": "Plymouth",
+   "name": "GTX",
+   "drivetrain": "FR",
+   "engine": "V8 NA",
+   "stockPower": 430,
+   "maxPower": 597,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ulpsn",
+   "manufacturer": "Plymouth",
+   "name": "PT Spyder",
+   "drivetrain": "MR",
+   "engine": "I4 DOHC MA",
+   "stockPower": 225,
+   "maxPower": 253,
+   "maxPowerKit": null
+  },
+  {
+   "code": "ulrrn",
+   "manufacturer": "Plymouth",
+   "name": "Muscle Car",
+   "drivetrain": "FR",
+   "engine": "V8 SOHC NA",
+   "stockPower": 429,
+   "maxPower": 597,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "ulsbn",
+   "manufacturer": "Plymouth",
+   "name": "Superbird",
+   "drivetrain": "FR",
+   "engine": "V8 NA",
+   "stockPower": 430,
+   "maxPower": 597,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "um67n",
+   "manufacturer": "Ford",
+   "name": "Cougar XR-7 '67",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 328,
+   "maxPower": 566,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "umcon",
+   "manufacturer": "Ford",
+   "name": "Cougar  '99",
+   "drivetrain": "FF",
+   "engine": "V6 DOHC NA",
+   "stockPower": 175,
+   "maxPower": 520,
+   "maxPowerKit": "PART_TURBO_3"
+  },
+  {
+   "code": "us35n",
+   "manufacturer": "Shelby",
+   "name": "GT350  '66",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 308,
+   "maxPower": 559,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "us36n",
+   "manufacturer": "Shelby",
+   "name": "GT350  '66",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 308,
+   "maxPower": 559,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "us50n",
+   "manufacturer": "Shelby",
+   "name": "GT500  '68",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 364,
+   "maxPower": 616,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "us51n",
+   "manufacturer": "Shelby",
+   "name": "GT500  '68",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 364,
+   "maxPower": 616,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "usccr",
+   "manufacturer": "Shelby",
+   "name": "Cobra Coupe  '65",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 394,
+   "maxPower": 394,
+   "maxPowerKit": null
+  },
+  {
+   "code": "uscon",
+   "manufacturer": "Shelby",
+   "name": "Cobra 427 '67",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 429,
+   "maxPower": 626,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "uss1n",
+   "manufacturer": "Shelby",
+   "name": "Series 1",
+   "drivetrain": "FR",
+   "engine": "V8 DOHC NA",
+   "stockPower": 321,
+   "maxPower": 580,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "uv12n",
+   "manufacturer": "Vector",
+   "name": "M12",
+   "drivetrain": "MR",
+   "engine": "V12 DOHC NA",
+   "stockPower": 496,
+   "maxPower": 643,
+   "maxPowerKit": "PART_NA_TUNE_1"
+  },
+  {
+   "code": "uv2lr",
+   "manufacturer": "Vector",
+   "name": "M12 LM Edition",
+   "drivetrain": "MR",
+   "engine": "V12 DOHC NA",
+   "stockPower": 689,
+   "maxPower": 689,
+   "maxPowerKit": null
+  },
+  {
+   "code": "uvw8n",
+   "manufacturer": "Vector",
+   "name": "Wiegert Vector W8 Twin Turbo",
+   "drivetrain": "MR",
+   "engine": "V8 TURBO",
+   "stockPower": 643,
+   "maxPower": 769,
+   "maxPowerKit": null
+  },
+  {
+   "code": "v-rbr",
+   "manufacturer": "TVR",
+   "name": "Cerbera LM Edition",
+   "drivetrain": "FR",
+   "engine": "DOHC NA",
+   "stockPower": 633,
+   "maxPower": 633,
+   "maxPowerKit": null
+  },
+  {
+   "code": "vc50n",
+   "manufacturer": "TVR",
+   "name": "Chimaera 5.0",
+   "drivetrain": "FR",
+   "engine": "V8 NA",
+   "stockPower": 321,
+   "maxPower": 536,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "vce5n",
+   "manufacturer": "TVR",
+   "name": "Cerbera 4.5",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 434,
+   "maxPower": 572,
+   "maxPowerKit": "PART_NA_TUNE_2"
+  },
+  {
+   "code": "vch2n",
+   "manufacturer": "TVR",
+   "name": "Chimaera 4.0",
+   "drivetrain": "FR",
+   "engine": "V8 NA",
+   "stockPower": 238,
+   "maxPower": 446,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "vch5n",
+   "manufacturer": "TVR",
+   "name": "Chimaera 4.5",
+   "drivetrain": "FR",
+   "engine": "V8 NA",
+   "stockPower": 287,
+   "maxPower": 484,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "vcrbn",
+   "manufacturer": "TVR",
+   "name": "Cerbera 4.2",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 366,
+   "maxPower": 580,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "vcs6n",
+   "manufacturer": "TVR",
+   "name": "Cerbera Speed 6",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 353,
+   "maxPower": 549,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "vgr5n",
+   "manufacturer": "TVR",
+   "name": "Griffith 500",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 343,
+   "maxPower": 572,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "vgrfn",
+   "manufacturer": "TVR",
+   "name": "Griffith Blackpool B340(J)",
+   "drivetrain": "FR",
+   "engine": "V8 OHV NA",
+   "stockPower": 337,
+   "maxPower": 577,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "vs12n",
+   "manufacturer": "TVR",
+   "name": "Speed 12",
+   "drivetrain": "FR",
+   "engine": "V12 DOHC NA",
+   "stockPower": 819,
+   "maxPower": 819,
+   "maxPowerKit": null
+  },
+  {
+   "code": "vst6n",
+   "manufacturer": "TVR",
+   "name": "Tuscan Speed 6",
+   "drivetrain": "FR",
+   "engine": "I6 DOHC NA",
+   "stockPower": 367,
+   "maxPower": 559,
+   "maxPowerKit": "PART_NA_TUNE_3"
+  },
+  {
+   "code": "x2a8n",
+   "manufacturer": "Suzuki",
+   "name": "Alto Works RS/Z(J) '98",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 61,
+   "maxPower": 185,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "x2aln",
+   "manufacturer": "Suzuki",
+   "name": "Alto Works RS/X(J) '90",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 62,
+   "maxPower": 190,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "x2asn",
+   "manufacturer": "Suzuki",
+   "name": "Alto Works Limited(J) '97",
+   "drivetrain": "AWD",
+   "engine": "I3 SOHC TURBO",
+   "stockPower": 62,
+   "maxPower": 173,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "x2azn",
+   "manufacturer": "Suzuki",
+   "name": "Alto Works RS/Z(J) '97",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 62,
+   "maxPower": 190,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "x2cpn",
+   "manufacturer": "Suzuki",
+   "name": "Capcino (J) '95",
+   "drivetrain": "FR",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 62,
+   "maxPower": 190,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "x2cur",
+   "manufacturer": "Suzuki",
+   "name": "Cultus Pikes Peak Version(J)",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC TURBO",
+   "stockPower": 798,
+   "maxPower": 798,
+   "maxPowerKit": null
+  },
+  {
+   "code": "x2esr",
+   "manufacturer": "Suzuki",
+   "name": "Escudo Pikes Peak Version(J)",
+   "drivetrain": "AWD",
+   "engine": "V6 DOHC TURBO",
+   "stockPower": 995,
+   "maxPower": 995,
+   "maxPowerKit": null
+  },
+  {
+   "code": "x2ksn",
+   "manufacturer": "Suzuki",
+   "name": "Kei S(J) '98",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 64,
+   "maxPower": 187,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "x2son",
+   "manufacturer": "Suzuki",
+   "name": "Cervo Mode SR-Four(J) '90",
+   "drivetrain": "AWD",
+   "engine": "I4 DOHC NA",
+   "stockPower": 64,
+   "maxPower": 117,
+   "maxPowerKit": "PART_TURBO_1"
+  },
+  {
+   "code": "x2w8n",
+   "manufacturer": "Suzuki",
+   "name": "Wagon R RR(J) '98",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 64,
+   "maxPower": 187,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "x2wfn",
+   "manufacturer": "Suzuki",
+   "name": "Wagon R Column FT(J) '97",
+   "drivetrain": "AWD",
+   "engine": "I3 SOHC TURBO",
+   "stockPower": 62,
+   "maxPower": 173,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "x2wrn",
+   "manufacturer": "Suzuki",
+   "name": "Wagon R Turbo RT/S(J) '95",
+   "drivetrain": "AWD",
+   "engine": "I3 SOHC TURBO",
+   "stockPower": 60,
+   "maxPower": 158,
+   "maxPowerKit": "PART_TURBO_2"
+  },
+  {
+   "code": "x2wsn",
+   "manufacturer": "Suzuki",
+   "name": "Wagon R Aero RS(J) '97",
+   "drivetrain": "AWD",
+   "engine": "I3 DOHC TURBO",
+   "stockPower": 62,
+   "maxPower": 190,
+   "maxPowerKit": "PART_TURBO_2"
+  }
+ ]
+}
