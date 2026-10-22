@@ -22,16 +22,16 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 
 | # | Code | Kind | Course | Laps | Menu | License | Drive | Dirt | Turbo | Racing mod | Max PS | Cars | Requires | 1st prize | Prize cars |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 0 | 4WD0001 | race | seatt_s | 2 | yes | A | AWD |  |  |  | 350 |  |  | 5000 | Subaru Legacy Wagon GT-B(J) '96 |
-| 1 | 4WD0002 | race | seattle | 2 | yes | IC | AWD |  |  |  | 400 |  |  | 6000 | Nissan Nismo 400R Preceiding Model(J) |
-| 2 | 4WD0003 | race | laguna | 2 | yes | IA | AWD |  |  |  | 700 |  |  | 15000 | Nissan Mine's R32.5 Skyline GT-R(J) |
+| 0 | 4WD0001 | race | Seattle Short Course | 2 | yes | A | AWD |  |  |  | 350 |  |  | 5000 | Subaru Legacy Wagon GT-B(J) '96 |
+| 1 | 4WD0002 | race | Seattle Circuit | 2 | yes | IC | AWD |  |  |  | 400 |  |  | 6000 | Nissan Nismo 400R Preceiding Model(J) |
+| 2 | 4WD0003 | race | Laguna Seca Raceway | 2 | yes | IA | AWD |  |  |  | 700 |  |  | 15000 | Nissan Mine's R32.5 Skyline GT-R(J) |
 | 3 | 7LN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 2 |  | 7000 |  |
 | 4 | 7LR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 2 |  | 10000 |  |
-| 5 | 80S0001 | race | mountain | 3 | yes | A |  |  |  |  | 200 |  |  | 7000 | Honda Mugen Ferio (J) |
-| 6 | 80S0002 | race | highway | 3 | yes | IC |  |  |  |  | 350 |  |  | 7000 | Honda Mugen CR-X III (J) |
-| 7 | 80S0003 | race | test_in2 | 3 | yes | IB |  |  |  |  | 350 |  |  | 8000 | Honda Mugen Civic Type-R(J) |
-| 8 | 80S0004 | race | seattle | 3 | yes | IB |  |  |  |  | 400 |  |  | 8000 | Honda Mugen Integra Type-R(J) |
-| 9 | 80S0005 | race | tahiti_t | 3 | yes | IB |  |  |  |  | 400 |  |  | 10000 | Nissan Skyline Silhouette Foumula (R30) |
+| 5 | 80S0001 | race | Trial Mountain Circuit | 3 | yes | A |  |  |  |  | 200 |  |  | 7000 | Honda Mugen Ferio (J) |
+| 6 | 80S0002 | race | Special Stage Route 5 | 3 | yes | IC |  |  |  |  | 350 |  |  | 7000 | Honda Mugen CR-X III (J) |
+| 7 | 80S0003 | race | Deep Forest Raceway | 3 | yes | IB |  |  |  |  | 350 |  |  | 8000 | Honda Mugen Civic Type-R(J) |
+| 8 | 80S0004 | race | Seattle Circuit | 3 | yes | IB |  |  |  |  | 400 |  |  | 8000 | Honda Mugen Integra Type-R(J) |
+| 9 | 80S0005 | race | Tahiti Road | 3 | yes | IB |  |  |  |  | 400 |  |  | 10000 | Nissan Skyline Silhouette Foumula (R30) |
 | 10 | A1N0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 2 |  | 3000 |  |
 | 11 | A7N0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 17 |  | 10000 |  |
 | 12 | ADN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 6 |  | 3000 |  |
@@ -44,67 +44,67 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 | 19 | BRR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 3 |  | 5000 |  |
 | 20 | BVN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 3000 |  |
 | 21 | BVR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 2 |  | 5000 |  |
-| 22 | CBM0001 | race | roma_short | 2 | yes |  |  |  |  |  |  |  |  | 5000 |  |
-| 23 | CBM0002 | race | grindel | 2 | yes |  |  |  |  |  |  |  |  | 6000 |  |
-| 24 | CBM0003 | race | roma | 2 | yes | B |  |  |  |  |  |  |  | 7000 |  |
+| 22 | CBM0001 | race | Rome Short Course | 2 | yes |  |  |  |  |  |  |  |  | 5000 |  |
+| 23 | CBM0002 | race | Grindelwald | 2 | yes |  |  |  |  |  |  |  |  | 6000 |  |
+| 24 | CBM0003 | race | Rome Circuit | 2 | yes | B |  |  |  |  |  |  |  | 7000 |  |
 | 25 | CCN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 6 |  | 7000 |  |
 | 26 | CCR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 6 |  | 10000 |  |
 | 27 | DNN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 2 |  | 5000 |  |
 | 28 | DNR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 2 |  | 7000 |  |
-| 29 | DO20001 | race | nn_dirt_2 | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
-| 30 | DO20002 | race | nn_dirt_2 | 1 | yes | IC |  | yes |  |  |  |  |  | 8000 |  |
-| 31 | DO20003 | race | nn_dirt_2 | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
-| 32 | DO30001 | race | nn_dirt_3 | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
-| 33 | DO30002 | race | nn_dirt_3 | 1 | yes | IC |  | yes |  |  |  |  |  | 8000 |  |
-| 34 | DO30003 | race | nn_dirt_3 | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
-| 35 | DO70001 | race | tahiti_test7 | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
-| 36 | DO70002 | race | tahiti_test7 | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
-| 37 | DO70003 | race | tahiti_test7 | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
-| 38 | DOC0001 | race | pikes | 1 | yes | IB |  | yes |  |  |  |  |  | 25000 |  |
-| 39 | DOC0002 | race | pikes | 1 | yes | IB |  | yes |  |  |  |  |  | 25000 |  |
-| 40 | DOC0003 | race | pikes | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
-| 41 | DON0001 | race | no_name_dirt | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
-| 42 | DON0002 | race | no_name_dirt | 1 | yes | IC |  | yes |  |  |  |  |  | 8000 |  |
-| 43 | DON0003 | race | no_name_dirt | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
-| 44 | DOT0001 | race | tahiti_d_new | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
-| 45 | DOT0002 | race | tahiti_d_new | 1 | yes | IC |  | yes |  |  |  |  |  | 8000 |  |
-| 46 | DOT0003 | race | tahiti_d_new | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
-| 47 | DRC0001 | race | pikes_rev | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
-| 48 | DRC0002 | race | pikes_rev | 1 | yes | IC |  | yes |  |  |  |  |  | 8000 |  |
-| 49 | DRC0003 | race | pikes_rev | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
-| 50 | DRN0001 | race | no_name_dirt_rev | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
-| 51 | DRN0002 | race | no_name_dirt_rev | 1 | yes | IC |  | yes |  |  |  |  |  | 8000 |  |
-| 52 | DRN0003 | race | no_name_dirt_rev | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
-| 53 | DRT0001 | race | tahiti_d_new_rev | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
-| 54 | DRT0002 | race | tahiti_d_new_rev | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
-| 55 | DRT0003 | race | tahiti_d_new_rev | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
+| 29 | DO20001 | race | Smokey Mountain South | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
+| 30 | DO20002 | race | Smokey Mountain South | 1 | yes | IC |  | yes |  |  |  |  |  | 8000 |  |
+| 31 | DO20003 | race | Smokey Mountain South | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
+| 32 | DO30001 | race | Green Forest Roadway | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
+| 33 | DO30002 | race | Green Forest Roadway | 1 | yes | IC |  | yes |  |  |  |  |  | 8000 |  |
+| 34 | DO30003 | race | Green Forest Roadway | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
+| 35 | DO70001 | race | Tahiti Maze | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
+| 36 | DO70002 | race | Tahiti Maze | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
+| 37 | DO70003 | race | Tahiti Maze | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
+| 38 | DOC0001 | race | Pikes Peak Hill Climb | 1 | yes | IB |  | yes |  |  |  |  |  | 25000 |  |
+| 39 | DOC0002 | race | Pikes Peak Hill Climb | 1 | yes | IB |  | yes |  |  |  |  |  | 25000 |  |
+| 40 | DOC0003 | race | Pikes Peak Hill Climb | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
+| 41 | DON0001 | race | Smokey Mountain North | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
+| 42 | DON0002 | race | Smokey Mountain North | 1 | yes | IC |  | yes |  |  |  |  |  | 8000 |  |
+| 43 | DON0003 | race | Smokey Mountain North | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
+| 44 | DOT0001 | race | Tahiti Dirt Route 3 | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
+| 45 | DOT0002 | race | Tahiti Dirt Route 3 | 1 | yes | IC |  | yes |  |  |  |  |  | 8000 |  |
+| 46 | DOT0003 | race | Tahiti Dirt Route 3 | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
+| 47 | DRC0001 | race | Pikes Peak Downhill | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
+| 48 | DRC0002 | race | Pikes Peak Downhill | 1 | yes | IC |  | yes |  |  |  |  |  | 8000 |  |
+| 49 | DRC0003 | race | Pikes Peak Downhill | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
+| 50 | DRN0001 | race | Smokey Mountain North (reverse) | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
+| 51 | DRN0002 | race | Smokey Mountain North (reverse) | 1 | yes | IC |  | yes |  |  |  |  |  | 8000 |  |
+| 52 | DRN0003 | race | Smokey Mountain North (reverse) | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
+| 53 | DRT0001 | race | Tahiti Dirt Route 3 (reverse) | 1 | yes | IB |  | yes |  |  |  |  |  | 10000 |  |
+| 54 | DRT0002 | race | Tahiti Dirt Route 3 (reverse) | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
+| 55 | DRT0003 | race | Tahiti Dirt Route 3 (reverse) | 1 | yes | A |  | yes |  |  |  |  |  | 5000 |  |
 | 56 | DVN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 2 |  | 7000 |  |
 | 57 | DVR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 5 |  | 10000 |  |
 | 58 | EFM0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 2 |  | 5000 |  |
 | 59 | EFN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 3000 |  |
 | 60 | EFR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 1 |  | 5000 |  |
-| 61 | EGV0001 | race | circuit | 60 | yes | IA |  |  |  |  | 700 |  |  | 500000 | Nissan R390 GT1 LM Race Car '97, Subaru Impreza Rally Car |
-| 62 | ELS0001 | race | laguna | 90 | yes | IA |  |  |  |  |  |  |  | 350000 | Mitsubishi 3000GT LM Edition '99, Toyota Celica Rally Car |
-| 63 | EPL0001 | race | new_parmaS | 3 | yes | IB |  |  |  |  | 600 |  | regional leagues | 10000 | Toyota Castrol Supra GT(J) '96 |
-| 64 | EPL0002 | race | circuit | 3 | yes | IB |  |  |  |  | 600 |  | regional leagues | 10000 | Nissan Zexel Skyline GT(J) '97 |
-| 65 | EPL0003 | race | roma | 3 | yes | IB |  |  |  |  | 600 |  | regional leagues | 10000 | Nissan Kure R33 GT(J) '97 |
-| 66 | EPS0001 | race | new_parmaS | 50 | yes | IB |  |  |  |  | 600 |  |  | 500000 | Dodge Viper GTS-R, Lancia Stratos |
-| 67 | ERM0001 | race | roma | 99 | yes | IA |  |  |  |  |  |  |  | 300000 | Toyota Altezza LM Edition, Toyota Corolla Rally Car '97 |
-| 68 | ES50001 | race | highway | 50 | yes | IA |  |  |  |  |  |  |  | 350000 | TVR Cerbera LM Edition, Mitsubishi Lancer Evolution VI Rally Car '99 |
-| 69 | EST0001 | race | seattle | 40 | yes | IA |  |  |  |  | 600 |  |  | 150000 | Ford GT90, Ford Escort Rally Car |
-| 70 | ETM0001 | race | mountain | 30 | yes | IB |  |  |  |  | 300 |  |  | 150000 | Toyota Denso Supra GT(J) '99 |
+| 61 | EGV0001 | race | Grand Valley Speedway | 60 | yes | IA |  |  |  |  | 700 |  |  | 500000 | Nissan R390 GT1 LM Race Car '97, Subaru Impreza Rally Car |
+| 62 | ELS0001 | race | Laguna Seca Raceway | 90 | yes | IA |  |  |  |  |  |  |  | 350000 | Mitsubishi 3000GT LM Edition '99, Toyota Celica Rally Car |
+| 63 | EPL0001 | race | Apricot Hill Speedway | 3 | yes | IB |  |  |  |  | 600 |  | regional leagues | 10000 | Toyota Castrol Supra GT(J) '96 |
+| 64 | EPL0002 | race | Grand Valley Speedway | 3 | yes | IB |  |  |  |  | 600 |  | regional leagues | 10000 | Nissan Zexel Skyline GT(J) '97 |
+| 65 | EPL0003 | race | Rome Circuit | 3 | yes | IB |  |  |  |  | 600 |  | regional leagues | 10000 | Nissan Kure R33 GT(J) '97 |
+| 66 | EPS0001 | race | Apricot Hill Speedway | 50 | yes | IB |  |  |  |  | 600 |  |  | 500000 | Dodge Viper GTS-R, Lancia Stratos |
+| 67 | ERM0001 | race | Rome Circuit | 99 | yes | IA |  |  |  |  |  |  |  | 300000 | Toyota Altezza LM Edition, Toyota Corolla Rally Car '97 |
+| 68 | ES50001 | race | Special Stage Route 5 | 50 | yes | IA |  |  |  |  |  |  |  | 350000 | TVR Cerbera LM Edition, Mitsubishi Lancer Evolution VI Rally Car '99 |
+| 69 | EST0001 | race | Seattle Circuit | 40 | yes | IA |  |  |  |  | 600 |  |  | 150000 | Ford GT90, Ford Escort Rally Car |
+| 70 | ETM0001 | race | Trial Mountain Circuit | 30 | yes | IB |  |  |  |  | 300 |  |  | 150000 | Toyota Denso Supra GT(J) '99 |
 | 71 | FCN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 3000 |  |
 | 72 | FCR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 1 |  | 5000 |  |
-| 73 | FFC0001 | race | tahiti_t | 2 | yes | B | FF |  |  |  | 300 |  |  | 5000 | Honda Mugen Accord SIR-T(J) |
-| 74 | FFC0002 | race | parma | 2 | yes | A | FF |  |  |  | 350 |  |  | 6000 | Toyota Tom's T111 (J) |
-| 75 | FFC0003 | race | mountain | 2 | yes | IC | FF |  |  |  | 400 |  |  | 7000 | Honda Mugen Prelude Type-S(J) |
+| 73 | FFC0001 | race | Tahiti Road | 2 | yes | B | FF |  |  |  | 300 |  |  | 5000 | Honda Mugen Accord SIR-T(J) |
+| 74 | FFC0002 | race | Midfield Raceway | 2 | yes | A | FF |  |  |  | 350 |  |  | 6000 | Toyota Tom's T111 (J) |
+| 75 | FFC0003 | race | Trial Mountain Circuit | 2 | yes | IC | FF |  |  |  | 400 |  |  | 7000 | Honda Mugen Prelude Type-S(J) |
 | 76 | FPM0001 | race | random | 2 | no |  |  |  |  | no_racing_mod |  | 2 |  | 5000 |  |
 | 77 | FPN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 2 |  | 5000 |  |
 | 78 | FPR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 2 |  | 7000 |  |
 | 79 | FPS0001 | race | random | 2 | no |  |  |  |  | racing_mod_required |  | 4 |  | 7000 |  |
-| 80 | FRC0001 | race | shortway | 2 | yes | A | FR |  |  |  | 300 |  |  | 5000 | Nissan Sileighty (J) |
-| 81 | FRC0002 | race | highway | 2 | yes | IC | FR |  |  |  | 450 |  |  | 6000 | Nissan Nismo 270R (J) |
-| 82 | FRC0003 | race | parma | 2 | yes | IB | FR |  |  |  | 500 |  |  | 7000 | Mazda Mazda RX-7 GT-C(J) '99 |
+| 80 | FRC0001 | race | Clubman Stage Route 5 | 2 | yes | A | FR |  |  |  | 300 |  |  | 5000 | Nissan Sileighty (J) |
+| 81 | FRC0002 | race | Special Stage Route 5 | 2 | yes | IC | FR |  |  |  | 450 |  |  | 6000 | Nissan Nismo 270R (J) |
+| 82 | FRC0003 | race | Midfield Raceway | 2 | yes | IB | FR |  |  |  | 500 |  |  | 7000 | Mazda Mazda RX-7 GT-C(J) '99 |
 | 83 | FREECHAMP0501 | event_synthesizer | random | 2 | yes | S |  |  |  |  |  |  |  | 10000 |  |
 | 84 | FREECHAMP0502 | event_synthesizer | random | 2 | no | S |  |  |  |  |  |  |  | 10000 |  |
 | 85 | FREECHAMP0503 | event_synthesizer | random | 2 | no | S |  |  |  |  |  |  |  | 10000 |  |
@@ -119,54 +119,54 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 | 94 | G400 | machine_test | TC_lisence | 1 | yes |  |  |  |  |  |  |  |  | 0 |  |
 | 95 | GAN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 7000 |  |
 | 96 | GAR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 2 |  | 10000 |  |
-| 97 | GBL0001 | race | mountain | 2 | yes | B |  |  |  |  | 200 |  |  | 4000 |  |
-| 98 | GBL0002 | race | mountain | 2 | yes | A |  |  |  |  | 350 |  |  | 5000 |  |
-| 99 | GBL0003 | race | mountain | 2 | yes | A |  |  |  |  | 400 |  |  | 7000 |  |
+| 97 | GBL0001 | race | Trial Mountain Circuit | 2 | yes | B |  |  |  |  | 200 |  |  | 4000 |  |
+| 98 | GBL0002 | race | Trial Mountain Circuit | 2 | yes | A |  |  |  |  | 350 |  |  | 5000 |  |
+| 99 | GBL0003 | race | Trial Mountain Circuit | 2 | yes | A |  |  |  |  | 400 |  |  | 7000 |  |
 | 100 | GBN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 5 |  | 7000 |  |
-| 101 | GCC0001 | race | roma_short | 2 | yes | B |  |  |  |  | 250 |  |  | 4000 | Toyota Vitz F(J) '99 |
-| 102 | GCC0002 | race | seatt_s | 2 | yes | B |  |  |  |  | 250 |  |  | 4000 | Renault Clio 16V |
-| 103 | GCC0003 | race | autumn | 2 | yes | B |  |  |  |  | 300 |  |  | 4000 | Volkswagen Lupo 1.4 |
-| 104 | GFL0001 | race | tahiti_t | 2 | yes | B |  |  |  |  | 250 |  |  | 4000 |  |
-| 105 | GFL0002 | race | tahiti_t | 2 | yes | A |  |  |  |  | 300 |  |  | 5000 |  |
-| 106 | GGL0001 | race | test_in2 | 2 | yes | B |  |  |  |  | 220 |  |  | 4000 |  |
-| 107 | GGL0002 | race | test_in2 | 2 | yes | A |  |  |  |  | 300 |  |  | 5000 |  |
-| 108 | GGL0003 | race | test_in2 | 2 | yes | A |  |  |  |  | 450 |  |  | 7000 |  |
-| 109 | GIL0001 | race | roma_short | 2 | yes | B |  |  |  |  | 200 |  |  | 4000 |  |
-| 110 | GIL0002 | race | roma | 2 | yes | A |  |  |  |  | 300 |  |  | 5000 |  |
-| 111 | GJL0001 | race | parma | 2 | yes | B |  |  |  |  | 200 |  |  | 4000 |  |
-| 112 | GJL0002 | race | parma | 2 | yes | A |  |  |  |  | 300 |  |  | 5000 |  |
-| 113 | GJL0003 | race | parma | 2 | yes | A |  |  |  |  | 350 |  |  | 7000 |  |
+| 101 | GCC0001 | race | Rome Short Course | 2 | yes | B |  |  |  |  | 250 |  |  | 4000 | Toyota Vitz F(J) '99 |
+| 102 | GCC0002 | race | Seattle Short Course | 2 | yes | B |  |  |  |  | 250 |  |  | 4000 | Renault Clio 16V |
+| 103 | GCC0003 | race | Autumn Ring | 2 | yes | B |  |  |  |  | 300 |  |  | 4000 | Volkswagen Lupo 1.4 |
+| 104 | GFL0001 | race | Tahiti Road | 2 | yes | B |  |  |  |  | 250 |  |  | 4000 |  |
+| 105 | GFL0002 | race | Tahiti Road | 2 | yes | A |  |  |  |  | 300 |  |  | 5000 |  |
+| 106 | GGL0001 | race | Deep Forest Raceway | 2 | yes | B |  |  |  |  | 220 |  |  | 4000 |  |
+| 107 | GGL0002 | race | Deep Forest Raceway | 2 | yes | A |  |  |  |  | 300 |  |  | 5000 |  |
+| 108 | GGL0003 | race | Deep Forest Raceway | 2 | yes | A |  |  |  |  | 450 |  |  | 7000 |  |
+| 109 | GIL0001 | race | Rome Short Course | 2 | yes | B |  |  |  |  | 200 |  |  | 4000 |  |
+| 110 | GIL0002 | race | Rome Circuit | 2 | yes | A |  |  |  |  | 300 |  |  | 5000 |  |
+| 111 | GJL0001 | race | Midfield Raceway | 2 | yes | B |  |  |  |  | 200 |  |  | 4000 |  |
+| 112 | GJL0002 | race | Midfield Raceway | 2 | yes | A |  |  |  |  | 300 |  |  | 5000 |  |
+| 113 | GJL0003 | race | Midfield Raceway | 2 | yes | A |  |  |  |  | 350 |  |  | 7000 |  |
 | 114 | GMAX | machine_test | maxspeed | 1 | yes |  |  |  |  |  |  |  |  | 0 |  |
 | 115 | GMN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 5000 |  |
 | 116 | GMR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 1 |  | 7000 |  |
 | 117 | GON0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 3000 |  |
 | 118 | GOR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 2 |  | 5000 |  |
-| 119 | GT30501 | race | short | 5 | yes | IB |  |  |  |  | 600 |  |  | 15000 | Nissan Zanavi Silvia GT(J) '99, Toyota Weds Celica GT(J) '99, Toyota Momo MR2 GT(J) '99, Toyota BP Trueno GT(J) '99 |
-| 120 | GT30502 | race | laguna | 5 | no | IB |  |  |  |  | 600 |  |  | 15000 |  |
-| 121 | GT30503 | race | test_in2 | 5 | no | IB |  |  |  |  | 600 |  |  | 15000 |  |
-| 122 | GT30504 | race | parma | 5 | no | IB |  |  |  |  | 600 |  |  | 15000 |  |
-| 123 | GT30505 | race | new_parmaS | 5 | no | IB |  |  |  |  | 600 |  |  | 15000 |  |
-| 124 | GT50501 | race | laguna | 5 | yes | IA |  |  |  |  |  |  |  | 50000 | Nissan Arta GT-R GT(J) '99, Toyota Cerumo Supra GT(J) '99, Honda Takata NSX GT(J) '99, Dodge STP Viper GT |
-| 125 | GT50502 | race | s_speed | 5 | no | IA |  |  |  |  |  |  |  | 50000 |  |
-| 126 | GT50503 | race | roma | 5 | no | IA |  |  |  |  |  |  |  | 50000 |  |
-| 127 | GT50504 | race | mountain | 5 | no | IA |  |  |  |  |  |  |  | 50000 |  |
-| 128 | GT50505 | race | new_parmaS | 5 | no | IA |  |  |  |  |  |  |  | 50000 |  |
-| 129 | GTA0001 | race | s_speed | 5 | yes | IA |  |  |  |  |  |  |  | 50000 | Mitsubishi Mine's Lancer Evolution V(J) |
-| 130 | GTA0002 | race | highway | 5 | yes | IA |  |  |  |  |  |  |  | 50000 | Nissan Mine's R34 Skyline GT-R(J) |
-| 131 | GTA0003 | race | sprint2 | 5 | yes | IA |  |  |  |  |  |  |  | 50000 | TVR Speed 12 |
-| 132 | GTA0004 | race | roma | 5 | yes | IA |  |  |  |  |  |  |  | 50000 | Tommy kaira ZZII (J) |
-| 133 | GTA0005 | race | laguna | 5 | yes | IA |  |  |  |  |  |  |  | 50000 | Nissan R390 GT1 Road Car '97 |
-| 134 | GTC0001 | race | sprint2 | 3 | yes | IC |  |  |  |  | 400 |  |  | 10000 | Nissan Daisin Silvia GT(J) '99 |
-| 135 | GTC0002 | race | circuit | 3 | yes | IB |  |  |  |  | 500 |  |  | 20000 | Honda Mugen NSX GT(J) |
-| 136 | GTC0003 | race | parma | 3 | yes | IA |  |  |  |  | 600 |  |  | 30000 | Nissan Unisia GT-R GT(J) '99 |
-| 137 | GTW0501 | race | mountain | 5 | yes | IA |  |  |  |  |  |  | pro leagues | 25000 | Toyota GT-ONE Race Car '98, Nissan R390 GT1 LM Race Car '98, Nissan Calsonic GT-R GT(J) '99, Honda Mugen NSX GT(J) '99 |
-| 138 | GTW0502 | race | laguna | 5 | no | IA |  |  |  |  |  |  | pro leagues | 25000 |  |
-| 139 | GTW0503 | race | new_parmaS | 5 | no | IA |  |  |  |  |  |  | pro leagues | 25000 |  |
-| 140 | GTW0504 | race | roma | 5 | no | IA |  |  |  |  |  |  | pro leagues | 25000 |  |
-| 141 | GTW0505 | race | parma | 5 | no | IA |  |  |  |  |  |  | pro leagues | 25000 |  |
-| 142 | GUL0001 | race | laguna | 2 | yes | B |  |  |  |  | 250 |  |  | 4000 |  |
-| 143 | GUL0002 | race | laguna | 2 | yes | A |  |  |  |  | 300 |  |  | 5000 |  |
-| 144 | GUL0003 | race | laguna | 2 | yes | A |  |  |  |  | 400 |  |  | 7000 |  |
+| 119 | GT30501 | race | Grand Valley East Section | 5 | yes | IB |  |  |  |  | 600 |  |  | 15000 | Nissan Zanavi Silvia GT(J) '99, Toyota Weds Celica GT(J) '99, Toyota Momo MR2 GT(J) '99, Toyota BP Trueno GT(J) '99 |
+| 120 | GT30502 | race | Laguna Seca Raceway | 5 | no | IB |  |  |  |  | 600 |  |  | 15000 |  |
+| 121 | GT30503 | race | Deep Forest Raceway | 5 | no | IB |  |  |  |  | 600 |  |  | 15000 |  |
+| 122 | GT30504 | race | Midfield Raceway | 5 | no | IB |  |  |  |  | 600 |  |  | 15000 |  |
+| 123 | GT30505 | race | Apricot Hill Speedway | 5 | no | IB |  |  |  |  | 600 |  |  | 15000 |  |
+| 124 | GT50501 | race | Laguna Seca Raceway | 5 | yes | IA |  |  |  |  |  |  |  | 50000 | Nissan Arta GT-R GT(J) '99, Toyota Cerumo Supra GT(J) '99, Honda Takata NSX GT(J) '99, Dodge STP Viper GT |
+| 125 | GT50502 | race | Super Speedway | 5 | no | IA |  |  |  |  |  |  |  | 50000 |  |
+| 126 | GT50503 | race | Rome Circuit | 5 | no | IA |  |  |  |  |  |  |  | 50000 |  |
+| 127 | GT50504 | race | Trial Mountain Circuit | 5 | no | IA |  |  |  |  |  |  |  | 50000 |  |
+| 128 | GT50505 | race | Apricot Hill Speedway | 5 | no | IA |  |  |  |  |  |  |  | 50000 |  |
+| 129 | GTA0001 | race | Super Speedway | 5 | yes | IA |  |  |  |  |  |  |  | 50000 | Mitsubishi Mine's Lancer Evolution V(J) |
+| 130 | GTA0002 | race | Special Stage Route 5 | 5 | yes | IA |  |  |  |  |  |  |  | 50000 | Nissan Mine's R34 Skyline GT-R(J) |
+| 131 | GTA0003 | race | Red Rock Valley Speedway | 5 | yes | IA |  |  |  |  |  |  |  | 50000 | TVR Speed 12 |
+| 132 | GTA0004 | race | Rome Circuit | 5 | yes | IA |  |  |  |  |  |  |  | 50000 | Tommy kaira ZZII (J) |
+| 133 | GTA0005 | race | Laguna Seca Raceway | 5 | yes | IA |  |  |  |  |  |  |  | 50000 | Nissan R390 GT1 Road Car '97 |
+| 134 | GTC0001 | race | Red Rock Valley Speedway | 3 | yes | IC |  |  |  |  | 400 |  |  | 10000 | Nissan Daisin Silvia GT(J) '99 |
+| 135 | GTC0002 | race | Grand Valley Speedway | 3 | yes | IB |  |  |  |  | 500 |  |  | 20000 | Honda Mugen NSX GT(J) |
+| 136 | GTC0003 | race | Midfield Raceway | 3 | yes | IA |  |  |  |  | 600 |  |  | 30000 | Nissan Unisia GT-R GT(J) '99 |
+| 137 | GTW0501 | race | Trial Mountain Circuit | 5 | yes | IA |  |  |  |  |  |  | pro leagues | 25000 | Toyota GT-ONE Race Car '98, Nissan R390 GT1 LM Race Car '98, Nissan Calsonic GT-R GT(J) '99, Honda Mugen NSX GT(J) '99 |
+| 138 | GTW0502 | race | Laguna Seca Raceway | 5 | no | IA |  |  |  |  |  |  | pro leagues | 25000 |  |
+| 139 | GTW0503 | race | Apricot Hill Speedway | 5 | no | IA |  |  |  |  |  |  | pro leagues | 25000 |  |
+| 140 | GTW0504 | race | Rome Circuit | 5 | no | IA |  |  |  |  |  |  | pro leagues | 25000 |  |
+| 141 | GTW0505 | race | Midfield Raceway | 5 | no | IA |  |  |  |  |  |  | pro leagues | 25000 |  |
+| 142 | GUL0001 | race | Laguna Seca Raceway | 2 | yes | B |  |  |  |  | 250 |  |  | 4000 |  |
+| 143 | GUL0002 | race | Laguna Seca Raceway | 2 | yes | A |  |  |  |  | 300 |  |  | 5000 |  |
+| 144 | GUL0003 | race | Laguna Seca Raceway | 2 | yes | A |  |  |  |  | 400 |  |  | 7000 |  |
 | 145 | GVM0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 5000 |  |
 | 146 | GVN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 4 |  | 5000 |  |
 | 147 | GVR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 4 |  | 7000 |  |
@@ -178,9 +178,9 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 | 153 | HCR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 8 |  | 7000 |  |
 | 154 | HNN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 10 |  | 10000 |  |
 | 155 | HRN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 13 |  | 7000 |  |
-| 156 | HTC0001 | race | tahiti_t | 2 | yes | A |  |  |  |  | 250 |  |  | 7000 | Honda Mugen CR-X III (J) |
-| 157 | HTC0002 | race | roma | 2 | yes | A |  |  |  |  | 300 |  |  | 7000 | Lotus Europa |
-| 158 | HTC0003 | race | grindel | 2 | yes | IC |  |  |  |  | 400 |  |  | 8000 | Toyota XYR  '99 |
+| 156 | HTC0001 | race | Tahiti Road | 2 | yes | A |  |  |  |  | 250 |  |  | 7000 | Honda Mugen CR-X III (J) |
+| 157 | HTC0002 | race | Rome Circuit | 2 | yes | A |  |  |  |  | 300 |  |  | 7000 | Lotus Europa |
+| 158 | HTC0003 | race | Grindelwald | 2 | yes | IC |  |  |  |  | 400 |  |  | 8000 | Toyota XYR  '99 |
 | 159 | IAN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 3 |  | 5000 |  |
 | 160 | IAR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 4 |  | 7000 |  |
 | 161 | IIN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 2 |  | 3000 |  |
@@ -196,18 +196,18 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 | 171 | LIA00 | license | circle80 | 2 | yes |  |  |  |  |  |  |  |  | 0 | Mitsubishi FTO LM Edition |
 | 172 | LIB00 | license | SMtN_License1 | 255 | yes |  |  | yes |  |  |  |  |  | 0 | Honda del Sol LM Edition |
 | 173 | LIC00 | license | test_j1 | 255 | yes |  |  |  |  |  |  |  |  | 0 | Mitsubishi 3000GT LM Edition |
-| 174 | LIS00 | license | tahiti_t | 1 | yes |  |  |  |  |  |  |  |  | 0 | Toyota GT-ONE Race Car '99 |
+| 174 | LIS00 | license | Tahiti Road | 1 | yes |  |  |  |  |  |  |  |  | 0 | Toyota GT-ONE Race Car '99 |
 | 175 | LJA00 | license | TC_lisence | 255 | yes |  |  |  |  |  |  |  |  | 0 | Dodge Concept Car |
 | 176 | LJB00 | license | TC_lisence | 255 | yes |  |  |  |  |  |  |  |  | 0 | Honda Spoon S2000 (J) |
 | 177 | MEN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 7 |  | 10000 |  |
 | 178 | MMN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 5 |  | 5000 |  |
 | 179 | MMR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 5 |  | 7000 |  |
-| 180 | MRC0001 | race | short | 2 | yes | IC | MR |  |  |  | 350 |  |  | 5000 | Toyota TRD2000GT (J) |
-| 181 | MRC0002 | race | testline | 2 | yes | IB | MR |  |  |  | 500 |  |  | 6000 | Toyota Tom's T020 (J) |
-| 182 | MRC0003 | race | sprint2 | 2 | yes | IA | MR |  |  |  | 600 |  |  | 15000 | Ford GT40 Race Car |
-| 183 | MSC0001 | race | seatt_s | 2 | yes | IA |  |  |  |  |  |  |  | 7000 | Plymouth PT Spyder |
-| 184 | MSC0002 | race | seattle | 2 | yes | IA |  |  |  |  |  |  |  | 8000 | Shelby Cobra 427 '67 |
-| 185 | MSC0003 | race | laguna | 2 | yes | IA |  |  |  |  |  |  |  | 10000 | Dodge Phaeton |
+| 180 | MRC0001 | race | Grand Valley East Section | 2 | yes | IC | MR |  |  |  | 350 |  |  | 5000 | Toyota TRD2000GT (J) |
+| 181 | MRC0002 | race | High Speed Ring | 2 | yes | IB | MR |  |  |  | 500 |  |  | 6000 | Toyota Tom's T020 (J) |
+| 182 | MRC0003 | race | Red Rock Valley Speedway | 2 | yes | IA | MR |  |  |  | 600 |  |  | 15000 | Ford GT40 Race Car |
+| 183 | MSC0001 | race | Seattle Short Course | 2 | yes | IA |  |  |  |  |  |  |  | 7000 | Plymouth PT Spyder |
+| 184 | MSC0002 | race | Seattle Circuit | 2 | yes | IA |  |  |  |  |  |  |  | 8000 | Shelby Cobra 427 '67 |
+| 185 | MSC0003 | race | Laguna Seca Raceway | 2 | yes | IA |  |  |  |  |  |  |  | 10000 | Dodge Phaeton |
 | 186 | N1N0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 16 |  | 5000 |  |
 | 187 | N1R0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 18 |  | 7000 |  |
 | 188 | NGN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 22 |  | 7000 |  |
@@ -216,12 +216,12 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 | 191 | NMR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 2 |  | 5000 |  |
 | 192 | NPN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 3 |  | 3000 |  |
 | 193 | NSN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 3 |  | 10000 |  |
-| 194 | PFL0001 | race | parma | 3 | yes | IB |  |  |  |  | 550 |  | regional leagues | 10000 | Nissan Nissan 300ZX GT(J) '97 |
-| 195 | PFL0002 | race | seattle | 3 | yes | IB |  |  |  |  | 550 |  | regional leagues | 10000 | Mazda Mazda RX-7 LM Edition |
-| 196 | PFL0003 | race | laguna | 3 | yes | IB |  |  |  |  | 550 |  | regional leagues | 10000 | Nissan Drag 180SX (J) |
-| 197 | PSC0001 | race | laguna | 2 | yes | A |  |  |  |  | 400 |  |  | 7000 | Toyota Angel T01 (J) |
-| 198 | PSC0002 | race | test_in2 | 2 | yes | IC |  |  |  |  | 450 |  |  | 8000 | Tommy kaira ZZIII (J) |
-| 199 | PSC0003 | race | mountain | 2 | yes | IB |  |  |  |  | 600 |  |  | 10000 | TVR Tuscan Speed 6 |
+| 194 | PFL0001 | race | Midfield Raceway | 3 | yes | IB |  |  |  |  | 550 |  | regional leagues | 10000 | Nissan Nissan 300ZX GT(J) '97 |
+| 195 | PFL0002 | race | Seattle Circuit | 3 | yes | IB |  |  |  |  | 550 |  | regional leagues | 10000 | Mazda Mazda RX-7 LM Edition |
+| 196 | PFL0003 | race | Laguna Seca Raceway | 3 | yes | IB |  |  |  |  | 550 |  | regional leagues | 10000 | Nissan Drag 180SX (J) |
+| 197 | PSC0001 | race | Laguna Seca Raceway | 2 | yes | A |  |  |  |  | 400 |  |  | 7000 | Toyota Angel T01 (J) |
+| 198 | PSC0002 | race | Deep Forest Raceway | 2 | yes | IC |  |  |  |  | 450 |  |  | 8000 | Tommy kaira ZZIII (J) |
+| 199 | PSC0003 | race | Trial Mountain Circuit | 2 | yes | IB |  |  |  |  | 600 |  |  | 10000 | TVR Tuscan Speed 6 |
 | 200 | Q2N0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 3000 |  |
 | 201 | QMN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 3 |  | 3000 |  |
 | 202 | QMR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 3 |  | 5000 |  |
@@ -230,25 +230,25 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 | 205 | SAN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 2 |  | 7000 |  |
 | 206 | SAR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 2 |  | 10000 |  |
 | 207 | SIN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 24 |  | 10000 |  |
-| 208 | SLS0001 | race | roma | 2 | yes | A |  |  |  |  | 400 |  |  | 5000 | Honda Accord Type-R |
-| 209 | SLS0002 | race | highway | 2 | yes | IC |  |  |  |  | 500 |  |  | 6000 | Toyota Chaser TRD Sports X30(J) |
-| 210 | SLS0003 | race | testline | 2 | yes | IB |  |  |  |  | 600 |  |  | 10000 | Nissan GT-R 4Door Tuned by Nismo(J) |
-| 211 | SND0001 | race | tahiti_t | 2 | yes |  |  |  |  |  |  |  |  | 3000 |  |
-| 212 | SND0002 | race | testline | 2 | yes |  |  |  |  |  |  |  |  | 4000 |  |
-| 213 | SND0003 | race | sprint2 | 2 | yes |  |  |  |  |  |  |  |  | 5000 |  |
-| 214 | STT0001 | race | new_parmaS | 3 | yes | IB |  |  |  |  | 500 |  |  | 15000 | Toyota TRD3000GT (J), Toyota Tom's Supra (J), Chevrolet Camaro Z28 30th Anniversary '96 |
-| 215 | STT0002 | race | mountain | 3 | yes | IB |  |  |  |  | 500 |  |  | 15000 | Toyota TRD3000GT (J), Toyota Tom's Supra (J), Chevrolet Camaro Z28 30th Anniversary '96 |
-| 216 | STT0003 | race | laguna | 3 | yes | IB |  |  |  |  | 500 |  |  | 15000 | Toyota TRD3000GT (J), Toyota Tom's Supra (J), Chevrolet Camaro Z28 30th Anniversary '96 |
-| 217 | STT0004 | race | test_in2 | 3 | yes | IB |  |  |  |  | 500 |  |  | 15000 | Toyota TRD3000GT (J), Toyota Tom's Supra (J), Chevrolet Camaro Z28 30th Anniversary '96 |
-| 218 | STT0005 | race | roma | 3 | yes | IB |  |  |  |  | 500 |  |  | 15000 | Toyota TRD3000GT (J), Toyota Tom's Supra (J), Chevrolet Camaro Z28 30th Anniversary '96 |
+| 208 | SLS0001 | race | Rome Circuit | 2 | yes | A |  |  |  |  | 400 |  |  | 5000 | Honda Accord Type-R |
+| 209 | SLS0002 | race | Special Stage Route 5 | 2 | yes | IC |  |  |  |  | 500 |  |  | 6000 | Toyota Chaser TRD Sports X30(J) |
+| 210 | SLS0003 | race | High Speed Ring | 2 | yes | IB |  |  |  |  | 600 |  |  | 10000 | Nissan GT-R 4Door Tuned by Nismo(J) |
+| 211 | SND0001 | race | Tahiti Road | 2 | yes |  |  |  |  |  |  |  |  | 3000 |  |
+| 212 | SND0002 | race | High Speed Ring | 2 | yes |  |  |  |  |  |  |  |  | 4000 |  |
+| 213 | SND0003 | race | Red Rock Valley Speedway | 2 | yes |  |  |  |  |  |  |  |  | 5000 |  |
+| 214 | STT0001 | race | Apricot Hill Speedway | 3 | yes | IB |  |  |  |  | 500 |  |  | 15000 | Toyota TRD3000GT (J), Toyota Tom's Supra (J), Chevrolet Camaro Z28 30th Anniversary '96 |
+| 215 | STT0002 | race | Trial Mountain Circuit | 3 | yes | IB |  |  |  |  | 500 |  |  | 15000 | Toyota TRD3000GT (J), Toyota Tom's Supra (J), Chevrolet Camaro Z28 30th Anniversary '96 |
+| 216 | STT0003 | race | Laguna Seca Raceway | 3 | yes | IB |  |  |  |  | 500 |  |  | 15000 | Toyota TRD3000GT (J), Toyota Tom's Supra (J), Chevrolet Camaro Z28 30th Anniversary '96 |
+| 217 | STT0004 | race | Deep Forest Raceway | 3 | yes | IB |  |  |  |  | 500 |  |  | 15000 | Toyota TRD3000GT (J), Toyota Tom's Supra (J), Chevrolet Camaro Z28 30th Anniversary '96 |
+| 218 | STT0005 | race | Rome Circuit | 3 | yes | IB |  |  |  |  | 500 |  |  | 15000 | Toyota TRD3000GT (J), Toyota Tom's Supra (J), Chevrolet Camaro Z28 30th Anniversary '96 |
 | 219 | TAN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 4 |  | 5000 |  |
 | 220 | TAR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 5 |  | 7000 |  |
-| 221 | TCN0001 | race | autumn | 3 | yes | IA |  |  | no_turbo |  |  |  |  | 50000 | Honda Spoon Civic Type-R(J), Honda Spoon Integra Type-R(J), Mazda MX-5 Miata B Spec(J), Mazda MX-5 Miata C Spec(J) |
-| 222 | TCN0002 | race | grindel | 3 | yes | IA |  |  | no_turbo |  |  |  |  | 50000 | Honda Spoon Civic Type-R(J), Honda Spoon Integra Type-R(J), Mazda MX-5 Miata B Spec(J), Mazda MX-5 Miata C Spec(J) |
-| 223 | TCN0003 | race | laguna | 3 | yes | IA |  |  | no_turbo |  |  |  |  | 50000 | Honda Spoon Civic Type-R(J), Honda Spoon Integra Type-R(J), Mazda MX-5 Miata B Spec(J), Mazda MX-5 Miata C Spec(J) |
-| 224 | TCT0001 | race | highway | 3 | yes | IA |  |  | turbo_required |  |  |  |  | 50000 | Nissan R33 Drag GT-R (J), Nissan Nismo 400R (J), Nissan Mine's R33 Skyline GT-R(J) |
-| 225 | TCT0002 | race | speed | 3 | yes | IA |  |  | turbo_required |  |  |  |  | 50000 | Nissan R33 Drag GT-R (J), Nissan Nismo 400R (J), Nissan Mine's R33 Skyline GT-R(J) |
-| 226 | TCT0003 | race | test_in2 | 3 | yes | IA |  |  | turbo_required |  |  |  |  | 50000 | Nissan R33 Drag GT-R (J), Nissan Nismo 400R (J), Nissan Mine's R33 Skyline GT-R(J) |
+| 221 | TCN0001 | race | Autumn Ring | 3 | yes | IA |  |  | no_turbo |  |  |  |  | 50000 | Honda Spoon Civic Type-R(J), Honda Spoon Integra Type-R(J), Mazda MX-5 Miata B Spec(J), Mazda MX-5 Miata C Spec(J) |
+| 222 | TCN0002 | race | Grindelwald | 3 | yes | IA |  |  | no_turbo |  |  |  |  | 50000 | Honda Spoon Civic Type-R(J), Honda Spoon Integra Type-R(J), Mazda MX-5 Miata B Spec(J), Mazda MX-5 Miata C Spec(J) |
+| 223 | TCN0003 | race | Laguna Seca Raceway | 3 | yes | IA |  |  | no_turbo |  |  |  |  | 50000 | Honda Spoon Civic Type-R(J), Honda Spoon Integra Type-R(J), Mazda MX-5 Miata B Spec(J), Mazda MX-5 Miata C Spec(J) |
+| 224 | TCT0001 | race | Special Stage Route 5 | 3 | yes | IA |  |  | turbo_required |  |  |  |  | 50000 | Nissan R33 Drag GT-R (J), Nissan Nismo 400R (J), Nissan Mine's R33 Skyline GT-R(J) |
+| 225 | TCT0002 | race | Test Course | 3 | yes | IA |  |  | turbo_required |  |  |  |  | 50000 | Nissan R33 Drag GT-R (J), Nissan Nismo 400R (J), Nissan Mine's R33 Skyline GT-R(J) |
+| 226 | TCT0003 | race | Deep Forest Raceway | 3 | yes | IA |  |  | turbo_required |  |  |  |  | 50000 | Nissan R33 Drag GT-R (J), Nissan Nismo 400R (J), Nissan Mine's R33 Skyline GT-R(J) |
 | 227 | TLN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 12 |  | 5000 |  |
 | 228 | TLR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 12 |  | 7000 |  |
 | 229 | TMN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 3000 |  |
@@ -257,15 +257,15 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 | 232 | TVR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 1 |  | 5000 |  |
 | 233 | VTN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 7000 |  |
 | 234 | VTR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 1 |  | 10000 |  |
-| 235 | WGN0001 | race | roma_short | 2 | yes | B |  |  |  |  | 400 |  |  | 5000 | Subaru Impreza Wagon STi Ver.V (J)'98 |
-| 236 | WGN0002 | race | s_speed | 2 | yes | A |  |  |  |  | 400 |  |  | 6000 | Honda Mugen Accord Wagon(J) |
-| 237 | WGN0003 | race | highway | 2 | yes | IC |  |  |  |  | 400 |  |  | 7000 | Nissan Stagea 260RS Tuned by Nismo(J) |
-| 238 | WLK0001 | race | roma_short | 2 | yes |  |  |  |  |  | 150 |  |  | 5000 | Honda Mugen Beat (J) |
-| 239 | WLK0002 | race | seatt_s | 2 | yes | B |  |  |  |  | 100 |  |  | 6000 | Mazda Mazda Demio A-spec(J) '97 |
-| 240 | WLK0003 | race | tahiti_t | 2 | yes | A |  |  |  |  | 100 |  |  | 7000 | Honda Mugen CR-X II (J) |
-| 241 | WOS0001 | race | tahiti_t | 2 | yes | A |  |  |  |  | 250 |  |  | 7000 | Mazda MX-5 Miata A Spec(J) |
-| 242 | WOS0002 | race | grindel | 2 | yes | IB |  |  |  |  | 350 |  |  | 8000 | Toyota MR-S Show Version(J) '97 |
-| 243 | WOS0003 | race | mountain | 2 | yes | IA |  |  |  |  | 600 |  |  | 15000 | Dodge Concept Car LM Edition |
+| 235 | WGN0001 | race | Rome Short Course | 2 | yes | B |  |  |  |  | 400 |  |  | 5000 | Subaru Impreza Wagon STi Ver.V (J)'98 |
+| 236 | WGN0002 | race | Super Speedway | 2 | yes | A |  |  |  |  | 400 |  |  | 6000 | Honda Mugen Accord Wagon(J) |
+| 237 | WGN0003 | race | Special Stage Route 5 | 2 | yes | IC |  |  |  |  | 400 |  |  | 7000 | Nissan Stagea 260RS Tuned by Nismo(J) |
+| 238 | WLK0001 | race | Rome Short Course | 2 | yes |  |  |  |  |  | 150 |  |  | 5000 | Honda Mugen Beat (J) |
+| 239 | WLK0002 | race | Seattle Short Course | 2 | yes | B |  |  |  |  | 100 |  |  | 6000 | Mazda Mazda Demio A-spec(J) '97 |
+| 240 | WLK0003 | race | Tahiti Road | 2 | yes | A |  |  |  |  | 100 |  |  | 7000 | Honda Mugen CR-X II (J) |
+| 241 | WOS0001 | race | Tahiti Road | 2 | yes | A |  |  |  |  | 250 |  |  | 7000 | Mazda MX-5 Miata A Spec(J) |
+| 242 | WOS0002 | race | Grindelwald | 2 | yes | IB |  |  |  |  | 350 |  |  | 8000 | Toyota MR-S Show Version(J) '97 |
+| 243 | WOS0003 | race | Trial Mountain Circuit | 2 | yes | IA |  |  |  |  | 600 |  |  | 15000 | Dodge Concept Car LM Edition |
 | 244 | XAN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 4 |  | 3000 |  |
 | 245 | XAR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 4 |  | 5000 |  |
 | 246 | XCN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 3000 |  |

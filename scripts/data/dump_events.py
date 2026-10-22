@@ -46,6 +46,21 @@ PRO_LEAGUES = ["PFL0001", "PFL0002", "PFL0003", "EPL0001", "EPL0002", "EPL0003"]
 # Machine tests (0-400m, 0-1000m, max speed), run by RaceSetup_InitMachineTest with no event
 # index, so no result is stored
 MACHINE_TESTS = {"G400", "G1000", "GMAX"}
+# Course display names, from the course tables in OVL2 (80050904 onwards)
+COURSE_NAMES = {
+    "autumn": "Autumn Ring", "circuit": "Grand Valley Speedway", "grindel": "Grindelwald",
+    "highway": "Special Stage Route 5", "laguna": "Laguna Seca Raceway",
+    "mountain": "Trial Mountain Circuit", "new_parmaS": "Apricot Hill Speedway",
+    "nn_dirt_2": "Smokey Mountain South", "nn_dirt_3": "Green Forest Roadway",
+    "no_name_dirt": "Smokey Mountain North", "no_name_dirt_rev": "Smokey Mountain North (reverse)",
+    "parma": "Midfield Raceway", "pikes": "Pikes Peak Hill Climb", "pikes_rev": "Pikes Peak Downhill",
+    "roma": "Rome Circuit", "roma_short": "Rome Short Course", "s_speed": "Super Speedway",
+    "seatt_s": "Seattle Short Course", "seattle": "Seattle Circuit", "short": "Grand Valley East Section",
+    "shortway": "Clubman Stage Route 5", "speed": "Test Course", "sprint2": "Red Rock Valley Speedway",
+    "tahiti_d_new": "Tahiti Dirt Route 3", "tahiti_d_new_rev": "Tahiti Dirt Route 3 (reverse)",
+    "tahiti_t": "Tahiti Road", "tahiti_test7": "Tahiti Maze", "test_in2": "Deep Forest Raceway",
+    "testline": "High Speed Ring",
+}
 # Event Synthesizer, shown once the S license is held (checked in game via g_Race_EventIndex)
 EVENT_SYNTHESIZER = {"FREERACE01": "easy", "FREERACE02": "normal", "FREERACE03": "hard",
                      "FREECHAMP05": "expert"}
@@ -174,6 +189,7 @@ def main():
             "code": code,
             "kind": kind,
             "course": None if course == "none" else course,
+            "courseName": COURSE_NAMES.get(course),
             "category": strings[struct.unpack_from("<H", e, 0x94)[0]],
             "laps": e[0x45],
             "inMenu": code in in_menu,
@@ -239,7 +255,7 @@ def main():
         if ev["requiresWon"]:
             req = "regional leagues" if ev["requiresWon"] is REGIONAL_LEAGUES else "pro leagues"
         lines.append("| %d | %s | %s | %s | %d | %s | %s | %s | %s | %s | %s | %s | %s | %s | %d | %s |" % (
-            ev["index"], ev["code"], ev["kind"], ev["course"] or "random", ev["laps"],
+            ev["index"], ev["code"], ev["kind"], ev["courseName"] or ev["course"] or "random", ev["laps"],
             "yes" if ev["inMenu"] else "no", opt(ev["license"]), opt(ev["drivetrain"]),
             "yes" if ev["dirtTires"] else "", opt(ev["turbo"]), opt(ev["racingMod"]),
             opt(ev["maxPower"]), len(ev["allowedCars"]) or "", req, ev["prizes"][0],
