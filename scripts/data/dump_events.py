@@ -61,6 +61,89 @@ COURSE_NAMES = {
     "tahiti_t": "Tahiti Road", "tahiti_test7": "Tahiti Maze", "test_in2": "Deep Forest Raceway",
     "testline": "High Speed Ring",
 }
+# Display names. The game draws event names as menu images, so these come from the Gran Turismo
+# Wiki (gran-turismo.fandom.com, Category:GT2_Events), matched on courses, licenses, power
+# limits, prizes and prize cars. Multi-race series: code prefix -> name, race = last 2 digits.
+SERIES_NAMES = {
+    "SND": "Sunday Cup", "CBM": "Clubman Cup", "WLK": "Light Weight K Cup", "FFC": "FF Challenge",
+    "FRC": "FR Challenge", "MRC": "Mid-Engine Challenge", "4WD": "4WD Challenge",
+    "GCC": "Compact Car World Cup", "WGN": "Wagon Cup", "SLS": "Luxury Sedan Cup",
+    "HTC": "Historic Car Cup", "WOS": "Convertible Car World Cup", "PSC": "Pure Sports Car Cup",
+    "MSC": "Muscle Car Cup", "80S": "80's Sports Car Cup", "GTC": "Grand Touring Car Trophy",
+    "STT": "Super Touring", "GTA": "Gran Turismo All Stars", "TCN": "Tuned NA Car No.1 Cup",
+    "TCT": "Tuned Turbo Car No.1 Cup", "GT305": "GT300 Championship", "GT505": "GT500 Championship",
+    "GJL": "Japan Nationals", "GUL": "US Nationals", "GBL": "UK Nationals", "GGL": "German Nationals",
+    "GFL": "French Nationals", "GIL": "Italian Nationals", "PFL": "Pacific League",
+    "EPL": "Euro League", "GTW05": "Gran Turismo World League",
+}
+SINGLE_NAMES = {
+    "EGV0001": "Grand Valley Speedway 300 km", "ELS0001": "Laguna Seca 200 Miles",
+    "EPS0001": "Apricot Hill 200 km", "ERM0001": "Rome City Course 2 Hours",
+    "ES50001": "Special Stage Route 5 All-Night", "EST0001": "Seattle City Course 100 Miles",
+    "ETM0001": "Trial Mountain 30 Laps", "G400": "Machine Test 0-400m",
+    "G1000": "Machine Test 0-1000m", "GMAX": "Machine Test Max Speed",
+    "LJB00": "National B License", "LJA00": "National A License",
+    "LIC00": "International C License", "LIB00": "International B License",
+    "LIA00": "International A License", "LIS00": "S License",  # License_IdFromRaceCode
+}
+# Dirt events (Wiki "Dirt Events (GT2)"): code prefix -> course. Race numbers run backwards
+# (xx0003 is the National A race 1), going by the license and prize of each race.
+DIRT_PREFIXES = {"DO2", "DO3", "DO7", "DOC", "DON", "DOT", "DRC", "DRN", "DRT"}
+# One-make races: N/M = normal cars, R/S = racing modification required
+ONE_MAKE_NAMES = {
+    "7L": "DB-7 Trophy", "A1": "AZ-1 Challenge", "A7": "RX-7 Meeting", "AD": "Demio Race",
+    "AR": "Roadster Trophy", "BM": "MGF Challenge", "BR": "Mini Challenge", "BV": "Tigra Cup (Vauxhall)",
+    "CC": "Corvette Meeting", "DN": "Neon Trophy", "DV": "Viper Festival of Speed",
+    "EFM": "Focus Challenge", "EF": "Ka Challenge", "FC": "Saxo Challenge", "FPM": "106 & 206 Race", "FPS": "106 & 206 Race", "FP": "106 Challenge",
+    "FR": "Clio Cup", "GA": "TT Challenge", "GB": "3 Series Cup", "GM": "SLK Trophy",
+    "GO": "Tigra Cup", "GVM": "New Beetle Challenge", "GVS": "New Beetle Challenge",
+    "GV": "Golf Cup", "H2": "S2000 Challenge", "HB": "Beat the Beat", "HC": "Civic Race",
+    "HN": "NSX Trophy", "HR": "Type R Meeting", "IA": "155 & 156 Race", "II": "500 Meeting",
+    "IL": "Delta Cup", "IOM": "Elan Trophy", "IOS": "Elan Trophy", "IO": "Elise Trophy",
+    "KZ": "ZZ Challenge", "ME": "Evolution Meeting", "MM": "Mirage Cup",
+    "N1": "Silvia & 180SX Club", "NG": "GT-R Meeting", "NM": "March Trophy", "NP": "Pulsar Cup",
+    "NS": "Skyline R34 Challenge", "Q2": "Midget Contest", "QM": "Mira Challenge",
+    "QS": "Storia Challenge", "SA": "SVX Challenge", "SI": "Impreza Challenge",
+    "TA": "Altezza Cup", "TL": "Celica Meeting", "TM": "MR-S Trophy", "TS": "Starlet Meeting",
+    "TV": "Vitz Trophy", "VT": "Tuscan Speed Challenge", "XA": "Alto Works Cup",
+    "XC": "Cappuccino Cup",
+}
+UNCERTAIN_NAMES = {
+    "BVN0001": "Vauxhall Tigra variant, on the dealership with manufacturer ID 35",
+    "BVR0001": "Vauxhall Tigra variant, on the dealership with manufacturer ID 35",
+    "FPM0001": "no menu entry and no wiki page; 106/206 cars, likely an unused 106 & 206 race",
+    "FPS0001": "no menu entry and no wiki page; 106/206 cars, likely an unused 106 & 206 race",
+    "DO70001": "races 2 and 3 have the same license and prize, order guessed",
+    "DO70002": "races 2 and 3 have the same license and prize, order guessed",
+    "DOC0001": "races 2 and 3 have the same license and prize, order guessed",
+    "DOC0002": "races 2 and 3 have the same license and prize, order guessed",
+    "DRT0002": "races 1 and 2 have the same license and prize, order guessed",
+    "DRT0003": "races 1 and 2 have the same license and prize, order guessed",
+}
+
+
+def event_name(code, course_name):
+    if code in SINGLE_NAMES:
+        return SINGLE_NAMES[code]
+    if code.startswith("FREECHAMP"):
+        return "Event Synthesizer Expert Race %d" % int(code[-2:])
+    if code.startswith("FREE"):
+        return "Event Synthesizer " + EVENT_SYNTHESIZER[code].title()
+    for prefix, name in SERIES_NAMES.items():
+        if code.startswith(prefix):
+            return "%s Race %d" % (name, int(code[-2:]))
+    if code[:3] in DIRT_PREFIXES:
+        return "%s Rally Race %d" % (course_name, 4 - int(code[-2:]))
+    for key in (code[:3], code[:2]):
+        if key in ONE_MAKE_NAMES:
+            name = ONE_MAKE_NAMES[key]
+            kind = "Racing" if code[2] in "RS" else "Normal"
+            if name.endswith(")"):
+                return "%s, %s)" % (name[:-1], kind)
+            return "%s (%s)" % (name, kind)
+    return None
+
+
 # Event Synthesizer, shown once the S license is held (checked in game via g_Race_EventIndex)
 EVENT_SYNTHESIZER = {"FREERACE01": "easy", "FREERACE02": "normal", "FREERACE03": "hard",
                      "FREECHAMP05": "expert"}
@@ -188,6 +271,8 @@ def main():
             "index": index,
             "code": code,
             "kind": kind,
+            "name": event_name(code, COURSE_NAMES.get(course)),
+            "nameNote": UNCERTAIN_NAMES.get(code),
             "course": None if course == "none" else course,
             "courseName": COURSE_NAMES.get(course),
             "category": strings[struct.unpack_from("<H", e, 0x94)[0]],
@@ -215,6 +300,18 @@ def main():
         if len(code) >= 4 and code[-4:-2] == "05":
             ev["championship"] = {"first": code[:-2] + "01", "race": int(code[-2:]), "races": 5}
         out.append(ev)
+
+    # One-make series with a single race have no normal/racing split, so drop the suffix
+    one_make = {}
+    for ev in out:
+        if ev["name"] and ev["name"].endswith(("Normal)", "Racing)")):
+            one_make.setdefault(ev["name"].rsplit(" (", 1)[0], []).append(ev)
+    for evs in one_make.values():
+        if len(evs) == 1:
+            evs[0]["name"] = evs[0]["name"].rsplit(" (", 1)[0]
+
+    names = [ev["name"] for ev in out]
+    assert None not in names and len(set(names)) == len(names), "event names must be unique"
 
     car_table = {cars[c]["code"]: {"manufacturer": cars[c]["manufacturer"], "name": cars[c]["name"]}
                  for c in sorted(used, key=lambda c: cars[c]["code"])}
@@ -246,16 +343,20 @@ def main():
         "  of each series and 0 everywhere else.",
         "- Requires: PFL/EPL need every regional league race (GJL, GBL, GFL, GGL, GIL, GUL) won;",
         "  GTW needs every PFL/EPL race won.",
+        "- Names are not stored as text in the game (the menus draw them as images). They come from",
+        "  the [Gran Turismo Wiki](https://gran-turismo.fandom.com/wiki/Category:GT2_Events),",
+        "  matched on courses, licenses, power limits, prizes and prize cars. A `?` marks a guess;",
+        "  `nameNote` in the JSON says why.",
         "",
-        "| # | Code | Kind | Course | Laps | Menu | License | Drive | Dirt | Turbo | Racing mod | Max PS | Cars | Requires | 1st prize | Prize cars |",
-        "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|",
+        "| # | Code | Name | Kind | Course | Laps | Menu | License | Drive | Dirt | Turbo | Racing mod | Max PS | Cars | Requires | 1st prize | Prize cars |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for ev in out:
         req = ""
         if ev["requiresWon"]:
             req = "regional leagues" if ev["requiresWon"] is REGIONAL_LEAGUES else "pro leagues"
-        lines.append("| %d | %s | %s | %s | %d | %s | %s | %s | %s | %s | %s | %s | %s | %s | %d | %s |" % (
-            ev["index"], ev["code"], ev["kind"], ev["courseName"] or ev["course"] or "random", ev["laps"],
+        lines.append("| %d | %s | %s | %s | %s | %d | %s | %s | %s | %s | %s | %s | %s | %s | %s | %d | %s |" % (
+            ev["index"], ev["code"], (ev["name"] or "") + (" ?" if ev["nameNote"] else ""), ev["kind"], ev["courseName"] or ev["course"] or "random", ev["laps"],
             "yes" if ev["inMenu"] else "no", opt(ev["license"]), opt(ev["drivetrain"]),
             "yes" if ev["dirtTires"] else "", opt(ev["turbo"]), opt(ev["racingMod"]),
             opt(ev["maxPower"]), len(ev["allowedCars"]) or "", req, ev["prizes"][0],
