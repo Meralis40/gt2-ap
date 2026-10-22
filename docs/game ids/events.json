@@ -2782,7 +2782,7 @@
   {
    "index": 93,
    "code": "G1000",
-   "kind": "special",
+   "kind": "machine_test",
    "course": "TC_lisence",
    "category": "0",
    "laps": 1,
@@ -2809,7 +2809,7 @@
   {
    "index": 94,
    "code": "G400",
-   "kind": "special",
+   "kind": "machine_test",
    "course": "TC_lisence",
    "category": "0",
    "laps": 1,
@@ -3366,7 +3366,7 @@
   {
    "index": 114,
    "code": "GMAX",
-   "kind": "special",
+   "kind": "machine_test",
    "course": "maxspeed",
    "category": "0",
    "laps": 1,

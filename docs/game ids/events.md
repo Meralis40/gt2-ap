@@ -6,7 +6,7 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 - `#` is the event index: the slot in `PlayerStats.eventResults` (0x801c99f8, one nibble
   per event, 0 = never finished, 1-6 = best place).
 - Kind `license` rows are the per-license entries; their prize car is the license reward.
-  `special` events (G400, G1000, GMAX) run without an event index and store no result.
+  `machine_test` events (G400 0-400m, G1000 0-1000m, GMAX max speed) store no result.
 - Course `random` means the game picks a course when the race starts.
 - Menu `no` means no menu element starts the event. Championship races 02-05 run after
   01; FPM0001 and FPS0001 have no entry at all.
@@ -113,8 +113,8 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 | 90 | FREERACE03 | race | random | 2 | yes | S |  |  |  |  |  |  |  | 10000 |  |
 | 91 | FRN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 7000 |  |
 | 92 | FRR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 1 |  | 10000 |  |
-| 93 | G1000 | special | TC_lisence | 1 | yes |  |  |  |  |  |  |  |  | 0 |  |
-| 94 | G400 | special | TC_lisence | 1 | yes |  |  |  |  |  |  |  |  | 0 |  |
+| 93 | G1000 | machine_test | TC_lisence | 1 | yes |  |  |  |  |  |  |  |  | 0 |  |
+| 94 | G400 | machine_test | TC_lisence | 1 | yes |  |  |  |  |  |  |  |  | 0 |  |
 | 95 | GAN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 7000 |  |
 | 96 | GAR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 2 |  | 10000 |  |
 | 97 | GBL0001 | race | mountain | 2 | yes | B |  |  |  |  | 200 |  |  | 4000 |  |
@@ -134,7 +134,7 @@ Full data, including allowed and prize cars, is in [events.json](events.json).
 | 111 | GJL0001 | race | parma | 2 | yes | B |  |  |  |  | 200 |  |  | 4000 |  |
 | 112 | GJL0002 | race | parma | 2 | yes | A |  |  |  |  | 300 |  |  | 5000 |  |
 | 113 | GJL0003 | race | parma | 2 | yes | A |  |  |  |  | 350 |  |  | 7000 |  |
-| 114 | GMAX | special | maxspeed | 1 | yes |  |  |  |  |  |  |  |  | 0 |  |
+| 114 | GMAX | machine_test | maxspeed | 1 | yes |  |  |  |  |  |  |  |  | 0 |  |
 | 115 | GMN0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 5000 |  |
 | 116 | GMR0001 | race | random | 2 | yes |  |  |  |  | racing_mod_required |  | 1 |  | 7000 |  |
 | 117 | GON0001 | race | random | 2 | yes |  |  |  |  | no_racing_mod |  | 1 |  | 3000 |  |

@@ -43,8 +43,9 @@ REGIONAL_LEAGUES = ["GJL0001", "GJL0002", "GJL0003", "GBL0001", "GBL0002", "GBL0
                     "GFL0001", "GFL0002", "GGL0001", "GGL0002", "GGL0003", "GIL0001",
                     "GIL0002", "GUL0001", "GUL0002", "GUL0003"]
 PRO_LEAGUES = ["PFL0001", "PFL0002", "PFL0003", "EPL0001", "EPL0002", "EPL0003"]
-# Run through FUN_OVL4__80012c6c with no event index, so no result is stored
-SPECIAL_EVENTS = {"G400", "G1000", "GMAX"}
+# Machine tests (0-400m, 0-1000m, max speed), run by RaceSetup_InitMachineTest with no event
+# index, so no result is stored
+MACHINE_TESTS = {"G400", "G1000", "GMAX"}
 
 
 def decode_car(code):
@@ -159,8 +160,8 @@ def main():
 
         if code.startswith("L"):
             kind = "license"
-        elif code in SPECIAL_EVENTS:
-            kind = "special"
+        elif code in MACHINE_TESTS:
+            kind = "machine_test"
         else:
             kind = "race"
         ev = {
@@ -209,7 +210,7 @@ def main():
         "- `#` is the event index: the slot in `PlayerStats.eventResults` (0x801c99f8, one nibble",
         "  per event, 0 = never finished, 1-6 = best place).",
         "- Kind `license` rows are the per-license entries; their prize car is the license reward.",
-        "  `special` events (G400, G1000, GMAX) run without an event index and store no result.",
+        "  `machine_test` events (G400 0-400m, G1000 0-1000m, GMAX max speed) store no result.",
         "- Course `random` means the game picks a course when the race starts.",
         "- Menu `no` means no menu element starts the event. Championship races 02-05 run after",
         "  01; FPM0001 and FPS0001 have no entry at all.",
