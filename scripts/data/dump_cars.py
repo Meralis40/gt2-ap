@@ -169,7 +169,9 @@ def main():
                     best_power, best_kit = power, kit
         out.append({
             "code": decode_car(code),
+            "carId": code,
             "manufacturer": MANUFACTURERS.get(entry[0x3a], "#%d" % entry[0x3a]),
+            "manufacturerId": entry[0x3a],
             "name": (names[n1] + " " + names[n2]).strip(),
             "drivetrain": drivetrain,
             "engine": " ".join(s for s in engine if s not in ("", "-")),

@@ -2,7 +2,9 @@
  "cars": [
   {
    "code": "a-a7r",
+   "carId": 184594972,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 A-spec LM Edition",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -12,7 +14,9 @@
   },
   {
    "code": "a-emn",
+   "carId": 184612312,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda Demio A-spec(J) '97",
    "drivetrain": "FF",
    "engine": "I4 SOHC NA",
@@ -22,7 +26,9 @@
   },
   {
    "code": "a222n",
+   "carId": 185348312,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 GT-Turbo(J) '83",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -32,7 +38,9 @@
   },
   {
    "code": "a26sn",
+   "carId": 185366360,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "MX-5 Miata 1.6 S Package(J) '98",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -42,7 +50,9 @@
   },
   {
    "code": "a28bn",
+   "carId": 185373464,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 Type RB(J) '98",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -52,7 +62,9 @@
   },
   {
    "code": "a28rn",
+   "carId": 185374488,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 Type R(J) '98",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -62,7 +74,9 @@
   },
   {
    "code": "a28sn",
+   "carId": 185374552,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 Type RS(J) '98",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -72,7 +86,9 @@
   },
   {
    "code": "a2aan",
+   "carId": 185381592,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda AZ-1 A-spec(J) '91",
    "drivetrain": "MR",
    "engine": "I3 DOHC TURBO",
@@ -82,7 +98,9 @@
   },
   {
    "code": "a2abn",
+   "carId": 185381656,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "MX-5 Miata B Spec(J)",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -92,7 +110,9 @@
   },
   {
    "code": "a2azn",
+   "carId": 185383192,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda AZ-1 (J) '91",
    "drivetrain": "MR",
    "engine": "I3 DOHC TURBO",
@@ -102,7 +122,9 @@
   },
   {
    "code": "a2bgn",
+   "carId": 185386072,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda Protegé GT-R(J) '92",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -112,7 +134,9 @@
   },
   {
    "code": "a2bin",
+   "carId": 185386200,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda Protegé 4Door Sedan(J) '89",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -122,7 +146,9 @@
   },
   {
    "code": "a2bsn",
+   "carId": 185386840,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda Protegé GT-X(J) '92",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -132,7 +158,9 @@
   },
   {
    "code": "a2gcn",
+   "carId": 185406296,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 GT-C(J) '99",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -142,7 +170,9 @@
   },
   {
    "code": "a2gln",
+   "carId": 185406872,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Demio GL-X(J) '99",
    "drivetrain": "FF",
    "engine": "I4 SOHC NA",
@@ -152,7 +182,9 @@
   },
   {
    "code": "a2gsn",
+   "carId": 185407320,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Demio GL-X Special(J) '98",
    "drivetrain": "FF",
    "engine": "I4 SOHC NA",
@@ -162,7 +194,9 @@
   },
   {
    "code": "a2l7r",
+   "carId": 185426460,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 GT-C LM Edition",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -172,7 +206,9 @@
   },
   {
    "code": "a2mkr",
+   "carId": 185431388,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Amemiya RX-7 (J) '99",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -182,7 +218,9 @@
   },
   {
    "code": "a2ran",
+   "carId": 185451224,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "MX-5 Miata A Spec(J)",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -192,7 +230,9 @@
   },
   {
    "code": "a2rbn",
+   "carId": 185451288,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 Type RB(J) '97",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -202,7 +242,9 @@
   },
   {
    "code": "a2rcn",
+   "carId": 185451352,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "MX-5 Miata C Spec(J)",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -212,7 +254,9 @@
   },
   {
    "code": "a2rrn",
+   "carId": 185452312,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 RS-R(J) '97",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -222,7 +266,9 @@
   },
   {
    "code": "a2rsn",
+   "carId": 185452376,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 Type RS(J) '97",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -232,7 +278,9 @@
   },
   {
    "code": "a2rzn",
+   "carId": 185452824,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 Type RZ(J) '97",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -242,7 +290,9 @@
   },
   {
    "code": "a2spn",
+   "carId": 185456280,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 Cabriolet(J) '90",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -252,7 +302,9 @@
   },
   {
    "code": "a2swn",
+   "carId": 185456728,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda 323F S-Wagon(J) '99",
    "drivetrain": "AWD",
    "engine": "I4 DOHC NA",
@@ -262,7 +314,9 @@
   },
   {
    "code": "a2vsn",
+   "carId": 185468760,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "MX-5 Miata 1.8 VS(J) '98",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -272,7 +326,9 @@
   },
   {
    "code": "acoen",
+   "carId": 188060632,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda Cosmo Type-E(J) '94",
    "drivetrain": "FR",
    "engine": "Rotar3 Rotary TURBO",
@@ -282,7 +338,9 @@
   },
   {
    "code": "acosn",
+   "carId": 188061528,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda Cosmo Type-S(J) '94",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -292,7 +350,9 @@
   },
   {
    "code": "ademn",
+   "carId": 188282328,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Demio GL-X(J) '97",
    "drivetrain": "FF",
    "engine": "I4 SOHC NA",
@@ -302,7 +362,9 @@
   },
   {
    "code": "adgln",
+   "carId": 188290456,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Demio GL(J) '97",
    "drivetrain": "FF",
    "engine": "I4 SOHC NA",
@@ -312,7 +374,9 @@
   },
   {
    "code": "adlxn",
+   "carId": 188311704,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Demio LX G Package(J) '97",
    "drivetrain": "FF",
    "engine": "I4 SOHC NA",
@@ -322,7 +386,9 @@
   },
   {
    "code": "afa7n",
+   "carId": 188789272,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 A-spec(J) '96",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -332,7 +398,9 @@
   },
   {
    "code": "afb7n",
+   "carId": 188793368,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 Type RB(J) '96",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -342,7 +410,9 @@
   },
   {
    "code": "afc7n",
+   "carId": 188797464,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 Infini III(J) '90",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -352,7 +422,9 @@
   },
   {
    "code": "afd7n",
+   "carId": 188801560,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 Type RZ(J) '96",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -362,7 +434,9 @@
   },
   {
    "code": "afn7r",
+   "carId": 188842524,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 LM Edition",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -372,7 +446,9 @@
   },
   {
    "code": "afo7n",
+   "carId": 188846616,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 Type R(J) '91",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -382,7 +458,9 @@
   },
   {
    "code": "afr7n",
+   "carId": 188858904,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 GT-X(J) '90",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -392,7 +470,9 @@
   },
   {
    "code": "afx7n",
+   "carId": 188883480,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda RX-7 Touring X(J) '96",
    "drivetrain": "FR",
    "engine": "Rotar2 Rotary TURBO",
@@ -402,7 +482,9 @@
   },
   {
    "code": "altsn",
+   "carId": 190441304,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "Mazda 323F Coupe Type-R(J)'93",
    "drivetrain": "FF",
    "engine": "V6 DOHC NA",
@@ -412,7 +494,9 @@
   },
   {
    "code": "aminn",
+   "carId": 190658072,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "MX-5 Miata (J) '93",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -422,7 +506,9 @@
   },
   {
    "code": "amisn",
+   "carId": 190658392,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "MX-5 Miata S-Special(J) '93",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -432,7 +518,9 @@
   },
   {
    "code": "amivn",
+   "carId": 190658584,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "MX-5 Miata V-Special(J) '93",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -442,7 +530,9 @@
   },
   {
    "code": "an16n",
+   "carId": 190849496,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "MX-5 Miata (J) '89",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -452,7 +542,9 @@
   },
   {
    "code": "arodn",
+   "carId": 191992728,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "MX-5 Miata 1.8 RS(J) '98",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -462,7 +554,9 @@
   },
   {
    "code": "as16n",
+   "carId": 192160216,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "MX-5 Miata S-Special(J) '92",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -472,7 +566,9 @@
   },
   {
    "code": "av16n",
+   "carId": 192946648,
    "manufacturer": "Mazda",
+   "manufacturerId": 18,
    "name": "MX-5 Miata V-Special(J) '90",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -482,7 +578,9 @@
   },
   {
    "code": "bistn",
+   "carId": 206428056,
    "manufacturer": "Lister",
+   "manufacturerId": 16,
    "name": "Storm V12",
    "drivetrain": "FR",
    "engine": "V12 NA",
@@ -492,7 +590,9 @@
   },
   {
    "code": "bj15n",
+   "carId": 206578072,
    "manufacturer": "Jaguar",
+   "manufacturerId": 13,
    "name": "XJR XJR Vehicle",
    "drivetrain": "FR",
    "engine": "V8 DOHC MA",
@@ -502,7 +602,9 @@
   },
   {
    "code": "bj22n",
+   "carId": 206581976,
    "manufacturer": "Jaguar",
+   "manufacturerId": 13,
    "name": "XJ220 GT Race Car",
    "drivetrain": "MR",
    "engine": "V6 DOHC TURBO",
@@ -512,7 +614,9 @@
   },
   {
    "code": "bjjrr",
+   "carId": 206653212,
    "manufacturer": "Jaguar",
+   "manufacturerId": 13,
    "name": "XJR15 GT Race Car",
    "drivetrain": "MR",
    "engine": "V12 SOHC NA",
@@ -522,7 +626,9 @@
   },
   {
    "code": "bjk8n",
+   "carId": 206656088,
    "manufacturer": "Jaguar",
+   "manufacturerId": 13,
    "name": "XK8 Coupe",
    "drivetrain": "FR",
    "engine": "V8 DOHC NA",
@@ -532,7 +638,9 @@
   },
   {
    "code": "bjkrn",
+   "carId": 206657304,
    "manufacturer": "Jaguar",
+   "manufacturerId": 13,
    "name": "XKR",
    "drivetrain": "FR",
    "engine": "V8 DOHC MA",
@@ -542,7 +650,9 @@
   },
   {
    "code": "bjxjn",
+   "carId": 206710040,
    "manufacturer": "Jaguar",
+   "manufacturerId": 13,
    "name": "XJ Sport 3.2",
    "drivetrain": "FR",
    "engine": "V8 DOHC NA",
@@ -552,7 +662,9 @@
   },
   {
    "code": "bmmgn",
+   "carId": 207451224,
    "manufacturer": "Mini & MG",
+   "manufacturerId": 21,
    "name": "MGF 1.8i VVC",
    "drivetrain": "MR",
    "engine": "I4 DOHC NA",
@@ -562,7 +674,9 @@
   },
   {
    "code": "brm1r",
+   "carId": 208760988,
    "manufacturer": "Mini & MG",
+   "manufacturerId": 21,
    "name": "MiniCooperMK1",
    "drivetrain": "FF",
    "engine": "I4 OHV NA",
@@ -572,7 +686,9 @@
   },
   {
    "code": "brmcn",
+   "carId": 208761688,
    "manufacturer": "Mini & MG",
+   "manufacturerId": 21,
    "name": "Mini Cooper 1.3i",
    "drivetrain": "FF",
    "engine": "I4 OHV NA",
@@ -582,7 +698,9 @@
   },
   {
    "code": "brmin",
+   "carId": 208762072,
    "manufacturer": "Mini & MG",
+   "manufacturerId": 21,
    "name": "Mini 1.3",
    "drivetrain": "FF",
    "engine": "I4 OHV NA",
@@ -592,7 +710,9 @@
   },
   {
    "code": "bu41n",
+   "carId": 209473688,
    "manufacturer": "RUF",
+   "manufacturerId": 28,
    "name": "RUF BTR TypeI",
    "drivetrain": "RR",
    "engine": "Boxer6 SOHC TURBO",
@@ -602,7 +722,9 @@
   },
   {
    "code": "bu42n",
+   "carId": 209473752,
    "manufacturer": "RUF",
+   "manufacturerId": 28,
    "name": "RUF BTR TypeII",
    "drivetrain": "RR",
    "engine": "Boxer6 SOHC TURBO",
@@ -612,7 +734,9 @@
   },
   {
    "code": "bub2n",
+   "carId": 209502424,
    "manufacturer": "RUF",
+   "manufacturerId": 28,
    "name": "RUF BTR2",
    "drivetrain": "RR",
    "engine": "Boxer6 SOHC TURBO",
@@ -622,7 +746,9 @@
   },
   {
    "code": "buc1n",
+   "carId": 209506456,
    "manufacturer": "RUF",
+   "manufacturerId": 28,
    "name": "RUF CTR Yellow Bird",
    "drivetrain": "RR",
    "engine": "Boxer6 SOHC TURBO",
@@ -632,7 +758,9 @@
   },
   {
    "code": "buc9n",
+   "carId": 209506968,
    "manufacturer": "RUF",
+   "manufacturerId": 28,
    "name": "RUF CTR2",
    "drivetrain": "AWD",
    "engine": "Boxer6 SOHC TURBO",
@@ -642,7 +770,9 @@
   },
   {
    "code": "bucrn",
+   "carId": 209508120,
    "manufacturer": "RUF",
+   "manufacturerId": 28,
    "name": "RUF CTR2 Sport",
    "drivetrain": "AWD",
    "engine": "Boxer6 SOHC TURBO",
@@ -652,7 +782,9 @@
   },
   {
    "code": "buctn",
+   "carId": 209508248,
    "manufacturer": "RUF",
+   "manufacturerId": 28,
    "name": "RUF RCT",
    "drivetrain": "RR",
    "engine": "Boxer6 SOHC TURBO",
@@ -662,7 +794,9 @@
   },
   {
    "code": "buthn",
+   "carId": 209577112,
    "manufacturer": "RUF",
+   "manufacturerId": 28,
    "name": "RUF Turbo-R",
    "drivetrain": "AWD",
    "engine": "Boxer6 SOHC TURBO",
@@ -672,7 +806,9 @@
   },
   {
    "code": "bvasn",
+   "carId": 209762136,
    "manufacturer": "#35",
+   "manufacturerId": 35,
    "name": "Astra SRi 2.0i 16V",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -682,7 +818,9 @@
   },
   {
    "code": "bvcdr",
+   "carId": 209769372,
    "manufacturer": "#35",
+   "manufacturerId": 35,
    "name": "Calibra Touring Car",
    "drivetrain": "AWD",
    "engine": "V6 DOHC NA",
@@ -692,7 +830,9 @@
   },
   {
    "code": "bvcon",
+   "carId": 209770072,
    "manufacturer": "#35",
+   "manufacturerId": 35,
    "name": "Corsa Sport 1.6i 16V",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -702,7 +842,9 @@
   },
   {
    "code": "bviir",
+   "carId": 209794268,
    "manufacturer": "#35",
+   "manufacturerId": 35,
    "name": "Tigra Ice Race Car",
    "drivetrain": "AWD",
    "engine": "V6 DOHC NA",
@@ -712,7 +854,9 @@
   },
   {
    "code": "bvtin",
+   "carId": 209839320,
    "manufacturer": "#35",
+   "manufacturerId": 35,
    "name": "Tigra 1.6i",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -722,7 +866,9 @@
   },
   {
    "code": "bvven",
+   "carId": 209847256,
    "manufacturer": "#35",
+   "manufacturerId": 35,
    "name": "Vectra GSi 2.5 V6",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -732,7 +878,9 @@
   },
   {
    "code": "c-30n",
+   "carId": 218120280,
    "manufacturer": "Chevrolet",
+   "manufacturerId": 5,
    "name": "Camaro Z28 30th Anniversary '96",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -742,7 +890,9 @@
   },
   {
    "code": "c427n",
+   "carId": 219427352,
    "manufacturer": "Chevrolet",
+   "manufacturerId": 5,
    "name": "Corvette 427 Stingray '69",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -752,7 +902,9 @@
   },
   {
    "code": "cc67n",
+   "carId": 221540888,
    "manufacturer": "Chevrolet",
+   "manufacturerId": 5,
    "name": "Corvette Sting Ray '67",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -762,7 +914,9 @@
   },
   {
    "code": "cc69n",
+   "carId": 221541016,
    "manufacturer": "Chevrolet",
+   "manufacturerId": 5,
    "name": "Camaro Z28 '69",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -772,7 +926,9 @@
   },
   {
    "code": "cc82n",
+   "carId": 221548760,
    "manufacturer": "Chevrolet",
+   "manufacturerId": 5,
    "name": "Corvette Stingray '82",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -782,7 +938,9 @@
   },
   {
    "code": "ccamn",
+   "carId": 221558232,
    "manufacturer": "Chevrolet",
+   "manufacturerId": 5,
    "name": "Camaro Z28 Coupe '97",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -792,7 +950,9 @@
   },
   {
    "code": "ccrcn",
+   "carId": 221627224,
    "manufacturer": "Chevrolet",
+   "manufacturerId": 5,
    "name": "Corvette Coupe '96",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -802,7 +962,9 @@
   },
   {
    "code": "ccrvn",
+   "carId": 221628440,
    "manufacturer": "Chevrolet",
+   "manufacturerId": 5,
    "name": "Corvette Grand Sport '96",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -812,7 +974,9 @@
   },
   {
    "code": "ccssn",
+   "carId": 221632344,
    "manufacturer": "Chevrolet",
+   "manufacturerId": 5,
    "name": "Camaro SS '97",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -822,7 +986,9 @@
   },
   {
    "code": "czr1n",
+   "carId": 227655832,
    "manufacturer": "Chevrolet",
+   "manufacturerId": 5,
    "name": "Corvette ZR-1 '95",
    "drivetrain": "FR",
    "engine": "V8 DOHC NA",
@@ -832,7 +998,9 @@
   },
   {
    "code": "d-pgr",
+   "carId": 234988636,
    "manufacturer": "Dodge",
+   "manufacturerId": 8,
    "name": "Viper GTS-R",
    "drivetrain": "FR",
    "engine": "V10 OHV NA",
@@ -842,7 +1010,9 @@
   },
   {
    "code": "d-phr",
+   "carId": 234988700,
    "manufacturer": "Dodge",
+   "manufacturerId": 8,
    "name": "Concept Car LM Edition",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -852,7 +1022,9 @@
   },
   {
    "code": "d2tvr",
+   "carId": 235792412,
    "manufacturer": "Dodge",
+   "manufacturerId": 8,
    "name": "STP Viper GT",
    "drivetrain": "FR",
    "engine": "V10 OHV NA",
@@ -862,7 +1034,9 @@
   },
   {
    "code": "dcaen",
+   "carId": 238334936,
    "manufacturer": "Dodge",
+   "manufacturerId": 8,
    "name": "Avenger ES",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -872,7 +1046,9 @@
   },
   {
    "code": "dcc1n",
+   "carId": 238342296,
    "manufacturer": "Dodge",
+   "manufacturerId": 8,
    "name": "Charger  '71",
    "drivetrain": "FR",
    "engine": "V8 NA",
@@ -882,7 +1058,9 @@
   },
   {
    "code": "dcchn",
+   "carId": 238343320,
    "manufacturer": "Dodge",
+   "manufacturerId": 8,
    "name": "Challenger",
    "drivetrain": "FR",
    "engine": "V8 NA",
@@ -892,7 +1070,9 @@
   },
   {
    "code": "dcien",
+   "carId": 238367704,
    "manufacturer": "Dodge",
+   "manufacturerId": 8,
    "name": "Intrepid ES",
    "drivetrain": "FF",
    "engine": "V6 SOHC NA",
@@ -902,7 +1082,9 @@
   },
   {
    "code": "dcnan",
+   "carId": 238387928,
    "manufacturer": "Dodge",
+   "manufacturerId": 8,
    "name": "Neon ACR",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -912,7 +1094,9 @@
   },
   {
    "code": "dcnrn",
+   "carId": 238389016,
    "manufacturer": "Dodge",
+   "manufacturerId": 8,
    "name": "Neon R/T",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -922,7 +1106,9 @@
   },
   {
    "code": "dcphn",
+   "carId": 238396568,
    "manufacturer": "Dodge",
+   "manufacturerId": 8,
    "name": "Concept Car",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -932,7 +1118,9 @@
   },
   {
    "code": "dcptn",
+   "carId": 238397336,
    "manufacturer": "Dodge",
+   "manufacturerId": 8,
    "name": "Phaeton",
    "drivetrain": "FR",
    "engine": "V12 NA",
@@ -942,7 +1130,9 @@
   },
   {
    "code": "dcsen",
+   "carId": 238408664,
    "manufacturer": "Dodge",
+   "manufacturerId": 8,
    "name": "Stratus ES",
    "drivetrain": "FF",
    "engine": "V6 SOHC NA",
@@ -952,7 +1142,9 @@
   },
   {
    "code": "dvp8r",
+   "carId": 243376732,
    "manufacturer": "Dodge",
+   "manufacturerId": 8,
    "name": "Viper GTS-R Team Oreca",
    "drivetrain": "FR",
    "engine": "V10 OHV NA",
@@ -962,7 +1154,9 @@
   },
   {
    "code": "dvpgn",
+   "carId": 243377240,
    "manufacturer": "Dodge",
+   "manufacturerId": 8,
    "name": "Viper GTS",
    "drivetrain": "FR",
    "engine": "V10 OHV NA",
@@ -972,7 +1166,9 @@
   },
   {
    "code": "dvprn",
+   "carId": 243377944,
    "manufacturer": "Dodge",
+   "manufacturerId": 8,
    "name": "Viper RT/10",
    "drivetrain": "FR",
    "engine": "V10 OHV NA",
@@ -982,7 +1178,9 @@
   },
   {
    "code": "efcon",
+   "carId": 255907416,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "Cougar 2.5i 24V",
    "drivetrain": "FF",
    "engine": "V6 DOHC NA",
@@ -992,7 +1190,9 @@
   },
   {
    "code": "efe2n",
+   "carId": 255914200,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "RS200 Rally Car",
    "drivetrain": "AWD",
    "engine": "DOHC TURBO",
@@ -1002,7 +1202,9 @@
   },
   {
    "code": "efesr",
+   "carId": 255915868,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "Escort Rally Car",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -1012,7 +1214,9 @@
   },
   {
    "code": "effgn",
+   "carId": 255919192,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "Focus Ghia 2.0i Zetec",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1022,7 +1226,9 @@
   },
   {
    "code": "effwr",
+   "carId": 255920220,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "Focus Rally Car",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -1032,7 +1238,9 @@
   },
   {
    "code": "effzn",
+   "carId": 255920408,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "Focus 1.8i Zetec",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1042,7 +1250,9 @@
   },
   {
    "code": "efkan",
+   "carId": 255939288,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "Ka",
    "drivetrain": "FF",
    "engine": "I4 SOHC NA",
@@ -1052,7 +1262,9 @@
   },
   {
    "code": "efmon",
+   "carId": 255948376,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "Mondeo Ghia X 2.5i 24V",
    "drivetrain": "FF",
    "engine": "V6 DOHC NA",
@@ -1062,7 +1274,9 @@
   },
   {
    "code": "efpun",
+   "carId": 255961048,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "Puma 1.7 Zetec-SE VCT",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1072,7 +1286,9 @@
   },
   {
    "code": "fcr8r",
+   "carId": 271958620,
    "manufacturer": "Citroen",
+   "manufacturerId": 6,
    "name": "Xsara Rally Car",
    "drivetrain": "AWD",
    "engine": "DOHC TURBO",
@@ -1082,7 +1298,9 @@
   },
   {
    "code": "fcs6n",
+   "carId": 271962584,
    "manufacturer": "Citroen",
+   "manufacturerId": 6,
    "name": "Saxo 1.6i VTS",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1092,7 +1310,9 @@
   },
   {
    "code": "fcx3n",
+   "carId": 271982872,
    "manufacturer": "Citroen",
+   "manufacturerId": 6,
    "name": "Xantia 3.0i V6 Exclusive",
    "drivetrain": "FF",
    "engine": "V6 DOHC NA",
@@ -1102,7 +1322,9 @@
   },
   {
    "code": "fcx8n",
+   "carId": 271983192,
    "manufacturer": "Citroen",
+   "manufacturerId": 6,
    "name": "Xsara 1.8i 16V Exclusive",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1112,7 +1334,9 @@
   },
   {
    "code": "fp1rn",
+   "carId": 275261208,
    "manufacturer": "Peugeot",
+   "manufacturerId": 25,
    "name": "106 1.6 Rallye",
    "drivetrain": "FF",
    "engine": "I4 SOHC NA",
@@ -1122,7 +1346,9 @@
   },
   {
    "code": "fp1sn",
+   "carId": 275261272,
    "manufacturer": "Peugeot",
+   "manufacturerId": 25,
    "name": "106 1.6 S16",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1132,7 +1358,9 @@
   },
   {
    "code": "fp26n",
+   "carId": 275263960,
    "manufacturer": "Peugeot",
+   "manufacturerId": 25,
    "name": "106 1.6 S16",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1142,7 +1370,9 @@
   },
   {
    "code": "fp27n",
+   "carId": 275264024,
    "manufacturer": "Peugeot",
+   "manufacturerId": 25,
    "name": "206 S16",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1152,7 +1382,9 @@
   },
   {
    "code": "fp2wr",
+   "carId": 275265628,
    "manufacturer": "Peugeot",
+   "manufacturerId": 25,
    "name": "206 S16",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -1162,7 +1394,9 @@
   },
   {
    "code": "fp2xr",
+   "carId": 275265692,
    "manufacturer": "Peugeot",
+   "manufacturerId": 25,
    "name": "206 Rally Car",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -1172,7 +1406,9 @@
   },
   {
    "code": "fp36n",
+   "carId": 275268056,
    "manufacturer": "Peugeot",
+   "manufacturerId": 25,
    "name": "306 S16",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1182,7 +1418,9 @@
   },
   {
    "code": "fp46n",
+   "carId": 275272152,
    "manufacturer": "Peugeot",
+   "manufacturerId": 25,
    "name": "406 3.0 V6 Coupe",
    "drivetrain": "FF",
    "engine": "V6 DOHC NA",
@@ -1192,7 +1430,9 @@
   },
   {
    "code": "fp4tn",
+   "carId": 275273624,
    "manufacturer": "Peugeot",
+   "manufacturerId": 25,
    "name": "406 Sedan",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1202,7 +1442,9 @@
   },
   {
    "code": "fp4un",
+   "carId": 275273688,
    "manufacturer": "Peugeot",
+   "manufacturerId": 25,
    "name": "406 Sedan",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1212,7 +1454,9 @@
   },
   {
    "code": "frc2n",
+   "carId": 275828952,
    "manufacturer": "Renault",
+   "manufacturerId": 27,
    "name": "Clio 16V",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1222,7 +1466,9 @@
   },
   {
    "code": "frcsn",
+   "carId": 275830616,
    "manufacturer": "Renault",
+   "manufacturerId": 27,
    "name": "Clio Sport V6",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -1232,7 +1478,9 @@
   },
   {
    "code": "frf1n",
+   "carId": 275841176,
    "manufacturer": "Renault",
+   "manufacturerId": 27,
    "name": "Espace F1",
    "drivetrain": "MR",
    "engine": "V10 DOHC NA",
@@ -1242,7 +1490,9 @@
   },
   {
    "code": "frl6n",
+   "carId": 275866072,
    "manufacturer": "Renault",
+   "manufacturerId": 27,
    "name": "Laguna V6",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1252,7 +1502,9 @@
   },
   {
    "code": "frmgn",
+   "carId": 275870808,
    "manufacturer": "Renault",
+   "manufacturerId": 27,
    "name": "Megane 2.0 16V Coupe",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1262,7 +1514,9 @@
   },
   {
    "code": "fv30n",
+   "carId": 276840536,
    "manufacturer": "Venturi",
+   "manufacturerId": 37,
    "name": "Atlantique 300",
    "drivetrain": "MR",
    "engine": "V6 DOHC TURBO",
@@ -1272,7 +1526,9 @@
   },
   {
    "code": "fv4gn",
+   "carId": 276845656,
    "manufacturer": "Venturi",
+   "manufacturerId": 37,
    "name": "Atlantique 400GT",
    "drivetrain": "MR",
    "engine": "V6 DOHC MA",
@@ -1282,7 +1538,9 @@
   },
   {
    "code": "fv60r",
+   "carId": 276852828,
    "manufacturer": "Venturi",
+   "manufacturerId": 37,
    "name": "Atlantique 600 LM",
    "drivetrain": "MR",
    "engine": "V6 DOHC TURBO",
@@ -1292,7 +1550,9 @@
   },
   {
    "code": "gaa3n",
+   "carId": 288141592,
    "manufacturer": "Audi",
+   "manufacturerId": 3,
    "name": "A3",
    "drivetrain": "FF",
    "engine": "I4 DOHC TURBO",
@@ -1302,7 +1562,9 @@
   },
   {
    "code": "gaa4n",
+   "carId": 288141656,
    "manufacturer": "Audi",
+   "manufacturerId": 3,
    "name": "A4 2.8 quattro",
    "drivetrain": "AWD",
    "engine": "V6 DOHC NA",
@@ -1312,7 +1574,9 @@
   },
   {
    "code": "gas3n",
+   "carId": 288215320,
    "manufacturer": "Audi",
+   "manufacturerId": 3,
    "name": "S3",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -1322,7 +1586,9 @@
   },
   {
    "code": "gas4n",
+   "carId": 288215384,
    "manufacturer": "Audi",
+   "manufacturerId": 3,
    "name": "S4",
    "drivetrain": "AWD",
    "engine": "V6 DOHC TURBO",
@@ -1332,7 +1598,9 @@
   },
   {
    "code": "gatlr",
+   "carId": 288220572,
    "manufacturer": "Audi",
+   "manufacturerId": 3,
    "name": "TT LM Edition",
    "drivetrain": "AWD",
    "engine": "DOHC TURBO",
@@ -1342,7 +1610,9 @@
   },
   {
    "code": "gattn",
+   "carId": 288221080,
    "manufacturer": "Audi",
+   "manufacturerId": 3,
    "name": "TT 1.8T quattro",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -1352,7 +1622,9 @@
   },
   {
    "code": "gb0cn",
+   "carId": 288363352,
    "manufacturer": "BMW",
+   "manufacturerId": 4,
    "name": "320Ci",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -1362,7 +1634,9 @@
   },
   {
    "code": "gb28n",
+   "carId": 288371288,
    "manufacturer": "BMW",
+   "manufacturerId": 4,
    "name": "328i",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -1372,7 +1646,9 @@
   },
   {
    "code": "gb2cn",
+   "carId": 288371544,
    "manufacturer": "BMW",
+   "manufacturerId": 4,
    "name": "323ti Compact",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -1382,7 +1658,9 @@
   },
   {
    "code": "gb52n",
+   "carId": 288383192,
    "manufacturer": "BMW",
+   "manufacturerId": 4,
    "name": "528i",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -1392,7 +1670,9 @@
   },
   {
    "code": "gb74n",
+   "carId": 288391512,
    "manufacturer": "BMW",
+   "manufacturerId": 4,
    "name": "740i",
    "drivetrain": "FR",
    "engine": "V8 DOHC NA",
@@ -1402,7 +1682,9 @@
   },
   {
    "code": "gb84n",
+   "carId": 288395608,
    "manufacturer": "BMW",
+   "manufacturerId": 4,
    "name": "840Ci",
    "drivetrain": "FR",
    "engine": "V8 DOHC NA",
@@ -1412,7 +1694,9 @@
   },
   {
    "code": "gbc3n",
+   "carId": 288411928,
    "manufacturer": "BMW",
+   "manufacturerId": 4,
    "name": "323Ci",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -1422,7 +1706,9 @@
   },
   {
    "code": "gbc8n",
+   "carId": 288412248,
    "manufacturer": "BMW",
+   "manufacturerId": 4,
    "name": "328Ci",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -1432,7 +1718,9 @@
   },
   {
    "code": "gm16n",
+   "carId": 291250648,
    "manufacturer": "Mercedes-Benz",
+   "manufacturerId": 19,
    "name": "A160 Avantgarde",
    "drivetrain": "FF",
    "engine": "I4 SOHC NA",
@@ -1442,7 +1730,9 @@
   },
   {
    "code": "gm20n",
+   "carId": 291254360,
    "manufacturer": "Mercedes-Benz",
+   "manufacturerId": 19,
    "name": "CLK 200 Sport",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -1452,7 +1742,9 @@
   },
   {
    "code": "gm32n",
+   "carId": 291258584,
    "manufacturer": "Mercedes-Benz",
+   "manufacturerId": 19,
    "name": "CLK 320 Sport",
    "drivetrain": "FR",
    "engine": "V6 SOHC NA",
@@ -1462,7 +1754,9 @@
   },
   {
    "code": "gmc4n",
+   "carId": 291295576,
    "manufacturer": "Mercedes-Benz",
+   "manufacturerId": 19,
    "name": "AMG C 43",
    "drivetrain": "FR",
    "engine": "V8 SOHC NA",
@@ -1472,7 +1766,9 @@
   },
   {
    "code": "gmd2r",
+   "carId": 291299548,
    "manufacturer": "Mercedes-Benz",
+   "manufacturerId": 19,
    "name": "- -",
    "drivetrain": "AWD",
    "engine": "DOHC NA",
@@ -1482,7 +1778,9 @@
   },
   {
    "code": "gme5n",
+   "carId": 291303832,
    "manufacturer": "Mercedes-Benz",
+   "manufacturerId": 19,
    "name": "AMG E 55",
    "drivetrain": "FR",
    "engine": "V8 SOHC NA",
@@ -1492,7 +1790,9 @@
   },
   {
    "code": "gmsln",
+   "carId": 291362200,
    "manufacturer": "Mercedes-Benz",
+   "manufacturerId": 19,
    "name": "SLK 230 Kompressor",
    "drivetrain": "FR",
    "engine": "I4 DOHC MA",
@@ -1502,7 +1802,9 @@
   },
   {
    "code": "goasn",
+   "carId": 291813208,
    "manufacturer": "Opel",
+   "manufacturerId": 24,
    "name": "Astra SRi 2.0i 16V",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1512,7 +1814,9 @@
   },
   {
    "code": "gocdr",
+   "carId": 291820444,
    "manufacturer": "Opel",
+   "manufacturerId": 24,
    "name": "Calibra Touring Car",
    "drivetrain": "AWD",
    "engine": "V6 DOHC NA",
@@ -1522,7 +1826,9 @@
   },
   {
    "code": "gocon",
+   "carId": 291821144,
    "manufacturer": "Opel",
+   "manufacturerId": 24,
    "name": "Corsa Sport 1.6i 16V",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1532,7 +1838,9 @@
   },
   {
    "code": "goiir",
+   "carId": 291845340,
    "manufacturer": "Opel",
+   "manufacturerId": 24,
    "name": "Tigra Ice Race Car",
    "drivetrain": "AWD",
    "engine": "V6 DOHC NA",
@@ -1542,7 +1850,9 @@
   },
   {
    "code": "gotin",
+   "carId": 291890392,
    "manufacturer": "Opel",
+   "manufacturerId": 24,
    "name": "Tigra 1.6i",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1552,7 +1862,9 @@
   },
   {
    "code": "goven",
+   "carId": 291898328,
    "manufacturer": "Opel",
+   "manufacturerId": 24,
    "name": "Vectra GSi 2.5 V6",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1562,7 +1874,9 @@
   },
   {
    "code": "gv45n",
+   "carId": 293622168,
    "manufacturer": "Volkswagen",
+   "manufacturerId": 38,
    "name": "Golf IV 2.3 V5",
    "drivetrain": "FF",
    "engine": "V5 NA",
@@ -1572,7 +1886,9 @@
   },
   {
    "code": "gv46n",
+   "carId": 293622232,
    "manufacturer": "Volkswagen",
+   "manufacturerId": 38,
    "name": "Golf IV V6",
    "drivetrain": "FF",
    "engine": "V6 NA",
@@ -1582,7 +1898,9 @@
   },
   {
    "code": "gv48n",
+   "carId": 293622360,
    "manufacturer": "Volkswagen",
+   "manufacturerId": 38,
    "name": "Golf IV GTI 1.8T",
    "drivetrain": "FF",
    "engine": "I4 SOHC TURBO",
@@ -1592,7 +1910,9 @@
   },
   {
    "code": "gv4gn",
+   "carId": 293622872,
    "manufacturer": "Volkswagen",
+   "manufacturerId": 38,
    "name": "Golf IV GTI",
    "drivetrain": "FF",
    "engine": "I4 SOHC NA",
@@ -1602,7 +1922,9 @@
   },
   {
    "code": "gvbgr",
+   "carId": 293651548,
    "manufacturer": "Volkswagen",
+   "manufacturerId": 38,
    "name": "New Beetle GT",
    "drivetrain": "AWD",
    "engine": "DOHC TURBO",
@@ -1612,7 +1934,9 @@
   },
   {
    "code": "gvlun",
+   "carId": 293693400,
    "manufacturer": "Volkswagen",
+   "manufacturerId": 38,
    "name": "Lupo 1.4",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1622,7 +1946,9 @@
   },
   {
    "code": "gvnbn",
+   "carId": 293700376,
    "manufacturer": "Volkswagen",
+   "manufacturerId": 38,
    "name": "New Beetle GLS 2.0L",
    "drivetrain": "FF",
    "engine": "I4 NA",
@@ -1632,7 +1958,9 @@
   },
   {
    "code": "gvp6n",
+   "carId": 293708248,
    "manufacturer": "Volkswagen",
+   "manufacturerId": 38,
    "name": "- -",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1642,7 +1970,9 @@
   },
   {
    "code": "h-err",
+   "carId": 302053148,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "del Sol LM Edition",
    "drivetrain": "MR",
    "engine": "I4 DOHC NA",
@@ -1652,7 +1982,9 @@
   },
   {
    "code": "h28cn",
+   "carId": 302814040,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Accord SiR-T(J) '98",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1662,7 +1994,9 @@
   },
   {
    "code": "h28wn",
+   "carId": 302815320,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Accord Wagon SiR(J) '98",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1672,7 +2006,9 @@
   },
   {
    "code": "h2a0n",
+   "carId": 302821464,
    "manufacturer": "Acura",
+   "manufacturerId": 0,
    "name": "Acura NSX  '91",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -1682,7 +2018,9 @@
   },
   {
    "code": "h2a2n",
+   "carId": 302821592,
    "manufacturer": "Acura",
+   "manufacturerId": 0,
    "name": "Acura NSX  '97",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -1692,7 +2030,9 @@
   },
   {
    "code": "h2acn",
+   "carId": 302822232,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Accord SiR-T(J) '97",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1702,7 +2042,9 @@
   },
   {
    "code": "h2ain",
+   "carId": 302822616,
    "manufacturer": "Acura",
+   "manufacturerId": 0,
    "name": "Acura Integra GS-R",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1712,7 +2054,9 @@
   },
   {
    "code": "h2arn",
+   "carId": 302823192,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Accord Type-R",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1722,7 +2066,9 @@
   },
   {
    "code": "h2awn",
+   "carId": 302823512,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Accord Wagon 2300VTL(J) '97",
    "drivetrain": "AWD",
    "engine": "I4 SOHC NA",
@@ -1732,7 +2078,9 @@
   },
   {
    "code": "h2ben",
+   "carId": 302826456,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Beat (J) '91",
    "drivetrain": "MR",
    "engine": "I3 SOHC NA",
@@ -1742,7 +2090,9 @@
   },
   {
    "code": "h2bfn",
+   "carId": 302826520,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Beat ver.F(J) '92",
    "drivetrain": "MR",
    "engine": "I3 SOHC NA",
@@ -1752,7 +2102,9 @@
   },
   {
    "code": "h2bzn",
+   "carId": 302827800,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Beat ver.Z(J) '94",
    "drivetrain": "MR",
    "engine": "I3 SOHC NA",
@@ -1762,7 +2114,9 @@
   },
   {
    "code": "h2cfn",
+   "carId": 302830616,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Civic Sedan",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1772,7 +2126,9 @@
   },
   {
    "code": "h2cnr",
+   "carId": 302831132,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Mugen NSX GT(J)",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -1782,7 +2138,9 @@
   },
   {
    "code": "h2crn",
+   "carId": 302831384,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Civic Type R(J) '98",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1792,7 +2150,9 @@
   },
   {
    "code": "h2csn",
+   "carId": 302831448,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Civic 3 Door Si",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1802,7 +2162,9 @@
   },
   {
    "code": "h2ign",
+   "carId": 302855256,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Integra SiR-G",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1812,7 +2174,9 @@
   },
   {
    "code": "h2irn",
+   "carId": 302855960,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Integra Type R 98 spec",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1822,7 +2186,9 @@
   },
   {
    "code": "h2l2r",
+   "carId": 302866652,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "S2000 GT1",
    "drivetrain": "FR",
    "engine": "DOHC NA",
@@ -1832,7 +2198,9 @@
   },
   {
    "code": "h2l8n",
+   "carId": 302867032,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Life T(J) '98",
    "drivetrain": "FF",
    "engine": "I3 SOHC NA",
@@ -1842,7 +2210,9 @@
   },
   {
    "code": "h2lin",
+   "carId": 302867672,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Life T (J) '97",
    "drivetrain": "FF",
    "engine": "I3 SOHC NA",
@@ -1852,7 +2222,9 @@
   },
   {
    "code": "h2lon",
+   "carId": 302868056,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Logo TS(J) '98",
    "drivetrain": "FF",
    "engine": "I4 SOHC NA",
@@ -1862,7 +2234,9 @@
   },
   {
    "code": "h2m2n",
+   "carId": 302870744,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Mugen CR-X II (J)",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1872,7 +2246,9 @@
   },
   {
    "code": "h2man",
+   "carId": 302871256,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Mugen Accord SIR-T(J)",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1882,7 +2258,9 @@
   },
   {
    "code": "h2mbn",
+   "carId": 302871320,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Mugen Beat (J)",
    "drivetrain": "MR",
    "engine": "I3 SOHC NA",
@@ -1892,7 +2270,9 @@
   },
   {
    "code": "h2mcn",
+   "carId": 302871384,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Mugen Civic Type-R(J)",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1902,7 +2282,9 @@
   },
   {
    "code": "h2mdn",
+   "carId": 302871448,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Mugen CR-X III (J)",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1912,7 +2294,9 @@
   },
   {
    "code": "h2mfn",
+   "carId": 302871576,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Mugen Ferio (J)",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1922,7 +2306,9 @@
   },
   {
    "code": "h2min",
+   "carId": 302871768,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Mugen Integra Type-R(J)",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1932,7 +2318,9 @@
   },
   {
    "code": "h2mpn",
+   "carId": 302872216,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Mugen Prelude Type-S(J)",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1942,7 +2330,9 @@
   },
   {
    "code": "h2mwn",
+   "carId": 302872664,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Mugen Accord Wagon(J)",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -1952,7 +2342,9 @@
   },
   {
    "code": "h2n1r",
+   "carId": 302874780,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Mobil 1 NSX GT(J) '99",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -1962,7 +2354,9 @@
   },
   {
    "code": "h2ncr",
+   "carId": 302875484,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Mugen NSX GT(J) '99",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -1972,7 +2366,9 @@
   },
   {
    "code": "h2nrr",
+   "carId": 302876444,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Raybrig NSX GT(J) '99",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -1982,7 +2378,9 @@
   },
   {
    "code": "h2ntr",
+   "carId": 302876572,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Takata NSX GT(J) '99",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -1992,7 +2390,9 @@
   },
   {
    "code": "h2prn",
+   "carId": 302884632,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Prelude",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2002,7 +2402,9 @@
   },
   {
    "code": "h2psn",
+   "carId": 302884696,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Prelude SiR S spec(J) '98",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2012,7 +2414,9 @@
   },
   {
    "code": "h2s2n",
+   "carId": 302895320,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "S2000",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -2022,7 +2426,9 @@
   },
   {
    "code": "h2scn",
+   "carId": 302895960,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Spoon Civic Type-R(J)",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2032,7 +2438,9 @@
   },
   {
    "code": "h2sin",
+   "carId": 302896344,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Spoon Integra Type-R(J)",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2042,7 +2450,9 @@
   },
   {
    "code": "h2ssn",
+   "carId": 302896984,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Spoon S2000 (J)",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -2052,7 +2462,9 @@
   },
   {
    "code": "h2ztn",
+   "carId": 302925720,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Z Turbo(J) '98",
    "drivetrain": "AWD",
    "engine": "I3 SOHC TURBO",
@@ -2062,7 +2474,9 @@
   },
   {
    "code": "hacsn",
+   "carId": 304928600,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Accord Sedan '96",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2072,7 +2486,9 @@
   },
   {
    "code": "hacwn",
+   "carId": 304928856,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Accord Wagon '96",
    "drivetrain": "FF",
    "engine": "I4 SOHC NA",
@@ -2082,7 +2498,9 @@
   },
   {
    "code": "hairn",
+   "carId": 304953112,
    "manufacturer": "Acura",
+   "manufacturerId": 0,
    "name": "Acura Integra Type R",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2092,7 +2510,9 @@
   },
   {
    "code": "hcfnn",
+   "carId": 305464856,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Civic Sedan '96",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2102,7 +2522,9 @@
   },
   {
    "code": "hcfon",
+   "carId": 305464920,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Civic Sedan '93",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2112,7 +2534,9 @@
   },
   {
    "code": "hcrxn",
+   "carId": 305514648,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Civic CRX Si '91",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2122,7 +2546,9 @@
   },
   {
    "code": "hcvnn",
+   "carId": 305530392,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Civic 3 Door '95",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2132,7 +2558,9 @@
   },
   {
    "code": "hcvon",
+   "carId": 305530456,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Civic 3 Door Si '93",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2142,7 +2570,9 @@
   },
   {
    "code": "hcvrn",
+   "carId": 305530648,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Civic Type R(J) '97",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2152,7 +2582,9 @@
   },
   {
    "code": "hdegn",
+   "carId": 305722456,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "del Sol VGi(J) '95",
    "drivetrain": "FF",
    "engine": "I4 SOHC NA",
@@ -2162,7 +2594,9 @@
   },
   {
    "code": "hdeln",
+   "carId": 305722776,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "del Sol S '93",
    "drivetrain": "FF",
    "engine": "I4 SOHC NA",
@@ -2172,7 +2606,9 @@
   },
   {
    "code": "hdern",
+   "carId": 305723160,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "del Sol Si '93",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2182,7 +2618,9 @@
   },
   {
    "code": "hdesn",
+   "carId": 305723224,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "del Sol SiR(J) '95",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2192,7 +2630,9 @@
   },
   {
    "code": "hiarn",
+   "carId": 307017496,
    "manufacturer": "Acura",
+   "manufacturerId": 0,
    "name": "Acura Integra Type-R '95",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2202,7 +2642,9 @@
   },
   {
    "code": "hiasn",
+   "carId": 307017560,
    "manufacturer": "Acura",
+   "manufacturerId": 0,
    "name": "Acura Integra GS-R '95",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2212,7 +2654,9 @@
   },
   {
    "code": "hinrn",
+   "carId": 307070744,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Integra Type R",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2222,7 +2666,9 @@
   },
   {
    "code": "hinsn",
+   "carId": 307070808,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Integra SiR-G",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2232,7 +2678,9 @@
   },
   {
    "code": "hnann",
+   "carId": 308327960,
    "manufacturer": "Acura",
+   "manufacturerId": 0,
    "name": "Acura NSX Type S Zero(J)",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -2242,7 +2690,9 @@
   },
   {
    "code": "hnarn",
+   "carId": 308328216,
    "manufacturer": "Acura",
+   "manufacturerId": 0,
    "name": "Acura NSX  '93",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -2252,7 +2702,9 @@
   },
   {
    "code": "hnasn",
+   "carId": 308328280,
    "manufacturer": "Acura",
+   "manufacturerId": 0,
    "name": "Acura NSX Type S(J)",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -2262,7 +2714,9 @@
   },
   {
    "code": "hnsbn",
+   "carId": 308400920,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "NSX",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -2272,7 +2726,9 @@
   },
   {
    "code": "hnsnn",
+   "carId": 308401688,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "NSX  Type S Zero",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -2282,7 +2738,9 @@
   },
   {
    "code": "hnsrn",
+   "carId": 308401944,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "NSX Type R '92",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -2292,7 +2750,9 @@
   },
   {
    "code": "hnssn",
+   "carId": 308402008,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "NSX  Type S",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -2302,7 +2762,9 @@
   },
   {
    "code": "hnsxn",
+   "carId": 308402328,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "NSX  '90",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -2312,7 +2774,9 @@
   },
   {
    "code": "hpnen",
+   "carId": 308904920,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Prelude  '96",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2322,7 +2786,9 @@
   },
   {
    "code": "hpnvn",
+   "carId": 308906008,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Prelude Type-SH",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2332,7 +2798,9 @@
   },
   {
    "code": "hpren",
+   "carId": 308921304,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Prelude Si '93",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2342,7 +2810,9 @@
   },
   {
    "code": "hprvn",
+   "carId": 308922392,
    "manufacturer": "Honda",
+   "manufacturerId": 11,
    "name": "Prelude VTEC '94",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2352,7 +2822,9 @@
   },
   {
    "code": "ia45n",
+   "carId": 321671576,
    "manufacturer": "Alfa Romeo",
+   "manufacturerId": 1,
    "name": "145 2.0 Cloverleaf",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2362,7 +2834,9 @@
   },
   {
    "code": "ia54n",
+   "carId": 321675608,
    "manufacturer": "Alfa Romeo",
+   "manufacturerId": 1,
    "name": "156 2.5 V6 24V",
    "drivetrain": "FF",
    "engine": "V6 DOHC NA",
@@ -2372,7 +2846,9 @@
   },
   {
    "code": "ia55n",
+   "carId": 321675672,
    "manufacturer": "Alfa Romeo",
+   "manufacturerId": 1,
    "name": "155 2.0 TS 16V",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2382,7 +2858,9 @@
   },
   {
    "code": "ia56n",
+   "carId": 321675736,
    "manufacturer": "Alfa Romeo",
+   "manufacturerId": 1,
    "name": "156 2.0 TS 16V",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2392,7 +2870,9 @@
   },
   {
    "code": "ia5dr",
+   "carId": 321676188,
    "manufacturer": "Alfa Romeo",
+   "manufacturerId": 1,
    "name": "155 Touring Car",
    "drivetrain": "AWD",
    "engine": "V6 DOHC NA",
@@ -2402,7 +2882,9 @@
   },
   {
    "code": "ia63n",
+   "carId": 321679640,
    "manufacturer": "Alfa Romeo",
+   "manufacturerId": 1,
    "name": "166 3.0 V6 24V",
    "drivetrain": "FF",
    "engine": "V6 DOHC NA",
@@ -2412,7 +2894,9 @@
   },
   {
    "code": "ia65n",
+   "carId": 321679768,
    "manufacturer": "Alfa Romeo",
+   "manufacturerId": 1,
    "name": "166 2.5 V6 24V",
    "drivetrain": "FF",
    "engine": "V6 DOHC NA",
@@ -2422,7 +2906,9 @@
   },
   {
    "code": "ia66n",
+   "carId": 321679832,
    "manufacturer": "Alfa Romeo",
+   "manufacturerId": 1,
    "name": "166 2.0 TS 16V",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2432,7 +2918,9 @@
   },
   {
    "code": "iag4n",
+   "carId": 321720664,
    "manufacturer": "Alfa Romeo",
+   "manufacturerId": 1,
    "name": "GTV 3.0 V6 24V",
    "drivetrain": "FF",
    "engine": "V6 DOHC NA",
@@ -2442,7 +2930,9 @@
   },
   {
    "code": "iag6n",
+   "carId": 321720792,
    "manufacturer": "Alfa Romeo",
+   "manufacturerId": 1,
    "name": "GTV 2.0 TS 16V",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2452,7 +2942,9 @@
   },
   {
    "code": "iaspn",
+   "carId": 321771160,
    "manufacturer": "Alfa Romeo",
+   "manufacturerId": 1,
    "name": "Spider 2.0 TS",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2462,7 +2954,9 @@
   },
   {
    "code": "ii50n",
+   "carId": 323772504,
    "manufacturer": "FIAT",
+   "manufacturerId": 9,
    "name": "500 Sporting",
    "drivetrain": "FF",
    "engine": "I4 NA",
@@ -2472,7 +2966,9 @@
   },
   {
    "code": "ii60n",
+   "carId": 323776600,
    "manufacturer": "FIAT",
+   "manufacturerId": 9,
    "name": "600(Seicento) Sporting",
    "drivetrain": "FF",
    "engine": "I4 NA",
@@ -2482,7 +2978,9 @@
   },
   {
    "code": "iiban",
+   "carId": 323797720,
    "manufacturer": "FIAT",
+   "manufacturerId": 9,
    "name": "Barchetta",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2492,7 +2990,9 @@
   },
   {
    "code": "iictn",
+   "carId": 323803032,
    "manufacturer": "FIAT",
+   "manufacturerId": 9,
    "name": "Coupe 2.0 20V Turbo",
    "drivetrain": "FF",
    "engine": "I5 DOHC TURBO",
@@ -2502,7 +3002,9 @@
   },
   {
    "code": "iio5n",
+   "carId": 323850648,
    "manufacturer": "FIAT",
+   "manufacturerId": 9,
    "name": "500R",
    "drivetrain": "RR",
    "engine": "I2 NA",
@@ -2512,7 +3014,9 @@
   },
   {
    "code": "iipun",
+   "carId": 323856344,
    "manufacturer": "FIAT",
+   "manufacturerId": 9,
    "name": "Punto GT",
    "drivetrain": "FF",
    "engine": "I4 TURBO",
@@ -2522,7 +3026,9 @@
   },
   {
    "code": "ildcn",
+   "carId": 324592472,
    "manufacturer": "Lancia",
+   "manufacturerId": 14,
    "name": "Delta HF Integrale Collezione",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -2532,7 +3038,9 @@
   },
   {
    "code": "ilden",
+   "carId": 324592600,
    "manufacturer": "Lancia",
+   "manufacturerId": 14,
    "name": "Delta HF Integrale",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -2542,7 +3050,9 @@
   },
   {
    "code": "ildvn",
+   "carId": 324593688,
    "manufacturer": "Lancia",
+   "manufacturerId": 14,
    "name": "Delta HF Integrale Evoluzione",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -2552,7 +3062,9 @@
   },
   {
    "code": "ils4r",
+   "carId": 324653404,
    "manufacturer": "Lancia",
+   "manufacturerId": 14,
    "name": "Delta S4",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -2562,7 +3074,9 @@
   },
   {
    "code": "ilstn",
+   "carId": 324655000,
    "manufacturer": "Lancia",
+   "manufacturerId": 14,
    "name": "Stratos",
    "drivetrain": "MR",
    "engine": "V6 DOHC NA",
@@ -2572,7 +3086,9 @@
   },
   {
    "code": "ily3n",
+   "carId": 324677912,
    "manufacturer": "Lancia",
+   "manufacturerId": 14,
    "name": "Y 1.2 16V",
    "drivetrain": "FF",
    "engine": "I4 NA",
@@ -2582,7 +3098,9 @@
   },
   {
    "code": "io11n",
+   "carId": 325329048,
    "manufacturer": "Lotus",
+   "manufacturerId": 17,
    "name": "Elise 111S",
    "drivetrain": "MR",
    "engine": "I4 DOHC NA",
@@ -2592,7 +3110,9 @@
   },
   {
    "code": "io13n",
+   "carId": 325329176,
    "manufacturer": "Lotus",
+   "manufacturerId": 17,
    "name": "Elise 135",
    "drivetrain": "MR",
    "engine": "I4 DOHC NA",
@@ -2602,7 +3122,9 @@
   },
   {
    "code": "io19n",
+   "carId": 325329560,
    "manufacturer": "Lotus",
+   "manufacturerId": 17,
    "name": "Elise 190",
    "drivetrain": "MR",
    "engine": "I4 DOHC NA",
@@ -2612,7 +3134,9 @@
   },
   {
    "code": "ioe9n",
+   "carId": 325382808,
    "manufacturer": "Lotus",
+   "manufacturerId": 17,
    "name": "Elan S2 '90",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2622,7 +3146,9 @@
   },
   {
    "code": "ioeln",
+   "carId": 325383576,
    "manufacturer": "Lotus",
+   "manufacturerId": 17,
    "name": "Elise",
    "drivetrain": "MR",
    "engine": "I4 DOHC NA",
@@ -2632,7 +3158,9 @@
   },
   {
    "code": "ioesn",
+   "carId": 325384024,
    "manufacturer": "Lotus",
+   "manufacturerId": 17,
    "name": "Esprit Sport 350",
    "drivetrain": "MR",
    "engine": "V8 DOHC TURBO",
@@ -2642,7 +3170,9 @@
   },
   {
    "code": "ioeun",
+   "carId": 325384152,
    "manufacturer": "Lotus",
+   "manufacturerId": 17,
    "name": "Europa",
    "drivetrain": "MR",
    "engine": "I4 DOHC NA",
@@ -2652,7 +3182,9 @@
   },
   {
    "code": "iogtn",
+   "carId": 325392280,
    "manufacturer": "Lotus",
+   "manufacturerId": 17,
    "name": "Esprit V8 GT",
    "drivetrain": "MR",
    "engine": "V8 DOHC TURBO",
@@ -2662,7 +3194,9 @@
   },
   {
    "code": "ioisr",
+   "carId": 325400412,
    "manufacturer": "Lotus",
+   "manufacturerId": 17,
    "name": "Esprit GT1",
    "drivetrain": "MR",
    "engine": "V8 DOHC TURBO",
@@ -2672,7 +3206,9 @@
   },
   {
    "code": "iolln",
+   "carId": 325412248,
    "manufacturer": "Lotus",
+   "manufacturerId": 17,
    "name": "Elise GT1",
    "drivetrain": "MR",
    "engine": "V8 DOHC TURBO",
@@ -2682,7 +3218,9 @@
   },
   {
    "code": "iomsn",
+   "carId": 325416792,
    "manufacturer": "Lotus",
+   "manufacturerId": 17,
    "name": "MotorsportElise",
    "drivetrain": "MR",
    "engine": "I4 DOHC NA",
@@ -2692,7 +3230,9 @@
   },
   {
    "code": "ios2n",
+   "carId": 325439704,
    "manufacturer": "Lotus",
+   "manufacturerId": 17,
    "name": "Elan S2 '64",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -2702,7 +3242,9 @@
   },
   {
    "code": "ios4n",
+   "carId": 325439832,
    "manufacturer": "Lotus",
+   "manufacturerId": 17,
    "name": "Elan S4 Sprint '71",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -2712,7 +3254,9 @@
   },
   {
    "code": "iosen",
+   "carId": 325440472,
    "manufacturer": "Lotus",
+   "manufacturerId": 17,
    "name": "Esprit V8 SE",
    "drivetrain": "MR",
    "engine": "V8 DOHC TURBO",
@@ -2722,7 +3266,9 @@
   },
   {
    "code": "k213n",
+   "carId": 353116440,
    "manufacturer": "Tommy kaira",
+   "manufacturerId": 32,
    "name": "m13(StageII) (J)",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2732,7 +3278,9 @@
   },
   {
    "code": "k231n",
+   "carId": 353124504,
    "manufacturer": "Tommy kaira",
+   "manufacturerId": 32,
    "name": "M30 (GTS,J) '87",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -2742,7 +3290,9 @@
   },
   {
    "code": "k232n",
+   "carId": 353124568,
    "manufacturer": "Tommy kaira",
+   "manufacturerId": 32,
    "name": "M30 (GTS-R,J) '91",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -2752,7 +3302,9 @@
   },
   {
    "code": "k233n",
+   "carId": 353124632,
    "manufacturer": "Tommy kaira",
+   "manufacturerId": 32,
    "name": "Tommykaira R (J) '95",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -2762,7 +3314,9 @@
   },
   {
    "code": "k234n",
+   "carId": 353124696,
    "manufacturer": "Tommy kaira",
+   "manufacturerId": 32,
    "name": "Tommykaira R (J) '99",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -2772,7 +3326,9 @@
   },
   {
    "code": "k2z2n",
+   "carId": 353255640,
    "manufacturer": "Tommy kaira",
+   "manufacturerId": 32,
    "name": "ZZII (J)",
    "drivetrain": "MR",
    "engine": "DOHC TURBO",
@@ -2782,7 +3338,9 @@
   },
   {
    "code": "k2z3n",
+   "carId": 353255704,
    "manufacturer": "Tommy kaira",
+   "manufacturerId": 32,
    "name": "ZZIII (J)",
    "drivetrain": "MR",
    "engine": "DOHC NA",
@@ -2792,7 +3350,9 @@
   },
   {
    "code": "k2zzn",
+   "carId": 353257752,
    "manufacturer": "Tommy kaira",
+   "manufacturerId": 32,
    "name": "ZZ-S Coupe(J)",
    "drivetrain": "MR",
    "engine": "I4 DOHC NA",
@@ -2802,7 +3362,9 @@
   },
   {
    "code": "ld6cn",
+   "carId": 372798296,
    "manufacturer": "Aston Martin",
+   "manufacturerId": 2,
    "name": "DB6",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -2812,7 +3374,9 @@
   },
   {
    "code": "ld7cn",
+   "carId": 372802392,
    "manufacturer": "Aston Martin",
+   "manufacturerId": 2,
    "name": "DB7 Coupe",
    "drivetrain": "FR",
    "engine": "I6 DOHC MA",
@@ -2822,7 +3386,9 @@
   },
   {
    "code": "ld7vn",
+   "carId": 372803608,
    "manufacturer": "Aston Martin",
+   "manufacturerId": 2,
    "name": "DB7 Volante",
    "drivetrain": "FR",
    "engine": "I6 DOHC MA",
@@ -2832,7 +3398,9 @@
   },
   {
    "code": "ldvan",
+   "carId": 372900568,
    "manufacturer": "Aston Martin",
+   "manufacturerId": 2,
    "name": "V8 Vantage",
    "drivetrain": "FR",
    "engine": "V8 DOHC MA",
@@ -2842,7 +3410,9 @@
   },
   {
    "code": "m-tor",
+   "carId": 386000476,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "FTO LM Edition",
    "drivetrain": "AWD",
    "engine": "DOHC TURBO",
@@ -2852,7 +3422,9 @@
   },
   {
    "code": "m2a5r",
+   "carId": 386707868,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Lancer Evolution V Rally Car '98",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -2862,7 +3434,9 @@
   },
   {
    "code": "m2agn",
+   "carId": 386708568,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Galant VR-G(J) '99",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2872,7 +3446,9 @@
   },
   {
    "code": "m2aln",
+   "carId": 386708888,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Galant VR-4(J) '99",
    "drivetrain": "AWD",
    "engine": "V6 DOHC TURBO",
@@ -2882,7 +3458,9 @@
   },
   {
    "code": "m2g2n",
+   "carId": 386732248,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Lancer Evolution II(J) '94",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -2892,7 +3470,9 @@
   },
   {
    "code": "m2g4n",
+   "carId": 386732376,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Galant Super VR4(J) '98",
    "drivetrain": "AWD",
    "engine": "V6 DOHC TURBO",
@@ -2902,7 +3482,9 @@
   },
   {
    "code": "m2g5n",
+   "carId": 386732440,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Lancer Evolution V GSR (J) '98",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -2912,7 +3494,9 @@
   },
   {
    "code": "m2g6n",
+   "carId": 386732504,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Lancer Evolution VI GSR (J) '99",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -2922,7 +3506,9 @@
   },
   {
    "code": "m2l4n",
+   "carId": 386752856,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Legnum Super VR4(J) '98",
    "drivetrain": "AWD",
    "engine": "V6 DOHC TURBO",
@@ -2932,7 +3518,9 @@
   },
   {
    "code": "m2lgn",
+   "carId": 386753624,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Legnum VR-4 type-S(J) '97",
    "drivetrain": "AWD",
    "engine": "V6 DOHC TURBO",
@@ -2942,7 +3530,9 @@
   },
   {
    "code": "m2lsn",
+   "carId": 386754392,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Legnum ST(J) '97",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2952,7 +3542,9 @@
   },
   {
    "code": "m2m5n",
+   "carId": 386757016,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Mine's Lancer Evolution V(J)",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -2962,7 +3554,9 @@
   },
   {
    "code": "m2m7n",
+   "carId": 386757144,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Mirage Asti ZR(J) '97",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2972,7 +3566,9 @@
   },
   {
    "code": "m2m8n",
+   "carId": 386757208,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Minica Pj(J) '98",
    "drivetrain": "AWD",
    "engine": "I3 SOHC TURBO",
@@ -2982,7 +3578,9 @@
   },
   {
    "code": "m2man",
+   "carId": 386757336,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Mirage Asti RX-R(J) '98",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -2992,7 +3590,9 @@
   },
   {
    "code": "m2min",
+   "carId": 386757848,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Mirage Cyborg-ZR(J) '97",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -3002,7 +3602,9 @@
   },
   {
    "code": "m2mon",
+   "carId": 386758232,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Minica Dangan ZZ(J) '90",
    "drivetrain": "AWD",
    "engine": "I3 DOHC TURBO",
@@ -3012,7 +3614,9 @@
   },
   {
    "code": "m2mrn",
+   "carId": 386758424,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "3000GT Twin Turbo MR(J)",
    "drivetrain": "AWD",
    "engine": "V6 DOHC TURBO",
@@ -3022,7 +3626,9 @@
   },
   {
    "code": "m2ngn",
+   "carId": 386761816,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Legnum VR-4 type-S(J) '99",
    "drivetrain": "AWD",
    "engine": "V6 DOHC TURBO",
@@ -3032,7 +3638,9 @@
   },
   {
    "code": "m2nsn",
+   "carId": 386762584,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Legnum ST(J) '99",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -3042,7 +3650,9 @@
   },
   {
    "code": "m2p8n",
+   "carId": 386769496,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Pajero Mini Sport(J) '98",
    "drivetrain": "AWD",
    "engine": "V4 DOHC TURBO",
@@ -3052,7 +3662,9 @@
   },
   {
    "code": "m2pjn",
+   "carId": 386770200,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Pajero Mini VR-II(J) '97",
    "drivetrain": "AWD",
    "engine": "V4 SOHC TURBO",
@@ -3062,7 +3674,9 @@
   },
   {
    "code": "m2r5n",
+   "carId": 386777496,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Lancer Evolution V RS (J) '98",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -3072,7 +3686,9 @@
   },
   {
    "code": "m2r6n",
+   "carId": 386777560,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Lancer Evolution VI RS (J) '99",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -3082,7 +3698,9 @@
   },
   {
    "code": "m2srn",
+   "carId": 386783000,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "3000GT SL",
    "drivetrain": "AWD",
    "engine": "V6 DOHC NA",
@@ -3092,7 +3710,9 @@
   },
   {
    "code": "m2tfr",
+   "carId": 386786332,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Taeivon FTO GT(J) '99",
    "drivetrain": "FF",
    "engine": "V6 DOHC TURBO",
@@ -3102,7 +3722,9 @@
   },
   {
    "code": "m2tlr",
+   "carId": 386786716,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "3000GT LM Edition '99",
    "drivetrain": "AWD",
    "engine": "DOHC TURBO",
@@ -3112,7 +3734,9 @@
   },
   {
    "code": "m2ttn",
+   "carId": 386787224,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "3000GT VR-4",
    "drivetrain": "AWD",
    "engine": "V6 DOHC TURBO",
@@ -3122,7 +3746,9 @@
   },
   {
    "code": "m2w5r",
+   "carId": 386797980,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Lancer Evolution V Rally Car '98",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -3132,7 +3758,9 @@
   },
   {
    "code": "m2w6r",
+   "carId": 386798044,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Lancer Evolution VI Rally Car '99",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -3142,7 +3770,9 @@
   },
   {
    "code": "mecln",
+   "carId": 389862808,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Eclipse GS-T",
    "drivetrain": "FF",
    "engine": "I4 DOHC TURBO",
@@ -3152,7 +3782,9 @@
   },
   {
    "code": "mftgn",
+   "carId": 390194264,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "FTO GR(J) '97",
    "drivetrain": "FF",
    "engine": "V6 DOHC NA",
@@ -3162,7 +3794,9 @@
   },
   {
    "code": "mftnn",
+   "carId": 390194712,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "FTO GP Version R(J) '97",
    "drivetrain": "FF",
    "engine": "V6 DOHC NA",
@@ -3172,7 +3806,9 @@
   },
   {
    "code": "mfton",
+   "carId": 390194776,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "FTO GPX(J) '94",
    "drivetrain": "FF",
    "engine": "V6 DOHC NA",
@@ -3182,7 +3818,9 @@
   },
   {
    "code": "mftrn",
+   "carId": 390194968,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "FTO GR(J) '94",
    "drivetrain": "FF",
    "engine": "V6 DOHC NA",
@@ -3192,7 +3830,9 @@
   },
   {
    "code": "mftxn",
+   "carId": 390195352,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "FTO GPX(J) '97",
    "drivetrain": "FF",
    "engine": "V6 DOHC NA",
@@ -3202,7 +3842,9 @@
   },
   {
    "code": "mgagn",
+   "carId": 390378584,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Galant VR-G Touring(J) '96",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -3212,7 +3854,9 @@
   },
   {
    "code": "mgaln",
+   "carId": 390378904,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Galant VR-4(J) '96",
    "drivetrain": "AWD",
    "engine": "V6 DOHC TURBO",
@@ -3222,7 +3866,9 @@
   },
   {
    "code": "mgnon",
+   "carId": 390432344,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "3000GT SL",
    "drivetrain": "AWD",
    "engine": "V6 DOHC NA",
@@ -3232,7 +3878,9 @@
   },
   {
    "code": "mgntn",
+   "carId": 390432664,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "3000GT VR-4 Turbo",
    "drivetrain": "AWD",
    "engine": "V6 DOHC TURBO",
@@ -3242,7 +3890,9 @@
   },
   {
    "code": "mgoon",
+   "carId": 390436440,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "3000GT (J) '92",
    "drivetrain": "AWD",
    "engine": "V6 DOHC NA",
@@ -3252,7 +3902,9 @@
   },
   {
    "code": "mgotn",
+   "carId": 390436760,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "3000GT VR-4",
    "drivetrain": "AWD",
    "engine": "V6 DOHC TURBO",
@@ -3262,7 +3914,9 @@
   },
   {
    "code": "mgtlr",
+   "carId": 390456732,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "3000GT LM Edition",
    "drivetrain": "AWD",
    "engine": "DOHC TURBO",
@@ -3272,7 +3926,9 @@
   },
   {
    "code": "mgtmn",
+   "carId": 390456792,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "3000GT MR(J) '95",
    "drivetrain": "AWD",
    "engine": "V6 DOHC TURBO",
@@ -3282,7 +3938,9 @@
   },
   {
    "code": "mgton",
+   "carId": 390456920,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "3000GT SL",
    "drivetrain": "AWD",
    "engine": "V6 DOHC NA",
@@ -3292,7 +3950,9 @@
   },
   {
    "code": "mgttn",
+   "carId": 390457240,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "3000GT VR-4 Turbo",
    "drivetrain": "AWD",
    "engine": "V6 DOHC TURBO",
@@ -3302,7 +3962,9 @@
   },
   {
    "code": "mlnnn",
+   "carId": 391743000,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Lancer EvolutionIV GSR(J) '96",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -3312,7 +3974,9 @@
   },
   {
    "code": "mlnon",
+   "carId": 391743064,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Lancer EvolutionIII GSR(J) '95",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -3322,7 +3986,9 @@
   },
   {
    "code": "mmgon",
+   "carId": 391976536,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Mirage Cyborg R(J) '92",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -3332,7 +3998,9 @@
   },
   {
    "code": "mmgrn",
+   "carId": 391976728,
    "manufacturer": "Mitsubishi",
+   "manufacturerId": 22,
    "name": "Mirage Asti RX(J) '96",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -3342,7 +4010,9 @@
   },
   {
    "code": "n-00n",
+   "carId": 402657368,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Nismo 400R (J)",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3352,7 +4022,9 @@
   },
   {
    "code": "n-18n",
+   "carId": 402661976,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Sileighty (J)",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -3362,7 +4034,9 @@
   },
   {
    "code": "n180n",
+   "carId": 403214424,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "240SX Fastback Type X(J) '96",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -3372,7 +4046,9 @@
   },
   {
    "code": "n18nn",
+   "carId": 403215896,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "240SX Fastback Type X(J) '96",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -3382,7 +4058,9 @@
   },
   {
    "code": "n18sn",
+   "carId": 403216216,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "240SX Fastback Type S(J) '96",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -3392,7 +4070,9 @@
   },
   {
    "code": "n230n",
+   "carId": 403456088,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline 2000 RS-X (DR30,J) '84",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -3402,7 +4082,9 @@
   },
   {
    "code": "n231n",
+   "carId": 403456152,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GTS-R(R31,J) '87",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -3412,7 +4094,9 @@
   },
   {
    "code": "n234n",
+   "carId": 403456344,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline 25GT Turbo(R34,J) '98",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -3422,7 +4106,9 @@
   },
   {
    "code": "n239r",
+   "carId": 403456668,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "R390 GT1 LM Race Car '97",
    "drivetrain": "MR",
    "engine": "V8 DOHC TURBO",
@@ -3432,7 +4118,9 @@
   },
   {
    "code": "n23nn",
+   "carId": 403457560,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "R390 GT1 Road Car '97",
    "drivetrain": "MR",
    "engine": "V8 DOHC TURBO",
@@ -3442,7 +4130,9 @@
   },
   {
    "code": "n23sr",
+   "carId": 403457884,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline Silhouette Foumula (R30)",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -3452,7 +4142,9 @@
   },
   {
    "code": "n23zr",
+   "carId": 403458332,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Nissan 300ZX GT(J) '97",
    "drivetrain": "FR",
    "engine": "V6 DOHC TURBO",
@@ -3462,7 +4154,9 @@
   },
   {
    "code": "n240r",
+   "carId": 403460188,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "R390 GT1 LM Race Car '98",
    "drivetrain": "MR",
    "engine": "V8 DOHC TURBO",
@@ -3472,7 +4166,9 @@
   },
   {
    "code": "n24nn",
+   "carId": 403461656,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "R390 GT1 Road Car '98",
    "drivetrain": "MR",
    "engine": "V8 DOHC TURBO",
@@ -3482,7 +4178,9 @@
   },
   {
    "code": "n24pn",
+   "carId": 403461784,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Nismo 400R Preceiding Model(J)",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3492,7 +4190,9 @@
   },
   {
    "code": "n24rn",
+   "carId": 403461912,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GT-R(R34,J) '99",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3502,7 +4202,9 @@
   },
   {
    "code": "n24vn",
+   "carId": 403462168,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GT-R V-spec(R34,J) '99",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3512,7 +4214,9 @@
   },
   {
    "code": "n24zn",
+   "carId": 403462424,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Datsun 240Z 240ZG(HS30,J) '71",
    "drivetrain": "FR",
    "engine": "I6 OHC NA",
@@ -3522,7 +4226,9 @@
   },
   {
    "code": "n260n",
+   "carId": 403468376,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Stagea 260RS Tuned by Nismo(J)",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3532,7 +4238,9 @@
   },
   {
    "code": "n270n",
+   "carId": 403472472,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Nismo 270R (J)",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -3542,7 +4250,9 @@
   },
   {
    "code": "n271n",
+   "carId": 403472536,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GT-R(KPGC10,J) '71",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -3552,7 +4262,9 @@
   },
   {
    "code": "n280n",
+   "carId": 403476568,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline 280 Type MR(J)",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3562,7 +4274,9 @@
   },
   {
    "code": "n284n",
+   "carId": 403476824,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Stagea 25t RS Four V(J) '98",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3572,7 +4286,9 @@
   },
   {
    "code": "n28gn",
+   "carId": 403477592,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Stagea Autech Ver. 260RS (J) '98",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3582,7 +4298,9 @@
   },
   {
    "code": "n2cun",
+   "carId": 403494872,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Cube X(J) '98",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -3592,7 +4310,9 @@
   },
   {
    "code": "n2d3r",
+   "carId": 403497244,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "R33 Drag GT-R (J)",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3602,7 +4322,9 @@
   },
   {
    "code": "n2d8r",
+   "carId": 403497564,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Drag 180SX (J)",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -3612,7 +4334,9 @@
   },
   {
    "code": "n2dsr",
+   "carId": 403498844,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Daisin Silvia GT(J) '99",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -3622,7 +4346,9 @@
   },
   {
    "code": "n2g7r",
+   "carId": 403509788,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Zexel Skyline GT(J) '97",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3632,7 +4358,9 @@
   },
   {
    "code": "n2gcr",
+   "carId": 403510108,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Calsonic GT-R GT(J) '99",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3642,7 +4370,9 @@
   },
   {
    "code": "n2gkr",
+   "carId": 403510620,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Kure R33 GT(J) '97",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3652,7 +4382,9 @@
   },
   {
    "code": "n2gpr",
+   "carId": 403510940,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Pennzoil GT-R GT(J) '99",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3662,7 +4394,9 @@
   },
   {
    "code": "n2gur",
+   "carId": 403511260,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Unisia GT-R GT(J) '99",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3672,7 +4406,9 @@
   },
   {
    "code": "n2gzr",
+   "carId": 403511580,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Arta GT-R GT(J) '99",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3682,7 +4418,9 @@
   },
   {
    "code": "n2ksn",
+   "carId": 403527512,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "240SX K's Aero(J) '98",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -3692,7 +4430,9 @@
   },
   {
    "code": "n2m2n",
+   "carId": 403534040,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Mine's R32.5 Skyline GT-R(J)",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3702,7 +4442,9 @@
   },
   {
    "code": "n2m3n",
+   "carId": 403534104,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Mine's R33 Skyline GT-R(J)",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3712,7 +4454,9 @@
   },
   {
    "code": "n2m4n",
+   "carId": 403534168,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Mine's R34 Skyline GT-R(J)",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3722,7 +4466,9 @@
   },
   {
    "code": "n2man",
+   "carId": 403534552,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "March G#(J) '97",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -3732,7 +4478,9 @@
   },
   {
    "code": "n2mtn",
+   "carId": 403535768,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "March Super Turbo(J) '89",
    "drivetrain": "FF",
    "engine": "I4 OHC MA+TURBO",
@@ -3742,7 +4490,9 @@
   },
   {
    "code": "n2p1n",
+   "carId": 403546264,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Pulsar Serie VZ-R N1(J) '97",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -3752,7 +4502,9 @@
   },
   {
    "code": "n2p2n",
+   "carId": 403546328,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Infiniti G20 2.0Te-V(J) '98",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -3762,7 +4514,9 @@
   },
   {
    "code": "n2pvn",
+   "carId": 403548184,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Pulsar Serie VZ-R(J) '97",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -3772,7 +4526,9 @@
   },
   {
    "code": "n2pwn",
+   "carId": 403548248,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Primera Wagon 2.0G-V(J) '98",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -3782,7 +4538,9 @@
   },
   {
    "code": "n2r4n",
+   "carId": 403554648,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GT-R 4Door(R33,J) '97",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3792,7 +4550,9 @@
   },
   {
    "code": "n2rnn",
+   "carId": 403555864,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "GT-R 4Door Tuned by Nismo(J)",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3802,7 +4562,9 @@
   },
   {
    "code": "n2rtn",
+   "carId": 403556248,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "300ZX 2by2 Twin Turbo(J) '98",
    "drivetrain": "FR",
    "engine": "V6 DOHC TURBO",
@@ -3812,7 +4574,9 @@
   },
   {
    "code": "n2s4n",
+   "carId": 403558744,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Stagea RS Four V(J) '97",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3822,7 +4586,9 @@
   },
   {
    "code": "n2sgn",
+   "carId": 403559512,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Stagea Autech Ver. 260RS (J) '97",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3832,7 +4598,9 @@
   },
   {
    "code": "n2skn",
+   "carId": 403559768,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Silvia Spec R(J) '99",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -3842,7 +4610,9 @@
   },
   {
    "code": "n2snn",
+   "carId": 403559960,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Sunny VZ-R(J) '98",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -3852,7 +4622,9 @@
   },
   {
    "code": "n2sqn",
+   "carId": 403560152,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Silvia Spec S(J) '99",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -3862,7 +4634,9 @@
   },
   {
    "code": "n2stn",
+   "carId": 403560344,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "300ZX 2seater Twin Turbo(J) '98",
    "drivetrain": "FR",
    "engine": "V6 DOHC TURBO",
@@ -3872,7 +4646,9 @@
   },
   {
    "code": "n2sxn",
+   "carId": 403560600,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Silvia Spec R Aero(J) '99",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -3882,7 +4658,9 @@
   },
   {
    "code": "n2syn",
+   "carId": 403560664,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Silvia Spec S Aero(J) '99",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -3892,7 +4670,9 @@
   },
   {
    "code": "n2xsr",
+   "carId": 403580764,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Zanavi Silvia GT(J) '99",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -3902,7 +4682,9 @@
   },
   {
    "code": "n2zrn",
+   "carId": 403588888,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "300ZX Version R 2by2(J) '98",
    "drivetrain": "FR",
    "engine": "V6 DOHC NA",
@@ -3912,7 +4694,9 @@
   },
   {
    "code": "n2zsn",
+   "carId": 403588952,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "300ZX Version S 2seater(J) '98",
    "drivetrain": "FR",
    "engine": "V6 DOHC NA",
@@ -3922,7 +4706,9 @@
   },
   {
    "code": "n432n",
+   "carId": 403980504,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GTS4(R32,J) '91",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3932,7 +4718,9 @@
   },
   {
    "code": "nax3n",
+   "carId": 405676312,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "300ZX 2-seater",
    "drivetrain": "FR",
    "engine": "V6 DOHC NA",
@@ -3942,7 +4730,9 @@
   },
   {
    "code": "naxsn",
+   "carId": 405677912,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "300ZX Turbo",
    "drivetrain": "FR",
    "engine": "V6 DOHC TURBO",
@@ -3952,7 +4742,9 @@
   },
   {
    "code": "naxvn",
+   "carId": 405678104,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "300ZX 2+2",
    "drivetrain": "FR",
    "engine": "V6 DOHC NA",
@@ -3962,7 +4754,9 @@
   },
   {
    "code": "nl33n",
+   "carId": 408437016,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "NismoGT-R LM Road Car(R33,J)",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -3972,7 +4766,9 @@
   },
   {
    "code": "nm32n",
+   "carId": 408699096,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GTS25 Type S(R32,J) '91",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -3982,7 +4778,9 @@
   },
   {
    "code": "nn32n",
+   "carId": 408961240,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GT-R NISMO(R32,J) '90",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -3992,7 +4790,9 @@
   },
   {
    "code": "nplon",
+   "carId": 409560664,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Pulsar GTi-R(J) '91",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -4002,7 +4802,9 @@
   },
   {
    "code": "nprin",
+   "carId": 409584856,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Infiniti G20 2.0Te(J) '96",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -4012,7 +4814,9 @@
   },
   {
    "code": "npron",
+   "carId": 409585240,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Infiniti G20 2.0Te(J) '91",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -4022,7 +4826,9 @@
   },
   {
    "code": "nq13n",
+   "carId": 409739544,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Silvia Q's 1800cc (J) '88",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -4032,7 +4838,9 @@
   },
   {
    "code": "nq14n",
+   "carId": 409739608,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "240SX Q's (J) '95",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -4042,7 +4850,9 @@
   },
   {
    "code": "nq15n",
+   "carId": 409739672,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "240SX Q's Aero(J) '97",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -4052,7 +4862,9 @@
   },
   {
    "code": "nq23n",
+   "carId": 409743640,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Silvia Q's 2000cc (J) '91",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -4062,7 +4874,9 @@
   },
   {
    "code": "nr02n",
+   "carId": 409997528,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GT-R(R32,J) '89",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -4072,7 +4886,9 @@
   },
   {
    "code": "nr32n",
+   "carId": 410009816,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GT-R(R32,J) '91",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -4082,7 +4898,9 @@
   },
   {
    "code": "nr33n",
+   "carId": 410009880,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GT-R(R33,J) '95",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -4092,7 +4910,9 @@
   },
   {
    "code": "nr34n",
+   "carId": 410009944,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GT-R(R33,J) '97",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -4102,7 +4922,9 @@
   },
   {
    "code": "ns13n",
+   "carId": 410263832,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Silvia K's 1800cc (J) '88",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -4112,7 +4934,9 @@
   },
   {
    "code": "ns14n",
+   "carId": 410263896,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "240SX K's (J) '95",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -4122,7 +4946,9 @@
   },
   {
    "code": "ns15n",
+   "carId": 410263960,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "240SX K's Aero(J) '96",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -4132,7 +4958,9 @@
   },
   {
    "code": "ns23n",
+   "carId": 410267928,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Silvia K's 2000cc (J) '91",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -4142,7 +4970,9 @@
   },
   {
    "code": "nt32n",
+   "carId": 410534104,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GTS-t Type M(R32,J) '91",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -4152,7 +4982,9 @@
   },
   {
    "code": "nt33n",
+   "carId": 410534168,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GTS25t Type M(R33,J) '96",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -4162,7 +4994,9 @@
   },
   {
    "code": "nv12n",
+   "carId": 411050200,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GT-R Vspec(R32,J) '93",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -4172,7 +5006,9 @@
   },
   {
    "code": "nv22n",
+   "carId": 411054296,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GT-R Vspec II(R32,J) '94",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -4182,7 +5018,9 @@
   },
   {
    "code": "nv33n",
+   "carId": 411058456,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GT-R Vspec(R33,J) '95",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -4192,7 +5030,9 @@
   },
   {
    "code": "nv34n",
+   "carId": 411058520,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "Skyline GT-R Vspec(R33,J) '97",
    "drivetrain": "AWD",
    "engine": "I6 DOHC TURBO",
@@ -4202,7 +5042,9 @@
   },
   {
    "code": "nzx2n",
+   "carId": 412229848,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "300ZX 2by2 Twin Turbo(J) '94",
    "drivetrain": "FR",
    "engine": "V6 DOHC TURBO",
@@ -4212,7 +5054,9 @@
   },
   {
    "code": "nzx3n",
+   "carId": 412229912,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "300ZX 2-seater",
    "drivetrain": "FR",
    "engine": "V6 DOHC NA",
@@ -4222,7 +5066,9 @@
   },
   {
    "code": "nzxsn",
+   "carId": 412231512,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "300ZX Turbo",
    "drivetrain": "FR",
    "engine": "V6 DOHC TURBO",
@@ -4232,7 +5078,9 @@
   },
   {
    "code": "nzxvn",
+   "carId": 412231704,
    "manufacturer": "Nissan",
+   "manufacturerId": 23,
    "name": "300ZX 2+2",
    "drivetrain": "FR",
    "engine": "V6 DOHC NA",
@@ -4242,7 +5090,9 @@
   },
   {
    "code": "q2m2n",
+   "carId": 453865688,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Move SR-XX(2WD,J) '97",
    "drivetrain": "FF",
    "engine": "I4 DOHC TURBO",
@@ -4252,7 +5102,9 @@
   },
   {
    "code": "q2m4n",
+   "carId": 453865816,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Move SR-XX(4WD,J) '97",
    "drivetrain": "AWD",
    "engine": "I3 DOHC TURBO",
@@ -4262,7 +5114,9 @@
   },
   {
    "code": "q2m8n",
+   "carId": 453866072,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Move SR-XX(4WD,J) '98",
    "drivetrain": "AWD",
    "engine": "I3 DOHC TURBO",
@@ -4272,7 +5126,9 @@
   },
   {
    "code": "q2mcn",
+   "carId": 453866328,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Move Custom (4WD,J) '98",
    "drivetrain": "AWD",
    "engine": "I3 DOHC TURBO",
@@ -4282,7 +5138,9 @@
   },
   {
    "code": "q2min",
+   "carId": 453866712,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Midget II D-type(J)",
    "drivetrain": "FR",
    "engine": "I3 SOHC NA",
@@ -4292,7 +5150,9 @@
   },
   {
    "code": "q2mon",
+   "carId": 453867096,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Mira TR-XX(J) '90",
    "drivetrain": "AWD",
    "engine": "I3 DOHC TURBO",
@@ -4302,7 +5162,9 @@
   },
   {
    "code": "q2mvn",
+   "carId": 453867544,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Move CX(J) '95",
    "drivetrain": "FF",
    "engine": "I3 DOHC NA",
@@ -4312,7 +5174,9 @@
   },
   {
    "code": "q2o4n",
+   "carId": 453874008,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Opti Club Sport(4WD,J) '97",
    "drivetrain": "AWD",
    "engine": "I3 DOHC NA",
@@ -4322,7 +5186,9 @@
   },
   {
    "code": "q2oen",
+   "carId": 453874648,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Opti Aerodown Beex(4WD,J) '98",
    "drivetrain": "AWD",
    "engine": "I3 DOHC TURBO",
@@ -4332,7 +5198,9 @@
   },
   {
    "code": "q2opn",
+   "carId": 453875352,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Opti Club Sport(2WD,J) '97",
    "drivetrain": "FF",
    "engine": "I3 DOHC NA",
@@ -4342,7 +5210,9 @@
   },
   {
    "code": "q2s4n",
+   "carId": 453890392,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Storia CX(4WD,J) '98",
    "drivetrain": "AWD",
    "engine": "I3 DOHC NA",
@@ -4352,7 +5222,9 @@
   },
   {
    "code": "q2sgr",
+   "carId": 453891164,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Storia Rally Car",
    "drivetrain": "AWD",
    "engine": "DOHC TURBO",
@@ -4362,7 +5234,9 @@
   },
   {
    "code": "q2stn",
+   "carId": 453891992,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Storia CX(2WD,J) '98",
    "drivetrain": "FF",
    "engine": "I3 DOHC NA",
@@ -4372,7 +5246,9 @@
   },
   {
    "code": "q2ten",
+   "carId": 453895128,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Terios Kid Aerodown(J) '98",
    "drivetrain": "AWD",
    "engine": "I3 DOHC TURBO",
@@ -4382,7 +5258,9 @@
   },
   {
    "code": "q2trn",
+   "carId": 453895960,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Mira TR(4WD,J) '98",
    "drivetrain": "AWD",
    "engine": "I3 DOHC TURBO",
@@ -4392,7 +5270,9 @@
   },
   {
    "code": "q2txn",
+   "carId": 453896344,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Mira TX(4WD,J) '98",
    "drivetrain": "AWD",
    "engine": "I3 DOHC TURBO",
@@ -4402,7 +5282,9 @@
   },
   {
    "code": "q2x4n",
+   "carId": 453910872,
    "manufacturer": "Daihatsu",
+   "manufacturerId": 7,
    "name": "Storia X4(J) '98",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -4412,7 +5294,9 @@
   },
   {
    "code": "s222n",
+   "carId": 487338200,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza 22B STi Version(J) '98",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4422,7 +5306,9 @@
   },
   {
    "code": "s236n",
+   "carId": 487342552,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Subaru 360",
    "drivetrain": "RR",
    "engine": "I2 NA",
@@ -4432,7 +5318,9 @@
   },
   {
    "code": "s2a6n",
+   "carId": 487371224,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza typeRA STi Ver.VI(J)'99",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4442,7 +5330,9 @@
   },
   {
    "code": "s2cir",
+   "carId": 487380188,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Cusco Impreza GT(J) '99",
    "drivetrain": "FR",
    "engine": "Boxer4 DOHC TURBO",
@@ -4452,7 +5342,9 @@
   },
   {
    "code": "s2fon",
+   "carId": 487392856,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Forester S/tb(J) '97",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4462,7 +5354,9 @@
   },
   {
    "code": "s2i4n",
+   "carId": 487403864,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Sedan STi Ver.IV(J)'97",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4472,7 +5366,9 @@
   },
   {
    "code": "s2i5n",
+   "carId": 487403928,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Sedan STi Ver.V(J)'98",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4482,7 +5378,9 @@
   },
   {
    "code": "s2i6n",
+   "carId": 487403992,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Sedan STi Ver. VI(J) '99",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4492,7 +5390,9 @@
   },
   {
    "code": "s2irr",
+   "carId": 487405340,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Rally Car(J) '99",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4502,7 +5402,9 @@
   },
   {
    "code": "s2iwn",
+   "carId": 487405656,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Sedan(J)'97",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4512,7 +5414,9 @@
   },
   {
    "code": "s2lbn",
+   "carId": 487416600,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Legacy Wagon GT-B(J) '97",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4522,7 +5426,9 @@
   },
   {
    "code": "s2lgn",
+   "carId": 487416920,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Legacy B4 RSK(J) '98",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4532,7 +5438,9 @@
   },
   {
    "code": "s2lwn",
+   "carId": 487417944,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Legacy Wagon GT-B(J) '98",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4542,7 +5450,9 @@
   },
   {
    "code": "s2nin",
+   "carId": 487425240,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Sedan (J)'98",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4552,7 +5462,9 @@
   },
   {
    "code": "s2nwn",
+   "carId": 487426136,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Wagon (J)'98",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4562,7 +5474,9 @@
   },
   {
    "code": "s2pmn",
+   "carId": 487433688,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Pleo RM(J) '98",
    "drivetrain": "AWD",
    "engine": "I4 SOHC MA",
@@ -4572,7 +5486,9 @@
   },
   {
    "code": "s2psn",
+   "carId": 487434072,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Pleo RS(J) '98",
    "drivetrain": "FF",
    "engine": "I4 DOHC MA",
@@ -4582,7 +5498,9 @@
   },
   {
    "code": "s2r4n",
+   "carId": 487440728,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza typeR  STi Ver.IV(J)'97",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4592,7 +5510,9 @@
   },
   {
    "code": "s2r5n",
+   "carId": 487440792,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza typeR STi Ver.V(J)'98",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4602,7 +5522,9 @@
   },
   {
    "code": "s2r6n",
+   "carId": 487440856,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza typeR STi Ver.VI(J)'99",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4612,7 +5534,9 @@
   },
   {
    "code": "s2v4n",
+   "carId": 487457112,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Vivio RX-RA(J) '97",
    "drivetrain": "AWD",
    "engine": "I4 DOHC MA",
@@ -4622,7 +5546,9 @@
   },
   {
    "code": "s2vin",
+   "carId": 487458008,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Vivio RX-R(J) '97",
    "drivetrain": "AWD",
    "engine": "I4 DOHC MA",
@@ -4632,7 +5558,9 @@
   },
   {
    "code": "s2w4n",
+   "carId": 487461208,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Wagon STi Ver.IV(J)'97",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4642,7 +5570,9 @@
   },
   {
    "code": "s2w5n",
+   "carId": 487461272,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Wagon STi Ver.V (J)'98",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4652,7 +5582,9 @@
   },
   {
    "code": "s2w6n",
+   "carId": 487461336,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Wagon STi Ver.VI (J) '99",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4662,7 +5594,9 @@
   },
   {
    "code": "s2wwn",
+   "carId": 487463000,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Wagon(J)'97",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4672,7 +5606,9 @@
   },
   {
    "code": "sipan",
+   "carId": 491627224,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Sedan WRX(J) '96",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4682,7 +5618,9 @@
   },
   {
    "code": "sipbn",
+   "carId": 491627288,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Sedan STi versionIII(J) '96",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4692,7 +5630,9 @@
   },
   {
    "code": "sipcn",
+   "carId": 491627352,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Wagon (J) '96",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4702,7 +5642,9 @@
   },
   {
    "code": "sipdn",
+   "carId": 491627416,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Wagon STi versionIII(J)'96",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4712,7 +5654,9 @@
   },
   {
    "code": "siprn",
+   "carId": 491628312,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza typeR STi Ver.(J) '96",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4722,7 +5666,9 @@
   },
   {
    "code": "sipsn",
+   "carId": 491628376,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Sedan STi versionII(J)'95",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4732,7 +5678,9 @@
   },
   {
    "code": "siptn",
+   "carId": 491628440,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Wagon STi versionII(J)'95",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4742,7 +5690,9 @@
   },
   {
    "code": "sipwn",
+   "carId": 491628632,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Wagon(J)'94",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4752,7 +5702,9 @@
   },
   {
    "code": "sipxr",
+   "carId": 491628700,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Rally Car",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4762,7 +5714,9 @@
   },
   {
    "code": "sipzn",
+   "carId": 491628824,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Impreza Sedan(J)'94",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4772,7 +5726,9 @@
   },
   {
    "code": "slgan",
+   "carId": 492376792,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Legacy Wagon GT-B(J) '96",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4782,7 +5738,9 @@
   },
   {
    "code": "slgbn",
+   "carId": 492376856,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Legacy Sedan RS(J) '96",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4792,7 +5750,9 @@
   },
   {
    "code": "slgnn",
+   "carId": 492377624,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Legacy Sports RS(J) '93",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4802,7 +5762,9 @@
   },
   {
    "code": "slgwn",
+   "carId": 492378200,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "Legacy Wagon GT(J) '93",
    "drivetrain": "AWD",
    "engine": "Boxer4 DOHC TURBO",
@@ -4812,7 +5774,9 @@
   },
   {
    "code": "ssv4n",
+   "carId": 494272856,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "SVX S4(J) '95",
    "drivetrain": "AWD",
    "engine": "Boxer6 DOHC NA",
@@ -4822,7 +5786,9 @@
   },
   {
    "code": "ssvxn",
+   "carId": 494274712,
    "manufacturer": "Subaru",
+   "manufacturerId": 30,
    "name": "SVX Lsi '95",
    "drivetrain": "AWD",
    "engine": "Boxer6 DOHC NA",
@@ -4832,7 +5798,9 @@
   },
   {
    "code": "t-rdn",
+   "carId": 503432088,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "TRD3000GT (J)",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -4842,7 +5810,9 @@
   },
   {
    "code": "t211n",
+   "carId": 504111256,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "MR2 1600G-Limited(J) '86",
    "drivetrain": "MR",
    "engine": "I4 DOHC MA",
@@ -4852,7 +5822,9 @@
   },
   {
    "code": "t22dn",
+   "carId": 504116120,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "TRD2000GT (J)",
    "drivetrain": "MR",
    "engine": "I4 DOHC TURBO",
@@ -4862,7 +5834,9 @@
   },
   {
    "code": "t22gn",
+   "carId": 504116312,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "2000GT GT '68",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -4872,7 +5846,9 @@
   },
   {
    "code": "t22hn",
+   "carId": 504116376,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "2000GT GT '68",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -4882,7 +5858,9 @@
   },
   {
    "code": "t261n",
+   "carId": 504131736,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Starlet 3 Door Turbo S(J) '82",
    "drivetrain": "FR",
    "engine": "I4 OHV NA",
@@ -4892,7 +5870,9 @@
   },
   {
    "code": "t271n",
+   "carId": 504135832,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Starlet 3 Door Turbo S(J) '87",
    "drivetrain": "FF",
    "engine": "I4 OHC TURBO",
@@ -4902,7 +5882,9 @@
   },
   {
    "code": "t285n",
+   "carId": 504140184,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Celica GT-Four(J) '88",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -4912,7 +5894,9 @@
   },
   {
    "code": "t286r",
+   "carId": 504140252,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "BP Trueno GT(J) '99",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -4922,7 +5906,9 @@
   },
   {
    "code": "t291n",
+   "carId": 504144024,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Altezza RS200(J) '98",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -4932,7 +5918,9 @@
   },
   {
    "code": "t292n",
+   "carId": 504144088,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Lexus IS",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -4942,7 +5930,9 @@
   },
   {
    "code": "t29lr",
+   "carId": 504145308,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Altezza LM Edition",
    "drivetrain": "FR",
    "engine": "DOHC TURBO",
@@ -4952,7 +5942,9 @@
   },
   {
    "code": "t29nn",
+   "carId": 504145432,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Altezza 280T(Tuned by Tom's,J)",
    "drivetrain": "FR",
    "engine": "I4 DOHC TURBO",
@@ -4962,7 +5954,9 @@
   },
   {
    "code": "t2a1n",
+   "carId": 504148120,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Aristo 3.0V(J) '91",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -4972,7 +5966,9 @@
   },
   {
    "code": "t2a3n",
+   "carId": 504148248,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Aristo V300(J) '97",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -4982,7 +5978,9 @@
   },
   {
    "code": "t2c3n",
+   "carId": 504156440,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Celica  '97",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -4992,7 +5990,9 @@
   },
   {
    "code": "t2c4n",
+   "carId": 504156504,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Celica GT-Four(J) '91",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -5002,7 +6002,9 @@
   },
   {
    "code": "t2can",
+   "carId": 504156888,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Caldina GT-T(J) '97",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -5012,7 +6014,9 @@
   },
   {
    "code": "t2cdn",
+   "carId": 504157080,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "XYR  '99",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -5022,7 +6026,9 @@
   },
   {
    "code": "t2cen",
+   "carId": 504157144,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Celica Elegant Version(J) '99",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -5032,7 +6038,9 @@
   },
   {
    "code": "t2clr",
+   "carId": 504157596,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Celica Rally Car",
    "drivetrain": "AWD",
    "engine": "DOHC TURBO",
@@ -5042,7 +6050,9 @@
   },
   {
    "code": "t2cmn",
+   "carId": 504157656,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Celica Mecanical Version(J) '99",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -5052,7 +6062,9 @@
   },
   {
    "code": "t2con",
+   "carId": 504157784,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Celica GT-R(J) '91",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -5062,7 +6074,9 @@
   },
   {
    "code": "t2crn",
+   "carId": 504157976,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Celica GT-Four RC(J) '91",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -5072,7 +6086,9 @@
   },
   {
    "code": "t2cwr",
+   "carId": 504158300,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Corolla Rally Car '97",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -5082,7 +6098,9 @@
   },
   {
    "code": "t2cxr",
+   "carId": 504158364,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Corolla Rally Car '98",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -5092,7 +6110,9 @@
   },
   {
    "code": "t2cyn",
+   "carId": 504158424,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Celica SS-II(J) '99",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -5102,7 +6122,9 @@
   },
   {
    "code": "t2g1n",
+   "carId": 504172696,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "GT-ONE Road Car '98",
    "drivetrain": "MR",
    "engine": "V8 DOHC TURBO",
@@ -5112,7 +6134,9 @@
   },
   {
    "code": "t2g8r",
+   "carId": 504173148,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "GT-ONE Race Car '98",
    "drivetrain": "MR",
    "engine": "V8 DOHC TURBO",
@@ -5122,7 +6146,9 @@
   },
   {
    "code": "t2g9r",
+   "carId": 504173212,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "GT-ONE Race Car '99",
    "drivetrain": "MR",
    "engine": "V8 DOHC TURBO",
@@ -5132,7 +6158,9 @@
   },
   {
    "code": "t2h8r",
+   "carId": 504177244,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "GT-ONE Race Car '98",
    "drivetrain": "MR",
    "engine": "V8 DOHC TURBO",
@@ -5142,7 +6170,9 @@
   },
   {
    "code": "t2h9r",
+   "carId": 504177308,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "GT-ONE Race Car '99",
    "drivetrain": "MR",
    "engine": "V8 DOHC TURBO",
@@ -5152,7 +6182,9 @@
   },
   {
    "code": "t2isn",
+   "carId": 504182616,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Lexus IS 200",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -5162,7 +6194,9 @@
   },
   {
    "code": "t2lgn",
+   "carId": 504194136,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Lexus GS 400",
    "drivetrain": "FR",
    "engine": "V8 DOHC NA",
@@ -5172,7 +6206,9 @@
   },
   {
    "code": "t2lsn",
+   "carId": 504194904,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Lexus SC 400",
    "drivetrain": "FR",
    "engine": "V8 DOHC NA",
@@ -5182,7 +6218,9 @@
   },
   {
    "code": "t2lvn",
+   "carId": 504195096,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Levin BZR(J) '98",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -5192,7 +6230,9 @@
   },
   {
    "code": "t2m2n",
+   "carId": 504197336,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "MR2 GT-S(J) '98",
    "drivetrain": "MR",
    "engine": "I4 DOHC TURBO",
@@ -5202,7 +6242,9 @@
   },
   {
    "code": "t2mgn",
+   "carId": 504198232,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "MR2 G-Limited(J) '98",
    "drivetrain": "MR",
    "engine": "I4 DOHC NA",
@@ -5212,7 +6254,9 @@
   },
   {
    "code": "t2mmr",
+   "carId": 504198620,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Momo MR2 GT(J) '99",
    "drivetrain": "MR",
    "engine": "I4 DOHC TURBO",
@@ -5222,7 +6266,9 @@
   },
   {
    "code": "t2msn",
+   "carId": 504199000,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "MR-S S Edition(J) '99",
    "drivetrain": "MR",
    "engine": "I4 DOHC NA",
@@ -5232,7 +6278,9 @@
   },
   {
    "code": "t2mtn",
+   "carId": 504199064,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "MR-S Show Version(J) '97",
    "drivetrain": "MR",
    "engine": "I4 DOHC NA",
@@ -5242,7 +6290,9 @@
   },
   {
    "code": "t2o3n",
+   "carId": 504205592,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Lexus SC 300",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -5252,7 +6302,9 @@
   },
   {
    "code": "t2prn",
+   "carId": 504211224,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "PRIUS (J) '97",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -5262,7 +6314,9 @@
   },
   {
    "code": "t2s3n",
+   "carId": 504221976,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Lexus GS 300",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -5272,7 +6326,9 @@
   },
   {
    "code": "t2scr",
+   "carId": 504222556,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Castrol Supra GT(J) '99",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -5282,7 +6338,9 @@
   },
   {
    "code": "t2sdr",
+   "carId": 504222620,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Denso Supra GT(J) '99",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -5292,7 +6350,9 @@
   },
   {
    "code": "t2sor",
+   "carId": 504223324,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Cerumo Supra GT(J) '99",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -5302,7 +6362,9 @@
   },
   {
    "code": "t2spn",
+   "carId": 504223384,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "MR Spider (J) '96",
    "drivetrain": "MR",
    "engine": "I4 DOHC NA",
@@ -5312,7 +6374,9 @@
   },
   {
    "code": "t2srn",
+   "carId": 504223512,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Supra SZ-R(J) '97",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -5322,7 +6386,9 @@
   },
   {
    "code": "t2ssn",
+   "carId": 504223576,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Supra RZ(J) '97",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -5332,7 +6398,9 @@
   },
   {
    "code": "t2svn",
+   "carId": 504223768,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Starlet Glanza V(J) '98",
    "drivetrain": "FF",
    "engine": "I4 DOHC TURBO",
@@ -5342,7 +6410,9 @@
   },
   {
    "code": "t2t1n",
+   "carId": 504225944,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Tom's T111 (J)",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -5352,7 +6422,9 @@
   },
   {
    "code": "t2t2n",
+   "carId": 504226008,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Tom's T020 (J)",
    "drivetrain": "MR",
    "engine": "I4 DOHC NA",
@@ -5362,7 +6434,9 @@
   },
   {
    "code": "t2t8n",
+   "carId": 504226392,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Tom's Supra (J)",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -5372,7 +6446,9 @@
   },
   {
    "code": "t2tan",
+   "carId": 504226520,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Angel T01 (J)",
    "drivetrain": "MR",
    "engine": "I4 DOHC NA",
@@ -5382,7 +6458,9 @@
   },
   {
    "code": "t2trn",
+   "carId": 504227608,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Trueno BZR(J) '98",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -5392,7 +6470,9 @@
   },
   {
    "code": "t2vzn",
+   "carId": 504236312,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Vitz F(J) '99",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -5402,7 +6482,9 @@
   },
   {
    "code": "t2wsr",
+   "carId": 504239964,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Weds Celica GT(J) '99",
    "drivetrain": "FF",
    "engine": "I4 DOHC TURBO",
@@ -5412,7 +6494,9 @@
   },
   {
    "code": "t2x3n",
+   "carId": 504242456,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Chaser TRD Sports X30(J)",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -5422,7 +6506,9 @@
   },
   {
    "code": "t2xxn",
+   "carId": 504244376,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Celica  '84",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -5432,7 +6518,9 @@
   },
   {
    "code": "tcegn",
+   "carId": 506786904,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Celica GT-Four(J) '95",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -5442,7 +6530,9 @@
   },
   {
    "code": "tceln",
+   "carId": 506787224,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Celica  '96",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -5452,7 +6542,9 @@
   },
   {
    "code": "tchsn",
+   "carId": 506799960,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Chaser Tourer S(J) '96",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -5462,7 +6554,9 @@
   },
   {
    "code": "tchvn",
+   "carId": 506800152,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Chaser Tourer V(J) '96",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -5472,7 +6566,9 @@
   },
   {
    "code": "texvn",
+   "carId": 507389976,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Corona Exiv 200GT(J) '96",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -5482,7 +6578,9 @@
   },
   {
    "code": "tlevn",
+   "carId": 509147160,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Levin BZG(J) '96",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -5492,7 +6590,9 @@
   },
   {
    "code": "tlv1n",
+   "carId": 509214872,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Levin GT-APEX(TypeII,J) '85",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -5502,7 +6602,9 @@
   },
   {
    "code": "tlvon",
+   "carId": 509216344,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Levin GT-APEX(TypeI,J) '83",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -5512,7 +6614,9 @@
   },
   {
    "code": "tm2sn",
+   "carId": 509359960,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Mark II Tourer S(J) '92",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -5522,7 +6626,9 @@
   },
   {
    "code": "tm2vn",
+   "carId": 509360152,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Mark II Tourer V(J) '92",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -5532,7 +6638,9 @@
   },
   {
    "code": "tmr2n",
+   "carId": 509460696,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "MR2 GT-S(J) '96",
    "drivetrain": "MR",
    "engine": "I4 DOHC TURBO",
@@ -5542,7 +6650,9 @@
   },
   {
    "code": "tmrln",
+   "carId": 509461912,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "MR2 G-Limited(J) '96",
    "drivetrain": "MR",
    "engine": "I4 DOHC NA",
@@ -5552,7 +6662,9 @@
   },
   {
    "code": "tsgtn",
+   "carId": 510990232,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Supra (Turbo) '93",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -5562,7 +6674,9 @@
   },
   {
    "code": "tsoan",
+   "carId": 511021784,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Soarer 2.5GT-T VVT-i(J) '96",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -5572,7 +6686,9 @@
   },
   {
    "code": "tsonn",
+   "carId": 511022616,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Supra (Turbo) '96",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -5582,7 +6698,9 @@
   },
   {
    "code": "tsoon",
+   "carId": 511022680,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Soarer 2.5GT-T(J) '95",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -5592,7 +6710,9 @@
   },
   {
    "code": "tsorn",
+   "carId": 511022872,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Supra  '96",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -5602,7 +6722,9 @@
   },
   {
    "code": "tsplr",
+   "carId": 511026588,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Castrol Supra GT(J) '96",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -5612,7 +6734,9 @@
   },
   {
    "code": "tspnn",
+   "carId": 511026712,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Supra (Turbo) '97",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -5622,7 +6746,9 @@
   },
   {
    "code": "tspon",
+   "carId": 511026776,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Supra Twinturbo-R(J) '91",
    "drivetrain": "FR",
    "engine": "I6 DOHC TURBO",
@@ -5632,7 +6758,9 @@
   },
   {
    "code": "tsprn",
+   "carId": 511026968,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Supra  '97",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -5642,7 +6770,9 @@
   },
   {
    "code": "tstln",
+   "carId": 511042968,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Starlet Glanza V(J) '96",
    "drivetrain": "FF",
    "engine": "I4 DOHC TURBO",
@@ -5652,7 +6782,9 @@
   },
   {
    "code": "ttr1n",
+   "carId": 511295640,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Trueno GT-APEX(TypeII,J) '85",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -5662,7 +6794,9 @@
   },
   {
    "code": "ttrnn",
+   "carId": 511297048,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Trueno BZG(J) '96",
    "drivetrain": "FF",
    "engine": "I4 DOHC NA",
@@ -5672,7 +6806,9 @@
   },
   {
    "code": "ttron",
+   "carId": 511297112,
    "manufacturer": "Toyota",
+   "manufacturerId": 33,
    "name": "Trueno GT-APEX(TypeI,J) '83",
    "drivetrain": "FR",
    "engine": "I4 DOHC NA",
@@ -5682,7 +6818,9 @@
   },
   {
    "code": "uf40n",
+   "carId": 524308568,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "GT40",
    "drivetrain": "MR",
    "engine": "V8 NA",
@@ -5692,7 +6830,9 @@
   },
   {
    "code": "uf4lr",
+   "carId": 524309916,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "GT40 Race Car",
    "drivetrain": "MR",
    "engine": "NA",
@@ -5702,7 +6842,9 @@
   },
   {
    "code": "uf90n",
+   "carId": 524329048,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "GT90",
    "drivetrain": "MR",
    "engine": "V12 DOHC TURBO",
@@ -5712,7 +6854,9 @@
   },
   {
    "code": "ufc9n",
+   "carId": 524341912,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "Mustang SVT Cobra  '99",
    "drivetrain": "FR",
    "engine": "V8 DOHC NA",
@@ -5722,7 +6866,9 @@
   },
   {
    "code": "ufcrn",
+   "carId": 524343064,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "Mustang SVT Cobra  '98",
    "drivetrain": "FR",
    "engine": "V8 DOHC NA",
@@ -5732,7 +6878,9 @@
   },
   {
    "code": "ufm9n",
+   "carId": 524382872,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "Mustang GT '99",
    "drivetrain": "FR",
    "engine": "V8 SOHC NA",
@@ -5742,7 +6890,9 @@
   },
   {
    "code": "ufmun",
+   "carId": 524384216,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "Mustang GT '98",
    "drivetrain": "FR",
    "engine": "V8 SOHC NA",
@@ -5752,7 +6902,9 @@
   },
   {
    "code": "ufs9r",
+   "carId": 524407452,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "SR Widebody",
    "drivetrain": "FR",
    "engine": "DOHC NA",
@@ -5762,7 +6914,9 @@
   },
   {
    "code": "uftan",
+   "carId": 524411608,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "Taurus SHO '99",
    "drivetrain": "FF",
    "engine": "V8 DOHC NA",
@@ -5772,7 +6926,9 @@
   },
   {
    "code": "ulcun",
+   "carId": 525916120,
    "manufacturer": "Plymouth",
+   "manufacturerId": 26,
    "name": "Cuda  '70",
    "drivetrain": "FR",
    "engine": "V8 NA",
@@ -5782,7 +6938,9 @@
   },
   {
    "code": "ulgxn",
+   "carId": 525932696,
    "manufacturer": "Plymouth",
+   "manufacturerId": 26,
    "name": "GTX",
    "drivetrain": "FR",
    "engine": "V8 NA",
@@ -5792,7 +6950,9 @@
   },
   {
    "code": "ulpsn",
+   "carId": 525969240,
    "manufacturer": "Plymouth",
+   "manufacturerId": 26,
    "name": "PT Spyder",
    "drivetrain": "MR",
    "engine": "I4 DOHC MA",
@@ -5802,7 +6962,9 @@
   },
   {
    "code": "ulrrn",
+   "carId": 525977368,
    "manufacturer": "Plymouth",
+   "manufacturerId": 26,
    "name": "Muscle Car",
    "drivetrain": "FR",
    "engine": "V8 SOHC NA",
@@ -5812,7 +6974,9 @@
   },
   {
    "code": "ulsbn",
+   "carId": 525980440,
    "manufacturer": "Plymouth",
+   "manufacturerId": 26,
    "name": "Superbird",
    "drivetrain": "FR",
    "engine": "V8 NA",
@@ -5822,7 +6986,9 @@
   },
   {
    "code": "um67n",
+   "carId": 526152216,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "Cougar XR-7 '67",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -5832,7 +6998,9 @@
   },
   {
    "code": "umcon",
+   "carId": 526177880,
    "manufacturer": "Ford",
+   "manufacturerId": 10,
    "name": "Cougar  '99",
    "drivetrain": "FF",
    "engine": "V6 DOHC NA",
@@ -5842,7 +7010,9 @@
   },
   {
    "code": "us35n",
+   "carId": 527712664,
    "manufacturer": "Shelby",
+   "manufacturerId": 29,
    "name": "GT350  '66",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -5852,7 +7022,9 @@
   },
   {
    "code": "us36n",
+   "carId": 527712728,
    "manufacturer": "Shelby",
+   "manufacturerId": 29,
    "name": "GT350  '66",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -5862,7 +7034,9 @@
   },
   {
    "code": "us50n",
+   "carId": 527720536,
    "manufacturer": "Shelby",
+   "manufacturerId": 29,
    "name": "GT500  '68",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -5872,7 +7046,9 @@
   },
   {
    "code": "us51n",
+   "carId": 527720600,
    "manufacturer": "Shelby",
+   "manufacturerId": 29,
    "name": "GT500  '68",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -5882,7 +7058,9 @@
   },
   {
    "code": "usccr",
+   "carId": 527749980,
    "manufacturer": "Shelby",
+   "manufacturerId": 29,
    "name": "Cobra Coupe  '65",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -5892,7 +7070,9 @@
   },
   {
    "code": "uscon",
+   "carId": 527750744,
    "manufacturer": "Shelby",
+   "manufacturerId": 29,
    "name": "Cobra 427 '67",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -5902,7 +7082,9 @@
   },
   {
    "code": "uss1n",
+   "carId": 527814808,
    "manufacturer": "Shelby",
+   "manufacturerId": 29,
    "name": "Series 1",
    "drivetrain": "FR",
    "engine": "V8 DOHC NA",
@@ -5912,7 +7094,9 @@
   },
   {
    "code": "uv12n",
+   "carId": 528490712,
    "manufacturer": "Vector",
+   "manufacturerId": 36,
    "name": "M12",
    "drivetrain": "MR",
    "engine": "V12 DOHC NA",
@@ -5922,7 +7106,9 @@
   },
   {
    "code": "uv2lr",
+   "carId": 528496028,
    "manufacturer": "Vector",
+   "manufacturerId": 36,
    "name": "M12 LM Edition",
    "drivetrain": "MR",
    "engine": "V12 DOHC NA",
@@ -5932,7 +7118,9 @@
   },
   {
    "code": "uvw8n",
+   "carId": 528618072,
    "manufacturer": "Vector",
+   "manufacturerId": 36,
    "name": "Wiegert Vector W8 Twin Turbo",
    "drivetrain": "MR",
    "engine": "V8 TURBO",
@@ -5942,7 +7130,9 @@
   },
   {
    "code": "v-rbr",
+   "carId": 536986396,
    "manufacturer": "TVR",
+   "manufacturerId": 34,
    "name": "Cerbera LM Edition",
    "drivetrain": "FR",
    "engine": "DOHC NA",
@@ -5952,7 +7142,9 @@
   },
   {
    "code": "vc50n",
+   "carId": 540303448,
    "manufacturer": "TVR",
+   "manufacturerId": 34,
    "name": "Chimaera 5.0",
    "drivetrain": "FR",
    "engine": "V8 NA",
@@ -5962,7 +7154,9 @@
   },
   {
    "code": "vce5n",
+   "carId": 540340632,
    "manufacturer": "TVR",
+   "manufacturerId": 34,
    "name": "Cerbera 4.5",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -5972,7 +7166,9 @@
   },
   {
    "code": "vch2n",
+   "carId": 540352728,
    "manufacturer": "TVR",
+   "manufacturerId": 34,
    "name": "Chimaera 4.0",
    "drivetrain": "FR",
    "engine": "V8 NA",
@@ -5982,7 +7178,9 @@
   },
   {
    "code": "vch5n",
+   "carId": 540352920,
    "manufacturer": "TVR",
+   "manufacturerId": 34,
    "name": "Chimaera 4.5",
    "drivetrain": "FR",
    "engine": "V8 NA",
@@ -5992,7 +7190,9 @@
   },
   {
    "code": "vcrbn",
+   "carId": 540394264,
    "manufacturer": "TVR",
+   "manufacturerId": 34,
    "name": "Cerbera 4.2",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -6002,7 +7202,9 @@
   },
   {
    "code": "vcs6n",
+   "carId": 540398040,
    "manufacturer": "TVR",
+   "manufacturerId": 34,
    "name": "Cerbera Speed 6",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -6012,7 +7214,9 @@
   },
   {
    "code": "vgr5n",
+   "carId": 541442456,
    "manufacturer": "TVR",
+   "manufacturerId": 34,
    "name": "Griffith 500",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -6022,7 +7226,9 @@
   },
   {
    "code": "vgrfn",
+   "carId": 541443096,
    "manufacturer": "TVR",
+   "manufacturerId": 34,
    "name": "Griffith Blackpool B340(J)",
    "drivetrain": "FR",
    "engine": "V8 OHV NA",
@@ -6032,7 +7238,9 @@
   },
   {
    "code": "vs12n",
+   "carId": 544481496,
    "manufacturer": "TVR",
+   "manufacturerId": 34,
    "name": "Speed 12",
    "drivetrain": "FR",
    "engine": "V12 DOHC NA",
@@ -6042,7 +7250,9 @@
   },
   {
    "code": "vst6n",
+   "carId": 544596440,
    "manufacturer": "TVR",
+   "manufacturerId": 34,
    "name": "Tuscan Speed 6",
    "drivetrain": "FR",
    "engine": "I6 DOHC NA",
@@ -6052,7 +7262,9 @@
   },
   {
    "code": "x2a8n",
+   "carId": 571257432,
    "manufacturer": "Suzuki",
+   "manufacturerId": 31,
    "name": "Alto Works RS/Z(J) '98",
    "drivetrain": "AWD",
    "engine": "I3 DOHC TURBO",
@@ -6062,7 +7274,9 @@
   },
   {
    "code": "x2aln",
+   "carId": 571258264,
    "manufacturer": "Suzuki",
+   "manufacturerId": 31,
    "name": "Alto Works RS/X(J) '90",
    "drivetrain": "AWD",
    "engine": "I3 DOHC TURBO",
@@ -6072,7 +7286,9 @@
   },
   {
    "code": "x2asn",
+   "carId": 571258712,
    "manufacturer": "Suzuki",
+   "manufacturerId": 31,
    "name": "Alto Works Limited(J) '97",
    "drivetrain": "AWD",
    "engine": "I3 SOHC TURBO",
@@ -6082,7 +7298,9 @@
   },
   {
    "code": "x2azn",
+   "carId": 571259160,
    "manufacturer": "Suzuki",
+   "manufacturerId": 31,
    "name": "Alto Works RS/Z(J) '97",
    "drivetrain": "AWD",
    "engine": "I3 DOHC TURBO",
@@ -6092,7 +7310,9 @@
   },
   {
    "code": "x2cpn",
+   "carId": 571266712,
    "manufacturer": "Suzuki",
+   "manufacturerId": 31,
    "name": "Capcino (J) '95",
    "drivetrain": "FR",
    "engine": "I3 DOHC TURBO",
@@ -6102,7 +7322,9 @@
   },
   {
    "code": "x2cur",
+   "carId": 571267036,
    "manufacturer": "Suzuki",
+   "manufacturerId": 31,
    "name": "Cultus Pikes Peak Version(J)",
    "drivetrain": "AWD",
    "engine": "I4 DOHC TURBO",
@@ -6112,7 +7334,9 @@
   },
   {
    "code": "x2esr",
+   "carId": 571275100,
    "manufacturer": "Suzuki",
+   "manufacturerId": 31,
    "name": "Escudo Pikes Peak Version(J)",
    "drivetrain": "AWD",
    "engine": "V6 DOHC TURBO",
@@ -6122,7 +7346,9 @@
   },
   {
    "code": "x2ksn",
+   "carId": 571299672,
    "manufacturer": "Suzuki",
+   "manufacturerId": 31,
    "name": "Kei S(J) '98",
    "drivetrain": "AWD",
    "engine": "I3 DOHC TURBO",
@@ -6132,7 +7358,9 @@
   },
   {
    "code": "x2son",
+   "carId": 571332184,
    "manufacturer": "Suzuki",
+   "manufacturerId": 31,
    "name": "Cervo Mode SR-Four(J) '90",
    "drivetrain": "AWD",
    "engine": "I4 DOHC NA",
@@ -6142,7 +7370,9 @@
   },
   {
    "code": "x2w8n",
+   "carId": 571347544,
    "manufacturer": "Suzuki",
+   "manufacturerId": 31,
    "name": "Wagon R RR(J) '98",
    "drivetrain": "AWD",
    "engine": "I3 DOHC TURBO",
@@ -6152,7 +7382,9 @@
   },
   {
    "code": "x2wfn",
+   "carId": 571347992,
    "manufacturer": "Suzuki",
+   "manufacturerId": 31,
    "name": "Wagon R Column FT(J) '97",
    "drivetrain": "AWD",
    "engine": "I3 SOHC TURBO",
@@ -6162,7 +7394,9 @@
   },
   {
    "code": "x2wrn",
+   "carId": 571348760,
    "manufacturer": "Suzuki",
+   "manufacturerId": 31,
    "name": "Wagon R Turbo RT/S(J) '95",
    "drivetrain": "AWD",
    "engine": "I3 SOHC TURBO",
@@ -6172,7 +7406,9 @@
   },
   {
    "code": "x2wsn",
+   "carId": 571348824,
    "manufacturer": "Suzuki",
+   "manufacturerId": 31,
    "name": "Wagon R Aero RS(J) '97",
    "drivetrain": "AWD",
    "engine": "I3 DOHC TURBO",
