@@ -93,6 +93,20 @@ There are three hooks: buying a car, changing the current car, and entering a ra
 
 **Entering a dealership** isn't blocked by the hooks above. The map tile navigates to the dealer's top page through the generic path in `SimMap_Update` (`pendingPage = element.targetPage`, `0x800147fc`). `MenuPage_Load` sets `g_MenuPageAttr` from the page footer (`0x8002149c`). Blocking entry would need a map from page ID to manufacturer, built from the page data. Blocking the purchase gives the same result with less work.
 
+### Data Transfer
+
+The title screen's Data Transfer menu (overlay 1) can also put a car in the garage, outside GT mode. The route from the main menu:
+
+1. `MainMenu_Run` (`0x80011384`), case `MAINMENU_DATA_TRANSFER`, runs `g_Page_DataTransfer` (`0x8004c4a0`).
+2. Its update (`0x8001db58`) opens `g_Page_DataTransferMenu` (`0x8004c548`).
+3. `DataTransferMenu_Update` (`0x8001dd98`) opens the selected entry of `g_DataTransferMenu_Pages` (`0x8004c3a4`, 3 pages). The first is `g_Page_DataTransferCarList` (`0x8004c59c`).
+4. `DataTransferCarList_Update` (`0x8001df54`) opens `g_Page_DataTransferBuyCar` (`0x8004c5f0`) when a car is picked.
+5. `DataTransferBuyCar_Update` (`0x8001f11c`) calls `UsedCar_Buy` (`0x8001eb60`) at `0x8001f310`, after memory card calls (`FUN_8006e43c`) return 0.
+
+All addresses are in OVL1. The list holds `Car` records (0xa4 bytes each); car `i` is at `FUN_OVL1__80020cb4() + i * 0xa4 + 4`. `UsedCar_Buy` adds it with `Garage_AddCar` and deducts `Car.value`. It doesn't change `currentCar`. `UsedCar_CanBuy` (`0x8001ead8`) returns 0 (can buy), 1 (garage full) or 2 (not enough credits).
+
+Through this menu, a car of a locked manufacturer can get into the garage. The race entry hook still keeps it from being used. To block the purchase too, hook `UsedCar_CanBuy` (check overlay 1 is loaded: `0x80010014` is `0x03e00008`). Read the manufacturer at `+0x81` of the car record, and return early with `v0 = 2` when it's locked. This is untested.
+
 `Garage_SellCar` and prize cars (`Race_AwardEventPrize`, `Race_AwardChampionshipPrize` in OVL0) don't change `currentCar`.
 
 ## Tuning parts
@@ -124,4 +138,4 @@ Not affected:
 The reused message pages (`0x8000001e`, `0x8000002f`, `0x80000030`, `0x80000019`) don't describe the AP reason exactly, but they're good enough for a first version. The client can show the real reason alongside.
 
 ## To verify
-- OVL1 has its own `UsedCar_CanBuy` / `UsedCar_Buy` (`0x8001ead8` / `0x8001eb60`), which adds a car with `Garage_AddCar` from a menu next to memory card calls. Its purpose is unknown. GT mode's used car lots use the OVL4 path above.
+- Whether `DataTransferBuyCar_Update` reacts to a refusal from `UsedCar_CanBuy` (see [Data Transfer](#data-transfer)).
