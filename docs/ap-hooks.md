@@ -1,6 +1,6 @@
 # Archipelago hooks
 
-Where the client hooks or patches the Simulation disc (`SCUS_944.88`, NTSC-U 1.2) for the randomizer rules, and where it keeps its own state in RAM. Found statically in Ghidra. Tested in game so far: the AP state block location and the `License_IsEarned` replacement. The rest is untested (see [To verify](#to-verify)).
+Where the client hooks or patches the Simulation disc (`SCUS_944.88`, NTSC-U 1.2) for the randomizer rules, and where it keeps its own state in RAM. Found statically in Ghidra, then tested in game with PCSX-Redux: the AP state block location, the `License_IsEarned` replacement, and the manufacturer, tuning part and trophy refusals (by setting registers by hand at each hook). The hook code itself isn't written yet. Open points are under [To verify](#to-verify).
 
 ## Common notes
 
@@ -19,7 +19,7 @@ Where the client hooks or patches the Simulation disc (`SCUS_944.88`, NTSC-U 1.2
 | Selected garage slot (OVL4) | `0x800a8d62` | s16, the car highlighted in the garage list |
 | `g_MenuPageAttr` (OVL4) | `0x800a8d78` | Byte 0 is the dealership's manufacturer ID, `0xff` elsewhere |
 
-Manufacturer IDs are in [manufacturers.md](game%20ids/manufacturers.md). [cars.json](game%20ids/cars.json) gives each car's `carId` (the raw u32 the game uses) and `manufacturerId`, so the client can look up the manufacturer of any car code.
+Manufacturer IDs are in [manufacturers.md](game%20ids/manufacturers.md). [cars.json](game%20ids/cars.json) gives each car's `carId` (the raw u32 the game uses) and `manufacturerId`, so the client can look up the manufacturer of any car code. The dealership hook doesn't need it (see below).
 
 ## AP state block
 
@@ -85,7 +85,7 @@ Keep the real test results as locations; don't patch the other copies:
 
 There are three hooks: buying a car, changing the current car, and entering a race with a car that is already owned. Buying is the only way a car of a locked manufacturer can enter the garage, apart from prize cars.
 
-**Buying, new and used: `Dealer_CanBuyNewCar` (OVL4 `0x80017914`, `a0` = car ID, `a1` = price, `a2` = garage).** Both dealership tiles and the used car list set up a type 1 transaction (`Txn_SetBuyNewCar`), which `Shop_CheckTransaction` checks with this function before the confirmation page. To refuse, return early with `v0 = 0`: `Shop_CheckTransaction` then returns 0, and `SimMap_Update` plays the error sound and stays on the page (`0x80014d50` → `0x80014e20`). Look up the manufacturer from the car ID in `cars.json`. Inside a dealership, `g_MenuPageAttr & 0xff` is also the manufacturer, but not in the used car lots.
+**Buying, new and used: `Dealer_CanBuyNewCar` (OVL4 `0x80017914`, `a0` = car ID, `a1` = price, `a2` = garage).** Both dealership tiles and the used car list set up a type 1 transaction (`Txn_SetBuyNewCar`), which `Shop_CheckTransaction` checks with this function before the confirmation page. To refuse, return early with `v0 = 0`: `Shop_CheckTransaction` then returns 0, and `SimMap_Update` plays the error sound and stays on the page (`0x80014d50` → `0x80014e20`). The manufacturer is `g_MenuPageAttr & 0xff`: the used car lot is inside each manufacturer's dealership, so the byte is still set there (checked in game; `UsedCarList_Build` also takes it as the manufacturer).
 
 **Changing the current car: `SimMap_Update` case `0xab` (OVL4 `0x80014c34`).** This is the garage "change car" action. It builds a type 7 transaction (`FUN_OVL4__8001da98`), and `Shop_CheckTransaction` sets `currentCar` straight away. The slot is the s16 at `0x800a8d62`; its manufacturer is the byte at `0x801cd558 + slot * 0xa4 + 0x81`. To refuse, set `pc = 0x80014e20`, which plays the error sound and returns. Don't refuse inside `Shop_CheckTransaction` instead: this case shows whatever page it returns, and 0 isn't a valid page.
 
@@ -117,10 +117,11 @@ Not affected:
 - **GTW: `Events_AllProLeaguesWon`.** Return early with `v0 = (trophies >= gtwNeeded)`. On failure, `Race_CheckEntry` returns -10 with message page `0x80000030`.
 - The regional leagues are unchanged: they only need their license, and some have a power limit.
 
-`Race_CheckEntry` is the only caller of both functions, so the hooks change nothing else. The game's two messages probably say to win the previous leagues; read them in game to see whether they still fit.
+`Race_CheckEntry` is the only caller of both functions, so the hooks change nothing else.
+
+## Refusal messages
+
+The reused message pages (`0x8000001e`, `0x8000002f`, `0x80000030`, `0x80000019`) don't describe the AP reason exactly, but they're good enough for a first version. The client can show the real reason alongside.
 
 ## To verify
-
-- Message pages `0x8000001e`, `0x8000002f`, `0x80000030`, `0x80000019`: read their text in game to decide which ones fit.
-- `FUN_80060840(0)` is the error sound (inferred: called with 0 on every refusal, 1 on success).
 - OVL1 has its own `UsedCar_CanBuy` / `UsedCar_Buy` (`0x8001ead8` / `0x8001eb60`), which adds a car with `Garage_AddCar` from a menu next to memory card calls. Its purpose is unknown. GT mode's used car lots use the OVL4 path above.
