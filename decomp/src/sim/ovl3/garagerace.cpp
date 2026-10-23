@@ -1,6 +1,7 @@
 // OVL3 entry point: race with the GT-mode garage cars picked in the OVL2 arcade
 // menus (docs/arcade.md).
 #include "common.h"
+#include "gamestate.h"
 
 // The arcade race selection that OVL2 leaves at 0x801d5fa0 (g_RaceCarWorkAlt).
 struct ArcadeRaceSel {
@@ -15,7 +16,6 @@ struct ArcadeRaceSel {
 };
 
 extern "C" {
-extern char g_GameState[];
 extern ArcadeRaceSel g_Ovl3_RaceSel;
 extern char g_Ovl3_GtData[];
 extern void *g_EventDataBuf;
@@ -30,7 +30,7 @@ void Overlay_StartAt(int index, void *entry, int arg0);
 extern "C" void ArcadeGarageRace_Entry(void)
 {
     // 0x801d5fa0, past the end of g_GameState, rounded down to a word.
-    char *base = g_GameState;
+    char *base = (char *)&g_GameState;
     int offset = 0xc6c0;
     ArcadeRaceSel *sel = (ArcadeRaceSel *)((int)(base + offset) & ~3);
 
