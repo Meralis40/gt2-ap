@@ -2,18 +2,7 @@
 // menus (docs/arcade.md).
 #include "common.h"
 #include "gamestate.h"
-
-// The arcade race selection that OVL2 leaves at 0x801d5fa0 (g_RaceCarWorkAlt).
-struct ArcadeRaceSel {
-    char unk0[2];
-    signed char raceType;  // 6: time trial
-    char unk3[3];
-    short garage;          // 0x6
-    short slot;            // 0x8
-    char unkA[0x2c8 - 0xa];
-    int useGarageCars;     // 0x2c8
-    char unk2CC[0x2d4 - 0x2cc];
-};
+#include "arcade.h"
 
 extern "C" {
 extern ArcadeRaceSel g_Ovl3_RaceSel;
