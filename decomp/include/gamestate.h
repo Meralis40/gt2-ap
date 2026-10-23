@@ -3,7 +3,8 @@
 #define GAMESTATE_H
 
 struct CarSetup {
-    char unk0[0x84];
+    unsigned int wheel;
+    char unk4[0x84 - 4];
 };
 
 // A car in a garage.
