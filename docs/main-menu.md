@@ -145,8 +145,4 @@ Below it:
 - In `Race_PrepareStart`, game 0 stores `RaceSetup_ReloadArcade`'s 0/1 result in `g_EventDataBuf`. That looks like a decompiler register mix-up.
 - `KeyConfig.analogMap` and the `g_KeyConfig_Presets` layout are tentative.
 - The GT1 save offsets used by `Convert_ApplyGt1Licenses` (+0x2b5c → B, +0x2b64 → A) come from the code order only.
-- No struct type yet for `g_ReplayCopy`, `g_DataXfer`, or the 0x1c0-byte car parameter block.
-- These functions are called only from OVL0 and are still unnamed:
-  - `FUN_80072e7c` and `FUN_80072eb4` start the save-replay and save-ghost card modes.
-  - `FUN_800724f8` and `FUN_80072598` fill the new replay entry for those modes.
-  - `FUN_80069f28` copies the ghost car parameters into `g_RaceCarParams`.
+- No struct type yet for `g_ReplayCopy` or `g_DataXfer`. The 0x1c0-byte car parameter block is now `CarParams` (see [race.md](race.md)).
