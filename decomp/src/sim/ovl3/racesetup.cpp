@@ -34,3 +34,33 @@ extern "C" RaceCar *RaceSetup_SetCarFromEntry(RaceSetup *setup, int index, int g
     CarParams_BuildFromSetup(&car->setup, (CarParams *)(base + (offset + index * 0x1c0)));
     return car;
 }
+
+// Sets car index of setup from a garage car, and builds its g_RaceCarParams.
+// gridSlot < 0 keeps the rest of the car.
+extern "C" RaceCar *RaceSetup_SetCarFromGarage(RaceSetup *setup, int index, int gridSlot, int driverType,
+                                              int unk8f, Car *car, int unk582, int garageSlot)
+{
+    RaceCar *rc = &setup->cars[index];
+    // g_RaceCarParams[index], past the end of g_GameState.
+    char *base = (char *)&g_GameState;
+    int offset = 0x14fda;
+    CarParams *params = (CarParams *)(base + (offset + index * 0x1c0));
+
+    if (gridSlot >= 0) {
+        memset(rc, 0, sizeof(RaceCar));
+        rc->active = 1;
+        rc->gridSlot = gridSlot;
+    }
+    rc->driverType = driverType;
+    rc->unk8f = unk8f;
+    rc->carId = car->baseCarId;
+    rc->colorCode = car->color;
+    rc->setup = car->setup;
+    CarSetup *cs = &rc->setup;
+    cs->flags_7a |= 0x40;
+    strcpy(rc->name, CarInfoA_GetName(rc->carId));
+    setup->unk582 = unk582;
+    setup->garageSlot = garageSlot;
+    CarParams_BuildFromSetup(cs, params);
+    return rc;
+}

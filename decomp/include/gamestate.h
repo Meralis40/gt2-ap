@@ -2,9 +2,12 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
+// The parts fitted to a car and their settings.
 struct CarSetup {
     unsigned int wheel;
-    char unk4[0x84 - 4];
+    char unk4[0x7a - 4];
+    unsigned char flags_7a;   // 0x7a
+    char unk7b[0x84 - 0x7b];
 };
 
 // A car in a garage.
