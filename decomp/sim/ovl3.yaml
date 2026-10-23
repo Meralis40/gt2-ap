@@ -38,6 +38,8 @@ segments:
     subsegments:
       - [0x0, cpp, carwork]    # src/sim/ovl3/carwork.cpp
       - [0x24, asm]
+      - [0x1858, cpp, setstages]  # src/sim/ovl3/setstages.cpp
+      - [0x1b0c, asm]
       - [0x1be8, cpp, arcadesel]  # src/sim/ovl3/arcadesel.cpp
       - [0x1cfc, cpp, minmax]  # src/sim/ovl3/minmax.cpp
       - [0x1ec0, asm]
