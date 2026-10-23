@@ -40,4 +40,5 @@ segments:
       - [0x24, asm]
       - [0x1cfc, cpp, minmax]  # src/sim/ovl3/minmax.cpp
       - [0x1d74, asm]
+      - [0x2c00, cpp, garagerace] # src/sim/ovl3/garagerace.cpp
   - [0x2cec]
