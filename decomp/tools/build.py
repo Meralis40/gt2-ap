@@ -23,9 +23,10 @@ CROSS = os.environ.get("CROSS", "mipsel-linux-gnu-")
 AS_FLAGS = ["-EL", "-march=r3000", "-mtune=r3000", "-mabi=32", "-G0", "-no-pad-sections", "-Iinclude"]
 BUILD = "build/sim"
 
-# C++ sources: PsyQ 4.6 is GCC 2.8.1 (tools/setup_toolchain.py). The host cpp
-# preprocesses, as on decomp.me: the 32-bit cpp and cc1plus cannot stat files on
-# a Windows drive under WSL, so cc1plus reads the preprocessed source from stdin.
+# C++ sources: GCC 2.8.1, as Sony's PsyQ 4.4 compiler (tools/setup_toolchain.py).
+# The host cpp preprocesses, as on decomp.me: the 32-bit cpp and cc1plus cannot
+# stat files on a Windows drive under WSL, so cc1plus reads the preprocessed
+# source from stdin.
 TOOLCHAIN = os.path.join(ROOT, "tools", "toolchain")
 CPP_FLAGS = ["-nostdinc", "-undef", "-D__GNUC__=2", "-D__GNUC_MINOR__=8", "-Dmips", "-D__mips__",
              "-DMIPSEL", "-Iinclude"]

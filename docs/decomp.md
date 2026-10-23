@@ -79,13 +79,13 @@ After renaming things in Ghidra, run the script (Script Manager, category **GT2*
 
 ## Compiler
 
-The game was built with the PsyQ 4.6 SDK: its libraries match PsyQ 4.6 (libpad 4.7), and PsyQ 4.6 ships GCC 2.8.1. The game code is C++ built with `-O2 -g0 -G0 -fvtable-thunks`. Its vtables have the thunk layout (0, the `__tf` function, then 4-byte function pointers), and the EXE header's `gp` is 0.
+The game's libraries match PsyQ 4.6 (libpad 4.7), but its code was not built with the PsyQ 4.6 compiler, which is GCC 2.95.2. It matches Sony's GCC 2.8.x builds, the compilers of PsyQ 4.3 (GCC 2.8.0) and PsyQ 4.4 (GCC 2.8.1), so the game used an older compiler with the newer libraries. The game code is C++ built with `-O2 -g0 -G0 -fvtable-thunks`. Its vtables have the thunk layout (0, the `__tf` function, then 4-byte function pointers), and the EXE header's `gp` is 0.
 
 The build uses the same open-source toolchain as decomp.me's `gcc2.8.1-psx` compiler:
 
 - **GCC 2.8.1** rebuilt from GNU sources with a PlayStation target (`mips-sony-psx`: R3000, little endian, soft float, unsigned `char`), [decompals/old-gcc](https://github.com/decompals/old-gcc) release 0.17. Only `cc1plus` is used.
-- **[maspsx](https://github.com/mkst/maspsx)** at the decomp.me commit (`4ffa8b5`). It rewrites the compiler output the way Sony's ASPSX assembled it, then runs GNU as. `--aspsx-version=2.86` (ASPSX of PsyQ 4.6) makes small `li` constants `addiu`, as in the game.
-  `setup_toolchain.py` patches one rule: after a `div`, maspsx adds a `nop` when the next instruction reads the quotient, even past a label, and ASPSX doesn't look past the label (`Rgb555_ToHsv` in OVL3).
+- **[maspsx](https://github.com/mkst/maspsx)** at the decomp.me commit (`4ffa8b5`). It rewrites the compiler output the way Sony's ASPSX assembled it, then runs GNU as. `--aspsx-version=2.86` (ASPSX of PsyQ 4.6) makes small `li` constants `addiu`, as in the game; with `-G0`, maspsx treats ASPSX 2.79 (PsyQ 4.4) the same.
+  `setup_toolchain.py` patches one rule: after a `div`, maspsx adds a `nop` when the next instruction reads the quotient, even past a label. The game has no `nop` there in `Rgb555_ToHsv` (OVL3), so the patch makes it match. Sony's ASPSX 2.79 and 2.86 do add the `nop`, though, so the original source probably differs from ours before that branch, and the patch may be dropped once it does.
 
 A `.cpp` file goes through:
 
@@ -93,7 +93,7 @@ A `.cpp` file goes through:
 2. `cc1plus -quiet -O2 -g0 -G0 -fvtable-thunks`, reading from stdin. The 32-bit compiler can't `stat` files on a Windows drive under WSL (inode numbers overflow), so it gets no file names. Its output is kept as `build/sim/src/.../<file>.cpp.s` for diffing.
 3. maspsx, then GNU as with the same flags as the disassembly.
 
-Sony's original `CC1PLPSX.EXE` might still differ from this rebuild in places. If a function can't be matched, try it with decomp.me's `psyq4.6` compiler, which runs Sony's executables.
+decomp.me's PsyQ packages (`psyq4.3` to `psyq4.6`) run Sony's executables under wibo. With PsyQ 4.3 and 4.4's `CC1PLPSX.EXE`, the same functions match as with this rebuild, and the ones that don't match here don't match there either: they need a different source, not a different compiler. Sony's ASPSX also checks divisions unless given `-0`; the game has no checks, and maspsx doesn't add them.
 
 ## Decompiling a function
 

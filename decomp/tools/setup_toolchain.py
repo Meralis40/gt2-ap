@@ -3,7 +3,7 @@
 """Downloads the C++ compiler used by the matching build into tools/toolchain/.
 
 - GCC 2.8.1 rebuilt for the PlayStation (decompals/old-gcc, mips-sony-psx target),
-  the counterpart of the PsyQ 4.6 compiler.
+  the counterpart of Sony's GCC 2.8.x (PsyQ 4.3, 4.4), which built the game.
 - maspsx, which rewrites the compiler output the way Sony's ASPSX assembled it,
   before GNU as. Same commit as decomp.me's gcc2.8.1-psx, with one fix
   (patch_maspsx).
@@ -41,9 +41,11 @@ def fetch(url, sha256):
 
 def patch_maspsx(path):
     # After a div/divu, maspsx puts a nop before an instruction that reads the
-    # quotient, looking past a label to find it. ASPSX 2.86 doesn't: in
-    # Rgb555_ToHsv (OVL3 0x80011dec) the mflo is followed by a label and a
-    # beqz on its register, with no nop.
+    # quotient, looking past a label to find it. The game has none in
+    # Rgb555_ToHsv (OVL3 0x80011dec), where the mflo is followed by a label and
+    # a beqz on its register, so this stops maspsx looking past the label.
+    # Sony's ASPSX 2.79 and 2.86 do add the nop, so this probably stands in
+    # for a source difference before that branch and may be dropped.
     with open(path) as fh:
         src = fh.read()
     old = """                next_instruction = self.get_next_instruction(
