@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-2.0-or-later
+"""Downloads the C++ compiler used by the matching build into tools/toolchain/.
+
+- GCC 2.8.1 rebuilt for the PlayStation (decompals/old-gcc, mips-sony-psx target),
+  the counterpart of the PsyQ 4.6 compiler.
+- maspsx, which rewrites the compiler output the way Sony's ASPSX assembled it,
+  before GNU as. Same commit as decomp.me's gcc2.8.1-psx.
+
+Both are pinned by SHA-256. See docs/decomp.md.
+"""
+import hashlib
+import io
+import os
+import shutil
+import stat
+import sys
+import tarfile
+import urllib.request
+import zipfile
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # decomp/
+DEST = os.path.join(ROOT, "tools", "toolchain")
+GCC_URL = "https://github.com/decompals/old-gcc/releases/download/0.17/gcc-2.8.1-psx.tar.gz"
+GCC_SHA256 = "f6f6e883942d4d3289d048236c672e71ed410e546aaae8ff655952f1567e1be0"
+MASPSX_COMMIT = "4ffa8b5106f9780d5d4aa7609f184949433ddbbc"
+MASPSX_URL = "https://github.com/mkst/maspsx/archive/%s.zip" % MASPSX_COMMIT
+MASPSX_SHA256 = "ef60294812d9e4bf6f97ccac973102ebedcc233b8afbccab770be6eac104713c"
+
+
+def fetch(url, sha256):
+    print("downloading", url)
+    with urllib.request.urlopen(url) as r:
+        data = r.read()
+    got = hashlib.sha256(data).hexdigest()
+    if got != sha256:
+        sys.exit("SHA-256 mismatch for %s: %s" % (url, got))
+    return data
+
+
+def main():
+    gcc_dir = os.path.join(DEST, "gcc-2.8.1-psx")
+    maspsx_dir = os.path.join(DEST, "maspsx")
+    shutil.rmtree(DEST, ignore_errors=True)
+    os.makedirs(gcc_dir)
+
+    with tarfile.open(fileobj=io.BytesIO(fetch(GCC_URL, GCC_SHA256))) as tar:
+        tar.extractall(gcc_dir, filter="data")
+    for name in os.listdir(gcc_dir):
+        p = os.path.join(gcc_dir, name)
+        os.chmod(p, os.stat(p).st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+
+    with zipfile.ZipFile(io.BytesIO(fetch(MASPSX_URL, MASPSX_SHA256))) as z:
+        z.extractall(DEST)
+    os.rename(os.path.join(DEST, "maspsx-" + MASPSX_COMMIT), maspsx_dir)
+    print("toolchain ready in", os.path.relpath(DEST, ROOT))
+
+
+if __name__ == "__main__":
+    main()

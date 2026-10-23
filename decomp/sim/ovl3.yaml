@@ -36,5 +36,6 @@ segments:
     start: 0x0
     vram: 0x80010000
     subsegments:
-      - [0x0, asm]
+      - [0x0, cpp, carwork]    # src/sim/ovl3/carwork.cpp
+      - [0x24, asm]
   - [0x2cec]

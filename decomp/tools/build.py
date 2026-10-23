@@ -23,6 +23,15 @@ CROSS = os.environ.get("CROSS", "mipsel-linux-gnu-")
 AS_FLAGS = ["-EL", "-march=r3000", "-mtune=r3000", "-mabi=32", "-G0", "-no-pad-sections", "-Iinclude"]
 BUILD = "build/sim"
 
+# C++ sources: PsyQ 4.6 is GCC 2.8.1 (tools/setup_toolchain.py). The host cpp
+# preprocesses, as on decomp.me: the 32-bit cpp and cc1plus cannot stat files on
+# a Windows drive under WSL, so cc1plus reads the preprocessed source from stdin.
+TOOLCHAIN = os.path.join(ROOT, "tools", "toolchain")
+CPP_FLAGS = ["-nostdinc", "-undef", "-D__GNUC__=2", "-D__GNUC_MINOR__=8", "-Dmips", "-D__mips__",
+             "-DMIPSEL", "-Iinclude"]
+CC1PLUS_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fvtable-thunks"]
+MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
+
 
 def run(cmd):
     r = subprocess.run(cmd, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
@@ -46,10 +55,32 @@ def objects(unit):
         return sorted(set(re.findall(r"(%s/\S+?\.o)\(" % re.escape(BUILD), fh.read())))
 
 
+def pipe(cmd, data):
+    r = subprocess.run(cmd, cwd=ROOT, input=data, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if r.returncode != 0:
+        sys.exit("command failed: %s\n%s" % (" ".join(cmd), r.stderr.decode(errors="replace")))
+    return r.stdout
+
+
+def compile_cpp(src, obj):
+    if not os.path.exists(os.path.join(TOOLCHAIN, "gcc-2.8.1-psx", "cc1plus")):
+        sys.exit("missing compiler: run tools/setup_toolchain.py first")
+    pre = pipe(["cpp"] + CPP_FLAGS + [src], None)
+    pre = re.sub(rb"(?m)^# 0", b"# 1", pre)  # cc1plus rejects line 0 markers
+    asm = pipe([os.path.join(TOOLCHAIN, "gcc-2.8.1-psx", "cc1plus")] + CC1PLUS_FLAGS + ["-o", "-"], pre)
+    with open(os.path.join(ROOT, obj[:-2] + ".s"), "wb") as fh:
+        fh.write(asm)  # kept for diffing
+    pipe([sys.executable, os.path.join(TOOLCHAIN, "maspsx", "maspsx.py")] + MASPSX_FLAGS
+         + ["--run-assembler", "--gnu-as-path", CROSS + "as"] + AS_FLAGS + ["-o", obj], asm)
+
+
 def assemble(obj):
     src = obj[len(BUILD) + 1:-2]
     os.makedirs(os.path.join(ROOT, os.path.dirname(obj)), exist_ok=True)
-    run([CROSS + "as"] + AS_FLAGS + ["-o", obj, src])
+    if src.endswith(".cpp"):
+        compile_cpp(src, obj)
+    else:
+        run([CROSS + "as"] + AS_FLAGS + ["-o", obj, src])
 
 
 def build(unit, pool):

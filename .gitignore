@@ -28,6 +28,7 @@ __pycache__/
 /decomp/asm/
 /decomp/assets/
 /decomp/build/
+/decomp/tools/toolchain/
 /decomp/include/macro.inc
 /decomp/include/labels.inc
 /decomp/include/gte_macros.inc
