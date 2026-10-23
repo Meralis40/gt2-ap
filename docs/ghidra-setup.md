@@ -88,10 +88,10 @@ Loader, in the Simulation EXE:
 |---|---|---|---|
 | 0 | `0x4d5f8` | `0x80012254` | Race (`GranTurismoRaceLoop`, `ArcadeRaceLoop`, `QuickMenu`) |
 | 1 | `0x3c8c4` | `0x80011384` | Title / boot (`data-title.txd`) |
-| 2 | `0x43544` | `0x80011750` | Arcade menus, track select |
-| 3 | `0x02cec` | `0x80012c00` | Unknown (small, no strings) |
+| 2 | `0x43544` | `0x80011750` | Arcade menus, track select ([arcade.md](arcade.md)) |
+| 3 | `0x02cec` | `0x80012c00` | Arcade races with GT Mode garage cars: builds the cars, then starts the race overlay ([arcade.md](arcade.md#ovl3-garage-cars-for-arcade-races)) |
 | 4 | `0x42a74` | `0x80013628` | GT mode menus (`GTBattleMenu`, `GTLoadingMenu`) |
-| 5 | `0x020e0` | `0x800114b8` | Movie player (`psxMovieLoop`) |
+| 5 | `0x020e0` | `0x800114b8` | Movie player (`psxMovieLoop`, [arcade.md](arcade.md#ovl5-movie-player)) |
 
 The Arcade disc (`SCUS_944.55`) uses the same scheme with the same load address `0x80010000`, the same entry points and the same role for each overlay. The resident code shifts down by 0x40:
 
