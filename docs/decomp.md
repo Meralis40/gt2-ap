@@ -1,6 +1,6 @@
 # Matching build
 
-The Simulation disc executable (`SCUS_944.88`) and its six uncompressed overlays can be rebuilt byte for byte from the disassembly. This is the base for a matching decompilation: functions are rewritten in C++ one at a time, with each build checked against the originals. So far only `CarWork_Clear` (OVL3) is C++; everything else is assembly.
+The Simulation disc executable (`SCUS_944.88`) and its six uncompressed overlays can be rebuilt byte for byte from the disassembly. This is the base for a matching decompilation: functions are rewritten in C++ one at a time, with each build checked against the originals. So far only `CarWork_Clear` (in OVL3 and OVL4) is C++; everything else is assembly.
 
 The disassembly comes from [splat](https://github.com/ethteck/splat) and uses the names from the Ghidra project ([ghidra-setup.md](ghidra-setup.md)). Only the configs, the symbol files and the build script are in the repo. The original files and everything generated from them stay outside git.
 
@@ -96,6 +96,7 @@ Sony's original `CC1PLPSX.EXE` might still differ from this rebuild in places. I
 ## Decompiling a function
 
 1. In the unit's yaml, give the function's address range its own subsegment: `[0x0, cpp, carwork]` makes `src/sim/<unit>/carwork.cpp`, and the next `asm` subsegment starts after the function.
+   A function that another unit has too uses that unit's file: OVL4's `[0x5404, cpp, ../ovl3/carwork]` builds `src/sim/ovl3/carwork.cpp`. `build.py` creates `src/sim/<unit>/` before splitting, so the `..` resolves and splat sees the existing file.
 2. Write the function in that file. Keep it `extern "C"` (see `include/common.h`) while its callers are assembly, so the symbol keeps the name the disassembly uses.
 3. Run `tools/build.py --split <unit>`, and compare `build/sim/src/.../<file>.cpp.s` with the original assembly until the unit prints `OK`.
 

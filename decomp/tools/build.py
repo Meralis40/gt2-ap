@@ -47,6 +47,9 @@ def yaml_sha1(unit):
 
 def split(unit):
     shutil.rmtree(os.path.join(ROOT, "asm", "sim", unit), ignore_errors=True)
+    # A source shared with another unit is named ../<unit>/<file>, which only
+    # resolves (and so isn't replaced by a stub) when this unit's directory exists.
+    os.makedirs(os.path.join(ROOT, "src", "sim", unit), exist_ok=True)
     run([sys.executable, "-m", "splat", "split", "sim/%s.yaml" % unit])
 
 

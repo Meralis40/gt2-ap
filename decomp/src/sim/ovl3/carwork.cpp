@@ -1,4 +1,5 @@
-// OVL3 copy of the OVL4 CarWork helpers (docs/arcade.md).
+// CarWork helpers, in OVL4 and copied into OVL3 (docs/arcade.md). Both overlays
+// build this file.
 #include "common.h"
 
 struct CarWork;
