@@ -1,0 +1,47 @@
+# GT2.OVL entry 0 of the Simulation disc, uncompressed. Loads at 0x80010000. See docs/decomp.md.
+name: ovl0.bin
+sha1: b8e5d9ea443c41ad7206882a4b8deb579c769948
+options:
+  basename: ovl0
+  base_path: ..
+  target_path: baserom/sim/ovl0.bin
+  elf_path: build/sim/ovl0.elf
+  platform: psx
+  compiler: GCC
+  build_path: build/sim
+  asm_path: asm/sim/ovl0
+  src_path: src/sim/ovl0
+  asset_path: assets/sim/ovl0
+  ld_script_path: build/sim/ovl0.ld
+  symbol_addrs_path: sim/symbols/ovl0.txt
+  undefined_funcs_auto_path: build/sim/ovl0.undefined_funcs_auto.txt
+  undefined_syms_auto_path: build/sim/ovl0.undefined_syms_auto.txt
+  create_undefined_funcs_auto: True
+  create_undefined_syms_auto: True
+  find_file_boundaries: False
+  use_legacy_include_asm: False
+  asm_jtbl_label_macro: jlabel
+  generate_asm_macros_files: True
+  ld_bss_is_noload: True
+  disasm_unknown: True
+  section_order: [".text", ".rodata", ".data", ".bss"]
+  subalign: 4 # GNU as aligns sections to 16; the original sections follow each other at 4
+  ld_align_segment_vram_end: False
+  ld_align_section_vram_end: False
+  string_encoding: ASCII # EUC-JP and Shift-JIS text stays as .word data: as would write it as UTF-8
+  data_string_encoding: ASCII
+segments:
+  - name: ovl0
+    type: code
+    start: 0x0
+    vram: 0x80010000
+    subsegments:
+      - [0x0, asm]
+      - [0x1ee98, textbin, text_data_8002ee98] # tables inside .text
+      - [0x1f92c, asm]
+      - [0x36bac, textbin, text_data_80046bac]
+      - [0x36fb0, asm]
+      - [0x389d8, textbin, text_data_800489d8]
+      - [0x38bd8, asm]
+      - [0x4a77c, rodata] # 0x8005a77c
+  - [0x4d5f8]

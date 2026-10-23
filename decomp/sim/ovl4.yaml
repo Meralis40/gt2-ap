@@ -1,0 +1,41 @@
+# GT2.OVL entry 4 of the Simulation disc, uncompressed. Loads at 0x80010000. See docs/decomp.md.
+name: ovl4.bin
+sha1: 76d3d705ad6e452030f98d15a4a8a3b0f5bdc280
+options:
+  basename: ovl4
+  base_path: ..
+  target_path: baserom/sim/ovl4.bin
+  elf_path: build/sim/ovl4.elf
+  platform: psx
+  compiler: GCC
+  build_path: build/sim
+  asm_path: asm/sim/ovl4
+  src_path: src/sim/ovl4
+  asset_path: assets/sim/ovl4
+  ld_script_path: build/sim/ovl4.ld
+  symbol_addrs_path: sim/symbols/ovl4.txt
+  undefined_funcs_auto_path: build/sim/ovl4.undefined_funcs_auto.txt
+  undefined_syms_auto_path: build/sim/ovl4.undefined_syms_auto.txt
+  create_undefined_funcs_auto: True
+  create_undefined_syms_auto: True
+  find_file_boundaries: False
+  use_legacy_include_asm: False
+  asm_jtbl_label_macro: jlabel
+  generate_asm_macros_files: True
+  ld_bss_is_noload: True
+  disasm_unknown: True
+  section_order: [".text", ".rodata", ".data", ".bss"]
+  subalign: 4 # GNU as aligns sections to 16; the original sections follow each other at 4
+  ld_align_segment_vram_end: False
+  ld_align_section_vram_end: False
+  string_encoding: ASCII # EUC-JP and Shift-JIS text stays as .word data: as would write it as UTF-8
+  data_string_encoding: ASCII
+segments:
+  - name: ovl4
+    type: code
+    start: 0x0
+    vram: 0x80010000
+    subsegments:
+      - [0x0, asm]
+      - [0x12964, rodata] # 0x80022964
+  - [0x42a74]

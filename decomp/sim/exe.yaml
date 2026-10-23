@@ -1,0 +1,51 @@
+# Simulation disc boot executable. See docs/decomp.md.
+name: SCUS_944.88
+sha1: 3030aa271c0a4022fc69ce09d76a6bc75e69a32a
+options:
+  basename: exe
+  base_path: ..
+  target_path: baserom/sim/SCUS_944.88
+  elf_path: build/sim/exe.elf
+  platform: psx
+  compiler: GCC
+  build_path: build/sim
+  asm_path: asm/sim/exe
+  src_path: src/sim/exe
+  asset_path: assets/sim/exe
+  ld_script_path: build/sim/exe.ld
+  symbol_addrs_path: sim/symbols/exe.txt
+  undefined_funcs_auto_path: build/sim/exe.undefined_funcs_auto.txt
+  undefined_syms_auto_path: build/sim/exe.undefined_syms_auto.txt
+  create_undefined_funcs_auto: True
+  create_undefined_syms_auto: True
+  find_file_boundaries: False
+  use_legacy_include_asm: False
+  asm_jtbl_label_macro: jlabel
+  generate_asm_macros_files: True
+  ld_bss_is_noload: True
+  disasm_unknown: True
+  section_order: [".text", ".rodata", ".data", ".bss"]
+  subalign: 4 # GNU as aligns sections to 16; the original sections follow each other at 4
+  ld_align_segment_vram_end: False
+  ld_align_section_vram_end: False
+  string_encoding: ASCII # EUC-JP and Shift-JIS text stays as .word data: as would write it as UTF-8
+  data_string_encoding: ASCII
+segments:
+  - name: header
+    type: header
+    start: 0x0
+  - name: boot
+    type: code
+    start: 0x800
+    vram: 0x80010000
+    subsegments:
+      - [0x800, asm, boot]              # 0x80010000 boot code
+      - [0x2530, data, boot_data]       # 0x80011d30 boot data, zeros from 0x80033de2
+  - name: resident
+    type: code
+    start: 0x4de00
+    vram: 0x8005d600
+    subsegments:
+      - [0x4de00, asm, resident]        # 0x8005d600 resident code (EXE entry point)
+      - [0x7e818, rodata, resident_data] # 0x8008e018 resident data
+  - [0x99800]

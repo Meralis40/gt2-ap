@@ -22,3 +22,13 @@ CMakeUserPresets.json
 __pycache__/
 *.pyc
 .venv/
+
+# Decompilation: original files and everything splat generates (see docs/decomp.md)
+/decomp/baserom/
+/decomp/asm/
+/decomp/assets/
+/decomp/build/
+/decomp/include/macro.inc
+/decomp/include/labels.inc
+/decomp/include/gte_macros.inc
+/decomp/include/include_asm.h
