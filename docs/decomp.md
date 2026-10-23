@@ -1,6 +1,6 @@
 # Matching build
 
-The Simulation disc executable (`SCUS_944.88`) and its six uncompressed overlays can be rebuilt byte for byte from the disassembly. This is the base for a matching decompilation: functions are rewritten in C++ one at a time, with each build checked against the originals. So far `CarWork_Clear` (in OVL3 and OVL4), `ArcadeSel_LoadGarageCar`, `Max3`, `Min3`, `RaceSetup_SetCarFromEntry`, `CarWork_LoadGarageCarAlt` and `ArcadeGarageRace_Entry` (OVL3) are C++; everything else is assembly.
+The Simulation disc executable (`SCUS_944.88`) and its six uncompressed overlays can be rebuilt byte for byte from the disassembly. This is the base for a matching decompilation: functions are rewritten in C++ one at a time, with each build checked against the originals. So far `CarWork_Clear` (in OVL3 and OVL4), `ArcadeSel_LoadGarageCar`, `Max3`, `Min3`, `Rgb555_ToHsv`, `RaceSetup_SetCarFromEntry`, `CarWork_LoadGarageCarAlt` and `ArcadeGarageRace_Entry` (OVL3) are C++; everything else is assembly.
 
 The disassembly comes from [splat](https://github.com/ethteck/splat) and uses the names from the Ghidra project ([ghidra-setup.md](ghidra-setup.md)). Only the configs, the symbol files and the build script are in the repo. The original files and everything generated from them stay outside git.
 
@@ -85,6 +85,7 @@ The build uses the same open-source toolchain as decomp.me's `gcc2.8.1-psx` comp
 
 - **GCC 2.8.1** rebuilt from GNU sources with a PlayStation target (`mips-sony-psx`: R3000, little endian, soft float, unsigned `char`), [decompals/old-gcc](https://github.com/decompals/old-gcc) release 0.17. Only `cc1plus` is used.
 - **[maspsx](https://github.com/mkst/maspsx)** at the decomp.me commit (`4ffa8b5`). It rewrites the compiler output the way Sony's ASPSX assembled it, then runs GNU as. `--aspsx-version=2.86` (ASPSX of PsyQ 4.6) makes small `li` constants `addiu`, as in the game.
+  `setup_toolchain.py` patches one rule: after a `div`, maspsx adds a `nop` when the next instruction reads the quotient, even past a label, and ASPSX doesn't look past the label (`Rgb555_ToHsv` in OVL3).
 
 A `.cpp` file goes through:
 

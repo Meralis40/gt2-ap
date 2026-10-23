@@ -5,7 +5,8 @@
 - GCC 2.8.1 rebuilt for the PlayStation (decompals/old-gcc, mips-sony-psx target),
   the counterpart of the PsyQ 4.6 compiler.
 - maspsx, which rewrites the compiler output the way Sony's ASPSX assembled it,
-  before GNU as. Same commit as decomp.me's gcc2.8.1-psx.
+  before GNU as. Same commit as decomp.me's gcc2.8.1-psx, with one fix
+  (patch_maspsx).
 
 Both are pinned by SHA-256. See docs/decomp.md.
 """
@@ -38,6 +39,23 @@ def fetch(url, sha256):
     return data
 
 
+def patch_maspsx(path):
+    # After a div/divu, maspsx puts a nop before an instruction that reads the
+    # quotient, looking past a label to find it. ASPSX 2.86 doesn't: in
+    # Rgb555_ToHsv (OVL3 0x80011dec) the mflo is followed by a label and a
+    # beqz on its register, with no nop.
+    with open(path) as fh:
+        src = fh.read()
+    old = """                next_instruction = self.get_next_instruction(
+                    skip=0, ignore_set=True, ignore_label=True
+                )
+                extra_nops = self._handle_nop_before_next_instruction("""
+    if src.count(old) != 2:
+        sys.exit("maspsx: unexpected source, can't patch %s" % path)
+    with open(path, "w") as fh:
+        fh.write(src.replace(old, old.replace("ignore_label=True", "ignore_label=False")))
+
+
 def main():
     gcc_dir = os.path.join(DEST, "gcc-2.8.1-psx")
     maspsx_dir = os.path.join(DEST, "maspsx")
@@ -53,6 +71,7 @@ def main():
     with zipfile.ZipFile(io.BytesIO(fetch(MASPSX_URL, MASPSX_SHA256))) as z:
         z.extractall(DEST)
     os.rename(os.path.join(DEST, "maspsx-" + MASPSX_COMMIT), maspsx_dir)
+    patch_maspsx(os.path.join(maspsx_dir, "maspsx", "__init__.py"))
     print("toolchain ready in", os.path.relpath(DEST, ROOT))
 
 

@@ -40,7 +40,7 @@ segments:
       - [0x24, asm]
       - [0x1be8, cpp, arcadesel]  # src/sim/ovl3/arcadesel.cpp
       - [0x1cfc, cpp, minmax]  # src/sim/ovl3/minmax.cpp
-      - [0x1d74, asm]
+      - [0x1ec0, asm]
       - [0x26bc, cpp, racesetup]  # src/sim/ovl3/racesetup.cpp
       - [0x27ac, asm]
       - [0x2b68, cpp, garagecar]  # src/sim/ovl3/garagecar.cpp
