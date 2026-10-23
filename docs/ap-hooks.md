@@ -62,7 +62,7 @@ Every OVL4 license check goes through this function:
 
 - `License_GetHighest` (`0x800191c4`), which `Race_CheckEntry` uses for each event's license requirement.
 - `License_CheckEntry` (`0x80019b88`): a license's tests need the next lower license, so B tests are always open and A tests need 1 Progressive License. Decided: keep this gating, so each Progressive License opens the next license's tests.
-- The menu checks for the IA/S-only elements (`FUN_OVL4__8001b680` and `FUN_OVL4__8001b6f0`), and the license icons (`MenuPage_DrawElements`).
+- The menu checks for the IA/S-only elements (`MenuElement_IsLicenseOk` and `MenuElement_IsActive`), and the license icons (`MenuPage_DrawElements`).
 
 It is a whole-function replacement that fits in place (7 of 26 instructions). It reads the count at `0x801f0d86`. Tested in game by writing it with the PCSX-Redux memory editor:
 
@@ -87,7 +87,7 @@ There are three hooks: buying a car, changing the current car, and entering a ra
 
 **Buying, new and used: `Dealer_CanBuyNewCar` (OVL4 `0x80017914`, `a0` = car ID, `a1` = price, `a2` = garage).** Both dealership tiles and the used car list set up a type 1 transaction (`Txn_SetBuyNewCar`), which `Shop_CheckTransaction` checks with this function before the confirmation page. To refuse, return early with `v0 = 0`: `Shop_CheckTransaction` then returns 0, and `SimMap_Update` plays the error sound and stays on the page (`0x80014d50` → `0x80014e20`). The manufacturer is `g_MenuPageAttr & 0xff`: the used car lot is inside each manufacturer's dealership, so the byte is still set there (checked in game; `UsedCarList_Build` also takes it as the manufacturer).
 
-**Changing the current car: `SimMap_Update` case `0xab` (OVL4 `0x80014c34`).** This is the garage "change car" action. It builds a type 7 transaction (`FUN_OVL4__8001da98`), and `Shop_CheckTransaction` sets `currentCar` straight away. The slot is the s16 at `0x800a8d62`; its manufacturer is the byte at `0x801cd558 + slot * 0xa4 + 0x81`. To refuse, set `pc = 0x80014e20`, which plays the error sound and returns. Don't refuse inside `Shop_CheckTransaction` instead: this case shows whatever page it returns, and 0 isn't a valid page.
+**Changing the current car: `SimMap_Update` case `0xab` (OVL4 `0x80014c34`).** This is the garage "change car" action. It builds a type 7 transaction (`Txn_SetSelectCar`), and `Shop_CheckTransaction` sets `currentCar` straight away. The slot is the s16 at `0x800a8d62`; its manufacturer is the byte at `0x801cd558 + slot * 0xa4 + 0x81`. To refuse, set `pc = 0x80014e20`, which plays the error sound and returns. Don't refuse inside `Shop_CheckTransaction` instead: this case shows whatever page it returns, and 0 isn't a valid page.
 
 **Racing: `Race_CheckEntry` (OVL4 `0x8001973c`, `a0` = race code, `a1` = `int *msgPage`).** This covers a locked car that was already current, or one won as a prize. Read the current car as above. To refuse, write `0x8000001e` to `*a1` (the "car not allowed" message used for the allowed-cars rule) and return early with `v0 = -8`.
 
