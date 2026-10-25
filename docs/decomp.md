@@ -1,6 +1,6 @@
 # Matching build
 
-The Simulation disc executable (`SCUS_944.88`) and its six uncompressed overlays can be rebuilt byte for byte from the disassembly. This is the base for a matching decompilation: functions are rewritten in C++ one at a time, with each build checked against the originals. So far `CarWork_Clear` and `CarWork_LoadParts` (in OVL3 and OVL4), `CarWork_SetStagesFromSetup`, `Car_StoreSetup`, `RaceCarPick_Random`, `RaceCarPick_SetColor`, `RaceSetup_InitEvent`, `ArcadeSel_SetupRaceCars`, `ArcadeSel_LoadGarageCar`, `Max3`, `Min3`, `Rgb555_ToHsv`, `RaceSetup_SetCarFromEntry`, `RaceSetup_SetCarFromGarage`, `CarWork_LoadGarageCarAlt` and `ArcadeGarageRace_Entry` (OVL3) are C++; everything else is assembly.
+The Simulation disc executable (`SCUS_944.88`) and its six uncompressed overlays can be rebuilt byte for byte from the disassembly. This is the base for a matching decompilation: functions are rewritten in C++ one at a time, with each build checked against the originals. So far the OVL3 functions are C++, and so are their copies in other overlays, which build the same sources: `Max3`, `Min3`, `Rgb555_ToHsv`, `RaceCarPick_Random`, `RaceCarPick_SetColor` and `RaceSetup_InitEvent` (also in OVL1, OVL2 and OVL4), `RaceSetup_SetCarFromEntry` and `RaceSetup_SetCarFromGarage` (also in OVL2 and OVL4), `CarWork_Clear`, `CarWork_LoadParts` and `CarWork_SetStagesFromSetup` (twice in OVL4), `Car_StoreSetup` (also in OVL4), and `ArcadeSel_SetupRaceCars`, `ArcadeSel_LoadGarageCar`, `CarWork_LoadGarageCarAlt` and `ArcadeGarageRace_Entry` (OVL3 only). Everything else is assembly.
 
 The disassembly comes from [splat](https://github.com/ethteck/splat) and uses the names from the Ghidra project ([ghidra-setup.md](ghidra-setup.md)). Only the configs, the symbol files and the build script are in the repo. The original files and everything generated from them stay outside git.
 
@@ -99,6 +99,7 @@ decomp.me's PsyQ packages (`psyq4.3` to `psyq4.6`) run Sony's executables under 
 
 1. In the unit's yaml, give the function's address range its own subsegment: `[0x0, cpp, carwork]` makes `src/sim/<unit>/carwork.cpp`, and the next `asm` subsegment starts after the function.
    A function that another unit has too uses that unit's file: OVL4's `[0x5404, cpp, ../ovl3/carwork]` builds `src/sim/ovl3/carwork.cpp`. `build.py` creates `src/sim/<unit>/` before splitting, so the `..` resolves and splat sees the existing file.
+   When the copy has other names there (`Demo_PickRandomCar` in OVL1, the `_OVL2` suffixes, OVL4's second CarWork copy), the unit gets its own file that `#define`s them and `#include`s the shared source, as `src/sim/ovl1/randompick.cpp` does.
 2. Write the function in that file. Keep it `extern "C"` (see `include/common.h`) while its callers are assembly, so the symbol keeps the name the disassembly uses.
 3. Run `tools/build.py --split <unit>`, and compare `build/sim/src/.../<file>.cpp.s` with the original assembly until the unit prints `OK`.
 

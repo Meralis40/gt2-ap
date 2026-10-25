@@ -36,6 +36,10 @@ segments:
     start: 0x0
     vram: 0x80010000
     subsegments:
-      - [0x0, asm]
+      - [0x0, cpp, minmax] # src/sim/ovl1/minmax.cpp, shared with OVL3
+      - [0x1c4, cpp, randompick] # src/sim/ovl1/randompick.cpp, shared with OVL3
+      - [0x434, cpp, ../ovl3/setcolor] # src/sim/ovl3/setcolor.cpp, shared with OVL3
+      - [0x4e0, cpp, initevent] # src/sim/ovl1/initevent.cpp, shared with OVL3
+      - [0x9c0, asm]
       - [0x10f2c, rodata] # 0x80020f2c
   - [0x3c8c4]

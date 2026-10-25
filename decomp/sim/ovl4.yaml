@@ -37,8 +37,19 @@ segments:
     vram: 0x80010000
     subsegments:
       - [0x0, asm]
+      - [0x550, cpp, ../ovl3/minmax] # src/sim/ovl3/minmax.cpp, shared with OVL3
+      - [0x714, cpp, ../ovl3/randompick] # src/sim/ovl3/randompick.cpp, shared with OVL3
+      - [0x984, cpp, ../ovl3/setcolor] # src/sim/ovl3/setcolor.cpp, shared with OVL3
+      - [0xa30, cpp, ../ovl3/initevent] # src/sim/ovl3/initevent.cpp, shared with OVL3
+      - [0xf10, cpp, ../ovl3/racesetup] # src/sim/ovl3/racesetup.cpp, shared with OVL3
+      - [0x1160, cpp, racestart_clear] # src/sim/ovl4/racestart_clear.cpp, shared with OVL3
+      - [0x1184, cpp, racestart_loadparts] # src/sim/ovl4/racestart_loadparts.cpp, shared with OVL3
+      - [0x29b8, cpp, racestart_setstages] # src/sim/ovl4/racestart_setstages.cpp, shared with OVL3
+      - [0x2c6c, asm]
       - [0x5404, cpp, ../ovl3/carwork] # src/sim/ovl3/carwork.cpp, shared with OVL3
       - [0x5428, cpp, ../ovl3/loadparts] # src/sim/ovl3/loadparts.cpp, shared with OVL3
-      - [0x6c5c, asm]
+      - [0x6c5c, cpp, ../ovl3/setstages] # src/sim/ovl3/setstages.cpp, shared with OVL3
+      - [0x6f10, cpp, ../ovl3/storesetup] # src/sim/ovl3/storesetup.cpp, shared with OVL3
+      - [0x6fec, asm]
       - [0x12964, rodata] # 0x80022964
   - [0x42a74]

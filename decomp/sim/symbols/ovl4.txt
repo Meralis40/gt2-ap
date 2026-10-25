@@ -8,6 +8,7 @@ Rgb555_ToHsv = 0x800105C8; // type:func
 RaceCarPick_Random = 0x80010714; // type:func
 RaceCarPick_SetColor = 0x80010984; // type:func
 RaceSetup_InitEvent = 0x80010A30; // type:func
+RaceSetup_SetCarFromEntry = 0x80010F10; // type:func
 RaceSetup_SetCarFromGarage = 0x80011000; // type:func
 RaceStart_CarWorkClear = 0x80011160; // type:func
 RaceStart_CarWorkLoadParts = 0x80011184; // type:func
