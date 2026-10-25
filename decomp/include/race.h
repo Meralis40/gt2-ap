@@ -53,7 +53,7 @@ struct CarParams;
 // A car picked for a race: car, colour and the entry it came from.
 struct RaceCarPick {
     unsigned int carId;
-    unsigned char flags;          // 0x4
+    signed char flags;            // 0x4
     signed char colorCode;        // 0x5
     unsigned short colorRgb;      // 0x6
     short entryIndex;             // 0x8

@@ -44,7 +44,7 @@ segments:
       - [0x1cfc, cpp, minmax]  # src/sim/ovl3/minmax.cpp
       - [0x1ec0, cpp, randompick]  # src/sim/ovl3/randompick.cpp
       - [0x2130, cpp, setcolor]  # src/sim/ovl3/setcolor.cpp
-      - [0x21dc, asm]
+      - [0x21dc, cpp, initevent]  # src/sim/ovl3/initevent.cpp
       - [0x26bc, cpp, racesetup]  # src/sim/ovl3/racesetup.cpp
       - [0x290c, cpp, setupracecars]  # src/sim/ovl3/setupracecars.cpp
       - [0x2b68, cpp, garagecar]  # src/sim/ovl3/garagecar.cpp
