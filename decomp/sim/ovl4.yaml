@@ -38,6 +38,7 @@ segments:
     subsegments:
       - [0x0, asm]
       - [0x5404, cpp, ../ovl3/carwork] # src/sim/ovl3/carwork.cpp, shared with OVL3
-      - [0x5428, asm]
+      - [0x5428, cpp, ../ovl3/loadparts] # src/sim/ovl3/loadparts.cpp, shared with OVL3
+      - [0x6c5c, asm]
       - [0x12964, rodata] # 0x80022964
   - [0x42a74]

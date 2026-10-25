@@ -37,7 +37,7 @@ segments:
     vram: 0x80010000
     subsegments:
       - [0x0, cpp, carwork]    # src/sim/ovl3/carwork.cpp
-      - [0x24, asm]
+      - [0x24, cpp, loadparts]  # src/sim/ovl3/loadparts.cpp
       - [0x1858, cpp, setstages]  # src/sim/ovl3/setstages.cpp
       - [0x1b0c, cpp, storesetup]  # src/sim/ovl3/storesetup.cpp
       - [0x1be8, cpp, arcadesel]  # src/sim/ovl3/arcadesel.cpp
