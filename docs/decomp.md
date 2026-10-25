@@ -1,6 +1,6 @@
 # Matching build
 
-The Simulation disc executable (`SCUS_944.88`) and its six uncompressed overlays can be rebuilt byte for byte from the disassembly. This is the base for a matching decompilation: functions are rewritten in C++ one at a time, with each build checked against the originals. So far `CarWork_Clear` (in OVL3 and OVL4), `CarWork_SetStagesFromSetup`, `Car_StoreSetup`, `RaceCarPick_SetColor`, `ArcadeSel_LoadGarageCar`, `Max3`, `Min3`, `Rgb555_ToHsv`, `RaceSetup_SetCarFromEntry`, `RaceSetup_SetCarFromGarage`, `CarWork_LoadGarageCarAlt` and `ArcadeGarageRace_Entry` (OVL3) are C++; everything else is assembly.
+The Simulation disc executable (`SCUS_944.88`) and its six uncompressed overlays can be rebuilt byte for byte from the disassembly. This is the base for a matching decompilation: functions are rewritten in C++ one at a time, with each build checked against the originals. So far `CarWork_Clear` (in OVL3 and OVL4), `CarWork_SetStagesFromSetup`, `Car_StoreSetup`, `RaceCarPick_SetColor`, `ArcadeSel_SetupRaceCars`, `ArcadeSel_LoadGarageCar`, `Max3`, `Min3`, `Rgb555_ToHsv`, `RaceSetup_SetCarFromEntry`, `RaceSetup_SetCarFromGarage`, `CarWork_LoadGarageCarAlt` and `ArcadeGarageRace_Entry` (OVL3) are C++; everything else is assembly.
 
 The disassembly comes from [splat](https://github.com/ethteck/splat) and uses the names from the Ghidra project ([ghidra-setup.md](ghidra-setup.md)). Only the configs, the symbol files and the build script are in the repo. The original files and everything generated from them stay outside git.
 

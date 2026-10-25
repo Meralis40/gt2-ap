@@ -46,7 +46,7 @@ segments:
       - [0x2130, cpp, setcolor]  # src/sim/ovl3/setcolor.cpp
       - [0x21dc, asm]
       - [0x26bc, cpp, racesetup]  # src/sim/ovl3/racesetup.cpp
-      - [0x290c, asm]
+      - [0x290c, cpp, setupracecars]  # src/sim/ovl3/setupracecars.cpp
       - [0x2b68, cpp, garagecar]  # src/sim/ovl3/garagecar.cpp
       - [0x2c00, cpp, garagerace] # src/sim/ovl3/garagerace.cpp
   - [0x2cec]
