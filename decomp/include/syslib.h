@@ -25,7 +25,7 @@ char *strcpy(char *dst, const char *src);
 int vsprintf(char *buf, const char *fmt, void *args);
 int Printf_Format(PutcFunc putc, const char *fmt, void *args);
 int Printf_EmitString(PutcFunc putc, unsigned int flags, int width, int prec, char *s);
-int Printf_EmitNumber(PutcFunc putc, unsigned int flags, int width, int prec, int sign, char *digits, int len,
+int Printf_EmitNumber(PutcFunc putc, unsigned int flags, int width, int prec, char sign, char *digits, int len,
                       int base);
 int Printf_PutcToBuffer(int c);
 void InitHeap(unsigned long *base, unsigned long size);

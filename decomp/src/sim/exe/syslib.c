@@ -241,7 +241,93 @@ int Printf_EmitString(PutcFunc putc, unsigned int flags, int width, int prec, ch
     return count;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Printf_EmitNumber);
+// Writes a converted number: padding, the prefix (sign, then 0 or 0x/0X with
+// flag 0x10), zeros up to prec digits, the len digits, then padding. Flags:
+// 1 pads on the right, 2 adds '+', 4 pads with zeros. base 17 is hex with 0X.
+// Returns the characters written, or -1 when putc fails.
+int Printf_EmitNumber(PutcFunc putc, unsigned int flags, int width, int prec, char sign, char *digits, int len, int base)
+{
+    char pfx[64];
+    int right = 0, npfx = 0, left = 0, count, zeros, i;
+    if (width < 0) {
+        width = 0;
+    }
+    if (prec < 0) {
+        prec = 1;
+    }
+    if (base < 11) {
+        if (sign != '-' && (flags & 2)) {
+            sign = '+';
+        }
+        if (sign) {
+            pfx[0] = sign;
+            npfx = 1;
+        }
+    }
+    if (flags & 0x10) {
+        if (base >= 8) {
+            pfx[npfx++] = '0';
+        }
+        if (base >= 16) {
+            pfx[npfx++] = (base & 1) ? 'X' : 'x';
+        }
+    }
+    zeros = prec - len;
+    if (zeros < 0) {
+        zeros = 0;
+    }
+    if ((len | zeros) == 0) {
+        left = width;
+        npfx = 0;
+    } else {
+        i = width - (npfx + len) - zeros;
+        if (i < 0) {
+            zeros += i;
+            i = 0;
+            if (zeros <= 0) {
+                zeros = len == 0;
+            }
+        } else if ((flags & 1) == 0) {
+            if (flags & 4) {
+                zeros += i;
+            } else {
+                left = i;
+            }
+        } else {
+            right = i;
+        }
+    }
+    count = 0;
+    for (i = 0; i < left; i++) {
+        if (putc(' ') < 0) {
+            return -1;
+        }
+        count++;
+    }
+    for (i = 0; i < npfx; i++, count++) {
+        if (putc(pfx[i]) < 0) {
+            return -1;
+        }
+    }
+    for (i = 0; i < zeros; i++) {
+        if (putc('0') < 0) {
+            return -1;
+        }
+        count++;
+    }
+    for (i = 0; i < len; i++, count++) {
+        if (putc(digits[i]) < 0) {
+            return -1;
+        }
+    }
+    for (i = 0; i < right; i++) {
+        if (putc(' ') < 0) {
+            return -1;
+        }
+        count++;
+    }
+    return count;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Printf_FormatDec64);
 
