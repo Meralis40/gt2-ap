@@ -38,5 +38,6 @@ extern char D_801F0D60[];        // end of the BSS
 extern char D_80090F74[]; // "0123456789abcdef"
 extern char D_80090F88[]; // "0123456789ABCDEF"
 extern char *D_801C9898; // vsprintf's output pointer
+extern unsigned long long D_800A8CB8[19]; // 10^18 down to 10^0
 
 #endif

@@ -329,7 +329,39 @@ int Printf_EmitNumber(PutcFunc putc, unsigned int flags, int width, int prec, ch
     return count;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Printf_FormatDec64);
+// 64-bit decimal, by repeated subtraction of the powers of ten. With point
+// set and prec >= 0, a '.' goes before the last prec digits; point then holds
+// the index of the digit before it (19 for none).
+void Printf_FormatDec64(PutcFunc putc, unsigned int flags, int width, int prec, unsigned long long val, int sign,
+                        int point)
+{
+    char buf[64];
+    int started, len, i, d, c;
+    unsigned long long p;
+    if (point == 0 || prec < 0 || (point = 18 - prec) < 0) {
+        point = 19;
+    }
+    started = 0;
+    len = 0;
+    for (i = 0; i < 19; i++) {
+        p = D_800A8CB8[i];
+        d = 0;
+        while (val >= p) {
+            d++;
+            val -= p;
+        }
+        c = d + '0';
+        if (started || d != 0 || i == point) {
+            if (i == point) {
+                buf[len++] = c;
+                c = '.';
+            }
+            buf[len++] = c;
+            started = 1;
+        }
+    }
+    Printf_EmitNumber(putc, flags, width, prec, sign, buf, len, 10);
+}
 
 // 64-bit octal. buf[0] keeps the sign, and the sign variable then becomes the
 // flag that leading zeros have been skipped.
