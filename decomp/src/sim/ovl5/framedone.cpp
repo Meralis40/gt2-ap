@@ -5,6 +5,6 @@
 extern "C" {
 void Movie_OnFrameDone()
 {
-    ((void (*)(psxViewLoop *))g_CurrentViewLoop->vptr[19])(g_CurrentViewLoop);
+    ((psxMovieLoop *)g_CurrentViewLoop)->OnFrameDecoded();
 }
 }

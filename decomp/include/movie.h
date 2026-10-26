@@ -45,10 +45,24 @@ struct MoviePlayer {
     void *vlcReady;
 };
 
-// Resident screen loop base (0x6c bytes). The vtable is a table of 4-byte
-// function pointers after two words (0 and the __tf function).
-struct psxViewLoop {
-    void **vptr;
+// Resident screen loops (EXE, still assembly). ScreenViewLoop holds only the
+// vtable pointer; Execute runs Enter, then Step until it returns 0, then
+// Leave. psxViewLoop (0x6c bytes) adds the frame, draw and display steps. The
+// virtual functions are declared in their vtable order.
+class ScreenViewLoop {
+public:
+    ScreenViewLoop();
+    virtual ~ScreenViewLoop();
+    virtual int Run();
+    virtual void Enter();
+    virtual int Step();
+    virtual void Flip();
+    virtual void Leave();
+    int Execute();
+};
+
+class psxViewLoop : public ScreenViewLoop {
+public:
     unsigned char pad04[0x14];
     int vsyncInterval;
     unsigned char videoModeDelay;
@@ -56,6 +70,22 @@ struct psxViewLoop {
     unsigned char bufferCount;
     unsigned char videoModePending;
     unsigned char pad20[0x4c];
+
+    psxViewLoop();
+    virtual ~psxViewLoop();
+    virtual void Enter();
+    virtual int Step();
+    virtual void Flip();
+    virtual void Leave();
+    virtual void BeginFrame();
+    virtual int Update();
+    virtual void BeginDraw();
+    virtual void Draw();
+    virtual void EndDraw();
+    virtual void DrawFrame();
+    virtual void SwapDisplay();
+    virtual void ApplyVideoMode();
+    virtual void UpdateDisplay();
 };
 
 struct PadState {
@@ -71,8 +101,9 @@ struct PadDevice {
     unsigned char pad48[0x1c];
 };
 
-struct psxMovieLoop {
-    psxViewLoop base;
+// The movie screen loop of OVL5 (movieloop.cpp, which emits its vtable).
+class psxMovieLoop : public psxViewLoop {
+public:
     PadDevice pad;
     PadState padState;
     int noSkip;
@@ -86,6 +117,20 @@ struct psxMovieLoop {
     short *dispStarts;         // display buffer positions (x, y)
     int dispOffX;
     int dispOffY;
+
+    psxMovieLoop(int movie, int triple);
+    virtual ~psxMovieLoop();
+    virtual void Enter();
+    virtual void Flip();
+    virtual void Leave();
+    virtual int Update();
+    virtual void BeginDraw();
+    virtual void Draw();
+    virtual void EndDraw();
+    virtual void UpdateDisplay();
+    virtual void Virtual15();
+    virtual int RestartRead();
+    virtual void OnFrameDecoded();
 };
 
 // Header of a movie sector (the first 8 words, read before the 0x1f8 words of
@@ -128,19 +173,22 @@ struct GfxIrq {
 
 #define PAD_START 0x10000
 
+// OVL5's .bss (at 0x800A8D5C, tools/build.py): g++ puts zero-initialized
+// globals in .data, so the section is given explicitly.
+#define OVL5_BSS __attribute__((section(".bss")))
+
 
 // Functions are extern "C" while their callers are assembly (common.h).
 extern "C" {
-// OVL5 data (bss, and tables in .rodata).
+// OVL5 data (g_Movie in movieset.cpp, the buffers in movieloop.cpp, the
+// tables in .rodata).
 extern MoviePlayer *g_Movie;
 extern unsigned char g_MovieFrames[32][0x46e0];
 extern unsigned char g_MovieVlcBufA[];
 extern unsigned char g_MovieVlcBufB[];
 extern unsigned char g_MovieSliceBufA[];
+extern unsigned char g_MovieSliceBufB[];
 extern unsigned char *g_MovieRing[32];
-extern void *psxMovieLoop__vtable[];
-extern int psxMovieLoop__typeinfo;
-extern char D_800115BC[];   // "12psxMovieLoop"
 extern short D_800120CC[];  // display buffers, double buffered
 extern short D_800120D4[];  // display buffers, triple buffered
 // VLC table, 0x100 bytes before its start (0x800115CC): one row of 64 words
@@ -155,7 +203,6 @@ extern int g_StreamLba;
 extern unsigned char g_LastBufferIndex;
 extern psxViewLoop *g_CurrentViewLoop;
 extern void *g_PadHandlers[];
-extern int psxViewLoop__typeinfo;
 
 // Resident code.
 int Sys_CriticalSection(int enter);
@@ -178,13 +225,6 @@ void PadDevice_Open(PadDevice *pad, int port, void **handlers);
 void PadDevice_Close(PadDevice *pad);
 void PadButtons_Read(void *buttons, PadState *state);
 void Overlay_Start(int ovl);
-void ScreenViewLoop__Execute(void *loop);
-void psxViewLoop__psxViewLoop(psxViewLoop *loop);
-void psxViewLoop__psxViewLoop_dtor(psxViewLoop *loop, int flags);
-void psxViewLoop__Enter(psxViewLoop *loop);
-void psxViewLoop__Leave(psxViewLoop *loop);
-void psxViewLoop____tf();
-void __rtti_si(void *ti, const char *name, void *base);
 
 // OVL5.
 void Movie_Init(MoviePlayer *mp, int rgb24);
@@ -223,25 +263,11 @@ void Movie_InitRing();
 void Movie_DisplayOn();
 void Movie_ClearVram();
 void Movie_OnFrameDone();
-psxMovieLoop *psxMovieLoop__psxMovieLoop(psxMovieLoop *self, int movie, int triple);
-void psxMovieLoop__psxMovieLoop_dtor(psxMovieLoop *self, int flags);
-void psxMovieLoop__Enter(psxMovieLoop *self);
-int psxMovieLoop__Update(psxMovieLoop *self);
-void psxMovieLoop__Flip();
-void psxMovieLoop__UpdateDisplay(psxMovieLoop *self);
-void psxMovieLoop__Leave(psxMovieLoop *self);
-void psxMovieLoop__BeginDraw();
-void psxMovieLoop__Draw();
-void psxMovieLoop__EndDraw();
-void psxMovieLoop__Virtual15();
-int psxMovieLoop__RestartRead(psxMovieLoop *self);
-void psxMovieLoop__OnFrameDecoded(psxMovieLoop *self);
 void Movie_Play18();
 void Movie_Play1A();
 void Movie_Play19();
 void Movie_DefaultEntry();
 void Movie_ArcadeEntry(int which);
-void *psxMovieLoop____tf();
 }
 
 // Installs the GPU DMA end hook and returns the previous one.

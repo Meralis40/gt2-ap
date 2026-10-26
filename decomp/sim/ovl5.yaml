@@ -46,8 +46,7 @@ segments:
       - [0xac0, cpp, decodevlc]  # src/sim/ovl5/decodevlc.cpp
       - [0xd38, cpp, movering]  # src/sim/ovl5/movering.cpp
       - [0xe2c, cpp, framedone]  # src/sim/ovl5/framedone.cpp
-      - [0xe64, cpp, loopenter]  # src/sim/ovl5/loopenter.cpp
-      - [0x11cc, cpp, loopdisplay]  # src/sim/ovl5/loopdisplay.cpp
-      - [0x1290, cpp, movieloop]  # src/sim/ovl5/movieloop.cpp
-      - [0x156c, rodata] # 0x8001156c
+      - [0xe64, cpp, movieloop]  # src/sim/ovl5/movieloop.cpp
+      - [0x156c, .rodata, movieloop]  # vtable and type name of psxMovieLoop
+      - [0x15cc, rodata] # 0x800115cc
   - [0x20e0]

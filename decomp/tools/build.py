@@ -35,7 +35,7 @@ BUILD = "build/sim"
 TOOLCHAIN = os.path.join(ROOT, "tools", "toolchain")
 CPP_FLAGS = ["-nostdinc", "-undef", "-D__GNUC__=2", "-D__GNUC_MINOR__=8", "-Dmips", "-D__mips__",
              "-DMIPSEL", "-Iinclude"]
-CC1PLUS_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fvtable-thunks"]
+CC1PLUS_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fvtable-thunks", "-fno-exceptions"]
 MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
 
 # PsyQ library members (the yaml's lib subsegments, tools/psyq.py). splat links
@@ -54,6 +54,23 @@ LIBGCC_BSS = {"exe": 0x801C93B0}
 LIBGCC_SYMBOLS = {"__ti9type_info": 0x801C9408, "__CTOR_LIST__": 0x801C9410, "__DTOR_LIST__": 0x801C9418,
                   "__ti16__user_type_info": 0x801F0D20, "__ti14__si_type_info": 0x801F0D30,
                   "__ti17__class_type_info": 0x801F0D40}
+
+
+# Units whose .bss doesn't follow their data: an overlay's BSS starts at the end
+# of the EXE's (OVL5's g_Movie, buffers and psxMovieLoop typeinfo).
+BSS_VRAM = {"ovl5": 0x800A8D5C}
+
+# The g++ names that a unit's C++ classes reference, defined as the symbols the
+# Ghidra export names (resident code and data of the base classes).
+CXX_NAMES = {"ovl5": {
+    "__11psxViewLoop": "psxViewLoop__psxViewLoop", "_._11psxViewLoop": "psxViewLoop__psxViewLoop_dtor",
+    "Enter__11psxViewLoop": "psxViewLoop__Enter", "Step__11psxViewLoop": "psxViewLoop__Step",
+    "Leave__11psxViewLoop": "psxViewLoop__Leave", "BeginFrame__11psxViewLoop": "psxViewLoop__BeginFrame",
+    "DrawFrame__11psxViewLoop": "psxViewLoop__DrawFrame", "SwapDisplay__11psxViewLoop": "psxViewLoop__SwapDisplay",
+    "ApplyVideoMode__11psxViewLoop": "psxViewLoop__ApplyVideoMode", "__tf11psxViewLoop": "psxViewLoop____tf",
+    "__ti11psxViewLoop": "psxViewLoop__typeinfo",
+    "Run__14ScreenViewLoop": "ScreenViewLoop__Run", "Execute__14ScreenViewLoop": "ScreenViewLoop__Execute",
+}}
 
 
 def run(cmd):
@@ -112,6 +129,26 @@ def psyq_script(unit, members):
     return "%s/%s.psyq.ld" % (BUILD, unit)
 
 
+def cxx_script(unit, script):
+    """Writes <unit>.cxx.ld: the script with the unit's .bss at BSS_VRAM and its CXX_NAMES."""
+    with open(os.path.join(ROOT, script)) as fh:
+        text = fh.read()
+    if unit in BSS_VRAM:
+        section = ".%s_bss (NOLOAD)" % unit
+        if text.count(section) != 1:
+            sys.exit("%s: can't find the %s section" % (script, section))
+        text = text.replace(section, ".%s_bss 0x%08X (NOLOAD)" % (unit, BSS_VRAM[unit]))
+    names = ["    %s = %s;" % n for n in sorted(CXX_NAMES.get(unit, {}).items())]
+    marker = "    /DISCARD/ :"
+    if text.count(marker) != 1:
+        sys.exit("%s: can't find the /DISCARD/ section" % script)
+    text = text.replace(marker, "\n".join(names + ["", marker]))
+    out = "%s/%s.cxx.ld" % (BUILD, unit)
+    with open(os.path.join(ROOT, out), "w") as fh:
+        fh.write(text)
+    return out
+
+
 def objects(unit):
     with open(os.path.join(ROOT, BUILD, unit + ".ld")) as fh:
         return sorted(set(re.findall(r"(%s/\S+?\.o)\(" % re.escape(BUILD), fh.read())))
@@ -156,6 +193,8 @@ def build(unit, pool):
         libgcc.build_archive([name for lib, name in members if lib == "libgcc"])
         script = psyq_script(unit, members)
         libs = ["--whole-archive"] + sorted({"build/psyq/%s.a" % lib for lib, _ in members}) + ["--no-whole-archive"]
+    if unit in BSS_VRAM or unit in CXX_NAMES:
+        script = cxx_script(unit, script)
     run([CROSS + "ld", "-EL", "-nostdlib", "--no-check-sections",
          "-T", script,
          "-T", "%s/%s.undefined_syms_auto.txt" % (BUILD, unit),
