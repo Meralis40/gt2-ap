@@ -21,7 +21,25 @@ char *strcpy(char *dst, const char *src)
     return dst;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", strcmp);
+// Returns -1, 0 or 1. The sign is computed before the test, which puts it in
+// the branch's delay slot.
+int strcmp(const char *s1, const char *s2)
+{
+    char c1, c2;
+    int d, r;
+    for (;;) {
+        c1 = *s1++;
+        c2 = *s2++;
+        d = c1 - c2;
+        r = d >> 31;
+        if (d != 0) {
+            return r | 1;
+        }
+        if (c1 == 0) {
+            return 0;
+        }
+    }
+}
 
 int sprintf(char *buf, const char *fmt, ...)
 {
