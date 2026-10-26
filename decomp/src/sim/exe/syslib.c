@@ -160,7 +160,24 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Printf_EmitNumber);
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Printf_FormatDec64);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Printf_FormatOct64);
+// 64-bit octal. buf[0] keeps the sign, and the sign variable then becomes the
+// flag that leading zeros have been skipped.
+void Printf_FormatOct64(PutcFunc putc, unsigned int flags, int width, int prec, unsigned long long val, int sign)
+{
+    char buf[64];
+    int len, shift, d;
+    buf[0] = sign;
+    len = 1;
+    sign = 0;
+    for (shift = 63; shift >= 0; shift -= 3) {
+        d = (val >> shift) & 7;
+        if (sign || d != 0) {
+            sign = 1;
+            buf[len++] = d + '0';
+        }
+    }
+    Printf_EmitNumber(putc, flags, width, prec, buf[0], buf + 1, len - 1, 8);
+}
 
 // 64-bit hex; conv is the conversion character, 'x' or 'X'.
 void Printf_FormatHex64(PutcFunc putc, unsigned int flags, int width, int prec, unsigned long long val, int conv)
