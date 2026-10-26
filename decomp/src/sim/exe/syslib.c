@@ -251,7 +251,20 @@ void Heap_InitDefault(void)
     InitHeap((unsigned long *)base, size);
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", free);
+// Frees the block, then merges it with the free blocks around it: back to the
+// first of the free blocks before it, then forward.
+void free(void *ptr)
+{
+    HeapBlock *b = (HeapBlock *)ptr - 1;
+    HeapBlock *p;
+    b->used = 0;
+    for (p = b->prev; p != 0 && p->used == 0; p = p->prev) {
+        b = p;
+    }
+    for (p = b->next; p != 0 && p->used == 0; p = b->next) {
+        Heap_MergeNext(b);
+    }
+}
 
 // vsprintf's sink: appends c to the output buffer.
 int Printf_PutcToBuffer(int c)
