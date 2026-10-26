@@ -198,7 +198,48 @@ int memcmp(const void *a, const void *b, int n)
     return 0;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Printf_EmitString);
+// %s: at most prec characters of s (all of them when prec < 0), padded to
+// width. Flag 1 pads on the right ('-'), flag 4 pads a right-aligned string
+// with '0'. Returns the characters written, or -1 when putc fails.
+int Printf_EmitString(PutcFunc putc, unsigned int flags, int width, int prec, char *s)
+{
+    int len, right = 0, left = 0, count = 0, i, fill;
+    len = strlen(s);
+    if (prec >= 0 && prec < len) {
+        len = prec;
+    }
+    width -= len;
+    if (width < 0) {
+        width = 0;
+    }
+    if ((flags & 1) == 0) {
+        left = width;
+    } else {
+        right = width;
+    }
+    fill = ' ';
+    if (flags & 4) {
+        fill = '0';
+    }
+    for (i = 0; i < left; i++) {
+        if (putc(fill) < 0) {
+            return -1;
+        }
+        count++;
+    }
+    for (i = 0; i < len; i++, count++) {
+        if (putc(s[i]) < 0) {
+            return -1;
+        }
+    }
+    for (i = 0; i < right; i++) {
+        if (putc(' ') < 0) {
+            return -1;
+        }
+        count++;
+    }
+    return count;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Printf_EmitNumber);
 
