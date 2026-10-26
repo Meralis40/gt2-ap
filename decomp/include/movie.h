@@ -105,7 +105,7 @@ struct CdAudio {
     CdReq req;
     int (*onSector)(void *, void *);
     unsigned char pad30[0x136];
-    unsigned char state;
+    volatile unsigned char state;  // changed by the CD interrupt
 };
 
 struct GfxIrq {
