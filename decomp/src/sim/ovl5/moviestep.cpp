@@ -1,9 +1,29 @@
-// Stops and steps the player (the MDEC outputs frame n while the CPU
-// decodes frame n + 1), and the CD sector and MDEC callbacks.
+// Reports the player's status, stops and steps the player (the MDEC outputs
+// frame n while the CPU decodes frame n + 1), and the CD sector and MDEC
+// callbacks.
 #include "common.h"
 #include "movie.h"
 
 extern "C" {
+// 0: a frame is ready to decode, 1: waiting, 2: the stream ended, 3: the CD stopped.
+int Movie_GetStatus(MoviePlayer *mp)
+{
+    int leave = Sys_CriticalSection(0);
+    int status = 1;
+
+    if ((unsigned short)mp->stream.queued == 0) {
+        if (mp->stream.flags & 4) {
+            status = 2;
+        } else if (g_CdAudio.state == 0) {
+            status = 3;
+        }
+    } else if (mp->mdec.state == 2) {
+        status = 0;
+    }
+    Sys_CriticalSection(leave);
+    return status;
+}
+
 void Movie_Stop(MoviePlayer *mp)
 {
     DecDCToutCallback(0);
