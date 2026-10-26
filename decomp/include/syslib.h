@@ -27,9 +27,13 @@ int Printf_Format(PutcFunc putc, const char *fmt, void *args);
 int Printf_EmitNumber(PutcFunc putc, unsigned int flags, int width, int prec, int sign, char *digits, int len,
                       int base);
 int Printf_PutcToBuffer(int c);
+void InitHeap(unsigned long *base, unsigned long size);
 
 extern HeapBlock *g_HeapBase;
 extern unsigned long g_HeapSize;
+extern unsigned int g_StackSize;
+extern unsigned int g_StartupSP; // sp when start was called
+extern char D_801F0D60[];        // end of the BSS
 extern char D_80090F74[]; // "0123456789abcdef"
 extern char D_80090F88[]; // "0123456789ABCDEF"
 extern char *D_801C9898; // vsprintf's output pointer
