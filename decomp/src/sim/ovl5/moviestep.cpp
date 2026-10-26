@@ -106,4 +106,34 @@ void Movie_MdecOutCb()
 {
     Movie_OnMdecSlice(g_Movie);
 }
+
+// An MDEC slice (a 16-pixel column) is out: sends it to VRAM, resumes a CD
+// read that waited for the MDEC, then starts the next slice or marks the
+// frame done.
+void Movie_OnMdecSlice(MoviePlayer *mp)
+{
+    RECT *r = &mp->mdec.rect;
+    unsigned int left = (unsigned short)mp->mdec.slicesLeft;
+    int rgb24 = mp->mdec.rgb24;
+
+    Gpu_TransferImage(r, mp->mdec.slice[left & 1], 0);
+    left--;
+    mp->mdec.rect.x += r->w;
+    mp->mdec.slicesLeft = left;
+    {
+        MovieStream *s = &mp->stream;
+        if (s->flags & 8) {
+            s->flags &= ~8;
+            MovieStream_ReadSector(s);
+        }
+    }
+    if (left == 0 || mp->mdec.state != 0) {
+        mp->mdec.state = 1;
+    } else {
+        if (rgb24 == 0) {
+            Gpu_DrawSync();
+        }
+        DecDCTout(mp->mdec.slice[left & 1], mp->mdec.sliceWords);
+    }
+}
 }
