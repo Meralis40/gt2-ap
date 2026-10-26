@@ -132,7 +132,8 @@ segments:
       - [0x816c4, lib, libetc, INTR, .rdata]  # 0x80090ec4
       - [0x81734, lib, libetc, VSYNC, .rdata]  # 0x80090f34
       - [0x81744, lib, libetc, INTR_DMA, .rdata]  # 0x80090f44
-      - [0x81774, rodata, resident_data2] # 0x80090f74
+      - [0x81774, .rodata, syslib]      # 0x80090f74 hex digits and printf's jump tables
+      - [0x81938, rodata, resident_data2] # 0x80091138
       - [0x978cc, lib, libgcc, _exit, .data]  # 0x800a70cc
       - [0x97910, lib, libgcc, __main, .data]  # 0x800a7110
       - [0x979b0, lib, libgcc, tinfo, .data]  # 0x800a71b0
