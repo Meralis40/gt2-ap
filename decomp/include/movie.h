@@ -88,6 +88,19 @@ struct psxMovieLoop {
     int dispOffY;
 };
 
+// Header of a movie sector (the first 8 words, read before the 0x1f8 words of
+// frame data).
+struct MovieSectorHeader {
+    unsigned short status;      // 0x160
+    unsigned short type;        // 0x5349
+    unsigned short sector;      // sector of the frame
+    unsigned short sectorCount; // sectors in the frame
+    unsigned int frameNo;
+    unsigned int pad0c;
+    unsigned int lastFrame;     // low 30 bits
+    unsigned int pad14[3];
+};
+
 // A CD read request: sectors start..end, mode, XA file and channel.
 struct CdReq {
     unsigned char flag;
@@ -144,6 +157,7 @@ extern int psxViewLoop__typeinfo;
 // Resident code.
 int Sys_CriticalSection(int enter);
 void CdAudio_ResetRead();
+void func_8007CFD4(void *dst, int words);  // jumps to CdGetSector
 int CdAudio_RunScript(int script);
 void DecDCTReset(int mode);
 void DecDCTin(unsigned long *buf, int mode);
