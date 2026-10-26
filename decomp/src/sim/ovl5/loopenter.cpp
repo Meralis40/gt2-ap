@@ -1,4 +1,4 @@
-// psxMovieLoop constructor, destructor and Enter.
+// psxMovieLoop constructor, destructor, Enter and Update.
 #include "common.h"
 #include "movie.h"
 
@@ -85,5 +85,62 @@ void psxMovieLoop__Enter(psxMovieLoop *self)
     Movie_SetSliceBuffers(mp, (unsigned long *)g_MovieSliceBufA, (unsigned long *)(g_MovieSliceBufA + 0x3000));
     Movie_Open(mp, self->movieIndex);
     Movie_Start(mp);
+}
+
+// One step of the screen loop: decodes the next frame when the display has a
+// free buffer. Returns 0 to leave (START pressed, the stream ended, or the
+// read can't restart), 1 after a frame was started.
+int psxMovieLoop__Update(psxMovieLoop *self)
+{
+    int start = Irq_WaitVSyncs(0);
+    int now;
+    int status;
+    int busy;
+
+    busy = 1;
+    for (;;) {
+        now = Irq_WaitVSyncs(0);
+        PadButtons_Read(self->pad.buttons, &self->padState);
+        if (self->noSkip == 0 && (self->padState.pressed & PAD_START)) {
+            while (Movie_GetStatus(&self->player) == busy) {
+            }
+            return 0;
+        }
+        status = Movie_GetStatus(&self->player);
+        // Waiting for 900 vsyncs (15 seconds at 60 Hz): treat it as a
+        // stopped CD.
+        if (status == busy && now - start > 899) {
+            start = now;
+            status = 3;
+        }
+        if (status == 0) {
+            if (self->startDelay != 0) {
+                // The CD callback changes queued: read it as volatile.
+                if (((volatile MovieStream *)&self->player.stream)->queued < self->startDelay) {
+                    continue;
+                }
+                self->startDelay = 0;
+            }
+            if (self->framesReady < self->base.bufferCount - 1) {
+                break;
+            }
+        }
+        if (status == 2) {
+            return 0;
+        }
+        // RestartRead (vptr[18]) returns 1 to keep playing. The original
+        // tests the result with xori, which only `^ 1` gives.
+        if (status == 3 && (((int (*)(psxMovieLoop *))self->base.vptr[18])(self) ^ 1) != 0) {
+            return 0;
+        }
+    }
+    {
+        short *pos = (short *)(self->decodeBuf * 4 + (int)self->dispStarts);
+        Movie_Step(&self->player, pos[0] + self->dispOffX, pos[1] + self->dispOffY);
+    }
+    if (++self->decodeBuf >= self->base.bufferCount) {
+        self->decodeBuf = 0;
+    }
+    return 1;
 }
 }
