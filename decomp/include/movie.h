@@ -180,7 +180,7 @@ void *Movie_DecodeNext(MoviePlayer *mp, int x, int y);
 void Movie_Step(MoviePlayer *mp, int x, int y);
 void Movie_DecodeThenStart(MoviePlayer *mp, int x, int y);
 int Movie_CdSectorCb(void *a, void *b);
-int Movie_OnSector(MoviePlayer *mp);
+int Movie_OnSector(MoviePlayer *mp, void *a, void *b);
 void Movie_MdecOutCb();
 void Movie_OnMdecSlice(MoviePlayer *mp);
 void Movie_GpuDmaIrq();

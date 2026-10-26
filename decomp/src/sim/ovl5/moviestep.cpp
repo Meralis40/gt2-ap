@@ -1,4 +1,5 @@
-// Stops the player; decodes a frame on the CPU while the MDEC outputs the previous one.
+// Stops and steps the player (the MDEC outputs frame n while the CPU
+// decodes frame n + 1), and the CD sector and MDEC callbacks.
 #include "common.h"
 #include "movie.h"
 
@@ -59,5 +60,30 @@ void Movie_DecodeThenStart(MoviePlayer *mp, int x, int y)
 {
     Movie_DecodeNext(mp, x, y);
     Movie_StartMdec(mp);
+}
+
+int Movie_CdSectorCb(void *a, void *b)
+{
+    return Movie_OnSector(g_Movie, a, b);
+}
+
+// While the MDEC is busy, defers the sector to Movie_OnMdecSlice (flag 8);
+// otherwise reads it. Returns 2 once the stream has ended.
+int Movie_OnSector(MoviePlayer *mp, void *a, void *b)
+{
+    MovieStream *s = &mp->stream;
+    unsigned int flags = s->flags;
+
+    // The MDEC callbacks change the state: read it as volatile.
+    if (((volatile MdecOut *)&mp->mdec)->state == 0) {
+        s->flags = flags | 8;
+        return (flags >> 1) & 2;
+    }
+    return (MovieStream_ReadSector(s) != 0) << 1;
+}
+
+void Movie_MdecOutCb()
+{
+    Movie_OnMdecSlice(g_Movie);
 }
 }

@@ -41,8 +41,6 @@ segments:
       - [0x174, cpp, moviestart]  # src/sim/ovl5/moviestart.cpp
       - [0x1b4, asm]
       - [0x250, cpp, moviestep]  # src/sim/ovl5/moviestep.cpp
-      - [0x420, asm]
-      - [0x49c, cpp, mdeccb]  # src/sim/ovl5/mdeccb.cpp
       - [0x4c4, asm]
       - [0x5ac, cpp, gpudma]  # src/sim/ovl5/gpudma.cpp
       - [0x6ec, asm]
