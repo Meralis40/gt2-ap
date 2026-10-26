@@ -88,16 +88,21 @@ struct psxMovieLoop {
     int dispOffY;
 };
 
+// A CD read request: sectors start..end, mode, XA file and channel.
+struct CdReq {
+    unsigned char flag;
+    unsigned char mode;
+    unsigned char file;
+    unsigned char channel;
+    unsigned int start;
+    unsigned int end;
+};
+
 struct CdAudio {
     unsigned char pad00[0x18];
     unsigned short masterVol;
     unsigned char pad1a[6];
-    unsigned char reqFlag;
-    unsigned char reqMode;
-    unsigned char reqFile;
-    unsigned char reqChannel;
-    unsigned int reqStart;
-    unsigned int reqEnd;
+    CdReq req;
     int (*onSector)(void *, void *);
     unsigned char pad30[0x136];
     unsigned char state;
@@ -228,6 +233,13 @@ static inline void (*Gfx_SetGpuDmaHook(void (*hook)()))()
 
     g_GfxIrq.gpuDmaHook = hook;
     return old;
+}
+
+// Sets the XA file and channel of a CD read request.
+static inline void CdReq_SetFilter(int file, int channel, CdReq *r)
+{
+    r->file = file;
+    r->channel = channel;
 }
 
 #endif

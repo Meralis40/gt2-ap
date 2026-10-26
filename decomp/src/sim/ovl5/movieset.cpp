@@ -47,4 +47,22 @@ void Movie_Open(MoviePlayer *mp, int movie)
     start += g_StreamLba;
     Movie_SetCdRange(mp, start, sectors - 0x19);
 }
+
+// Prepares the streaming read of sectors lba to lba + sectors - 1, mode 0xc0,
+// XA file 1 channel 7, with Movie_CdSectorCb called for each sector.
+void Movie_SetCdRange(MoviePlayer *mp, unsigned int lba, int sectors)
+{
+    unsigned int end;
+
+    CdAudio_ResetRead();
+    end = lba + sectors;
+    end--;
+    g_CdAudio.req.mode = 0xc0;
+    g_CdAudio.masterVol = 0x8000;
+    g_CdAudio.req.flag = 0;
+    g_CdAudio.req.start = lba;
+    g_CdAudio.req.end = end;
+    CdReq_SetFilter(1, 7, &g_CdAudio.req);
+    g_CdAudio.onSector = Movie_CdSectorCb;
+}
 }

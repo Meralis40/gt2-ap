@@ -37,7 +37,6 @@ segments:
     vram: 0x80010000
     subsegments:
       - [0x0, cpp, movieset]  # src/sim/ovl5/movieset.cpp
-      - [0xf8, asm]
       - [0x174, cpp, moviestart]  # src/sim/ovl5/moviestart.cpp
       - [0x1b4, asm]
       - [0x250, cpp, moviestep]  # src/sim/ovl5/moviestep.cpp
