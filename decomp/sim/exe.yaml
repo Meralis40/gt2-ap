@@ -13,6 +13,7 @@ options:
   src_path: src/sim/exe
   asset_path: assets/sim/exe
   ld_script_path: build/sim/exe.ld
+  lib_path: build/psyq
   symbol_addrs_path: sim/symbols/exe.txt
   undefined_funcs_auto_path: build/sim/exe.undefined_funcs_auto.txt
   undefined_syms_auto_path: build/sim/exe.undefined_syms_auto.txt
@@ -47,5 +48,95 @@ segments:
     vram: 0x8005d600
     subsegments:
       - [0x4de00, asm, resident]        # 0x8005d600 resident code (EXE entry point)
-      - [0x7e818, rodata, resident_data] # 0x8008e018 resident data
+      # PsyQ library members, linked from build/psyq/<lib>.a (tools/psyq.py,
+      # docs/psyq-libs.md). Their .bss is placed by tools/build.py.
+      - [0x76e58, lib, libpress, LIBPRESS, .text]  # 0x80086658
+      - [0x774e8, lib, libcard, INIT, .text]  # 0x80086ce8
+      - [0x775e8, lib, libcard, C112, .text]  # 0x80086de8
+      - [0x775f8, lib, libcard, CARD, .text]  # 0x80086df8
+      - [0x77638, lib, libcard, C171, .text]  # 0x80086e38
+      - [0x77648, lib, libcard, A79, .text]  # 0x80086e48
+      - [0x77658, lib, libcard, A78, .text]  # 0x80086e58
+      - [0x77668, lib, libcard, A74, .text]  # 0x80086e68
+      - [0x77678, lib, libcard, PATCH, .text]  # 0x80086e78
+      - [0x77898, lib, libcard, A75, .text]  # 0x80087098
+      - [0x778a8, lib, libcard, A76, .text]  # 0x800870a8
+      - [0x778b8, lib, libcard, END, .text]  # 0x800870b8
+      - [0x77938, lib, libcard, A80, .text]  # 0x80087138
+      - [0x77948, lib, libpad, PDDIRINI, .text]  # 0x80087148
+      - [0x779f8, lib, libpad, PDMAIINI, .text]  # 0x800871f8
+      - [0x77b08, lib, libpad, PDENT2, .text]  # 0x80087308
+      - [0x77bd8, lib, libpad, PDENT4, .text]  # 0x800873d8
+      - [0x77cb8, lib, libpad, PDCMD1, .text]  # 0x800874b8
+      - [0x77cf8, lib, libpad, PDCMD2, .text]  # 0x800874f8
+      - [0x77e68, lib, libpad, PDRESRES, .text]  # 0x80087668
+      - [0x79cd8, lib, libpad, PDDIRRES, .text]  # 0x800894d8
+      - [0x7a718, lib, libcd, S_021, .text]  # 0x80089f18
+      - [0x7a738, lib, libcd, EVENT, .text]  # 0x80089f38
+      - [0x7a888, lib, libcd, S_014, .text]  # 0x8008a088
+      - [0x7a8a8, lib, libcd, S_015, .text]  # 0x8008a0a8
+      - [0x7a8c8, lib, libcd, S_016, .text]  # 0x8008a0c8
+      - [0x7ac88, lib, libcd, BIOS_2, .text]  # 0x8008a488
+      - [0x7ad88, lib, libcd, BIOS_1, .text]  # 0x8008a588
+      - [0x7c308, lib, libgte, MSC00, .text]  # 0x8008bb08
+      - [0x7c398, lib, libgte, PATCHGTE, .text]  # 0x8008bb98
+      - [0x7c478, lib, libetc, INTR, .text]  # 0x8008bc78
+      - [0x7cb38, lib, libetc, VSYNC, .text]  # 0x8008c338
+      - [0x7cd48, lib, libetc, INTR_VB, .text]  # 0x8008c548
+      - [0x7ce68, lib, libetc, INTR_DMA, .text]  # 0x8008c668
+      - [0x7d108, lib, libapi, C68, .text]  # 0x8008c908
+      - [0x7d118, lib, libapi, A36, .text]  # 0x8008c918
+      - [0x7d128, lib, libapi, A08, .text]  # 0x8008c928
+      - [0x7d138, lib, libapi, A12, .text]  # 0x8008c938
+      - [0x7d148, lib, libapi, A37, .text]  # 0x8008c948
+      - [0x7d158, lib, libapi, A09, .text]  # 0x8008c958
+      - [0x7d168, lib, libapi, C73, .text]  # 0x8008c968
+      - [0x7d178, lib, libapi, A81, .text]  # 0x8008c978
+      - [0x7d188, lib, libapi, C58, .text]  # 0x8008c988
+      - [0x7d198, lib, libapi, A91, .text]  # 0x8008c998
+      - [0x7d1a8, lib, libapi, PAD, .text]  # 0x8008c9a8
+      - [0x7d438, lib, libapi, L03, .text]  # 0x8008cc38
+      - [0x7d448, lib, libapi, L02, .text]  # 0x8008cc48
+      - [0x7d458, lib, libapi, L10, .text]  # 0x8008cc58
+      - [0x7d468, lib, libapi, A07, .text]  # 0x8008cc68
+      - [0x7d478, lib, libapi, A25, .text]  # 0x8008cc78
+      - [0x7d488, lib, libapi, C114, .text]  # 0x8008cc88
+      - [0x7d4a8, lib, libapi, A23, .text]  # 0x8008cca8
+      - [0x7d4b8, lib, libapi, A24, .text]  # 0x8008ccb8
+      - [0x7d4c8, lib, libapi, CHCLRPAD, .text]  # 0x8008ccc8
+      - [0x7d538, lib, libapi, PATCH, .text]  # 0x8008cd38
+      - [0x7d5d8, lib, libapi, A21, .text]  # 0x8008cdd8
+      - [0x7d5e8, lib, libapi, A18, .text]  # 0x8008cde8
+      - [0x7d5f8, lib, libapi, A19, .text]  # 0x8008cdf8
+      - [0x7d608, asm, syslib]          # 0x8008ce08 the game's own library (memset, printf, malloc...)
+      - [0x7e7c4, lib, libc, C39, .text]  # 0x8008dfc4
+      - [0x7e7d4, lib, libc, C24, .text]  # 0x8008dfd4
+      - [0x7e7e4, lib, libc, C40, .text]  # 0x8008dfe4
+      - [0x7e7f4, lib, libc, C63, .text]  # 0x8008dff4
+      - [0x7e804, lib, libc, A63, .text]  # 0x8008e004
+      - [0x7e824, rodata, resident_data] # 0x8008e024 resident data
+      - [0x813d4, lib, libpress, LIBPRESS, .rdata]  # 0x80090bd4
+      - [0x81424, lib, libpad, PDENT4, .rdata]  # 0x80090c24
+      - [0x81444, lib, libcd, EVENT, .rdata]  # 0x80090c44
+      - [0x81464, lib, libcd, BIOS_1, .rdata]  # 0x80090c64
+      - [0x816c4, lib, libetc, INTR, .rdata]  # 0x80090ec4
+      - [0x81734, lib, libetc, VSYNC, .rdata]  # 0x80090f34
+      - [0x81744, lib, libetc, INTR_DMA, .rdata]  # 0x80090f44
+      - [0x81774, rodata, resident_data2] # 0x80090f74
+      - [0x97d24, lib, libpress, LIBPRESS, .data]  # 0x800a7524
+      - [0x97e74, lib, libcard, INIT, .data]  # 0x800a7674
+      - [0x97e84, lib, libpad, PDMAIINI, .data]  # 0x800a7684
+      - [0x97e94, lib, libpad, PDRESRES, .data]  # 0x800a7694
+      - [0x97f44, lib, libpad, PDDIRRES, .data]  # 0x800a7744
+      - [0x97f54, lib, libcd, EVENT, .data]  # 0x800a7754
+      - [0x97f64, lib, libcd, S_016, .data]  # 0x800a7764
+      - [0x97fe4, lib, libcd, BIOS_2, .data]  # 0x800a77e4
+      - [0x98004, lib, libcd, BIOS_1, .data]  # 0x800a7804
+      - [0x98314, lib, libgte, MSC00, .data]  # 0x800a7b14
+      - [0x98324, lib, libetc, INTR, .data]  # 0x800a7b24
+      - [0x99424, lib, libetc, VSYNC, .data]  # 0x800a8c24
+      - [0x99444, lib, libetc, INTR_VB, .data]  # 0x800a8c44
+      - [0x99474, lib, libetc, INTR_DMA, .data]  # 0x800a8c74
+      - [0x994a4, lib, libapi, PAD, .data]  # 0x800a8ca4
+      - [0x994b4, data, resident_data3] # 0x800a8cb4
   - [0x99800]

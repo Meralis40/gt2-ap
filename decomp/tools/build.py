@@ -16,6 +16,10 @@ import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
 
+import yaml
+
+import psyq
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # decomp/
 UNITS = ["exe", "ovl0", "ovl1", "ovl2", "ovl3", "ovl4", "ovl5"]
 OUTPUT = {"exe": "SCUS_944.88"}  # others: <unit>.bin
@@ -32,6 +36,14 @@ CPP_FLAGS = ["-nostdinc", "-undef", "-D__GNUC__=2", "-D__GNUC_MINOR__=8", "-Dmip
              "-DMIPSEL", "-Iinclude"]
 CC1PLUS_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fvtable-thunks"]
 MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
+
+# PsyQ library members (the yaml's lib subsegments, tools/psyq.py). splat links
+# their .text, .rdata and .data; their .bss goes in its own NOLOAD section at
+# this address, in the order of their .text. The uninitialized symbols that
+# psylink placed apart from their member are defined at their addresses.
+# See docs/psyq-libs.md.
+PSYQ_BSS = {"exe": 0x801C9598}
+PSYQ_SYMBOLS = {"_padRestPeriod": 0x801C9420, "_apiPadPatch": 0x801F0D50}
 
 
 def run(cmd):
@@ -52,6 +64,36 @@ def split(unit):
     # resolves (and so isn't replaced by a stub) when this unit's directory exists.
     os.makedirs(os.path.join(ROOT, "src", "sim", unit), exist_ok=True)
     run([sys.executable, "-m", "splat", "split", "sim/%s.yaml" % unit])
+
+
+def lib_members(unit):
+    """[(lib, member)] of the unit's lib subsegments, in .text order."""
+    with open(os.path.join(ROOT, "sim", unit + ".yaml")) as fh:
+        config = yaml.safe_load(fh)
+    members = []
+    for seg in config["segments"]:
+        for sub in seg.get("subsegments", []) if isinstance(seg, dict) else []:
+            if isinstance(sub, list) and len(sub) >= 4 and sub[1] == "lib":
+                if (sub[2], sub[3]) not in members:
+                    members.append((sub[2], sub[3]))
+    return members
+
+
+def psyq_script(unit, members):
+    """Writes <unit>.psyq.ld: splat's script with the members' .bss and symbols."""
+    with open(os.path.join(ROOT, BUILD, unit + ".ld")) as fh:
+        script = fh.read()
+    lines = ["    psyq_bss 0x%08X (NOLOAD) : SUBALIGN(4)" % PSYQ_BSS[unit], "    {"]
+    lines += ["        build/psyq/%s.a:%s.o(.bss);" % m for m in members]
+    lines += ["    }", ""]
+    lines += ["    %s = 0x%08X;" % s for s in sorted(PSYQ_SYMBOLS.items())] + [""]
+    marker = "    /DISCARD/ :"
+    if script.count(marker) != 1:
+        sys.exit("%s.ld: can't find the /DISCARD/ section" % unit)
+    script = script.replace(marker, "\n".join(lines) + marker)
+    with open(os.path.join(ROOT, BUILD, unit + ".psyq.ld"), "w") as fh:
+        fh.write(script)
+    return "%s/%s.psyq.ld" % (BUILD, unit)
 
 
 def objects(unit):
@@ -91,11 +133,17 @@ def build(unit, pool):
     list(pool.map(assemble, objects(unit)))
     elf = "%s/%s.elf" % (BUILD, unit)
     out = "%s/%s" % (BUILD, OUTPUT.get(unit, unit + ".bin"))
+    script, libs = "%s/%s.ld" % (BUILD, unit), []
+    members = lib_members(unit)
+    if members:
+        psyq.build_archives(members)
+        script = psyq_script(unit, members)
+        libs = ["--whole-archive"] + sorted({"build/psyq/%s.a" % lib for lib, _ in members}) + ["--no-whole-archive"]
     run([CROSS + "ld", "-EL", "-nostdlib", "--no-check-sections",
-         "-T", "%s/%s.ld" % (BUILD, unit),
+         "-T", script,
          "-T", "%s/%s.undefined_syms_auto.txt" % (BUILD, unit),
          "-T", "%s/%s.undefined_funcs_auto.txt" % (BUILD, unit),
-         "-Map", "%s/%s.map" % (BUILD, unit), "-o", elf])
+         "-Map", "%s/%s.map" % (BUILD, unit), "-o", elf] + libs)
     run([CROSS + "objcopy", "-O", "binary", elf, out])
     with open(os.path.join(ROOT, out), "rb") as fh:
         got = hashlib.sha1(fh.read()).hexdigest()
