@@ -32,7 +32,7 @@ The runtime (emulator core now, recompilation later) sits behind a small interfa
    - A (target): MIPS → C recompiler (delay slots, GTE, per-overlay sections + overlay-aware dispatch) and runtime (renderer, SPU, CD/XA, MDEC, BIOS, pad, memcard).
 4. **AP game layer** — `apclientpp`, location detection hooks, item application, traps, notifications, per-seed saves.
 5. **Arcade mode** — second executable + overlays, shared AP state.
-6. **AP world** — Python world in the AP repo layout, designed from phase 2 findings.
+6. **AP world** — Python world in the AP repo layout, designed from phase 2 findings. MVP (Simulation Mode) in [world/gt2](../world/gt2), see [world/README.md](../world/README.md).
 7. **Custom content** — file overrides through the virtual CD layer, later AP-aware content.
 
 ## Notes
