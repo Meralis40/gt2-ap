@@ -4,7 +4,7 @@ Where the libc, libgcc and C++ runtime code and data are in the Simulation disc 
 
 ## Summary
 
-- **libc** is not PsyQ's, apart from five BIOS stubs. `memset`, `strcpy`, `sprintf`, `malloc`, `free`, `InitHeap` and the rest (`syslib`, `0x8008ce08–0x8008dfc4`) are the game's own C code, compiled with GCC and no frame info. No version of LIBC2 or LIBC comes close. They are to be decompiled, not linked.
+- **libc** is not PsyQ's, apart from five BIOS stubs. `memset`, `strcpy`, `sprintf`, `malloc`, `free`, `InitHeap` and the rest (`syslib`, `0x8008ce08–0x8008dfc4`) are the game's own C code, compiled with GCC and no frame info. No version of LIBC2 or LIBC comes close. They are decompiled, not linked: `src/sim/exe/syslib.c` ([decomp.md](decomp.md#c-sources)).
 - **The C++ runtime and the libgcc helpers** (`0x80085974–0x80086658`) are GCC 2.8.1's own `libgcc`, built with `-fexceptions`: `exit`, `__main` and the constructor lists, RTTI (`tinfo.cc`), `__builtin_delete` and `__divdi3`. They are not in any PsyQ library. They rebuild **byte for byte** from the GCC 2.8.1 sources with the compiler the build already uses (`tools/toolchain/gcc-2.8.1-psx`); a GNU ld link at their addresses gives the same `.text`, `.rodata` and `.data` as the EXE. The matching build compiles and links them ([In the build](#in-the-build)).
 - Six objects, 0xce4 bytes of code, 0x1b0 of `.rodata`, 0x458 of `.data`, plus seven BSS symbols.
 - Nothing else from libgcc is linked: there is no soft float (`__addsf3`, `__fixsfsi`, …), no other 64-bit helper (`__muldi3`, `__udivdi3`, `__ashldi3`, `__cmpdi2`, …), no `__builtin_new`, `__builtin_vec_new`, `__builtin_vec_delete`, `__pure_virtual`, `__dynamic_cast` or exception handling (`__throw`, `__eh_*`).

@@ -116,7 +116,7 @@ segments:
       - [0x7d5d8, lib, libapi, A21, .text]  # 0x8008cdd8
       - [0x7d5e8, lib, libapi, A18, .text]  # 0x8008cde8
       - [0x7d5f8, lib, libapi, A19, .text]  # 0x8008cdf8
-      - [0x7d608, asm, syslib]          # 0x8008ce08 the game's own library (memset, printf, malloc...)
+      - [0x7d608, c, syslib]            # 0x8008ce08 the game's own library (memset, printf, malloc...)
       - [0x7e7c4, lib, libc, C39, .text]  # 0x8008dfc4
       - [0x7e7d4, lib, libc, C24, .text]  # 0x8008dfd4
       - [0x7e7e4, lib, libc, C40, .text]  # 0x8008dfe4
