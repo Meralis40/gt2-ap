@@ -36,10 +36,11 @@ TOOLCHAIN = os.path.join(ROOT, "tools", "toolchain")
 CPP_FLAGS = ["-nostdinc", "-undef", "-D__GNUC__=2", "-D__GNUC_MINOR__=8", "-Dmips", "-D__mips__",
              "-DMIPSEL", "-Iinclude"]
 CC1PLUS_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fvtable-thunks", "-fno-exceptions"]
-# C sources (the game's libc, syslib): GCC 2.95.2 with signed char, assembled by
+# C sources (the game's libc, syslib): GCC 2.95.2 with signed char and type based
+# alias analysis (Heap_SplitBlock needs it), assembled by
 # GNU as instead of ASPSX (it puts a load delay nop before a label, where ASPSX
 # and maspsx put it after). The GNU as of the time encoded move as addu.
-CC1_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fsigned-char"]
+CC1_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fsigned-char", "-fstrict-aliasing"]
 MOVE = re.compile(rb"(?m)^\tmove\t(\$\w+),(\$\w+)")
 MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
 
