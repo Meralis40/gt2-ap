@@ -1,4 +1,4 @@
-// Player setup: GPU DMA hook, frame ring and buffers.
+// Player setup: GPU DMA hook, frame ring, buffers and the movie's CD sectors.
 #include "common.h"
 #include "movie.h"
 
@@ -37,5 +37,14 @@ void Movie_SetSliceBuffers(MoviePlayer *mp, unsigned long *a, unsigned long *b)
 
     m->slice[0] = a;
     m->slice[1] = b;
+}
+
+void Movie_Open(MoviePlayer *mp, int movie)
+{
+    int start = g_MovieSectors[movie];
+    int sectors = g_MovieSectors[movie + 1] - start;
+
+    start += g_StreamLba;
+    Movie_SetCdRange(mp, start, sectors - 0x19);
 }
 }
