@@ -39,7 +39,6 @@ segments:
       - [0x0, cpp, movieset]  # src/sim/ovl5/movieset.cpp
       - [0x174, cpp, moviestart]  # src/sim/ovl5/moviestart.cpp
       - [0x1b4, cpp, moviestep]  # src/sim/ovl5/moviestep.cpp
-      - [0x4c4, asm]
       - [0x5ac, cpp, gpudma]  # src/sim/ovl5/gpudma.cpp
       - [0x6ec, asm]
       - [0x894, cpp, popframe]  # src/sim/ovl5/popframe.cpp
