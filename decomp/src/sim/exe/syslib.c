@@ -11,7 +11,51 @@ void Sys_Init(void)
     Boot_InitHardware();
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", memset);
+// Fills by words, with swr and swl for an unaligned head and tail. When dst is
+// unaligned and n >= 4, it returns dst rounded up to a word, not dst.
+// The loops count down to the -1 kept in end (at the top), not to 0.
+void *memset(void *dst, int c, size_t n)
+{
+    unsigned char *p;
+    unsigned int *w;
+    unsigned int a, x, rem;
+    unsigned int end = -1;
+    if (n == 0) {
+        return dst;
+    }
+    c &= 0xff;
+    if (n < 4) {
+        p = dst;
+        if (--n != end) {
+            do {
+                *p++ = c;
+            } while (--n != -1);
+        }
+    } else {
+        a = (unsigned int)dst & 3;
+        x = c | (c << 8);
+        c = x | (x << 16);
+        if (a != 0) {
+            __asm__ volatile("swr %0, 0(%1)" : : "r"(c), "r"(dst));
+            a = 4 - a;
+            dst = (char *)dst + a;
+            n -= a;
+        }
+        w = dst;
+        a = n >> 2;
+        rem = n & 3;
+        if (--a != end) {
+            do {
+                *w++ = c;
+            } while (--a != -1);
+        }
+        if (rem != 0) {
+            p = (unsigned char *)w + rem;
+            __asm__ volatile("swl %0, -1(%1)" : : "r"(c), "r"(p));
+        }
+    }
+    return dst;
+}
 
 char *strcpy(char *dst, const char *src)
 {
