@@ -3,6 +3,15 @@
 #include "movie.h"
 
 extern "C" {
+void Movie_Init(MoviePlayer *mp, int rgb24)
+{
+    g_Movie = mp;
+    mp->onFrameDone = 0;
+    MovieStream_Clear(&mp->stream);
+    MdecOut_Init(&mp->mdec, rgb24);
+    mp->savedGpuDmaHook = Gfx_SetGpuDmaHook(Movie_GpuDmaIrq);
+}
+
 void Movie_Shutdown(MoviePlayer *mp)
 {
     g_GfxIrq.gpuDmaHook = mp->savedGpuDmaHook;
