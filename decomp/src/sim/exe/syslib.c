@@ -269,7 +269,26 @@ int vsprintf(char *buf, const char *fmt, void *args)
     return n;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Heap_SplitBlock);
+// Cuts block to size bytes when the rest holds a header and 16 bytes or more;
+// the rest becomes a free block after it.
+void Heap_SplitBlock(HeapBlock *block, unsigned int size)
+{
+    HeapBlock *nb, *next;
+    if (block->size >= size + 2 * sizeof(HeapBlock)) {
+        nb = (HeapBlock *)((char *)block + size) + 1;
+        *nb = *block;
+        next = block->next;
+        block->size = size;
+        block->next = nb;
+        nb->prev = block;
+        nb->used = 0;
+        nb->size -= sizeof(HeapBlock);
+        nb->size -= size;
+        if (next != 0) {
+            next->prev = nb;
+        }
+    }
+}
 
 // Absorbs the next block, header and payload, into block.
 void Heap_MergeNext(HeapBlock *block)
