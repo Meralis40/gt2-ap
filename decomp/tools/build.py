@@ -18,6 +18,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import yaml
 
+import libgcc
 import psyq
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # decomp/
@@ -44,6 +45,15 @@ MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
 # See docs/psyq-libs.md.
 PSYQ_BSS = {"exe": 0x801C9598}
 PSYQ_SYMBOLS = {"_padRestPeriod": 0x801C9420, "_apiPadPatch": 0x801F0D50}
+
+# GCC 2.8.1's libgcc objects (the yaml's libgcc lib subsegments, tools/libgcc.py),
+# placed like the PsyQ members: their .bss (__main's flag) at this address, the
+# first word of the BSS that the startup code clears, and their common symbols
+# at their addresses. See docs/runtime-libs.md.
+LIBGCC_BSS = {"exe": 0x801C93B0}
+LIBGCC_SYMBOLS = {"__ti9type_info": 0x801C9408, "__CTOR_LIST__": 0x801C9410, "__DTOR_LIST__": 0x801C9418,
+                  "__ti16__user_type_info": 0x801F0D20, "__ti14__si_type_info": 0x801F0D30,
+                  "__ti17__class_type_info": 0x801F0D40}
 
 
 def run(cmd):
@@ -80,13 +90,19 @@ def lib_members(unit):
 
 
 def psyq_script(unit, members):
-    """Writes <unit>.psyq.ld: splat's script with the members' .bss and symbols."""
+    """Writes <unit>.psyq.ld: splat's script with the library members' .bss and symbols."""
     with open(os.path.join(ROOT, BUILD, unit + ".ld")) as fh:
         script = fh.read()
-    lines = ["    psyq_bss 0x%08X (NOLOAD) : SUBALIGN(4)" % PSYQ_BSS[unit], "    {"]
-    lines += ["        build/psyq/%s.a:%s.o(.bss);" % m for m in members]
-    lines += ["    }", ""]
-    lines += ["    %s = 0x%08X;" % s for s in sorted(PSYQ_SYMBOLS.items())] + [""]
+    lines = []
+    for name, addr, libs, symbols in [("libgcc_bss", LIBGCC_BSS, ["libgcc"], LIBGCC_SYMBOLS),
+                                      ("psyq_bss", PSYQ_BSS, sorted(psyq.LIBS), PSYQ_SYMBOLS)]:
+        objs = [m for m in members if m[0] in libs]
+        if not objs:
+            continue
+        lines += ["    %s 0x%08X (NOLOAD) : SUBALIGN(4)" % (name, addr[unit]), "    {"]
+        lines += ["        build/psyq/%s.a:%s.o(.bss);" % m for m in objs]
+        lines += ["    }", ""]
+        lines += ["    %s = 0x%08X;" % s for s in sorted(symbols.items())] + [""]
     marker = "    /DISCARD/ :"
     if script.count(marker) != 1:
         sys.exit("%s.ld: can't find the /DISCARD/ section" % unit)
@@ -136,7 +152,8 @@ def build(unit, pool):
     script, libs = "%s/%s.ld" % (BUILD, unit), []
     members = lib_members(unit)
     if members:
-        psyq.build_archives(members)
+        psyq.build_archives([m for m in members if m[0] != "libgcc"])
+        libgcc.build_archive([name for lib, name in members if lib == "libgcc"])
         script = psyq_script(unit, members)
         libs = ["--whole-archive"] + sorted({"build/psyq/%s.a" % lib for lib, _ in members}) + ["--no-whole-archive"]
     run([CROSS + "ld", "-EL", "-nostdlib", "--no-check-sections",

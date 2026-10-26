@@ -238,4 +238,4 @@ No game code or overlay references the libraries' data or their internal functio
 
 ### Not PsyQ
 
-The C++ runtime and `__divdi3` (`80085974–80086658`, with their `.rodata` at `80090a24` and `.data` at `800a70cc`) are from GCC 2.8.1's `libgcc`. They stay assembly for now; [runtime-libs.md](runtime-libs.md) shows how they rebuild byte for byte from GCC 2.8.1's `libgcc2.c` and `cp/tinfo.cc` with the game's compiler, and what the build would need.
+The C++ runtime and `__divdi3` (`80085974–80086658`, with their `.rodata` at `80090a24` and `.data` at `800a70cc`) are from GCC 2.8.1's `libgcc`. The build compiles them from GCC 2.8.1's `libgcc2.c` and `cp/tinfo.cc` with the game's compiler and links them the same way, from `build/psyq/libgcc.a` ([runtime-libs.md](runtime-libs.md#in-the-build)).

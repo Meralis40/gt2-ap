@@ -48,6 +48,14 @@ segments:
     vram: 0x8005d600
     subsegments:
       - [0x4de00, asm, resident]        # 0x8005d600 resident code (EXE entry point)
+      # GCC 2.8.1's libgcc, built from the GNU sources into build/psyq/libgcc.a
+      # (tools/libgcc.py, docs/runtime-libs.md). __main's .bss and the commons
+      # are placed by tools/build.py.
+      - [0x76174, lib, libgcc, _exit, .text]  # 0x80085974
+      - [0x76190, lib, libgcc, __main, .text]  # 0x80085990
+      - [0x762c8, lib, libgcc, tinfo, .text]  # 0x80085ac8
+      - [0x76860, lib, libgcc, _op_delete, .text]  # 0x80086060
+      - [0x76884, lib, libgcc, _divdi3, .text]  # 0x80086084
       # PsyQ library members, linked from build/psyq/<lib>.a (tools/psyq.py,
       # docs/psyq-libs.md). Their .bss is placed by tools/build.py.
       - [0x76e58, lib, libpress, LIBPRESS, .text]  # 0x80086658
@@ -115,6 +123,8 @@ segments:
       - [0x7e7f4, lib, libc, C63, .text]  # 0x8008dff4
       - [0x7e804, lib, libc, A63, .text]  # 0x8008e004
       - [0x7e824, rodata, resident_data] # 0x8008e024 resident data
+      - [0x81224, lib, libgcc, tinfo, .rodata]  # 0x80090a24
+      - [0x812d4, lib, libgcc, _divdi3, .rodata]  # 0x80090ad4
       - [0x813d4, lib, libpress, LIBPRESS, .rdata]  # 0x80090bd4
       - [0x81424, lib, libpad, PDENT4, .rdata]  # 0x80090c24
       - [0x81444, lib, libcd, EVENT, .rdata]  # 0x80090c44
@@ -123,6 +133,12 @@ segments:
       - [0x81734, lib, libetc, VSYNC, .rdata]  # 0x80090f34
       - [0x81744, lib, libetc, INTR_DMA, .rdata]  # 0x80090f44
       - [0x81774, rodata, resident_data2] # 0x80090f74
+      - [0x978cc, lib, libgcc, _exit, .data]  # 0x800a70cc
+      - [0x97910, lib, libgcc, __main, .data]  # 0x800a7110
+      - [0x979b0, lib, libgcc, tinfo, .data]  # 0x800a71b0
+      - [0x97ca8, lib, libgcc, _op_delete, .data]  # 0x800a74a8
+      - [0x97ce4, lib, libgcc, _divdi3, .data]  # 0x800a74e4
+      - [0x97d0c, lib, libgcc, _ctors, .data]  # 0x800a750c
       - [0x97d24, lib, libpress, LIBPRESS, .data]  # 0x800a7524
       - [0x97e74, lib, libcard, INIT, .data]  # 0x800a7674
       - [0x97e84, lib, libpad, PDMAIINI, .data]  # 0x800a7684

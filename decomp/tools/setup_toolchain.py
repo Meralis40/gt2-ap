@@ -7,8 +7,10 @@
 - maspsx, which rewrites the compiler output the way Sony's ASPSX assembled it,
   before GNU as. Same commit as decomp.me's gcc2.8.1-psx, with one fix
   (patch_maspsx).
+- The GCC 2.8.1 sources of the libgcc objects the EXE links (tools/libgcc.py,
+  docs/runtime-libs.md), extracted to gcc-2.8.1-src/.
 
-Both are pinned by SHA-256. See docs/decomp.md.
+All are pinned by SHA-256. See docs/decomp.md.
 """
 import hashlib
 import io
@@ -27,6 +29,14 @@ GCC_SHA256 = "f6f6e883942d4d3289d048236c672e71ed410e546aaae8ff655952f1567e1be0"
 MASPSX_COMMIT = "4ffa8b5106f9780d5d4aa7609f184949433ddbbc"
 MASPSX_URL = "https://github.com/mkst/maspsx/archive/%s.zip" % MASPSX_COMMIT
 MASPSX_SHA256 = "ef60294812d9e4bf6f97ccac973102ebedcc233b8afbccab770be6eac104713c"
+GCC_SRC_URL = "https://ftp.gnu.org/gnu/gcc/gcc-2.8.1.tar.gz"
+GCC_SRC_SHA256 = "3b30fbfdf93e628373d90d174243f3267b0eec9ebe792bb64fd15b8828c2ea4c"
+# The files tools/libgcc.py compiles and includes, under gcc-2.8.1/.
+GCC_SRC_FILES = [
+    "COPYING", "libgcc2.c", "longlong.h", "gbl-ctors.h", "defaults.h", "gansidecl.h",
+    "machmode.h", "machmode.def", "config/mips/mips.h", "config/mips/xm-mips.h",
+    "cp/tinfo.cc", "cp/tinfo.h", "cp/inc/exception", "cp/inc/new", "cp/inc/typeinfo",
+]
 
 
 def fetch(url, sha256):
@@ -74,6 +84,13 @@ def main():
         z.extractall(DEST)
     os.rename(os.path.join(DEST, "maspsx-" + MASPSX_COMMIT), maspsx_dir)
     patch_maspsx(os.path.join(maspsx_dir, "maspsx", "__init__.py"))
+
+    src_dir = os.path.join(DEST, "gcc-2.8.1-src")
+    with tarfile.open(fileobj=io.BytesIO(fetch(GCC_SRC_URL, GCC_SRC_SHA256))) as tar:
+        for name in GCC_SRC_FILES:
+            member = tar.getmember("gcc-2.8.1/" + name)
+            member.name = name
+            tar.extract(member, src_dir, filter="data")
     print("toolchain ready in", os.path.relpath(DEST, ROOT))
 
 
