@@ -143,6 +143,9 @@ extern int psxMovieLoop__typeinfo;
 extern char D_800115BC[];   // "12psxMovieLoop"
 extern short D_800120CC[];  // display buffers, double buffered
 extern short D_800120D4[];  // display buffers, triple buffered
+// VLC table, 0x100 bytes before its start (0x800115CC): one row of 64 words
+// per leading-zero count from 1.
+extern unsigned int D_800114CC[];
 
 // Resident data.
 extern CdAudio g_CdAudio;
@@ -157,6 +160,7 @@ extern int psxViewLoop__typeinfo;
 // Resident code.
 int Sys_CriticalSection(int enter);
 void CdAudio_ResetRead();
+unsigned char *Lz_Decompress(unsigned char *dst, unsigned char *src, int size);
 void func_8007CFD4(void *dst, int words);  // jumps to CdGetSector
 int CdAudio_RunScript(int script);
 void DecDCTReset(int mode);
