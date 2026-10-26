@@ -130,14 +130,13 @@ The members with identical code were told apart by their relocations:
 
 | Range | Contents |
 |---|---|
-| up to `80085c24` | Game code |
-| `80085c24–80086084` | C++ runtime from the compiler's `libgcc`: RTTI (`dcast`, the `__tf` functions, the type_info destructors) and `__builtin_delete` |
-| `80086084–80086658` | `__divdi3` (`libgcc2`) |
+| up to `80085974` | Game code |
+| `80085974–80086658` | GCC 2.8.1's `libgcc`: `exit`, `__main` and the constructor lists, RTTI (`tinfo.cc`), `__builtin_delete`, `__divdi3`. See [runtime-libs.md](runtime-libs.md) |
 | `80086658–8008ce08` | PsyQ: libpress, libcard, libpad, libcd, libgte, libetc, libapi |
-| `8008ce08–8008dfc4` | Not PsyQ: `Sys_Init`, `memset`, `strcpy`, `strcmp`, `sprintf`, `strncpy`, `strlen`, `memcpy`, `strcat`, `strncasecmp`, `malloc`, `abs`, `memcmp`, a printf with 64-bit numbers, `InitHeap`, `free`, `vsprintf`. None is close to any version of LIBC2. Probably a library of the game's own |
+| `8008ce08–8008dfc4` | Not PsyQ: `Sys_Init`, `memset`, `strcpy`, `strcmp`, `sprintf`, `strncpy`, `strlen`, `memcpy`, `strcat`, `strncasecmp`, `malloc`, `abs`, `memcmp`, a printf with 64-bit numbers, `InitHeap`, `free`, `vsprintf`. None is close to any version of LIBC2. The game's own library, in C ([runtime-libs.md](runtime-libs.md#the-games-library)) |
 | `8008dfc4–8008e024` | libc 4.6: the BIOS stubs `bcopy`, `strncmp`, `bzero`, `printf`, `puts` |
 
-`__builtin_delete` matches libsn 4.7's `op_delete.obj` but not 4.6's `_OP_DELE.OBJ`, and `__divdi3` matches no libsn. Both are from GCC 2.8.1's own `libgcc`, which the decomp.me toolchain doesn't include, so they stay assembly for now.
+`__builtin_delete`'s code is the same as libsn 4.7's `op_delete.obj` but not 4.6's `_OP_DELE.OBJ`, and `__divdi3` matches no libsn. Both are from GCC 2.8.1's own `libgcc`, which rebuilds byte for byte from the GNU sources with the build's compiler ([runtime-libs.md](runtime-libs.md)).
 
 The libc stubs come after the game's string functions. So the game's library was linked before `LIBC.LIB`: `memset`, `memcpy`, `strcpy` and the rest resolved to the game's copies, and only the five names it doesn't define came from libc.
 
@@ -239,4 +238,4 @@ No game code or overlay references the libraries' data or their internal functio
 
 ### Not PsyQ
 
-The C++ runtime and `__divdi3` (`80085c24–80086658`) are from GCC 2.8.1's `libgcc`. They stay assembly, or can later be built from GCC 2.8.1's `libgcc2.c` and `tinfo.cc` with the game's compiler.
+The C++ runtime and `__divdi3` (`80085974–80086658`, with their `.rodata` at `80090a24` and `.data` at `800a70cc`) are from GCC 2.8.1's `libgcc`. They stay assembly for now; [runtime-libs.md](runtime-libs.md) shows how they rebuild byte for byte from GCC 2.8.1's `libgcc2.c` and `cp/tinfo.cc` with the game's compiler, and what the build would need.

@@ -83,7 +83,7 @@ After renaming things in Ghidra, run the script (Script Manager, category **GT2*
 
 ## Compiler
 
-The game's libraries match PsyQ 4.6 (libpad 4.7; see [psyq-libs.md](psyq-libs.md) for the objects and how to link them), but its code was not built with the PsyQ 4.6 compiler, which is GCC 2.95.2. It matches Sony's GCC 2.8.x builds, the compilers of PsyQ 4.3 (GCC 2.8.0) and PsyQ 4.4 (GCC 2.8.1), so the game used an older compiler with the newer libraries. The game code is C++ built with `-O2 -g0 -G0 -fvtable-thunks`. Its vtables have the thunk layout (0, the `__tf` function, then 4-byte function pointers), and the EXE header's `gp` is 0.
+The game's libraries match PsyQ 4.6 (libpad 4.7; see [psyq-libs.md](psyq-libs.md) for the objects and how to link them), but its code was not built with the PsyQ 4.6 compiler, which is GCC 2.95.2. It matches Sony's GCC 2.8.x builds, the compilers of PsyQ 4.3 (GCC 2.8.0) and PsyQ 4.4 (GCC 2.8.1), so the game used an older compiler with the newer libraries. The game code is C++ built with `-O2 -g0 -G0 -fvtable-thunks`. Its vtables have the thunk layout (0, the `__tf` function, then 4-byte function pointers), and the EXE header's `gp` is 0. The C++ runtime linked with it (`__main`, RTTI, `__divdi3`) is GCC 2.8.1's own `libgcc`, built with `-fexceptions`; [runtime-libs.md](runtime-libs.md) has it and the game's libc.
 
 The build uses the same open-source toolchain as decomp.me's `gcc2.8.1-psx` compiler:
 
