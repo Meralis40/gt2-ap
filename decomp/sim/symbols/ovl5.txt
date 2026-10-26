@@ -1190,6 +1190,7 @@ g_HeapBase = 0x800A8D50;
 g_HeapSize = 0x800A8D54;
 g_StackSize = 0x800A8D58;
 g_Movie = 0x800A8D5C;
+g_MovieFrames = 0x800A8D60;
 g_IsoCtx = 0x800A8E5C;
 g_VolDir = 0x800A97D0;
 g_MovieVlcBufA = 0x80136960;
