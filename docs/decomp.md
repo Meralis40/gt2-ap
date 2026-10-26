@@ -1,6 +1,6 @@
 # Matching build
 
-The Simulation disc executable (`SCUS_944.88`) and its six uncompressed overlays can be rebuilt byte for byte from the disassembly. This is the base for a matching decompilation: functions are rewritten in C++ one at a time, with each build checked against the originals. So far the OVL3 functions are C++, and so are their copies in other overlays, which build the same sources: `Max3`, `Min3`, `Rgb555_ToHsv`, `RaceCarPick_Random`, `RaceCarPick_SetColor` and `RaceSetup_InitEvent` (also in OVL1, OVL2 and OVL4), `RaceSetup_SetCarFromEntry` and `RaceSetup_SetCarFromGarage` (also in OVL2 and OVL4), `CarWork_Clear`, `CarWork_LoadParts` and `CarWork_SetStagesFromSetup` (twice in OVL4), `Car_StoreSetup` (also in OVL4), and `ArcadeSel_SetupRaceCars`, `ArcadeSel_LoadGarageCar`, `CarWork_LoadGarageCarAlt` and `ArcadeGarageRace_Entry` (OVL3 only). The Sony PsyQ library code in the EXE is linked from the original library objects ([psyq-libs.md](psyq-libs.md)), and the C++ runtime from GCC 2.8.1's `libgcc`, compiled from the GNU sources ([runtime-libs.md](runtime-libs.md)). Everything else is assembly.
+The Simulation disc executable (`SCUS_944.88`) and its six uncompressed overlays can be rebuilt byte for byte from the disassembly. This is the base for a matching decompilation: functions are rewritten in C++ one at a time, with each build checked against the originals. So far the OVL3 functions are C++, and so are their copies in other overlays, which build the same sources: `Max3`, `Min3`, `Rgb555_ToHsv`, `RaceCarPick_Random`, `RaceCarPick_SetColor` and `RaceSetup_InitEvent` (also in OVL1, OVL2 and OVL4), `RaceSetup_SetCarFromEntry` and `RaceSetup_SetCarFromGarage` (also in OVL2 and OVL4), `CarWork_Clear`, `CarWork_LoadParts` and `CarWork_SetStagesFromSetup` (twice in OVL4), `Car_StoreSetup` (also in OVL4), and `ArcadeSel_SetupRaceCars`, `ArcadeSel_LoadGarageCar`, `CarWork_LoadGarageCarAlt` and `ArcadeGarageRace_Entry` (OVL3 only). In OVL5 (the movie player), 38 of its 55 functions are C++, from a first pass over Ghidra's decompilation: the player setup and stepping (`Movie_Shutdown` to `Movie_SetSliceBuffers`, `Movie_Start`, `Movie_Stop` to `Movie_DecodeThenStart`), the MDEC and GPU DMA callbacks, `MovieStream_Clear`, `_Start` and `_Stop`, `MdecOut_Init` and `_Stop`, `Movie_InitRing`, `Movie_DisplayOn`, `Movie_OnFrameDone`, the `psxMovieLoop` destructor, `Enter`, `Flip`, `Leave` and the small virtuals, `Movie_Play18`, `_Play1A`, `_Play19`, both entries and `__tf`. Their `psxMovieLoop` methods are still `extern "C"` functions taking the object, and its vtable is the original data. The Sony PsyQ library code in the EXE is linked from the original library objects ([psyq-libs.md](psyq-libs.md)), and the C++ runtime from GCC 2.8.1's `libgcc`, compiled from the GNU sources ([runtime-libs.md](runtime-libs.md)). Everything else is assembly.
 
 The disassembly comes from [splat](https://github.com/ethteck/splat) and uses the names from the Ghidra project ([ghidra-setup.md](ghidra-setup.md)). Only the configs, the symbol files and the build script are in the repo. The original files and everything generated from them stay outside git.
 
@@ -54,6 +54,7 @@ For each unit (`exe`, `ovl0` … `ovl5`) this runs splat if its output is missin
 | `decomp/src/sim/<unit>/*.cpp` | Decompiled functions |
 | `decomp/include/common.h` | Declarations shared by the sources |
 | `decomp/include/gamestate.h`, `carwork.h`, `race.h` | `GameState`, garage, `CarWork` and race types, from the Ghidra types |
+| `decomp/include/movie.h` | OVL5 movie player types (`MoviePlayer`, `MovieStream`, `MdecOut`, `psxMovieLoop`) and declarations |
 | `decomp/tools/build.py` | Build and check |
 | `decomp/tools/psyq.py` | Converts PsyQ library members to ELF archives |
 | `decomp/tools/libgcc.py`, `libgcc_config/` | Compiles the EXE's libgcc objects from the GCC 2.8.1 sources |
@@ -112,7 +113,7 @@ splat never overwrites an existing source file.
 
 ## Next steps
 
-- Decompile more of OVL3 (its functions are copies of OVL4 code) and OVL5.
+- Decompile more of OVL3 (its functions are copies of OVL4 code) and the rest of OVL5 (`Movie_Init`, `Movie_Open`, `Movie_SetCdRange`, `Movie_GetStatus`, `Movie_CdSectorCb`, `Movie_OnSector`, `Movie_OnMdecSlice`, `MovieStream_ReadSector`, `_PopFrame`, `_ReleaseFrame`, `MdecOut_SetSize`, `_Start`, `Movie_DecodeVlc`, `Movie_ClearVram`, the `psxMovieLoop` constructor, `Update` and `UpdateDisplay`).
 - Use `INCLUDE_ASM` for the functions of a file that aren't matched yet, so a file can follow the original objects.
 - Split the units into files (one per original object) where the code shows the boundaries; for now each code region is one file.
 - Drop `extern "C"` once callers are C++, so names get GCC 2 mangling.

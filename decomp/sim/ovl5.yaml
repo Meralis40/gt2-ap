@@ -37,5 +37,28 @@ segments:
     vram: 0x80010000
     subsegments:
       - [0x0, asm]
+      - [0x68, cpp, movieset]  # src/sim/ovl5/movieset.cpp
+      - [0xa4, asm]
+      - [0x174, cpp, moviestart]  # src/sim/ovl5/moviestart.cpp
+      - [0x1b4, asm]
+      - [0x250, cpp, moviestep]  # src/sim/ovl5/moviestep.cpp
+      - [0x420, asm]
+      - [0x49c, cpp, mdeccb]  # src/sim/ovl5/mdeccb.cpp
+      - [0x4c4, asm]
+      - [0x5ac, cpp, gpudma]  # src/sim/ovl5/gpudma.cpp
+      - [0x6ec, asm]
+      - [0x950, cpp, mdecinit]  # src/sim/ovl5/mdecinit.cpp
+      - [0x994, asm]
+      - [0xa90, cpp, mdecstop]  # src/sim/ovl5/mdecstop.cpp
+      - [0xac0, asm]
+      - [0xd38, cpp, movering]  # src/sim/ovl5/movering.cpp
+      - [0xda8, asm]
+      - [0xe2c, cpp, framedone]  # src/sim/ovl5/framedone.cpp
+      - [0xe64, asm]
+      - [0xf2c, cpp, loopenter]  # src/sim/ovl5/loopenter.cpp
+      - [0x102c, asm]
+      - [0x11cc, cpp, loopflip]  # src/sim/ovl5/loopflip.cpp
+      - [0x11d4, asm]
+      - [0x1290, cpp, movieloop]  # src/sim/ovl5/movieloop.cpp
       - [0x156c, rodata] # 0x8001156c
   - [0x20e0]
