@@ -45,7 +45,6 @@ segments:
       - [0x5ac, cpp, gpudma]  # src/sim/ovl5/gpudma.cpp
       - [0x6ec, asm]
       - [0x894, cpp, popframe]  # src/sim/ovl5/popframe.cpp
-      - [0x90c, asm]
       - [0x950, cpp, mdecinit]  # src/sim/ovl5/mdecinit.cpp
       - [0x994, asm]
       - [0xa90, cpp, mdecstop]  # src/sim/ovl5/mdecstop.cpp
