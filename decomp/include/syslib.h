@@ -24,8 +24,14 @@ size_t strlen(const char *s);
 char *strcpy(char *dst, const char *src);
 int vsprintf(char *buf, const char *fmt, void *args);
 int Printf_Format(PutcFunc putc, const char *fmt, void *args);
+int Printf_EmitNumber(PutcFunc putc, unsigned int flags, int width, int prec, int sign, char *digits, int len,
+                      int base);
+int Printf_PutcToBuffer(int c);
 
 extern HeapBlock *g_HeapBase;
+extern unsigned long g_HeapSize;
+extern char D_80090F74[]; // "0123456789abcdef"
+extern char D_80090F88[]; // "0123456789ABCDEF"
 extern char *D_801C9898; // vsprintf's output pointer
 
 #endif

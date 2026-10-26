@@ -16,11 +16,8 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", memset);
 char *strcpy(char *dst, const char *src)
 {
     char *d = dst;
-    signed char c;
-    do {
-        c = *src++;
-        *d++ = c;
-    } while (c != 0);
+    while ((*d++ = *src++) != 0) {
+    }
     return dst;
 }
 
@@ -31,20 +28,40 @@ int sprintf(char *buf, const char *fmt, ...)
     return vsprintf(buf, fmt, (char *)&fmt + 4);
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", strncpy);
+char *strncpy(char *dst, const char *src, size_t n)
+{
+    size_t len = strlen(src) + 1;
+    if (n < len) {
+        len = n;
+    }
+    bcopy(src, dst, len);
+    return dst;
+}
 
 size_t strlen(const char *s)
 {
     size_t n = -1;
     int c;
     do {
-        c = *(signed char *)s++;
+        c = *s++;
         n++;
     } while (c != 0);
     return n;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", memcpy);
+void *memcpy(void *dst, const void *src, size_t n)
+{
+    unsigned char *d;
+    const unsigned char *s = (const unsigned char *)src;
+    if (src == dst) {
+        return dst;
+    }
+    d = (unsigned char *)dst;
+    while (n--) {
+        *d++ = *s++;
+    }
+    return dst;
+}
 
 char *strcat(char *dst, const char *src)
 {
@@ -57,13 +74,13 @@ int strncasecmp(const char *a, const char *b, int n)
 {
     int ca, cb;
     while (n != 0) {
-        ca = *(signed char *)a++;
-        cb = *(signed char *)b++;
+        ca = *a++;
+        cb = *b++;
         if ((unsigned int)(ca - 'a') < 26) {
-            ca = (signed char)(ca - 0x20);
+            ca = (char)(ca - 0x20);
         }
         if ((unsigned int)(cb - 'a') < 26) {
-            cb = (signed char)(cb - 0x20);
+            cb = (char)(cb - 0x20);
         }
         if (ca != cb) {
             return ca - cb;
@@ -127,13 +144,48 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Printf_FormatDec64);
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Printf_FormatOct64);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Printf_FormatHex64);
+// 64-bit hex; conv is the conversion character, 'x' or 'X'.
+void Printf_FormatHex64(PutcFunc putc, unsigned int flags, int width, int prec, unsigned long long val, int conv)
+{
+    char buf[64];
+    char *digits;
+    int len = 0, started, shift;
+    if (conv == 'x') {
+        digits = D_80090F74;
+    } else {
+        digits = D_80090F88;
+    }
+    started = 0;
+    for (shift = 60; shift >= 0; shift -= 4) {
+        int d = (val >> shift) & 15;
+        if (started || d != 0) {
+            started = 1;
+            buf[len++] = digits[d];
+        }
+    }
+    // base 17 makes Printf_EmitNumber write an upper-case 0X
+    Printf_EmitNumber(putc, flags, width, prec, 0, buf, len, conv == 'X' ? 17 : 16);
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Printf_ParseInt);
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Printf_Format);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", InitHeap);
+// The whole region becomes one free block.
+void InitHeap(unsigned long *base, unsigned long size)
+{
+    g_HeapBase = (HeapBlock *)base;
+    g_HeapSize = size;
+    if (size < sizeof(HeapBlock)) {
+        size = 0;
+    } else {
+        size -= sizeof(HeapBlock);
+    }
+    g_HeapBase->prev = 0;
+    g_HeapBase->next = 0;
+    g_HeapBase->size = size;
+    g_HeapBase->used = 0;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Heap_InitDefault);
 
@@ -146,7 +198,14 @@ int Printf_PutcToBuffer(int c)
     return 0;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", vsprintf);
+int vsprintf(char *buf, const char *fmt, void *args)
+{
+    int n;
+    D_801C9898 = buf;
+    n = Printf_Format(Printf_PutcToBuffer, fmt, args);
+    buf[n] = 0;
+    return n;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Heap_SplitBlock);
 
