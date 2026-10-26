@@ -1,4 +1,4 @@
-// Takes the next queued frame of the CD stream ring.
+// Takes the next queued frame of the CD stream ring, and releases it.
 #include "common.h"
 #include "movie.h"
 
@@ -21,5 +21,18 @@ unsigned char *MovieStream_PopFrame(MovieStream *s)
     }
     Sys_CriticalSection(leave);
     return frame;
+}
+
+// Frees the slot of the frame taken by MovieStream_PopFrame.
+void MovieStream_ReleaseFrame(MovieStream *s)
+{
+    int leave = Sys_CriticalSection(0);
+    int queued = s->queued;
+
+    if (queued != 0) {
+        queued--;
+    }
+    s->queued = queued;
+    Sys_CriticalSection(leave);
 }
 }
