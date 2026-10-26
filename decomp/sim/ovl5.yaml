@@ -55,8 +55,7 @@ segments:
       - [0xe64, asm]
       - [0xf2c, cpp, loopenter]  # src/sim/ovl5/loopenter.cpp
       - [0x102c, asm]
-      - [0x11cc, cpp, loopflip]  # src/sim/ovl5/loopflip.cpp
-      - [0x11d4, asm]
+      - [0x11cc, cpp, loopdisplay]  # src/sim/ovl5/loopdisplay.cpp
       - [0x1290, cpp, movieloop]  # src/sim/ovl5/movieloop.cpp
       - [0x156c, rodata] # 0x8001156c
   - [0x20e0]
