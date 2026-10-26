@@ -217,7 +217,22 @@ void InitHeap(unsigned long *base, unsigned long size)
     g_HeapBase->used = 0;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Heap_InitDefault);
+// The heap runs from the end of the BSS to g_StackSize below the stack that
+// start was called with, both aligned to 16 bytes, or is empty.
+void Heap_InitDefault(void)
+{
+    int base, top, size;
+    base = (int)(D_801F0D60 + 15) & ~15;
+    base |= 0x80000000;
+    top = g_StartupSP & ~15;
+    top = (top - g_StackSize + 15) & ~15;
+    top |= 0x80000000;
+    size = 0;
+    if (base < top) {
+        size = top - base;
+    }
+    InitHeap((unsigned long *)base, size);
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", free);
 
