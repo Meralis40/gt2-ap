@@ -45,7 +45,6 @@ segments:
       - [0x9e4, cpp, mdecstart]  # src/sim/ovl5/mdecstart.cpp
       - [0xac0, cpp, decodevlc]  # src/sim/ovl5/decodevlc.cpp
       - [0xd38, cpp, movering]  # src/sim/ovl5/movering.cpp
-      - [0xda8, asm]
       - [0xe2c, cpp, framedone]  # src/sim/ovl5/framedone.cpp
       - [0xe64, asm]
       - [0xf2c, cpp, loopenter]  # src/sim/ovl5/loopenter.cpp
