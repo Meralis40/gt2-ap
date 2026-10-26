@@ -36,9 +36,11 @@ TOOLCHAIN = os.path.join(ROOT, "tools", "toolchain")
 CPP_FLAGS = ["-nostdinc", "-undef", "-D__GNUC__=2", "-D__GNUC_MINOR__=8", "-Dmips", "-D__mips__",
              "-DMIPSEL", "-Iinclude"]
 CC1PLUS_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fvtable-thunks", "-fno-exceptions"]
-# C sources (the game's libc, syslib): GCC 2.95.2, as PsyQ 4.6's compiler, with
-# signed char.
+# C sources (the game's libc, syslib): GCC 2.95.2 with signed char, assembled by
+# GNU as instead of ASPSX (it puts a load delay nop before a label, where ASPSX
+# and maspsx put it after). The GNU as of the time encoded move as addu.
 CC1_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fsigned-char"]
+MOVE = re.compile(rb"(?m)^\tmove\t(\$\w+),(\$\w+)")
 MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
 
 # PsyQ library members (the yaml's lib subsegments, tools/psyq.py). splat links
@@ -164,7 +166,7 @@ def pipe(cmd, data):
     return r.stdout
 
 
-def compile_cc(src, obj, gcc, cc, flags):
+def compile_cc(src, obj, gcc, cc, flags, maspsx=True):
     if not os.path.exists(os.path.join(TOOLCHAIN, gcc, cc)):
         sys.exit("missing compiler: run tools/setup_toolchain.py first")
     pre = pipe(["cpp"] + CPP_FLAGS + [src], None)
@@ -172,8 +174,11 @@ def compile_cc(src, obj, gcc, cc, flags):
     asm = pipe([os.path.join(TOOLCHAIN, gcc, cc)] + flags + ["-o", "-"], pre)
     with open(os.path.join(ROOT, obj[:-2] + ".s"), "wb") as fh:
         fh.write(asm)  # kept for diffing
-    pipe([sys.executable, os.path.join(TOOLCHAIN, "maspsx", "maspsx.py")] + MASPSX_FLAGS
-         + ["--run-assembler", "--gnu-as-path", CROSS + "as"] + AS_FLAGS + ["-o", obj], asm)
+    if maspsx:
+        pipe([sys.executable, os.path.join(TOOLCHAIN, "maspsx", "maspsx.py")] + MASPSX_FLAGS
+             + ["--run-assembler", "--gnu-as-path", CROSS + "as"] + AS_FLAGS + ["-o", obj], asm)
+    else:
+        pipe([CROSS + "as"] + AS_FLAGS + ["-o", obj], MOVE.sub(rb"\taddu\t\1,\2,$0", asm))
 
 
 def assemble(obj):
@@ -182,7 +187,7 @@ def assemble(obj):
     if src.endswith(".cpp"):
         compile_cc(src, obj, "gcc-2.8.1-psx", "cc1plus", CC1PLUS_FLAGS)
     elif src.endswith(".c"):
-        compile_cc(src, obj, "gcc-2.95.2-psx", "cc1", CC1_FLAGS)
+        compile_cc(src, obj, "gcc-2.95.2-psx", "cc1", CC1_FLAGS, maspsx=False)
     else:
         run([CROSS + "as"] + AS_FLAGS + ["-o", obj, src])
 

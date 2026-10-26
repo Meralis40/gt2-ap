@@ -185,7 +185,19 @@ void Printf_FormatHex64(PutcFunc putc, unsigned int flags, int width, int prec, 
     Printf_EmitNumber(putc, flags, width, prec, 0, buf, len, conv == 'X' ? 17 : 16);
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Printf_ParseInt);
+// Reads a decimal number at *p and moves *p past it.
+int Printf_ParseInt(char **p)
+{
+    char *s = *p;
+    int n = 0;
+    char c = *s;
+    while ((unsigned int)(c - '0') < 10) {
+        n = n * 10 + (c - '0');
+        c = *++s;
+    }
+    *p = s;
+    return n;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Printf_Format);
 
