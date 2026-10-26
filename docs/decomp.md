@@ -1,6 +1,6 @@
 # Matching build
 
-The Simulation disc executable (`SCUS_944.88`) and its six uncompressed overlays can be rebuilt byte for byte from the disassembly. This is the base for a matching decompilation: functions are rewritten in C++ one at a time, with each build checked against the originals. So far the OVL3 functions are C++, and so are their copies in other overlays, which build the same sources: `Max3`, `Min3`, `Rgb555_ToHsv`, `RaceCarPick_Random`, `RaceCarPick_SetColor` and `RaceSetup_InitEvent` (also in OVL1, OVL2 and OVL4), `RaceSetup_SetCarFromEntry` and `RaceSetup_SetCarFromGarage` (also in OVL2 and OVL4), `CarWork_Clear`, `CarWork_LoadParts` and `CarWork_SetStagesFromSetup` (twice in OVL4), `Car_StoreSetup` (also in OVL4), and `ArcadeSel_SetupRaceCars`, `ArcadeSel_LoadGarageCar`, `CarWork_LoadGarageCarAlt` and `ArcadeGarageRace_Entry` (OVL3 only). All 55 functions of OVL5 (the movie player) are C++: the player (`Movie_*`), its CD stream ring (`MovieStream_*`), the MDEC output (`MdecOut_*`), the `psxMovieLoop` screen loop and the movie entries. `psxMovieLoop` is a real C++ class, derived from the resident `psxViewLoop` and `ScreenViewLoop`, which `movie.h` declares in vtable order (their code is still assembly). `movieloop.cpp` emits its vtable, type name, `__tf` function and typeinfo, and defines the overlay's buffers in `.bss`. The rest of OVL5's `.rodata` (the VLC table and the display positions) is still the original data. The Sony PsyQ library code in the EXE is linked from the original library objects ([psyq-libs.md](psyq-libs.md)), and the C++ runtime from GCC 2.8.1's `libgcc`, compiled from the GNU sources ([runtime-libs.md](runtime-libs.md)). Everything else is assembly.
+The Simulation disc executable (`SCUS_944.88`) and its six uncompressed overlays can be rebuilt byte for byte from the disassembly. This is the base for a matching decompilation: functions are rewritten in C++ one at a time, with each build checked against the originals. So far the OVL3 functions are C++, and so are their copies in other overlays, which build the same sources: `Max3`, `Min3`, `Rgb555_ToHsv`, `RaceCarPick_Random`, `RaceCarPick_SetColor` and `RaceSetup_InitEvent` (also in OVL1, OVL2 and OVL4), `RaceSetup_SetCarFromEntry` and `RaceSetup_SetCarFromGarage` (also in OVL2 and OVL4), `CarWork_Clear`, `CarWork_LoadParts` and `CarWork_SetStagesFromSetup` (twice in OVL4), `Car_StoreSetup` (also in OVL4), and `ArcadeSel_SetupRaceCars`, `ArcadeSel_LoadGarageCar`, `CarWork_LoadGarageCarAlt` and `ArcadeGarageRace_Entry` (OVL3 only). All 55 functions of OVL5 (the movie player) are C++: the player (`Movie_*`), its CD stream ring (`MovieStream_*`), the MDEC output (`MdecOut_*`), the `psxMovieLoop` screen loop and the movie entries. `psxMovieLoop` is a real C++ class, derived from the resident `psxViewLoop` and `ScreenViewLoop`, which `movie.h` declares in vtable order (their code is still assembly). `movieloop.cpp` emits its vtable, type name, `__tf` function and typeinfo, and defines the overlay's buffers in `.bss`. The rest of OVL5's `.rodata` (the VLC table and the display positions) is still the original data. The Sony PsyQ library code in the EXE is linked from the original library objects ([psyq-libs.md](psyq-libs.md)), and the C++ runtime from GCC 2.8.1's `libgcc`, compiled from the GNU sources ([runtime-libs.md](runtime-libs.md)). 11 of the 27 functions of the game's own C library (`syslib`) are C: `Sys_Init`, `strcpy`, `sprintf`, `strlen`, `strcat`, `strncasecmp`, `malloc`, `abs`, `memcmp`, `Printf_PutcToBuffer` and `Heap_MergeNext`, in `src/sim/exe/syslib.c`, which includes the other 16 from splat's output with `INCLUDE_ASM` ([C sources](#c-sources)). Everything else is assembly.
 
 The disassembly comes from [splat](https://github.com/ethteck/splat) and uses the names from the Ghidra project ([ghidra-setup.md](ghidra-setup.md)). Only the configs, the symbol files and the build script are in the repo. The original files and everything generated from them stay outside git.
 
@@ -51,9 +51,10 @@ For each unit (`exe`, `ovl0` … `ovl5`) this runs splat if its output is missin
 |---|---|
 | `decomp/sim/<unit>.yaml` | splat config of each unit: segments, options, expected SHA-1 |
 | `decomp/sim/symbols/<unit>.txt` | Names exported from Ghidra |
-| `decomp/src/sim/<unit>/*.cpp` | Decompiled functions |
+| `decomp/src/sim/<unit>/*.cpp`, `*.c` | Decompiled functions (C for the EXE's `syslib`) |
 | `decomp/include/common.h` | Declarations shared by the sources |
 | `decomp/include/gamestate.h`, `carwork.h`, `race.h` | `GameState`, garage, `CarWork` and race types, from the Ghidra types |
+| `decomp/include/syslib.h` | The EXE's C library (`HeapBlock`) and declarations |
 | `decomp/include/movie.h` | OVL5 movie player types (`MoviePlayer`, `MovieStream`, `MdecOut`, `psxMovieLoop`) and declarations |
 | `decomp/tools/build.py` | Build and check |
 | `decomp/tools/psyq.py` | Converts PsyQ library members to ELF archives |
@@ -89,7 +90,7 @@ The game's libraries match PsyQ 4.6 (libpad 4.7; see [psyq-libs.md](psyq-libs.md
 
 The build uses the same open-source toolchain as decomp.me's `gcc2.8.1-psx` compiler:
 
-- **GCC 2.8.1** rebuilt from GNU sources with a PlayStation target (`mips-sony-psx`: R3000, little endian, soft float, unsigned `char`), [decompals/old-gcc](https://github.com/decompals/old-gcc) release 0.17. Only `cc1plus` is used.
+- **GCC 2.8.1** rebuilt from GNU sources with a PlayStation target (`mips-sony-psx`: R3000, little endian, soft float, unsigned `char`), [decompals/old-gcc](https://github.com/decompals/old-gcc) release 0.17. The game code uses `cc1plus`, its C library `cc1`.
 - **[maspsx](https://github.com/mkst/maspsx)** at the decomp.me commit (`4ffa8b5`). It rewrites the compiler output the way Sony's ASPSX assembled it, then runs GNU as. `--aspsx-version=2.86` (ASPSX of PsyQ 4.6) makes small `li` constants `addiu`, as in the game; with `-G0`, maspsx treats ASPSX 2.79 (PsyQ 4.4) the same.
   `setup_toolchain.py` patches one rule: after a `div`, maspsx adds a `nop` when the next instruction reads the quotient, even past a label. The game has no `nop` there in `Rgb555_ToHsv` (OVL3), so the patch makes it match. Sony's ASPSX 2.79 and 2.86 do add the `nop`, though, so the original source probably differs from ours before that branch, and the patch may be dropped once it does.
 
@@ -100,6 +101,13 @@ A `.cpp` file goes through:
 3. maspsx, then GNU as with the same flags as the disassembly.
 
 decomp.me's PsyQ packages (`psyq4.3` to `psyq4.6`) run Sony's executables under wibo. With PsyQ 4.3 and 4.4's `CC1PLPSX.EXE`, the same functions match as with this rebuild, and the ones that don't match here don't match there either: they need a different source, not a different compiler. Sony's ASPSX also checks divisions unless given `-0`; the game has no checks, and maspsx doesn't add them.
+
+## C sources
+
+`syslib` (`0x8008ce08–0x8008dfc4`, [runtime-libs.md](runtime-libs.md#the-games-library)) is the game's libc. Its functions have C names (`memset`, `malloc`), and `cc1` and `cc1plus` compile all of them to the same code, so the code can't tell C from C++; it is C, as a libc would be. A `.c` file goes through the same steps as a `.cpp` file, with `cc1 -quiet -O2 -g0 -G0`.
+
+- **Signed `char`.** The library reads characters with `lb` (`strlen`, `strcmp`, `strncasecmp`) where the PlayStation target's unsigned `char` gives `lbu`. The sources cast to `signed char`; plain `char` with `-fsigned-char` gives the same code, so the original may have been built that way.
+- **One file.** `[0x7d608, c, syslib]` is a single `c` subsegment. The functions not matched yet are `INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", <name>)`: splat writes each one's assembly there. The file defines `INCLUDE_ASM_USE_MACRO_INC`, so the included code uses `macro.inc`, whose `jlabel` makes the labels of `Printf_Format`'s jump tables global (the tables are in `resident_data2`).
 
 ## Decompiling a function
 
@@ -114,6 +122,7 @@ splat never overwrites an existing source file.
 ## Next steps
 
 - Decompile more of OVL3 (its functions are copies of OVL4 code).
-- Use `INCLUDE_ASM` for the functions of a file that aren't matched yet, so a file can follow the original objects.
+- Use `INCLUDE_ASM` for the functions of a file that aren't matched yet, so a file can follow the original objects (`syslib.c` does).
+- Match the rest of `syslib` ([C sources](#c-sources)).
 - Split the units into files (one per original object) where the code shows the boundaries; for now each code region is one file.
 - Drop `extern "C"` once callers are C++, so names get GCC 2 mangling.

@@ -36,6 +36,8 @@ TOOLCHAIN = os.path.join(ROOT, "tools", "toolchain")
 CPP_FLAGS = ["-nostdinc", "-undef", "-D__GNUC__=2", "-D__GNUC_MINOR__=8", "-Dmips", "-D__mips__",
              "-DMIPSEL", "-Iinclude"]
 CC1PLUS_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fvtable-thunks", "-fno-exceptions"]
+# C sources (the game's libc, syslib): the same compiler's cc1.
+CC1_FLAGS = ["-quiet", "-O2", "-g0", "-G0"]
 MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
 
 # PsyQ library members (the yaml's lib subsegments, tools/psyq.py). splat links
@@ -161,12 +163,12 @@ def pipe(cmd, data):
     return r.stdout
 
 
-def compile_cpp(src, obj):
-    if not os.path.exists(os.path.join(TOOLCHAIN, "gcc-2.8.1-psx", "cc1plus")):
+def compile_cc(src, obj, cc, flags):
+    if not os.path.exists(os.path.join(TOOLCHAIN, "gcc-2.8.1-psx", cc)):
         sys.exit("missing compiler: run tools/setup_toolchain.py first")
     pre = pipe(["cpp"] + CPP_FLAGS + [src], None)
     pre = re.sub(rb"(?m)^# 0", b"# 1", pre)  # cc1plus rejects line 0 markers
-    asm = pipe([os.path.join(TOOLCHAIN, "gcc-2.8.1-psx", "cc1plus")] + CC1PLUS_FLAGS + ["-o", "-"], pre)
+    asm = pipe([os.path.join(TOOLCHAIN, "gcc-2.8.1-psx", cc)] + flags + ["-o", "-"], pre)
     with open(os.path.join(ROOT, obj[:-2] + ".s"), "wb") as fh:
         fh.write(asm)  # kept for diffing
     pipe([sys.executable, os.path.join(TOOLCHAIN, "maspsx", "maspsx.py")] + MASPSX_FLAGS
@@ -177,7 +179,9 @@ def assemble(obj):
     src = obj[len(BUILD) + 1:-2]
     os.makedirs(os.path.join(ROOT, os.path.dirname(obj)), exist_ok=True)
     if src.endswith(".cpp"):
-        compile_cpp(src, obj)
+        compile_cc(src, obj, "cc1plus", CC1PLUS_FLAGS)
+    elif src.endswith(".c"):
+        compile_cc(src, obj, "cc1", CC1_FLAGS)
     else:
         run([CROSS + "as"] + AS_FLAGS + ["-o", obj, src])
 
