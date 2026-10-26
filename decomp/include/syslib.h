@@ -23,7 +23,12 @@ void bcopy(const void *src, void *dst, size_t n);
 size_t strlen(const char *s);
 char *strcpy(char *dst, const char *src);
 int vsprintf(char *buf, const char *fmt, void *args);
-int Printf_Format(PutcFunc putc, const char *fmt, void *args);
+int Printf_Format(PutcFunc putc, const char *fmt, char *args);
+int Printf_ParseInt(char **p);
+int Printf_FormatDec64(PutcFunc putc, unsigned int flags, int width, int prec, unsigned long long val, int sign,
+                       int point);
+int Printf_FormatOct64(PutcFunc putc, unsigned int flags, int width, int prec, unsigned long long val, int sign);
+int Printf_FormatHex64(PutcFunc putc, unsigned int flags, int width, int prec, unsigned long long val, int conv);
 int Printf_EmitString(PutcFunc putc, unsigned int flags, int width, int prec, char *s);
 int Printf_EmitNumber(PutcFunc putc, unsigned int flags, int width, int prec, char sign, char *digits, int len,
                       int base);
@@ -35,8 +40,6 @@ extern unsigned long g_HeapSize;
 extern unsigned int g_StackSize;
 extern unsigned int g_StartupSP; // sp when start was called
 extern char D_801F0D60[];        // end of the BSS
-extern char D_80090F74[]; // "0123456789abcdef"
-extern char D_80090F88[]; // "0123456789ABCDEF"
 extern char *D_801C9898; // vsprintf's output pointer
 extern unsigned long long D_800A8CB8[19]; // 10^18 down to 10^0
 

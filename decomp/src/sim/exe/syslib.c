@@ -1,8 +1,5 @@
 // The game's own C library: string and memory functions, sprintf and a small
 // heap. The functions still in assembly are included from splat's output.
-// Jump table labels are global (macro.inc), as the tables are in another file.
-#define INCLUDE_ASM_USE_MACRO_INC 1
-#include "include_asm.h"
 #include "syslib.h"
 
 void Sys_Init(void)
@@ -332,7 +329,7 @@ int Printf_EmitNumber(PutcFunc putc, unsigned int flags, int width, int prec, ch
 // 64-bit decimal, by repeated subtraction of the powers of ten. With point
 // set and prec >= 0, a '.' goes before the last prec digits; point then holds
 // the index of the digit before it (19 for none).
-void Printf_FormatDec64(PutcFunc putc, unsigned int flags, int width, int prec, unsigned long long val, int sign,
+int Printf_FormatDec64(PutcFunc putc, unsigned int flags, int width, int prec, unsigned long long val, int sign,
                         int point)
 {
     char buf[64];
@@ -360,12 +357,12 @@ void Printf_FormatDec64(PutcFunc putc, unsigned int flags, int width, int prec, 
             started = 1;
         }
     }
-    Printf_EmitNumber(putc, flags, width, prec, sign, buf, len, 10);
+    return Printf_EmitNumber(putc, flags, width, prec, sign, buf, len, 10);
 }
 
 // 64-bit octal. buf[0] keeps the sign, and the sign variable then becomes the
 // flag that leading zeros have been skipped.
-void Printf_FormatOct64(PutcFunc putc, unsigned int flags, int width, int prec, unsigned long long val, int sign)
+int Printf_FormatOct64(PutcFunc putc, unsigned int flags, int width, int prec, unsigned long long val, int sign)
 {
     char buf[64];
     int len, shift, d;
@@ -379,19 +376,19 @@ void Printf_FormatOct64(PutcFunc putc, unsigned int flags, int width, int prec, 
             buf[len++] = d + '0';
         }
     }
-    Printf_EmitNumber(putc, flags, width, prec, buf[0], buf + 1, len - 1, 8);
+    return Printf_EmitNumber(putc, flags, width, prec, buf[0], buf + 1, len - 1, 8);
 }
 
 // 64-bit hex; conv is the conversion character, 'x' or 'X'.
-void Printf_FormatHex64(PutcFunc putc, unsigned int flags, int width, int prec, unsigned long long val, int conv)
+int Printf_FormatHex64(PutcFunc putc, unsigned int flags, int width, int prec, unsigned long long val, int conv)
 {
     char buf[64];
     char *digits;
     int len = 0, started, shift;
     if (conv == 'x') {
-        digits = D_80090F74;
+        digits = "0123456789abcdef";
     } else {
-        digits = D_80090F88;
+        digits = "0123456789ABCDEF";
     }
     started = 0;
     for (shift = 60; shift >= 0; shift -= 4) {
@@ -402,7 +399,7 @@ void Printf_FormatHex64(PutcFunc putc, unsigned int flags, int width, int prec, 
         }
     }
     // base 17 makes Printf_EmitNumber write an upper-case 0X
-    Printf_EmitNumber(putc, flags, width, prec, 0, buf, len, conv == 'X' ? 17 : 16);
+    return Printf_EmitNumber(putc, flags, width, prec, 0, buf, len, conv == 'X' ? 17 : 16);
 }
 
 // Reads a decimal number at *p and moves *p past it.
@@ -419,7 +416,188 @@ int Printf_ParseInt(char **p)
     return n;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/syslib", Printf_Format);
+// The printf engine: sends the output of fmt to putc and returns how many
+// characters it wrote, or -1 when putc fails. Flags are - + 0 space #, width
+// and precision can be * (but .* sets the width), sizes are h, l (int) and L
+// (64 bits). %i prints in octal and %t in decimal with a point before the last
+// prec digits; e, f, g, n and p only skip their argument.
+int Printf_Format(PutcFunc putc, const char *fmt, char *args)
+{
+    int count = 0;
+    char c;
+    unsigned int flags;
+    int width, prec, size, esc, r, sign;
+    const char *start;
+    long long sval;
+    unsigned long long uval;
+
+    while ((c = *fmt++) != 0) {
+        start = fmt;
+        esc = c == '%';
+        if (*fmt != '%') {
+            esc = 0;
+        }
+        if (c != '%' || esc) {
+            fmt = start + esc;
+            if (putc(c) != 0) {
+                return -1;
+            }
+            count++;
+            continue;
+        }
+        flags = 0;
+        for (;; fmt++) {
+            c = *fmt;
+            switch (*fmt) {
+            case '-':
+                flags |= 1;
+                continue;
+            case '+':
+                flags |= 2;
+                continue;
+            case '0':
+                flags |= 4;
+                continue;
+            case ' ':
+                flags |= 8;
+                continue;
+            case '#':
+                flags |= 0x10;
+                continue;
+            }
+            break;
+        }
+        width = -1;
+        if ((unsigned int)(c - '0') < 10) {
+            width = Printf_ParseInt((char **)&fmt);
+            c = *fmt;
+        } else if (c == '*') {
+            width = *(int *)args;
+            args += 4;
+            c = *++fmt;
+        }
+        prec = -1;
+        if (c == '.') {
+            c = *++fmt;
+            if ((unsigned int)(c - '0') < 10) {
+                prec = Printf_ParseInt((char **)&fmt);
+            } else if (c == '*') {
+                width = *(int *)args;
+                args += 4;
+                fmt++;
+            }
+        }
+        switch (*fmt++) {
+        case 'h':
+            size = 1;
+            break;
+        case 'l':
+            size = 2;
+            break;
+        case 'L':
+            size = 3;
+            break;
+        default:
+            size = 0;
+            fmt--;
+            break;
+        }
+        c = *fmt;
+        switch (*fmt++) {
+        case 'X':
+        case 'd':
+        case 'i':
+        case 'o':
+        case 't':
+        case 'u':
+        case 'x':
+            switch (size) {
+            case 1:
+                sval = (short)*(unsigned short *)args;
+                args += 4;
+                uval = sval & 0xffff;
+                break;
+            case 3:
+                sval = *(long long *)args;
+                args += 8;
+                uval = sval;
+                break;
+            default:
+                sval = *(int *)args;
+                args += 4;
+                uval = sval & 0xffffffff;
+                break;
+            }
+            sign = 0;
+            if (sval < 0 && (c == 'd' || c == 'i' || c == 't')) {
+                uval = -sval;
+                sign = '-';
+            }
+            switch (c) {
+            case 'd':
+            case 'u':
+                r = Printf_FormatDec64(putc, flags, width, prec, uval, sign, 0);
+                break;
+            case 't':
+                r = Printf_FormatDec64(putc, flags, width, prec, uval, sign, 1);
+                break;
+            case 'i':
+            case 'o':
+                r = Printf_FormatOct64(putc, flags, width, prec, uval, sign);
+                break;
+            case 'X':
+            case 'x':
+                r = Printf_FormatHex64(putc, flags, width, prec, uval, c);
+                break;
+            default:
+                r = 0;
+                break;
+            }
+            if (r < 0) {
+                return -1;
+            }
+            count += r;
+            break;
+        case 'E':
+        case 'G':
+        case 'e':
+        case 'f':
+        case 'g':
+            if (size < 2) {
+                args += sizeof(float) ;
+            } else if (size < 3) {
+                args += sizeof(double);
+            } else {
+                args += sizeof(long double);
+            }
+            break;
+        case 'n':
+        case 'p':
+            args += 4;
+            break;
+        case 'c':
+            if (putc(*args) < 0) {
+                return -1;
+            }
+            args += 4;
+            count++;
+            break;
+        case 's':
+            r = Printf_EmitString(putc, flags, width, prec, *(char **)args);
+            args += 4;
+            if (r < 0) {
+                return -1;
+            }
+            count += r;
+            break;
+        default:
+            // unknown conversion: the % prints nothing, and the rest is copied
+            fmt = start;
+            break;
+        }
+    }
+    return count;
+}
 
 // The whole region becomes one free block.
 void InitHeap(unsigned long *base, unsigned long size)
