@@ -3,6 +3,10 @@
 #include "movie.h"
 
 extern "C" {
+// The player being played, for the callbacks. The first variable of the
+// overlay's .bss.
+MoviePlayer *g_Movie OVL5_BSS;
+
 void Movie_Init(MoviePlayer *mp, int rgb24)
 {
     g_Movie = mp;
