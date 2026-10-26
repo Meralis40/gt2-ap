@@ -221,4 +221,13 @@ void Movie_ArcadeEntry(int which);
 void *psxMovieLoop____tf();
 }
 
+// Installs the GPU DMA end hook and returns the previous one.
+static inline void (*Gfx_SetGpuDmaHook(void (*hook)()))()
+{
+    void (*old)() = g_GfxIrq.gpuDmaHook;
+
+    g_GfxIrq.gpuDmaHook = hook;
+    return old;
+}
+
 #endif
