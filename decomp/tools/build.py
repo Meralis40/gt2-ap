@@ -43,6 +43,9 @@ CC1PLUS_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fvtable-thunks", "-fno-excepti
 CC1_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fsigned-char", "-fstrict-aliasing"]
 MOVE = re.compile(rb"(?m)^\tmove\t(\$\w+),(\$\w+)")
 MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
+# C++ sources assembled by GNU as, like the C ones: ScreenViewLoop::Run jumps
+# past the load delay nop before its loop label, as only GNU as places it.
+GAS_CXX = {"src/sim/exe/screenviewloop.cpp"}
 
 # PsyQ library members (the yaml's lib subsegments, tools/psyq.py). splat links
 # their .text, .rdata and .data; their .bss goes in its own NOLOAD section at
@@ -66,9 +69,18 @@ LIBGCC_SYMBOLS = {"__ti9type_info": 0x801C9408, "__CTOR_LIST__": 0x801C9410, "__
 # of the EXE's (OVL5's g_Movie, buffers and psxMovieLoop typeinfo).
 BSS_VRAM = {"ovl5": 0x800A8D5C}
 
-# The g++ names that a unit's C++ classes reference, defined as the symbols the
-# Ghidra export names (resident code and data of the base classes).
-CXX_NAMES = {"ovl5": {
+# Names defined as other names in a unit's link: the g++ names that its C++
+# classes reference, as the symbols the Ghidra export names (resident code and
+# data of the base classes), and, for the classes it defines, the Ghidra names
+# that its assembly references, as the g++ names.
+CXX_NAMES = {"exe": {
+    "ScreenViewLoop__ScreenViewLoop": "__14ScreenViewLoop", "ScreenViewLoop__ScreenViewLoop_dtor": "_._14ScreenViewLoop",
+    "ScreenViewLoop__Execute": "Execute__14ScreenViewLoop", "ScreenViewLoop__Run": "Run__14ScreenViewLoop",
+    "ScreenViewLoop__Enter": "Enter__14ScreenViewLoop", "ScreenViewLoop__Step": "Step__14ScreenViewLoop",
+    "ScreenViewLoop__Flip": "Flip__14ScreenViewLoop", "ScreenViewLoop__Leave": "Leave__14ScreenViewLoop",
+    "ScreenViewLoop____tf": "__tf14ScreenViewLoop", "ScreenViewLoop__vtable": "__vt_14ScreenViewLoop",
+    "__ti14ScreenViewLoop": "ScreenViewLoop__typeinfo",
+}, "ovl5": {
     "__11psxViewLoop": "psxViewLoop__psxViewLoop", "_._11psxViewLoop": "psxViewLoop__psxViewLoop_dtor",
     "Enter__11psxViewLoop": "psxViewLoop__Enter", "Step__11psxViewLoop": "psxViewLoop__Step",
     "Leave__11psxViewLoop": "psxViewLoop__Leave", "BeginFrame__11psxViewLoop": "psxViewLoop__BeginFrame",
@@ -186,7 +198,7 @@ def assemble(obj):
     src = obj[len(BUILD) + 1:-2]
     os.makedirs(os.path.join(ROOT, os.path.dirname(obj)), exist_ok=True)
     if src.endswith(".cpp"):
-        compile_cc(src, obj, "gcc-2.8.1-psx", "cc1plus", CC1PLUS_FLAGS)
+        compile_cc(src, obj, "gcc-2.8.1-psx", "cc1plus", CC1PLUS_FLAGS, maspsx=src not in GAS_CXX)
     elif src.endswith(".c"):
         compile_cc(src, obj, "gcc-2.95.2-psx", "cc1", CC1_FLAGS, maspsx=False)
     else:

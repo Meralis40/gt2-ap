@@ -1,4 +1,4 @@
-// Resident code 8008371c-80083ae0 (padbuttons). Ghidra's decompilation; the functions
+// Resident code 800834fc-80083ae0 (padbuttons). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
@@ -7,6 +7,16 @@
 extern "C" {
 void PadButtons_ClearEvents(PadButtonState *state);
 int Sys_CriticalSection(int leave);
+extern unsigned char D_800A6F28;
+
+INCLUDE_ASM("asm/sim/exe/nonmatchings/padbuttons", FUN_800834fc);
+
+INCLUDE_ASM("asm/sim/exe/nonmatchings/padbuttons", FUN_800835dc);
+
+void FUN_80083708(int param_1, unsigned char param_2)
+{
+    (&D_800A6F28)[param_1] = param_2;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/padbuttons", Pad_UpdateVibration);
 
