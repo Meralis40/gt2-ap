@@ -43,9 +43,22 @@ CC1PLUS_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fvtable-thunks", "-fno-excepti
 CC1_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fsigned-char", "-fstrict-aliasing"]
 MOVE = re.compile(rb"(?m)^\tmove\t(\$\w+),(\$\w+)")
 MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
-# C++ sources assembled by GNU as, like the C ones: ScreenViewLoop::Run jumps
-# past the load delay nop before its loop label, as only GNU as places it.
-GAS_CXX = {"src/sim/exe/screenviewloop.cpp"}
+# C++ sources assembled by GNU as, like the C ones: ScreenViewLoop::Run and
+# Credits_FormatCommas jump past the load delay nop before a loop label, as only
+# GNU as places it. GCC 2.8.1 writes divisions as assembler macros, which GNU as
+# expands with divide-by-zero checks the game doesn't have, so they are written
+# out as div $0 and mflo (mfhi for rem), as GCC 2.95 does. ASPSX would put a nop
+# after the mflo when the next instruction reads it; the game has none.
+GAS_CXX = {"src/sim/exe/screenviewloop.cpp", "src/sim/exe/format.cpp"}
+DIV = re.compile(rb"(?m)^\t(div|divu|rem|remu)\t(\$\w+),(\$\w+),(\$\w+)$")
+
+
+def div_expand(m):
+    op, dest, a, b = m.groups()
+    if dest in (b"$0", b"$zero"):
+        return m.group(0)
+    mf = b"mfhi" if op.startswith(b"rem") else b"mflo"
+    return b"\t%s\t$0,%s,%s\n\t%s\t%s" % (op.replace(b"rem", b"div"), a, b, mf, dest)
 
 # PsyQ library members (the yaml's lib subsegments, tools/psyq.py). splat links
 # their .text, .rdata and .data; their .bss goes in its own NOLOAD section at
@@ -203,7 +216,7 @@ def pipe(cmd, data):
     return r.stdout
 
 
-def compile_cc(src, obj, gcc, cc, flags, maspsx=True):
+def compile_cc(src, obj, gcc, cc, flags, maspsx=True, expand_div=False):
     if not os.path.exists(os.path.join(TOOLCHAIN, gcc, cc)):
         sys.exit("missing compiler: run tools/setup_toolchain.py first")
     pre = pipe(["cpp"] + CPP_FLAGS + [src], None)
@@ -215,6 +228,8 @@ def compile_cc(src, obj, gcc, cc, flags, maspsx=True):
         pipe([sys.executable, os.path.join(TOOLCHAIN, "maspsx", "maspsx.py")] + MASPSX_FLAGS
              + ["--run-assembler", "--gnu-as-path", CROSS + "as"] + AS_FLAGS + ["-o", obj], asm)
     else:
+        if expand_div:
+            asm = DIV.sub(div_expand, asm)
         pipe([CROSS + "as"] + AS_FLAGS + ["-o", obj], MOVE.sub(rb"\taddu\t\1,\2,$0", asm))
 
 
@@ -222,7 +237,8 @@ def assemble(obj):
     src = obj[len(BUILD) + 1:-2]
     os.makedirs(os.path.join(ROOT, os.path.dirname(obj)), exist_ok=True)
     if src.endswith(".cpp"):
-        compile_cc(src, obj, "gcc-2.8.1-psx", "cc1plus", CC1PLUS_FLAGS, maspsx=src not in GAS_CXX)
+        gas = src in GAS_CXX
+        compile_cc(src, obj, "gcc-2.8.1-psx", "cc1plus", CC1PLUS_FLAGS, maspsx=not gas, expand_div=gas)
     elif src.endswith(".c"):
         compile_cc(src, obj, "gcc-2.95.2-psx", "cc1", CC1_FLAGS, maspsx=False)
     else:
