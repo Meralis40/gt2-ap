@@ -193,24 +193,32 @@ extern "C" void Boot_ClearVram()
 
 // A VendorBootLogo loop for each splash screen. The TIMs are inflated into
 // g_VolDir, unused this early.
-// Not matching: the original keeps the loop's test at the top and holds the
-// high halves of g_VolDir and D_80033DC0 in registers across it; no source
-// shape tried gives both.
+// Not matching: loop strength reduction gives the byte fields their own
+// pointer (s + 7), so the high half of D_80033DC0 isn't kept in a register as
+// in the original. The buf local (g_VolDir in a register for PacketBuffer_Init
+// and Tim_LoadClutAndImage, the symbol for Gzip_Inflate) and the local at the
+// top of the loop (it keeps the test at the top) are right.
 #ifdef NON_MATCHING
 extern "C" void Boot_ShowSplashScreens()
 {
     SplashScreen *s;
+    unsigned char *buf = g_VolDir;
 
     Boot_ClearVram();
     VendorBootLogo logo;
     logo.SetVideoMode(0x27);
-    PacketBuffer_Init(&logo.packets, g_VolDir, 0xc0000);
+    PacketBuffer_Init(&logo.packets, buf, 0xc0000);
     ViewDrawContext_Init(&logo.draw, g_MenuContext, 0x100);
     logo.InitLayer();
+    RECT *image = &D_80033DC8;
+    int width = 0xa0;
+
     for (s = g_SplashScreens; s->timGz != 0; s++) {
-        D_80033DC8.w = 0xa0 << s->hiRes;
+        int shift = s->hiRes;
+
+        image->w = width << shift;
         Gzip_Inflate(s->timGz, g_VolDir);
-        Tim_LoadClutAndImage(g_VolDir, &D_80033DC0, &D_80033DC8);
+        Tim_LoadClutAndImage(buf, &D_80033DC0, image);
         logo.frame = 0;
         logo.duration = s->frames;
         logo.fadeOut = s->fadeOut;

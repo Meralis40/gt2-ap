@@ -105,7 +105,7 @@ CXX_NAMES = {"exe": {
     "VendorBootLogo__Draw": "Draw__14VendorBootLogo", "VendorBootLogo____tf": "__tf14VendorBootLogo",
     "VendorBootLogo__vtable": "__vt_14VendorBootLogo", "__ti14VendorBootLogo": "0x801697D0",
     # members still in assembly (INCLUDE_ASM)
-    "Enter__11psxViewLoop": "psxViewLoop__Enter", "Step__11psxViewLoop": "psxViewLoop__Step",
+    "Enter__11psxViewLoop": "psxViewLoop__Enter",
 }, "ovl5": {
     "__11psxViewLoop": "psxViewLoop__psxViewLoop", "_._11psxViewLoop": "psxViewLoop__psxViewLoop_dtor",
     "Enter__11psxViewLoop": "psxViewLoop__Enter", "Step__11psxViewLoop": "psxViewLoop__Step",
