@@ -134,21 +134,14 @@ void Speed_Format(char *buf, unsigned int v)
 }
 
 // Writes v in decimal with a comma every three digits.
-// NON_MATCHING: only maspsx's handling differs. After the divu it adds a nop
-// before the sltu that reads the quotient (the game never has that nop after a
-// divu), and it puts the label of the copy loop's test before the load delay
-// nop, where the game's j lands after it. GNU as does both the game's way but
-// adds a divide-by-zero check. One load also differs: the test's lbu at the
-// loop end is lb in the game.
-#ifdef NON_MATCHING
 void Credits_FormatCommas(char *buf, unsigned int v)
 {
-    signed char digits[64];
+    char digits[64];
     int div = 10000000;
     int started = 0;
     int n;
     int group;
-    signed char c;
+    int c;
 
     if (v == 0) {
         buf[0] = '0';
@@ -187,7 +180,7 @@ loop:
     }
     n++;
     *buf = digits[n];
-    c = digits[n + 1];
+    c = (signed char)digits[n + 1]; // lb, where the first test reads lbu
 test:
     buf++;
     if (c != 0) {
@@ -195,7 +188,4 @@ test:
     }
     *buf = 0;
 }
-#else
-INCLUDE_ASM("asm/sim/exe/nonmatchings/format", Credits_FormatCommas);
-#endif
 }
