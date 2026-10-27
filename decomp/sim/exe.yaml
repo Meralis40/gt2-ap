@@ -190,6 +190,8 @@ segments:
       - [0x7e7f4, lib, libc, C63, .text]  # 0x8008dff4
       - [0x7e804, lib, libc, A63, .text]  # 0x8008e004
       - [0x7e824, rodata, resident_data] # 0x8008e024 resident data
+      - [0x802b0, .rodata, carddialog]  # 0x8008fab0 CardSlots_Update's jump table
+      - [0x802c8, rodata, resident_data_8008fac8]
       - [0x80e30, .rodata, viewloopdb]  # 0x80090630 vtable and type name of psxViewLoopDoubleBuffer
       - [0x80e90, rodata, resident_data_80090690]
       - [0x80ec8, .rodata, viewloop]  # 0x800906c8 vtable and type name of psxViewLoop

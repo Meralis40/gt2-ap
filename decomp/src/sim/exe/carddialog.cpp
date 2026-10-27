@@ -1,7 +1,8 @@
 // Resident code 8006e1cc-8006ebf0 (carddialog): the memory card dialogs, a
 // message over two option boxes picked with left and right. They open by
-// sliding the boxes in and close as a wipe of the chosen box. The functions
-// that don't match yet are the original assembly.
+// sliding the boxes in and close as a wipe of the chosen box. Also the card
+// slot status and a scaled sprite helper. CardSlots_Update's jump table is
+// this file's .rodata (0x8008fab0).
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
 #include "resident.h"
@@ -52,6 +53,46 @@ struct GouraudQuad {
     uint bottom;
 };
 
+// A rectangle of a texture page (FUN_8006ea38).
+struct Sprite {
+    uchar u;
+    uchar v;
+    ushort clut;
+    short w;
+    short h;
+    ushort tpage;
+};
+
+// The textured quad Prim_AddPolyFT4 returns (PsyQ POLY_FT4 after its tag).
+struct PolyFT4 {
+    uint rgb;
+    short x0, y0;
+    uchar u0, v0;
+    ushort clut;
+    short x1, y1;
+    uchar u1, v1;
+    ushort tpage;
+    short x2, y2;
+    uchar u2, v2;
+    ushort pad1;
+    short x3, y3;
+    uchar u3, v3;
+    ushort pad2;
+};
+
+// A memory card port of the card driver (g_McPorts, 0x264 bytes).
+struct McPort {
+    uchar unk000[0x25d];
+    uchar state;                // 0 ready, 2, 3, 4, 5: see CardSlots_Update
+    uchar unk25e[6];
+};
+
+// The card driver state; the ports are g_McPorts.
+struct CardSystem {
+    uchar unk00[0x44];
+    McPort ports[2];
+};
+
 // Pad bits of PadState.pressed.
 #define PAD_LEFT 0x4
 #define PAD_RIGHT 0x8
@@ -61,6 +102,7 @@ struct GouraudQuad {
 extern "C" {
 extern TextStyle D_80091EC8;    // the dialog's text style
 extern uint D_80091EE4;         // the colour boxes fade from and to
+extern CardSystem g_Card;
 
 void TextItem_Init(TextItem *item, TextStyle *style, char *text);
 void TextItem_Hide(TextItem *item);
@@ -72,6 +114,7 @@ void Menu_AddGouraudQuad(uint *ot, GouraudQuad *quad);
 void Prim_AddRectOutline(uint *ot, uint rgb, RECT *rect);
 void *Prim_AddDrawMode(uint *ot, uint tpage);
 RECT *Prim_AddTile(uint *ot, uint rgb);
+PolyFT4 *Prim_AddPolyFT4(uint *ot, uint rgb);
 void Sfx_PlayMenu(int sfx);
 void CardDialog_Close(CardDialog *dlg);
 
@@ -355,7 +398,28 @@ void CardDialog_Draw(CardDialog *dlg, uint *ot, TextCtx *ctx)
     }
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/carddialog", FUN_8006ea38);
+// Adds a sprite scaled by scale / 256 around (x, y) as a textured quad.
+void FUN_8006ea38(uint *ot, Sprite *sprite, int x, int y, uint rgb, int scale)
+{
+    int w = sprite->w * scale;
+    int h = sprite->h * scale;
+    PolyFT4 *p = Prim_AddPolyFT4(ot, rgb);
+    int left = x - (w >> 8);
+    int right = x + (w >> 8);
+    int top = y - (h >> 8);
+    int bottom = y + (h >> 8);
+
+    p->x0 = p->x2 = left;
+    p->x1 = p->x3 = right;
+    p->y0 = p->y1 = top;
+    p->y2 = p->y3 = bottom;
+    p->u0 = p->u2 = sprite->u;
+    p->u1 = p->u3 = sprite->u + sprite->w - 1;
+    p->v0 = p->v1 = sprite->v;
+    p->v2 = p->v3 = sprite->v + sprite->h - 1;
+    p->clut = sprite->clut;
+    p->tpage = sprite->tpage;
+}
 
 void CardSlots_Init(short *status)
 {
@@ -363,5 +427,41 @@ void CardSlots_Init(short *status)
     status[1] = 2;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/carddialog", CardSlots_Update);
+// The card driver state, through an accessor: with &g_Card written directly
+// the compiler folds the port offset into the loop pointer.
+static inline CardSystem *Card_Get()
+{
+    return &g_Card;
+}
+
+// Each frame: the menu status of each card slot from its driver state. Other
+// states keep the previous status.
+void CardSlots_Update(short *status)
+{
+    int i;
+
+    for (i = 0; i < 2; i++) {
+        int slot = *status;
+        McPort *port = &Card_Get()->ports[i];
+
+        switch (port->state) {
+        case 0:
+            slot = 0;
+            break;
+        case 2:
+            slot = 1;
+            break;
+        case 3:
+            slot = 3;
+            break;
+        case 4:
+            slot = 2;
+            break;
+        case 5:
+            slot = 4;
+            break;
+        }
+        *status++ = slot;
+    }
+}
 }
