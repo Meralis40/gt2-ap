@@ -106,8 +106,8 @@ segments:
       - [0x733a8, asm, gpu2]  # 0x80082ba8
       - [0x737ac, asm, util]  # 0x80082fac
       - [0x739bc, asm, negcon]  # 0x800831bc
-      - [0x73ba0, cpp, screenviewloop]  # 0x800833a0
-      - [0x73f1c, cpp, padbuttons]  # 0x8008371c
+      - [0x73ba0, cpp, screenviewloop]  # 0x800833a0 class ScreenViewLoop
+      - [0x73cfc, cpp, padbuttons]  # 0x800834fc
       - [0x742e0, asm, rand]  # 0x80083ae0
       - [0x7430c, cpp, inflate]  # 0x80083b0c
       - [0x76058, asm, padanalog]  # 0x80085858
@@ -186,6 +186,8 @@ segments:
       - [0x7e7f4, lib, libc, C63, .text]  # 0x8008dff4
       - [0x7e804, lib, libc, A63, .text]  # 0x8008e004
       - [0x7e824, rodata, resident_data] # 0x8008e024 resident data
+      - [0x810ec, .rodata, screenviewloop]  # 0x800908ec vtable and type name of ScreenViewLoop
+      - [0x81120, rodata, resident_data_80090920]
       - [0x81224, lib, libgcc, tinfo, .rodata]  # 0x80090a24
       - [0x812d4, lib, libgcc, _divdi3, .rodata]  # 0x80090ad4
       - [0x813d4, lib, libpress, LIBPRESS, .rdata]  # 0x80090bd4
