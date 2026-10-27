@@ -97,7 +97,7 @@ segments:
       - [0x70634, cpp, viewloopdb]  # 0x8007fe34
       - [0x70888, cpp, viewdraw]  # 0x80080088
       - [0x70cf8, asm, krom]  # 0x800804f8
-      - [0x71020, cpp, viewloop]  # 0x80080820
+      - [0x71020, cpp, viewloop]  # 0x80080820 class psxViewLoop
       - [0x716ec, asm, music]  # 0x80080eec
       - [0x71884, cpp, vsynccb]  # 0x80081084
       - [0x718f8, asm, math]  # 0x800810f8
@@ -186,6 +186,8 @@ segments:
       - [0x7e7f4, lib, libc, C63, .text]  # 0x8008dff4
       - [0x7e804, lib, libc, A63, .text]  # 0x8008e004
       - [0x7e824, rodata, resident_data] # 0x8008e024 resident data
+      - [0x80ec8, .rodata, viewloop]  # 0x800906c8 vtable and type name of psxViewLoop
+      - [0x80f1c, rodata, resident_data_8009071c]
       - [0x810ec, .rodata, screenviewloop]  # 0x800908ec vtable and type name of ScreenViewLoop
       - [0x81120, rodata, resident_data_80090920]
       - [0x81224, lib, libgcc, tinfo, .rodata]  # 0x80090a24

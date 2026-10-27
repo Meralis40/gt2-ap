@@ -3,9 +3,7 @@
 #ifndef MOVIE_H
 #define MOVIE_H
 
-struct RECT {
-    short x, y, w, h;
-};
+#include "viewloop.h"
 
 // Ring of frames read from the CD (0x1c bytes).
 struct MovieStream {
@@ -44,8 +42,6 @@ struct MoviePlayer {
     void *vlcOther;
     void *vlcReady;
 };
-
-#include "viewloop.h"
 
 struct PadState {
     unsigned int held;
@@ -125,11 +121,6 @@ struct CdAudio {
     volatile unsigned char state;  // changed by the CD interrupt
 };
 
-struct GfxIrq {
-    unsigned char pad00[0xc];
-    void (*gpuDmaHook)();
-};
-
 #define PAD_START 0x10000
 
 // OVL5's .bss (at 0x800A8D5C, tools/build.py): g++ puts zero-initialized
@@ -156,11 +147,8 @@ extern unsigned int D_800114CC[];
 
 // Resident data.
 extern CdAudio g_CdAudio;
-extern GfxIrq g_GfxIrq;
 extern int g_MovieSectors[];
 extern int g_StreamLba;
-extern unsigned char g_LastBufferIndex;
-extern psxViewLoop *g_CurrentViewLoop;
 extern void *g_PadHandlers[];
 
 // Resident code.
