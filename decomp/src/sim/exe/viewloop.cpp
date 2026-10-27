@@ -103,23 +103,22 @@ void psxViewLoop::SetVideoMode(unsigned int mode)
     }
 }
 
-// Not matching: g_LastBufferIndex and the new index get a0 and a1 the other way
-// round (register allocation).
-#ifdef NON_MATCHING
+// The index goes through a byte local stored after videoModeDelay: that gives
+// g_LastBufferIndex a0 and the index a1, as in the original.
 void psxViewLoop::Enter()
 {
+    unsigned char index;
+
     prevLoop = g_CurrentViewLoop;
     g_CurrentViewLoop = this;
-    bufferIndex = g_LastBufferIndex < bufferCount ? g_LastBufferIndex : 0;
+    index = g_LastBufferIndex < bufferCount ? g_LastBufferIndex : 0;
     videoModeDelay = 3;
+    bufferIndex = index;
     videoModePending = 0;
     swapPending = 0;
     VSyncList_Add(&g_GfxIrq.vsyncCallbacks, &vsync);
     draw.otHead = 0;
 }
-#else
-INCLUDE_ASM("asm/sim/exe/nonmatchings/viewloop", psxViewLoop__Enter);
-#endif
 
 // The status byte is read before the pointer to the buffers is taken: that
 // keeps result = 0 first and &g_PadSystem in a register, as in the original.
