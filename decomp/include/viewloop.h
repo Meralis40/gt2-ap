@@ -104,6 +104,21 @@ public:
     static void VSyncHandler();
 };
 
+// A psxViewLoop drawing into two buffers one above the other in VRAM
+// (viewloopdb.cpp, 0x70 bytes): BeginDraw offsets the draw area by the
+// current buffer's y, SwapDisplay shows it.
+class psxViewLoopDoubleBuffer : public psxViewLoop {
+public:
+    short bufferY[2];           // VRAM y of each buffer: 0 and 240, or 0 and 0 in 480-line modes
+
+    psxViewLoopDoubleBuffer();
+    virtual ~psxViewLoopDoubleBuffer();
+    virtual void Leave();
+    virtual void BeginDraw();
+    virtual void SwapDisplay();
+    void SetVideoMode(unsigned int mode);
+};
+
 extern "C" {
 extern GfxIrq g_GfxIrq;
 extern unsigned char g_LastBufferIndex;

@@ -94,7 +94,7 @@ segments:
       - [0x6fda8, cpp, mcformat]  # 0x8007f5a8
       - [0x6fff4, asm, misc]  # 0x8007f7f4
       - [0x70124, asm, pad]  # 0x8007f924
-      - [0x70634, cpp, viewloopdb]  # 0x8007fe34
+      - [0x7068c, cpp, viewloopdb]  # 0x8007fe8c class psxViewLoopDoubleBuffer
       - [0x70888, cpp, viewdraw]  # 0x80080088
       - [0x70cf8, asm, krom]  # 0x800804f8
       - [0x71020, cpp, viewloop]  # 0x80080820 class psxViewLoop
@@ -186,6 +186,8 @@ segments:
       - [0x7e7f4, lib, libc, C63, .text]  # 0x8008dff4
       - [0x7e804, lib, libc, A63, .text]  # 0x8008e004
       - [0x7e824, rodata, resident_data] # 0x8008e024 resident data
+      - [0x80e30, .rodata, viewloopdb]  # 0x80090630 vtable and type name of psxViewLoopDoubleBuffer
+      - [0x80e90, rodata, resident_data_80090690]
       - [0x80ec8, .rodata, viewloop]  # 0x800906c8 vtable and type name of psxViewLoop
       - [0x80f1c, rodata, resident_data_8009071c]
       - [0x810ec, .rodata, screenviewloop]  # 0x800908ec vtable and type name of ScreenViewLoop
