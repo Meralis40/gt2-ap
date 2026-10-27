@@ -90,6 +90,15 @@ CXX_NAMES = {"exe": {
     "psxViewLoop__ApplyVideoMode": "ApplyVideoMode__11psxViewLoop",
     "psxViewLoop__UpdateDisplay": "UpdateDisplay__11psxViewLoop", "psxViewLoop____tf": "__tf11psxViewLoop",
     "psxViewLoop__vtable": "__vt_11psxViewLoop", "__ti11psxViewLoop": "psxViewLoop__typeinfo",
+    "psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer": "__23psxViewLoopDoubleBuffer",
+    "psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer_dtor": "_._23psxViewLoopDoubleBuffer",
+    "psxViewLoopDoubleBuffer__Leave": "Leave__23psxViewLoopDoubleBuffer",
+    "psxViewLoopDoubleBuffer__SetVideoMode": "SetVideoMode__23psxViewLoopDoubleBufferUi",
+    "psxViewLoopDoubleBuffer__BeginDraw": "BeginDraw__23psxViewLoopDoubleBuffer",
+    "psxViewLoopDoubleBuffer__SwapDisplay": "SwapDisplay__23psxViewLoopDoubleBuffer",
+    "psxViewLoopDoubleBuffer____tf": "__tf23psxViewLoopDoubleBuffer",
+    "psxViewLoopDoubleBuffer__vtable": "__vt_23psxViewLoopDoubleBuffer",
+    "__ti23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__typeinfo",
     # members still in assembly (INCLUDE_ASM)
     "Enter__11psxViewLoop": "psxViewLoop__Enter", "Step__11psxViewLoop": "psxViewLoop__Step",
 }, "ovl5": {
