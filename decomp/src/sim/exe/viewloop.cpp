@@ -121,17 +121,15 @@ void psxViewLoop::Enter()
 INCLUDE_ASM("asm/sim/exe/nonmatchings/viewloop", psxViewLoop__Enter);
 #endif
 
-// Not matching: the first scheduling pass moves result = 0 after the volatile
-// status load, into the load delay, where the original keeps it first and
-// stalls.
-#ifdef NON_MATCHING
+// The status byte is read before the pointer to the buffers is taken: that
+// keeps result = 0 first and &g_PadSystem in a register, as in the original.
 int psxViewLoop::Step()
 {
     int result = 0;
+    int status = g_PadSystem.raw[1].status;
+    volatile PadRawBuffer *raw = &g_PadSystem.raw[1];
 
-    if (g_PadSystem.raw[1].status == 0) {
-        volatile PadRawBuffer *raw = &g_PadSystem.raw[1];
-
+    if (status == 0) {
         if ((raw->buttons[1] << 8 | raw->buttons[0]) == PAD_RAW_RESET) {
             result = 1;
         }
@@ -146,9 +144,6 @@ int psxViewLoop::Step()
     EndDraw();
     return result;
 }
-#else
-INCLUDE_ASM("asm/sim/exe/nonmatchings/viewloop", psxViewLoop__Step);
-#endif
 
 void psxViewLoop::Flip()
 {
