@@ -80,6 +80,18 @@ CXX_NAMES = {"exe": {
     "ScreenViewLoop__Flip": "Flip__14ScreenViewLoop", "ScreenViewLoop__Leave": "Leave__14ScreenViewLoop",
     "ScreenViewLoop____tf": "__tf14ScreenViewLoop", "ScreenViewLoop__vtable": "__vt_14ScreenViewLoop",
     "__ti14ScreenViewLoop": "ScreenViewLoop__typeinfo",
+    "psxViewLoop__VSyncHandler": "VSyncHandler__11psxViewLoop", "psxViewLoop__psxViewLoop": "__11psxViewLoop",
+    "psxViewLoop__psxViewLoop_dtor": "_._11psxViewLoop", "psxViewLoop__SetVideoMode": "SetVideoMode__11psxViewLoopUi",
+    "psxViewLoop__Flip": "Flip__11psxViewLoop", "psxViewLoop__Leave": "Leave__11psxViewLoop",
+    "psxViewLoop__BeginFrame": "BeginFrame__11psxViewLoop", "psxViewLoop__Update": "Update__11psxViewLoop",
+    "psxViewLoop__BeginDraw": "BeginDraw__11psxViewLoop", "psxViewLoop__Draw": "Draw__11psxViewLoop",
+    "psxViewLoop__EndDraw": "EndDraw__11psxViewLoop", "psxViewLoop__DrawFrame": "DrawFrame__11psxViewLoop",
+    "psxViewLoop__SwapDisplay": "SwapDisplay__11psxViewLoop",
+    "psxViewLoop__ApplyVideoMode": "ApplyVideoMode__11psxViewLoop",
+    "psxViewLoop__UpdateDisplay": "UpdateDisplay__11psxViewLoop", "psxViewLoop____tf": "__tf11psxViewLoop",
+    "psxViewLoop__vtable": "__vt_11psxViewLoop", "__ti11psxViewLoop": "psxViewLoop__typeinfo",
+    # members still in assembly (INCLUDE_ASM)
+    "Enter__11psxViewLoop": "psxViewLoop__Enter", "Step__11psxViewLoop": "psxViewLoop__Step",
 }, "ovl5": {
     "__11psxViewLoop": "psxViewLoop__psxViewLoop", "_._11psxViewLoop": "psxViewLoop__psxViewLoop_dtor",
     "Enter__11psxViewLoop": "psxViewLoop__Enter", "Step__11psxViewLoop": "psxViewLoop__Step",
