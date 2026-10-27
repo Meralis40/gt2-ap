@@ -53,7 +53,10 @@ def collect(program):
     st = program.getSymbolTable()
     out = {}
     for f in fm.getFunctions(True):
-        if f.isThunk() or f.isExternal():
+        if f.isExternal():
+            continue
+        # A thunk takes its target's name unless it was given one of its own.
+        if f.isThunk() and f.getSymbol().getSource() != SourceType.USER_DEFINED:
             continue
         a = f.getEntryPoint()
         out.setdefault(a.getAddressSpace().getName(), []).append((a.getOffset(), f.getName(True), "func"))

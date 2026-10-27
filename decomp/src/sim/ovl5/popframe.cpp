@@ -24,7 +24,7 @@ int MovieStream_ReadSector(MovieStream *s)
     unsigned int count;
     unsigned int ended;
 
-    func_8007CFD4(&hdr, 8);
+    CdGetSector_Thunk(&hdr, 8);
     {
         unsigned short status = hdr.status;
         unsigned short type = hdr.type;
@@ -83,7 +83,7 @@ accept:
             flags |= 4;
         }
     }
-    func_8007CFD4(dst, 0x1f8);
+    CdGetSector_Thunk(dst, 0x1f8);
 done:
     s->flags = flags;
     s->sectorIdx = sectorIdx;
