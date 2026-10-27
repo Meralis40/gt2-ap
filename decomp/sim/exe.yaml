@@ -41,7 +41,11 @@ segments:
     vram: 0x80010000
     subsegments:
       - [0x800, asm, boot]              # 0x80010000 boot code
-      - [0x2530, data, boot_data]       # 0x80011d30 boot data, zeros from 0x80033de2
+      - [0x1224, cpp, bootlogo]         # 0x80010a24 class VendorBootLogo, Boot_Init
+      - [0x171c, asm, boot_iso]         # 0x80010f1c
+      - [0x2530, rodata, boot_data]     # 0x80011d30 boot data
+      - [0x2538, .rodata, bootlogo]     # 0x80011d38 Boot_Init's string, VendorBootLogo's vtable and type name
+      - [0x2598, data, boot_data2]      # 0x80011d98 zeros from 0x80033de2
   - name: resident
     type: code
     start: 0x4de00

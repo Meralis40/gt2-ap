@@ -72,14 +72,15 @@ BSS_VRAM = {"ovl5": 0x800A8D5C}
 # Names defined as other names in a unit's link: the g++ names that its C++
 # classes reference, as the symbols the Ghidra export names (resident code and
 # data of the base classes), and, for the classes it defines, the Ghidra names
-# that its assembly references, as the g++ names.
+# that its assembly references, as the g++ names. The typeinfo objects of
+# those classes (.comm) are placed at their addresses.
 CXX_NAMES = {"exe": {
     "ScreenViewLoop__ScreenViewLoop": "__14ScreenViewLoop", "ScreenViewLoop__ScreenViewLoop_dtor": "_._14ScreenViewLoop",
     "ScreenViewLoop__Execute": "Execute__14ScreenViewLoop", "ScreenViewLoop__Run": "Run__14ScreenViewLoop",
     "ScreenViewLoop__Enter": "Enter__14ScreenViewLoop", "ScreenViewLoop__Step": "Step__14ScreenViewLoop",
     "ScreenViewLoop__Flip": "Flip__14ScreenViewLoop", "ScreenViewLoop__Leave": "Leave__14ScreenViewLoop",
     "ScreenViewLoop____tf": "__tf14ScreenViewLoop", "ScreenViewLoop__vtable": "__vt_14ScreenViewLoop",
-    "__ti14ScreenViewLoop": "ScreenViewLoop__typeinfo",
+    "__ti14ScreenViewLoop": "0x801C9400",
     "psxViewLoop__VSyncHandler": "VSyncHandler__11psxViewLoop", "psxViewLoop__psxViewLoop": "__11psxViewLoop",
     "psxViewLoop__psxViewLoop_dtor": "_._11psxViewLoop", "psxViewLoop__SetVideoMode": "SetVideoMode__11psxViewLoopUi",
     "psxViewLoop__Flip": "Flip__11psxViewLoop", "psxViewLoop__Leave": "Leave__11psxViewLoop",
@@ -89,7 +90,7 @@ CXX_NAMES = {"exe": {
     "psxViewLoop__SwapDisplay": "SwapDisplay__11psxViewLoop",
     "psxViewLoop__ApplyVideoMode": "ApplyVideoMode__11psxViewLoop",
     "psxViewLoop__UpdateDisplay": "UpdateDisplay__11psxViewLoop", "psxViewLoop____tf": "__tf11psxViewLoop",
-    "psxViewLoop__vtable": "__vt_11psxViewLoop", "__ti11psxViewLoop": "psxViewLoop__typeinfo",
+    "psxViewLoop__vtable": "__vt_11psxViewLoop", "__ti11psxViewLoop": "0x801F0CF0",
     "psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer": "__23psxViewLoopDoubleBuffer",
     "psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer_dtor": "_._23psxViewLoopDoubleBuffer",
     "psxViewLoopDoubleBuffer__Leave": "Leave__23psxViewLoopDoubleBuffer",
@@ -98,7 +99,11 @@ CXX_NAMES = {"exe": {
     "psxViewLoopDoubleBuffer__SwapDisplay": "SwapDisplay__23psxViewLoopDoubleBuffer",
     "psxViewLoopDoubleBuffer____tf": "__tf23psxViewLoopDoubleBuffer",
     "psxViewLoopDoubleBuffer__vtable": "__vt_23psxViewLoopDoubleBuffer",
-    "__ti23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__typeinfo",
+    "__ti23psxViewLoopDoubleBuffer": "0x801F0CE0",
+    "VendorBootLogo__VendorBootLogo": "__14VendorBootLogo", "VendorBootLogo__VendorBootLogo_dtor": "_._14VendorBootLogo",
+    "VendorBootLogo__InitLayer": "InitLayer__14VendorBootLogo", "VendorBootLogo__Update": "Update__14VendorBootLogo",
+    "VendorBootLogo__Draw": "Draw__14VendorBootLogo", "VendorBootLogo____tf": "__tf14VendorBootLogo",
+    "VendorBootLogo__vtable": "__vt_14VendorBootLogo", "__ti14VendorBootLogo": "0x801697D0",
     # members still in assembly (INCLUDE_ASM)
     "Enter__11psxViewLoop": "psxViewLoop__Enter", "Step__11psxViewLoop": "psxViewLoop__Step",
 }, "ovl5": {
