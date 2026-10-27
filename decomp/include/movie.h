@@ -208,7 +208,7 @@ extern void *g_PadHandlers[];
 int Sys_CriticalSection(int enter);
 void CdAudio_ResetRead();
 unsigned char *Lz_Decompress(unsigned char *dst, unsigned char *src, int size);
-void func_8007CFD4(void *dst, int words);  // jumps to CdGetSector
+void CdGetSector_Thunk(void *dst, int words);  // jumps to CdGetSector
 int CdAudio_RunScript(int script);
 void DecDCTReset(int mode);
 void DecDCTin(unsigned long *buf, int mode);
