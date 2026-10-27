@@ -93,10 +93,10 @@ struct CardDialog {
     struct TextItem message;
     struct TextItem option0;
     struct TextItem option1;
-    char sfx;
-    uchar choice;
-    short boxWidth;
-    short boxHeight;
+    signed char sfx;            /* menu sound on a move, < 0 for none */
+    signed char choice;         /* 0 or 1 */
+    ushort boxWidth;
+    ushort boxHeight;
     short anim;
     short flash;
     ushort flags;
