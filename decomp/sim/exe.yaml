@@ -195,6 +195,8 @@ segments:
       - [0x80338, rodata, resident_data_8008fb38]
       - [0x80340, .rodata, carparams]  # 0x8008fb40 the jump tables of its switches, Part_Lookup's "00000"
       - [0x80594, rodata, resident_data_8008fd94]  # from the pad word after carparams.cpp's last jump table
+      - [0x80ab8, .rodata, cdaudio]  # 0x800902b8 the jump tables of its switches
+      - [0x80bb4, rodata, resident_data_800903b4]  # CD audio scripts
       - [0x80e30, .rodata, viewloopdb]  # 0x80090630 vtable and type name of psxViewLoopDoubleBuffer
       - [0x80e90, rodata, resident_data_80090690]
       - [0x80ec8, .rodata, viewloop]  # 0x800906c8 vtable and type name of psxViewLoop
