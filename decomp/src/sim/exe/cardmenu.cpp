@@ -44,6 +44,11 @@ int SaveFile_GetFileSize(GameSaveFile *file);
 int SaveFile_CheckCrc(GameSaveFile *file, void *data);
 void GameState_ReadSave(void *file, void *data);
 void CardProgress_Reset(CardProgressBar *bar);
+void Text_Init(TextCtx *ctx, int tpageId);
+void Text_SetFont(TextCtx *ctx, Font *font);
+void Text_DrawCentered(TextCtx *ctx, char *s, int x, int y, int a4);
+void CardMenu_DrawKanji(uint *ot, char *sjis, int x, int y, int a4, uint rgb);
+void ReplayDir_Init(ReplayDir *dir, int blocks);
 typedef int (*CardStateFn)(int event, void *arg);
 extern CardStateFn g_CardMenu_States[];
 // The menu text, one block of strings (sB_LbFt is the first). The game addresses them
@@ -156,9 +161,27 @@ void SaveFile_InitHeader(GameSaveFile *file);
 extern CardMenu *g_CardMenu;
 extern signed char g_CardMenu_GhostLoaded;
 extern GameState g_GameState;
+extern NumberPicker g_CardMenu_BlockPicker; // the replay file's size, in blocks
 extern Font g_CardMenu_FontSmall;
 extern Font g_CardMenu_FontMedium;
 extern Font g_CardMenu_FontLarge;
+
+// A memory card port of the card driver (0x264 bytes).
+struct McPort {
+    uchar unk000[0x25a];
+    uchar freeBlocks;
+    uchar unk25b[2];
+    uchar state;
+    uchar unk25e[6];
+};
+
+// The card driver state.
+struct CardSystem {
+    uchar unk00[0x44];
+    McPort ports[2];
+};
+
+extern CardSystem g_Card;
 
 // What an overlay hands CardMenu_Setup.
 struct CardMenuConfig {
@@ -262,7 +285,63 @@ void CardMenu_CacheKanjiListHints(void)
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_EntryListCallback);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_PickReplayFileSize);
+// State 9 of a new replay card: picks the replay file's size in blocks (3 to the free
+// blocks), then sets up the directory (10, after 12 frames); "No space" (9) under 3.
+int CardState_PickReplayFileSize(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int r = m->blockPickResult;
+    int next = -1;
+    short *status;
+
+    switch (event) {
+    case 0: {
+        int free = g_Card.ports[m->slot].freeBlocks;
+        NumberPicker *p;
+
+        if (free < 3) {
+            next = 9;
+            break;
+        }
+        p = &g_CardMenu_BlockPicker;
+        p->min = 3;
+        p->max = free;
+        p->value = 3;
+        p->anim = 0;
+        m->line1 = TEXT(SelectNumberOfBlocks);
+        m->line2 = D_8008FAC8;
+        CardMenu_CacheKanjiLines();
+        break;
+    }
+    case 1:
+        status = m->slotStatus + m->slot;
+        if (*status != 0) {
+            g_CardMenu_BlockPicker.anim = -1;
+            next = 3;
+            break;
+        }
+        switch (r) {
+        case -3:
+        case -2:
+            break;
+        case -1:
+            g_CardMenu_BlockPicker.anim = -1;
+            Sfx_PlayMenu(2);
+            next = 2;
+            break;
+        default:
+            g_CardMenu_BlockPicker.anim = -1;
+            ReplayDir_Init(&m->dir, r);
+            next = 10;
+            m->delay = 12;
+            break;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_ReadReplayDir);
 
@@ -396,7 +475,79 @@ int CardState_WriteReplayDir(int event, void *arg)
     return next;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_SaveFailed);
+// State 15: "Saving data failed. Try saving again?", while the card stays in the slot;
+// retries the write (13), or back to the slot choice (2). A changed slot goes to 4, 5 or
+// the read error.
+int CardState_SaveFailed(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int r = m->dlgSaveFailed.result;
+    int next = -1;
+
+    switch (event) {
+    case 0: {
+        CardDialog *dlg;
+        short *status = m->slotStatus + m->slot;
+
+        if (*status == 2) {
+            return 33;
+        }
+        Sfx_PlayMenu(0);
+        dlg = &m->dlgSaveFailed;
+        CardDialog_Open(dlg);
+        dlg->choice = 0;
+        m->line1 = TEXT(SavingDataFailed);
+        m->line2 = TEXT(TrySavingAgain);
+        CardMenu_CacheKanjiLines();
+        break;
+    }
+    case 1: {
+        short *status = m->slotStatus + m->slot;
+        int st = *status;
+
+        switch (st) {
+        case 2:
+            Sfx_PlayMenu(0);
+            CardDialog_Close(&m->dlgSaveFailed);
+            next = 4;
+            break;
+        case 3:
+            Sfx_PlayMenu(0);
+            CardDialog_Close(&m->dlgSaveFailed);
+            next = 5;
+            break;
+        case 4:
+            Sfx_PlayMenu(0);
+            CardDialog_Close(&m->dlgSaveFailed);
+            m->errorMsg = TEXT(FailedToReadMemoryCard);
+            CardMenu_CacheKanjiError();
+            next = 1;
+            break;
+        case 0:
+            switch (r) {
+            case -1:
+                Sfx_PlayMenu(0);
+                break;
+            case 1:
+                CardDialog_Close(&m->dlgSaveFailed);
+                Sfx_PlayMenu(2);
+                next = 2;
+                break;
+            case 0:
+                CardDialog_Close(&m->dlgSaveFailed);
+                Sfx_PlayMenu(1);
+                next = 13;
+                break;
+            }
+            break;
+        }
+        break;
+    }
+    case 2:
+        break;
+    }
+    return next;
+}
 
 // State 16: "Saving complete"; back to the slot choice (2), or leaves.
 int CardState_SaveComplete(int event, void *arg)
@@ -821,7 +972,62 @@ int CardState_Start(int event, void *arg)
     return next;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_Error);
+// State 1: the error dialog, with errorMsg drawn above it; back to the slot choice (2), or
+// leaves.
+int CardState_Error(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    uint *ot = (uint *)arg;
+    int r = m->dlgError.result;
+    int next = -1;
+
+    switch (event) {
+    case 0: {
+        CardDialog *dlg;
+
+        Sfx_PlayMenu(0);
+        dlg = &m->dlgError;
+        CardDialog_Open(dlg);
+        dlg->choice = 0;
+        m->line1 = D_8008FAC8;
+        m->line2 = D_8008FAC8;
+        CardMenu_CacheKanjiLines();
+        break;
+    }
+    case 1:
+        switch (r) {
+        case -1:
+        case 1:
+            next = CARD_EXIT;
+            break;
+        case 0:
+            Sfx_PlayMenu(1);
+            next = 2;
+            break;
+        }
+        break;
+    case 2: {
+        TextCtx ctx;
+
+        Text_Init(&ctx, m->textPri);
+        Text_SetFont(&ctx, &g_CardMenu_FontLarge);
+        {
+            TextCtx *t = &ctx;
+
+            t->unk1c = 1;
+            t->ot = ot;
+            t->rgb = 0x6f6f6f;
+        }
+        if (g_GameState.language == 0) {
+            CardMenu_DrawKanji(ot, m->errorMsg, 0xb0, 0xea, 1, 0x808080);
+        } else {
+            Text_DrawCentered(&ctx, m->errorMsg, 0xb0, 0xfa, 1);
+        }
+        break;
+    }
+    }
+    return next;
+}
 
 // State 2: "Select a slot"; goes on to check the slot (3), or leaves on cancel.
 int CardState_SelectSlot(int event, void *arg)
@@ -984,7 +1190,81 @@ int CardState_Format(int event, void *arg)
     return next;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_NoSpace);
+// "No replay files" (replay modes) or "Not enough empty blocks" (saves), until the slot's
+// status changes (3).
+int CardState_NoSpace(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int r = m->dlgError.result;
+    int next = -1;
+    short *status;
+    int st;
+
+    switch (event) {
+    case 0: {
+        CardDialog *dlg;
+
+        Sfx_PlayMenu(0);
+        dlg = &m->dlgError;
+        CardDialog_Open(dlg);
+        dlg->choice = 0;
+        switch ((short)m->mode) {
+        case CARDMODE_SAVE_REPLAY:
+        case CARDMODE_SAVE_GAME:
+            m->line1 = TEXT(NotEnoughEmptyBlocks);
+            break;
+        case CARDMODE_PLAY_REPLAY:
+        case CARDMODE_EDIT_REPLAY:
+        case CARDMODE_LOAD_GHOST:
+            m->line1 = TEXT(NoReplayFilesFound);
+            break;
+        default:
+            return next;
+        }
+        m->line2 = D_8008FAC8;
+        CardMenu_CacheKanjiLines();
+        break;
+    }
+    case 1:
+        status = m->slotStatus + m->slot;
+        st = *status;
+        switch ((short)m->mode) {
+        case CARDMODE_SAVE_REPLAY:
+        case CARDMODE_SAVE_GAME:
+            if (st == 0) {
+                goto ask;
+            }
+            break;
+        case CARDMODE_PLAY_REPLAY:
+        case CARDMODE_EDIT_REPLAY:
+        case CARDMODE_LOAD_GHOST:
+            if (st == 0 || st == 3) {
+                goto ask;
+            }
+            break;
+        default:
+            goto ask;
+        }
+        CardDialog_Close(&m->dlgError);
+        next = 3;
+        break;
+    ask:
+        switch (r) {
+        case -1:
+        case 1:
+            next = CARD_EXIT;
+            break;
+        case 0:
+            Sfx_PlayMenu(1);
+            next = 2;
+            break;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
 
 // "No replay data": the error dialog, until a card shows up in the slot (3).
 int CardState_NoReplayData(int event, void *arg)
