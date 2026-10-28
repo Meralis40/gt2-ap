@@ -10,7 +10,7 @@ void CardMenu_CacheKanjiSlotNames(void);
 void CardMenu_InitWidgets(void);
 void CardMenu_PrepareGhostEntry(void);
 void CardMenu_PrepareReplayEntry(void);
-void CardMenu_SetState(int state);
+int CardMenu_SetState(int state);
 int CardState_Idle(int event, void *arg);
 void KanjiFont_Reset(void *font);
 void KanjiFont_CacheString(void *font, char *sjis);
@@ -24,7 +24,6 @@ int ReplayData_BuildRace(void *dst);
 int ReplayData_BuildGhost(void *dst);
 void ReplayEntry_SetTitle(char *dst, char *title);
 void ReplayEntry_SetCarName(void *entry, char *name);
-extern char D_8008FB14[]; // "No Name"
 void Sfx_PlayMenu(int sfx);
 void CardDialog_Open(CardDialog *dlg);
 int McCard_GetResult(void);
@@ -68,6 +67,14 @@ static inline int ReplayDir_IsOk(ReplayDir *dir)
 void MenuList_Open(MenuList *list);
 void MenuList_Close(MenuList *list);
 unsigned char ReplayDir_IsPlayable(ReplayDir *dir, int entry);
+int SaveFile_Find(GameSaveFile *file, int port);
+int SaveFile_GetBlockCount(GameSaveFile *file);
+int ReplayFile_Find(ReplayDir *dir, int port);
+void WipeBar_Update(WipeBar *bar);
+int CardDialog_Update(CardDialog *dlg, PadState *pad);
+int NumberPicker_Update(NumberPicker *p, PadState *pad);
+int MenuList_Update(MenuList *list, PadState *pad);
+int TextEntry_Update(TextEntry *entry, PadState *pad);
 typedef int (*CardStateFn)(int event, void *arg);
 extern CardStateFn g_CardMenu_States[];
 // The menu text, one block of strings (sB_LbFt is the first). The game addresses them
@@ -172,8 +179,13 @@ enum {
     T_BN = 0x7a4,
 };
 #define TEXT(name) (sB_LbFt + T_##name)
+
+// This file's .rodata, in the game's order: the empty line, CardState_CheckSlot's three
+// jump tables, the default replay title and CardMenu_Update's jump table.
+extern const char D_8008FAC8[8];
+const char D_8008FAC8[8] = { 0 }; // braces: a string initializer is emitted again as a literal
+#define EMPTY ((char *)D_8008FAC8)
 enum { CARD_EXIT = 0x27, CARD_REPLAY_LOADED = 0x28 }; // what a state returns to leave
-extern char D_8008FAC8[]; // ""
 void KanjiFont_UploadClut(void *font);
 void KanjiFont_UploadTexture(void *font);
 void SaveFile_InitHeader(GameSaveFile *file);
@@ -388,7 +400,7 @@ int CardState_PickReplayFileSize(int event, void *arg)
         p->value = 3;
         p->anim = 0;
         m->line1 = TEXT(SelectNumberOfBlocks);
-        m->line2 = D_8008FAC8;
+        m->line2 = EMPTY;
         CardMenu_CacheKanjiLines();
         break;
     }
@@ -442,7 +454,7 @@ int CardState_ReadReplayDir(int event, void *arg)
             bar->color = 0x90500c;
             CardProgress_Reset(bar);
             m->line1 = TEXT(CheckingReplayFile);
-            m->line2 = D_8008FAC8;
+            m->line2 = EMPTY;
             CardMenu_CacheKanjiLines();
         }
         break;
@@ -464,7 +476,7 @@ int CardState_ReadReplayDir(int event, void *arg)
                 m->editEntry = 0;
                 if ((signed char)m->dir.count == 0) {
                     m->line1 = TEXT(NoReplayDataInFile);
-                    m->line2 = D_8008FAC8;
+                    m->line2 = EMPTY;
                     CardMenu_CacheKanjiLines();
                     next = 24;
                 }
@@ -473,7 +485,7 @@ int CardState_ReadReplayDir(int event, void *arg)
                 next = 18;
                 if ((signed char)m->dir.count == 0) {
                     m->line1 = TEXT(NoReplayDataInFile);
-                    m->line2 = D_8008FAC8;
+                    m->line2 = EMPTY;
                     CardMenu_CacheKanjiLines();
                     next = 20;
                 }
@@ -482,7 +494,7 @@ int CardState_ReadReplayDir(int event, void *arg)
                 next = 26;
                 if ((signed char)m->dir.count == 0) {
                     m->line1 = TEXT(NoReplayDataInFile);
-                    m->line2 = D_8008FAC8;
+                    m->line2 = EMPTY;
                     CardMenu_CacheKanjiLines();
                     next = 20;
                 }
@@ -789,7 +801,7 @@ int CardState_SaveComplete(int event, void *arg)
         CardDialog_Open(dlg);
         dlg->choice = 1;
         m->line1 = TEXT(SavingComplete);
-        m->line2 = D_8008FAC8;
+        m->line2 = EMPTY;
         CardMenu_CacheKanjiLines();
         break;
     }
@@ -829,8 +841,8 @@ int CardState_PlayList(int event, void *arg)
     case 0: {
         MenuList *list;
 
-        m->line1 = D_8008FAC8;
-        m->line2 = D_8008FAC8;
+        m->line1 = EMPTY;
+        m->line2 = EMPTY;
         CardMenu_CacheKanjiLines();
         CardMenu_CacheKanjiListHints();
         list = &g_CardMenu_EntryList;
@@ -955,7 +967,95 @@ int CardState_LoadReplay(int event, void *arg)
     return next;
 }
 
+// State 26: the ghosts recorded on the current race's course; loads the chosen one (27),
+// or "No matching data found" (20).
+// Not matching: as in CardState_PlayList, GCC strength-reduces the rows loop.
+#ifdef NON_MATCHING
+int CardState_GhostList(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    char *base = (char *)&g_GameState;
+    int offset = 0xbf7c;
+    RaceSetup *setup = (RaceSetup *)(base + offset);
+    uint course = setup->courseHash;
+    ReplayDir *dir = &m->dir;
+    int r = m->listResult;
+    int count = (signed char)dir->count;
+    int next = -1;
+    short *status;
+
+    switch (event) {
+    case 0: {
+        int n;
+        int i;
+
+        m->line1 = EMPTY;
+        m->line2 = EMPTY;
+        CardMenu_CacheKanjiLines();
+        n = 0;
+        for (i = 0; i < count; i++) {
+            ReplayDirEntry *e = &dir->entries[i];
+
+            if ((e->kind == 1) & (e->courseId == course)) {
+                m->rows[n][0] = i;
+                m->rows[n][1] = 0;
+                m->rows[n][2] = 1;
+                n++;
+            }
+        }
+        if (n > 0) {
+            MenuList *list = &g_CardMenu_EntryList;
+
+            list->count = n;
+            list->selected = 0;
+            MenuList_Open(list);
+            Sfx_PlayMenu(7);
+            next = -1;
+        } else {
+            m->line1 = TEXT(NoMatchingDataFound);
+            m->line2 = EMPTY;
+            CardMenu_CacheKanjiLines();
+            next = 20;
+        }
+        break;
+    }
+    case 1:
+        status = m->slotStatus + m->slot;
+        if (*status != 0) {
+            MenuList_Close(&g_CardMenu_EntryList);
+            next = 3;
+            break;
+        }
+        switch (r) {
+        case -1:
+            MenuList_Close(&g_CardMenu_EntryList);
+            Sfx_PlayMenu(2);
+            next = 2;
+            break;
+        case -3:
+            Sfx_PlayMenu(6);
+            break;
+        case -4:
+            Sfx_PlayMenu(0);
+            break;
+        case -2:
+            break;
+        default:
+            Sfx_PlayMenu(1);
+            m->selEntry = (signed char)m->rows[r][0];
+            next = 27;
+            MenuList_Close(&g_CardMenu_EntryList);
+            break;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
+#else
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_GhostList);
+#endif
 
 // State 27: reads the selected ghost, with the progress bar, and unpacks it if its CRC is
 // right; then 28.
@@ -1035,7 +1135,7 @@ int CardState_ConfirmSave(int event, void *arg)
         CardDialog_Open(dlg);
         dlg->choice = 1;
         m->line1 = TEXT(StartSaving);
-        m->line2 = D_8008FAC8;
+        m->line2 = EMPTY;
         CardMenu_CacheKanjiLines();
         break;
     }
@@ -1214,7 +1314,7 @@ int CardState_SaveError(int event, void *arg)
         CardDialog_Open(dlg);
         dlg->choice = 0;
         m->line1 = TEXT(SavingDataFailed);
-        m->line2 = D_8008FAC8;
+        m->line2 = EMPTY;
         CardMenu_CacheKanjiLines();
         break;
     }
@@ -1256,7 +1356,7 @@ int CardState_ConfirmLoad(int event, void *arg)
         CardDialog_Open(dlg);
         dlg->choice = 1;
         m->line1 = TEXT(StartLoading);
-        m->line2 = D_8008FAC8;
+        m->line2 = EMPTY;
         CardMenu_CacheKanjiLines();
         break;
     }
@@ -1356,7 +1456,7 @@ int CardState_LoadComplete(int event, void *arg)
         CardDialog_Open(dlg);
         dlg->choice = 1;
         m->line1 = TEXT(LoadingComplete);
-        m->line2 = D_8008FAC8;
+        m->line2 = EMPTY;
         CardMenu_CacheKanjiLines();
         break;
     }
@@ -1416,8 +1516,8 @@ int CardState_Error(int event, void *arg)
         dlg = &m->dlgError;
         CardDialog_Open(dlg);
         dlg->choice = 0;
-        m->line1 = D_8008FAC8;
-        m->line2 = D_8008FAC8;
+        m->line1 = EMPTY;
+        m->line2 = EMPTY;
         CardMenu_CacheKanjiLines();
         break;
     }
@@ -1472,7 +1572,7 @@ int CardState_SelectSlot(int event, void *arg)
         }
         CardDialog_Open(&m->dlgSelectSlot);
         m->line1 = TEXT(SelectASlot);
-        m->line2 = D_8008FAC8;
+        m->line2 = EMPTY;
         CardMenu_CacheKanjiLines();
         break;
     }
@@ -1495,7 +1595,163 @@ int CardState_SelectSlot(int event, void *arg)
     return next;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_CheckSlot);
+// State 3: checks the card in the slot, then goes on by mode and slot status (0 a card,
+// 1 checking, 2 no card, 3 not formatted, 4 read error).
+int CardState_CheckSlot(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int next = -1;
+
+    switch (event) {
+    case 0:
+        m->line1 = TEXT(CheckingSlot);
+        m->slotBar.t = 0;
+        m->line2 = EMPTY;
+        CardMenu_CacheKanjiLines();
+        // fall through
+    case 1:
+        switch ((short)m->mode) {
+        case CARDMODE_SAVE_GAME: {
+            short *status;
+            int free;
+
+            status = m->slotStatus + m->slot;
+            switch (*status) {
+            case 0:
+                next = 29;
+                if (SaveFile_Find(m->saveFile, m->slot) != 0) {
+                    break;
+                }
+                free = g_Card.ports[m->slot].freeBlocks;
+                next = 32;
+                if (free < SaveFile_GetBlockCount(m->saveFile)) {
+                    next = 9;
+                }
+                break;
+            case 1:
+                break;
+            case 2:
+                goto noCard;
+            case 3:
+                goto notFormatted;
+            case 4:
+                goto readError;
+            }
+            break;
+        }
+        case CARDMODE_LOAD_GAME: {
+            short *status;
+            int st;
+
+            status = m->slotStatus + m->slot;
+            switch (st = *status) {
+            case 4:
+                goto readError;
+            case 0:
+                next = 34;
+                if (SaveFile_Find(m->saveFile, m->slot) == 0) {
+                    next = 36;
+                }
+                break;
+            case 2:
+                goto noCard;
+            case 1:
+                break;
+            default:
+                next = 36;
+                break;
+            }
+            break;
+        }
+        case CARDMODE_SAVE_REPLAY: {
+            short *status;
+
+            status = m->slotStatus + m->slot;
+            switch (*status) {
+            case 3:
+            notFormatted:
+                next = 5;
+                break;
+            case 0:
+                if (ReplayFile_Find(&m->dir, m->slot) == 0) {
+                    next = 8;
+                } else {
+                    next = 7;
+                }
+                break;
+            case 1:
+                break;
+            case 2:
+                goto noCard;
+            case 4:
+                goto readError;
+            }
+            break;
+        }
+        case CARDMODE_PLAY_REPLAY:
+        case CARDMODE_LOAD_GHOST: {
+            short *status;
+            int st;
+
+            status = m->slotStatus + m->slot;
+            switch (st = *status) {
+            case 4:
+                goto readError;
+            case 0:
+                if (ReplayFile_Find(&m->dir, m->slot) == 0) {
+                    next = 17;
+                } else {
+                    next = 7;
+                }
+                break;
+            case 2:
+                goto noCard;
+            case 1:
+                break;
+            default:
+                next = 17;
+                break;
+            }
+            break;
+        }
+        case CARDMODE_EDIT_REPLAY: {
+            short *status;
+            int st;
+
+            status = m->slotStatus + m->slot;
+            switch (st = *status) {
+            case 2:
+            noCard:
+                next = 4;
+                break;
+            case 4:
+            readError:
+                m->errorMsg = TEXT(FailedToReadMemoryCard);
+                CardMenu_CacheKanjiError();
+                next = 1;
+                break;
+            case 0:
+                if (ReplayFile_Find(&m->dir, m->slot) == 0) {
+                    next = 22;
+                } else {
+                    next = 7;
+                }
+                break;
+            case 1:
+                break;
+            default:
+                next = 22;
+                break;
+            }
+            break;
+        }
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
 
 // "No memory card detected", until the slot's status changes (3).
 int CardState_NoCard(int event, void *arg)
@@ -1509,7 +1765,7 @@ int CardState_NoCard(int event, void *arg)
     case 0:
         CardDialog_Open(&m->dlgNoCard);
         m->line1 = TEXT(NoMemoryCardDetected);
-        m->line2 = D_8008FAC8;
+        m->line2 = EMPTY;
         CardMenu_CacheKanjiLines();
         break;
     case 1:
@@ -1648,7 +1904,7 @@ int CardState_NoSpace(int event, void *arg)
         default:
             return next;
         }
-        m->line2 = D_8008FAC8;
+        m->line2 = EMPTY;
         CardMenu_CacheKanjiLines();
         break;
     }
@@ -1752,7 +2008,7 @@ int CardState_NoGameFile(int event, void *arg)
         CardDialog_Open(dlg);
         dlg->choice = 0;
         m->line1 = TEXT(NoGameFileFound);
-        m->line2 = D_8008FAC8;
+        m->line2 = EMPTY;
         CardMenu_CacheKanjiLines();
         break;
     }
@@ -1785,8 +2041,9 @@ int CardState_Idle(int event, void *arg)
     return -1;
 }
 
-// Enters state (Idle when negative) by calling its handler with event 0.
-void CardMenu_SetState(int state)
+// Enters state (Idle when negative) by calling its handler with event 0, and returns what
+// it returns.
+int CardMenu_SetState(int state)
 {
     CardMenu *m = g_CardMenu;
 
@@ -1796,8 +2053,11 @@ void CardMenu_SetState(int state)
         m->handler = (void *)g_CardMenu_States[state];
     }
     m->state = state;
-    ((CardStateFn)m->handler)(0, 0);
+    return ((CardStateFn)m->handler)(0, 0);
 }
+
+extern const char D_8008FB14[12];
+const char D_8008FB14[12] = { 'N', 'o', ' ', 'N', 'a', 'm', 'e' };
 
 // Builds the race's replay data and its directory entry.
 void CardMenu_PrepareReplayEntry(void)
@@ -1810,7 +2070,7 @@ void CardMenu_PrepareReplayEntry(void)
 
     m->replaySize = ReplayData_BuildRace(m->replayData);
     e = &m->newEntry;
-    ReplayEntry_SetTitle(e->title, D_8008FB14);
+    ReplayEntry_SetTitle(e->title, (char *)D_8008FB14);
     e->unk40 = setup->game;
     e->raceMode = setup->raceType;
     e->kind = 0;
@@ -1830,7 +2090,7 @@ void CardMenu_PrepareGhostEntry(void)
 
     m->replaySize = ReplayData_BuildGhost(m->replayData);
     e = &m->newEntry;
-    ReplayEntry_SetTitle(e->title, D_8008FB14);
+    ReplayEntry_SetTitle(e->title, (char *)D_8008FB14);
     e->unk40 = setup->game;
     e->raceMode = setup->raceType;
     e->kind = 1;
@@ -1856,7 +2116,88 @@ CardMenu *CardMenu_Setup(CardMenuConfig *config)
     return m + 1;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_Update);
+// Each frame: takes the pad, updates the widgets, then runs the state and the states it
+// moves to. Returns 1 when the menu is left, 2 when a replay was loaded, 0 otherwise.
+int CardMenu_Update(PadState *pad)
+{
+    CardMenu *m = g_CardMenu;
+    int result = 0;
+    int r;
+
+    m->repeat = 0;
+    m->pressed = 0;
+    m->held = 0;
+    m->deleteMode = 0;
+    if (pad != 0) {
+        PadButton held = pad->held;
+
+        m->held = held;
+        m->pressed = pad->pressed;
+        m->repeat = pad->repeat;
+        switch ((short)m->mode) {
+        case CARDMODE_SAVE_REPLAY:
+        case CARDMODE_EDIT_REPLAY:
+            m->deleteMode = (held & (PAD_L1 | PAD_R1)) == (PAD_L1 | PAD_R1);
+            break;
+        case CARDMODE_PLAY_REPLAY:
+        case CARDMODE_LOAD_GHOST:
+        case CARDMODE_SAVE_GAME:
+        case CARDMODE_LOAD_GAME:
+            break;
+        }
+    }
+    WipeBar_Update(&m->slotBar);
+    m->dlgError.result = CardDialog_Update(&m->dlgError, pad);
+    m->dlgSelectSlot.result = CardDialog_Update(&m->dlgSelectSlot, pad);
+    m->dlgNoCard.result = CardDialog_Update(&m->dlgNoCard, pad);
+    m->dlgFormat.result = CardDialog_Update(&m->dlgFormat, pad);
+    m->blockPickResult = NumberPicker_Update(&g_CardMenu_BlockPicker, pad);
+    m->listResult = MenuList_Update(&g_CardMenu_EntryList, pad);
+    m->dlgSaveFailed.result = CardDialog_Update(&m->dlgSaveFailed, pad);
+    m->dlgSaveError.result = CardDialog_Update(&m->dlgSaveError, pad);
+    m->dlgComplete.result = CardDialog_Update(&m->dlgComplete, pad);
+    m->titleResult = TextEntry_Update(&m->titleEntry, pad);
+    m->dlgOverwrite.result = CardDialog_Update(&m->dlgOverwrite, pad);
+    m->dlgConfirmSave.result = CardDialog_Update(&m->dlgConfirmSave, pad);
+    m->dlgConfirmLoad.result = CardDialog_Update(&m->dlgConfirmLoad, pad);
+    m->dlgDiscard.result = CardDialog_Update(&m->dlgDiscard, pad);
+    r = ((CardStateFn)m->handler)(1, 0);
+next:
+    switch (r) {
+    case CARD_EXIT: {
+        WipeBar *bar = &m->slotBar;
+
+        if (bar->t >= 0) {
+            bar->t = ~bar->duration;
+        }
+        m->line1 = EMPTY;
+        m->line2 = EMPTY;
+        CardMenu_CacheKanjiLines();
+        CardMenu_SetState(-1);
+        result = 1;
+        break;
+    }
+    case CARD_REPLAY_LOADED: {
+        WipeBar *bar = &m->slotBar;
+
+        if (bar->t >= 0) {
+            bar->t = ~bar->duration;
+        }
+        m->line1 = EMPTY;
+        m->line2 = EMPTY;
+        CardMenu_CacheKanjiLines();
+        CardMenu_SetState(-1);
+        result = 2;
+        break;
+    }
+    case -1:
+        break;
+    default:
+        r = CardMenu_SetState(r);
+        goto next;
+    }
+    return result;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_Draw);
 
