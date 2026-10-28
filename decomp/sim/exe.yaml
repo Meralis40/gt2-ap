@@ -190,6 +190,8 @@ segments:
       - [0x7e7f4, lib, libc, C63, .text]  # 0x8008dff4
       - [0x7e804, lib, libc, A63, .text]  # 0x8008e004
       - [0x7e824, rodata, resident_data] # 0x8008e024 resident data
+      - [0x80070, .rodata, garage]  # 0x8008f870 the jump tables of CarWork_SetPartSlot, CarWork_GetPartIdx and CarSpec_FromCarWorkWithPart
+      - [0x80190, rodata, resident_data_8008f990]  # the jump tables of the garage functions still in assembly
       - [0x802b0, .rodata, carddialog]  # 0x8008fab0 CardSlots_Update's jump table
       - [0x802c8, .rodata, cardmenu]  # 0x8008fac8 "", CardState_CheckSlot's and CardMenu_Update's jump tables, "No Name"
       - [0x80338, rodata, resident_data_8008fb38]
