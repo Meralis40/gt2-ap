@@ -49,6 +49,12 @@ void Text_SetFont(TextCtx *ctx, Font *font);
 void Text_DrawCentered(TextCtx *ctx, char *s, int x, int y, int a4);
 void CardMenu_DrawKanji(uint *ot, char *sjis, int x, int y, int a4, uint rgb);
 void ReplayDir_Init(ReplayDir *dir, int blocks);
+int ReplayFile_StartWriteData(ReplayDir *dir, int port, void *data, int size, short *sectors);
+void ReplayDir_UpdateCrc(ReplayDir *dir);
+int ReplayFile_StartReadEntry(ReplayDir *dir, int port, int entry, void *data, short *sectors);
+int ReplayDir_CheckEntryCrc(ReplayDir *dir, int entry, void *data);
+void Replay_Unpack(void *data, int arg);
+void GhostReplay_Unpack(void *data);
 typedef int (*CardStateFn)(int event, void *arg);
 extern CardStateFn g_CardMenu_States[];
 // The menu text, one block of strings (sB_LbFt is the first). The game addresses them
@@ -432,7 +438,70 @@ int CardState_CreateReplayFile(int event, void *arg)
     return next;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_WriteReplayData);
+// State 13: writes the new replay's data (or, when editing, only the directory), with the
+// progress bar; then the directory (14).
+int CardState_WriteReplayData(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int next = -1;
+
+    switch (event) {
+    case 0:
+        switch ((short)m->mode) {
+        case CARDMODE_SAVE_REPLAY: {
+            CardProgressBar *bar;
+
+            if (ReplayFile_StartWriteData(&m->dir, m->slot, m->replayData, m->replaySize, m->newSectors) != 0) {
+                m->errorMsg = TEXT(SavingDataFailed);
+                CardMenu_CacheKanjiError();
+                next = 15;
+            }
+            bar = &m->progress;
+            bar->total = m->replaySize + 0x150c;
+            bar->color = 0xc5090;
+            CardProgress_Reset(bar);
+            m->line1 = TEXT(Saving);
+            m->line2 = TEXT(PleaseDoNotRemoveMemoryCard);
+            CardMenu_CacheKanjiLines();
+            break;
+        }
+        case CARDMODE_EDIT_REPLAY: {
+            CardProgressBar *bar;
+
+            ReplayDir_UpdateCrc(&m->dir);
+            bar = &m->progress;
+            bar->total = 0x150c;
+            bar->color = 0xc5090;
+            CardProgress_Reset(bar);
+            m->line1 = TEXT(Saving);
+            m->line2 = TEXT(PleaseDoNotRemoveMemoryCard);
+            CardMenu_CacheKanjiLines();
+            next = 14;
+            break;
+        }
+        }
+        break;
+    case 1:
+        switch (McCard_GetResult()) {
+        case 1:
+            CardProgress_Update(&m->progress, g_McOp_Remaining + 0x150c);
+            break;
+        case 0:
+            next = 14;
+            break;
+        default:
+            m->progress.visible = -1;
+            m->errorMsg = TEXT(SavingDataFailed);
+            CardMenu_CacheKanjiError();
+            next = 15;
+        }
+        break;
+    case 2:
+        CardProgress_Draw(&m->progress);
+        break;
+    }
+    return next;
+}
 
 // State 14: writes the replay directory, with the progress bar; then "Saving complete" (16).
 int CardState_WriteReplayDir(int event, void *arg)
@@ -587,11 +656,132 @@ int CardState_SaveComplete(int event, void *arg)
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_PlayList);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_LoadReplay);
+// State 20: reads the selected replay, with the progress bar, and unpacks it if its CRC is
+// right; then leaves with CARD_REPLAY_LOADED.
+int CardState_LoadReplay(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int sel = m->selEntry;
+    int next = -1;
+
+    switch (event) {
+    case 0: {
+        ReplayDir *dir = &m->dir;
+
+        if (ReplayFile_StartReadEntry(dir, m->slot, sel, m->replayData, m->newSectors) != 0) {
+            m->errorMsg = TEXT(LoadingDataFailed);
+            CardMenu_CacheKanjiError();
+            next = 1;
+        } else {
+            CardProgressBar *bar = &m->progress;
+
+            bar->total = ((dir->entries + sel)->size + 0x7f) & ~0x7f;
+            bar->color = 0x50782c;
+            CardProgress_Reset(bar);
+            m->line1 = TEXT(Loading);
+            m->line2 = TEXT(PleaseDoNotRemoveMemoryCard);
+            CardMenu_CacheKanjiLines();
+        }
+        break;
+    }
+    case 1:
+        switch (McCard_GetResult()) {
+        case 1:
+            CardProgress_Update(&m->progress, g_McOp_Remaining);
+            break;
+        case 0: {
+            WipeBar *bar = &m->slotBar;
+
+            m->progress.visible = -1;
+            bar->t = ~bar->duration;
+            if (ReplayDir_CheckEntryCrc(&m->dir, sel, m->replayData) != 0) {
+                Replay_Unpack(m->replayData, 0);
+                next = CARD_REPLAY_LOADED;
+            } else {
+                m->errorMsg = TEXT(LoadingFailed_2);
+                CardMenu_CacheKanjiError();
+                next = 1;
+            }
+            break;
+        }
+        default:
+            m->progress.visible = -1;
+            m->errorMsg = TEXT(LoadingDataFailed);
+            CardMenu_CacheKanjiError();
+            next = 1;
+        }
+        break;
+    case 2:
+        CardProgress_Draw(&m->progress);
+        break;
+    }
+    return next;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_GhostList);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_LoadGhost);
+// State 27: reads the selected ghost, with the progress bar, and unpacks it if its CRC is
+// right; then 28.
+int CardState_LoadGhost(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int sel = m->selEntry;
+    int next = -1;
+
+    switch (event) {
+    case 0: {
+        ReplayDir *dir = &m->dir;
+
+        if (ReplayFile_StartReadEntry(dir, m->slot, sel, m->replayData, m->newSectors) != 0) {
+            m->errorMsg = TEXT(LoadingDataFailed);
+            CardMenu_CacheKanjiError();
+            next = 15;
+        } else {
+            CardProgressBar *bar = &m->progress;
+
+            bar->total = ((dir->entries + sel)->size + 0x7f) & ~0x7f;
+            bar->color = 0x50782c;
+            CardProgress_Reset(bar);
+            m->line1 = TEXT(Loading);
+            m->line2 = TEXT(PleaseDoNotRemoveMemoryCard);
+            CardMenu_CacheKanjiLines();
+        }
+        break;
+    }
+    case 1:
+        switch (McCard_GetResult()) {
+        case 1:
+            CardProgress_Update(&m->progress, g_McOp_Remaining);
+            break;
+        case 0: {
+            WipeBar *bar = &m->slotBar;
+
+            m->progress.visible = -1;
+            bar->t = ~bar->duration;
+            if (ReplayDir_CheckEntryCrc(&m->dir, sel, m->replayData) != 0) {
+                GhostReplay_Unpack(m->replayData);
+                g_CardMenu_GhostLoaded = 1;
+                next = 28;
+            } else {
+                m->errorMsg = TEXT(LoadingFailed_2);
+                CardMenu_CacheKanjiError();
+                next = 1;
+            }
+            break;
+        }
+        default:
+            m->progress.visible = -1;
+            m->errorMsg = TEXT(LoadingDataFailed);
+            CardMenu_CacheKanjiError();
+            next = 1;
+        }
+        break;
+    case 2:
+        CardProgress_Draw(&m->progress);
+        break;
+    }
+    return next;
+}
 
 // State 29: "Start saving?"; creates the game file (31), or back to the slot choice (2).
 int CardState_ConfirmSave(int event, void *arg)
