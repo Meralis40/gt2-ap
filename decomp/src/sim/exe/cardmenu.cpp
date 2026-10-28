@@ -6,19 +6,169 @@
 
 extern "C" {
 void CardMenu_CacheKanji(char *sjis);
-void CardMenu_CacheKanjiSlotNames(...);
-void CardMenu_InitWidgets(...);
-void CardMenu_PrepareGhostEntry(...);
-void CardMenu_PrepareReplayEntry(...);
+void CardMenu_CacheKanjiSlotNames(void);
+void CardMenu_InitWidgets(void);
+void CardMenu_PrepareGhostEntry(void);
+void CardMenu_PrepareReplayEntry(void);
 void CardMenu_SetState(int state);
+int CardState_Idle(int event, void *arg);
+void KanjiFont_Reset(void *font);
+void KanjiFont_CacheString(void *font, char *sjis);
+void GameState_WriteSave(void *dst, void *file, int size);
+void KanjiFont_SetBuffers(void *font, void *pixels, void *nodes, unsigned char wideMode);
+void KanjiFont_SetVram(void *font, int x, int y, int w, int h);
+void *KanjiFont_FindGlyph(void *font, unsigned int code);
+void KanjiFont_RenderGlyph(void *font, void *glyph);
+typedef void (*KanjiLoadFn)(void *font, void *glyph);
+int ReplayData_BuildRace(void *dst);
+int ReplayData_BuildGhost(void *dst);
+void ReplayEntry_SetTitle(char *dst, char *title);
+void ReplayEntry_SetCarName(void *entry, char *name);
+extern char D_8008FB14[]; // "No Name"
+void Sfx_PlayMenu(int sfx);
+void CardDialog_Open(CardDialog *dlg);
+int McCard_GetResult(void);
+void McCard_StartFormat(int port);
+int ReplayFile_Create(ReplayDir *dir, int port);
+void CardMenu_CacheKanjiLines(void);
+void CardMenu_CacheKanjiError(void);
+typedef int (*CardStateFn)(int event, void *arg);
+extern CardStateFn g_CardMenu_States[];
+// The menu text, one block of strings (sB_LbFt is the first). The game addresses them
+// from one base, so the second of two strings is often an offset from the first.
+extern char sB_LbFt[];
+enum {
+    T_LbFt = 0x0,
+    T_Hp = 0x6,
+    T_1000rpm = 0x9,
+    T_Nlb = 0x11,
+    T_Nhp = 0x16,
+    T_SelectNumberOfBlocks = 0x1b,
+    T_NotEnoughEmptyBlocks = 0x3a,
+    T_SelectASlot = 0x59,
+    T_CheckingSlot = 0x76,
+    T_PleaseDoNotRemoveMemoryCard = 0x94,
+    T_NoMemoryCardDetected = 0xbf,
+    T_FailedToReadMemoryCard = 0xdc,
+    T_MemoryCardIsNotFormatted = 0x105,
+    T_DoYouWantToFormat = 0x126,
+    T_Formatting = 0x13e,
+    T_FormattingFailed = 0x157,
+    T_CheckingReplayFile = 0x174,
+    T_CreatingFile = 0x197,
+    T_CreatingFileFailed = 0x1b0,
+    T_StartLoading = 0x1d0,
+    T_Loading = 0x1e5,
+    T_LoadingComplete = 0x1f8,
+    T_LoadingDataFailed = 0x20f,
+    T_StartSaving = 0x22c,
+    T_OverwriteFile = 0x241,
+    T_Saving = 0x258,
+    T_SavingComplete = 0x26b,
+    T_TrySavingAgain = 0x283,
+    T_SavingDataFailed = 0x2a1,
+    T_GameFileAlreadyExists = 0x2ba,
+    T_NoGameFileFound = 0x2e7,
+    T_LoadingFailed = 0x30f,
+    T_FailedToCreateGameFile = 0x326,
+    T_NoReplayFilesFound = 0x350,
+    T_NoReplayDataInFile = 0x372,
+    T_FailedToCreateReplayFile = 0x39d,
+    T_LoadingFailed_2 = 0x3cc,
+    T_NoMatchingDataFound = 0x3e3,
+    T_RenameTitle = 0x40a,
+    T_SaveChanges = 0x421,
+    T_CreateNewFile = 0x43a,
+    T_OverwriteFile_2 = 0x450,
+    T_DeleteFile = 0x465,
+    T_SaveReplay = 0x475,
+    T_MemoryCard1 = 0x489,
+    T_MemoryCard2 = 0x49a,
+    T_TotalNReplay = 0x4ab,
+    T_NNSectorFree = 0x4c4,
+    T_NeedNSector = 0x4db,
+    T_PressL1R1ForDeleteMode = 0x4f2,
+    T_EditReplayDataFile = 0x512,
+    T_Ok = 0x534,
+    T_Cancel = 0x537,
+    T_MemoryCardSlot = 0x541,
+    T_Slot1 = 0x559,
+    T_Slot2 = 0x566,
+    T_NoMemoryCardDetected_2 = 0x573,
+    T_ChangeSlot = 0x590,
+    T_Load = 0x5a2,
+    T_Save = 0x5ac,
+    T_Start = 0x5ba,
+    T_DoYouWantToFormat_2 = 0x5c4,
+    T_Yes = 0x5db,
+    T_No = 0x5df,
+    T_Error = 0x5e4,
+    T_DataError = 0x5ee,
+    T_DoYouWantToOverwrite = 0x603,
+    T_NSector = 0x61d,
+    T_NewFile = 0x62c,
+    T_Exit = 0x640,
+    T_Ok_2 = 0x64c,
+    T_Exit_2 = 0x653,
+    T_Retry = 0x65b,
+    T_Ghost = 0x666,
+    T_Race = 0x676,
+    T_TimeTrial = 0x67e,
+    T_License = 0x68f,
+    T_2p = 0x69c,
+    T_Max32Files = 0x6a0,
+    T_DataIsTooLarge = 0x6b1,
+    T_Cr = 0x6ca,
+    T_ChangesAreNotSaved = 0x6ce,
+    T_Cancel_2 = 0x6f2,
+    T_Play = 0x707,
+    T_CannotPlayGhost = 0x714,
+    T_TestRun = 0x73e,
+    T_Championship = 0x750,
+    T_0400m = 0x75e,
+    T_01000m = 0x768,
+    T_MaxSpeed = 0x773,
+    T_SN = 0x788,
+    T_IaN = 0x78d,
+    T_IbN = 0x793,
+    T_IcN = 0x799,
+    T_AN = 0x79f,
+    T_BN = 0x7a4,
+};
+#define TEXT(name) (sB_LbFt + T_##name)
+enum { CARD_EXIT = 0x27, CARD_REPLAY_LOADED = 0x28 }; // what a state returns to leave
+extern char D_8008FAC8[]; // ""
 void KanjiFont_UploadClut(void *font);
 void KanjiFont_UploadTexture(void *font);
 void SaveFile_InitHeader(GameSaveFile *file);
 extern CardMenu *g_CardMenu;
-extern unsigned char g_CardMenu_GhostLoaded;
+extern signed char g_CardMenu_GhostLoaded;
 extern GameState g_GameState;
+extern Font g_CardMenu_FontSmall;
+extern Font g_CardMenu_FontMedium;
+extern Font g_CardMenu_FontLarge;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", KanjiFont_Init);
+// What an overlay hands CardMenu_Setup.
+struct CardMenuConfig {
+    CardMenu *work; // becomes g_CardMenu
+    void *kanjiFont;
+    short *slotStatus;
+    Font *fontSmall;
+    Font *fontMedium;
+    Font *fontLarge;
+    short textPri;
+};
+
+// Sets up a kanji glyph cache: the pixel buffer at +0x1824, 256 glyph nodes at +0x24,
+// its texture and CLUT in VRAM, and the glyph loader at +0x9824.
+void KanjiFont_Init(void *font, int vramX, int vramY, int texWidth, int texHeight, int clutX, int clutY)
+{
+    KanjiFont_SetBuffers(font, (char *)font + 0x1824, (char *)font + 0x24, 0);
+    KanjiFont_SetVram(font, vramX, vramY, texWidth, texHeight);
+    *(short *)((char *)font + 0xe) = (clutX >> 4) + clutY * 64;
+    KanjiFont_Reset(font);
+    *(KanjiLoadFn *)((char *)font + 0x9824) = KanjiFont_RenderGlyph;
+}
 
 void KanjiFont_Upload(void *font)
 {
@@ -26,11 +176,35 @@ void KanjiFont_Upload(void *font)
     KanjiFont_UploadTexture(font);
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", KanjiFont_CacheString);
+// Finds (or adds) the glyph of each SJIS character and has the font's loader draw it.
+void KanjiFont_CacheString(void *font, char *sjis)
+{
+    unsigned char *p = (unsigned char *)sjis;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_CacheKanjiSlotNames);
+    for (; *p != 0; p += 2) {
+        (*(KanjiLoadFn *)((char *)font + 0x9824))(font, KanjiFont_FindGlyph(font, p[0] << 8 | p[1]));
+    }
+}
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_CacheKanji);
+void CardMenu_CacheKanjiSlotNames(void)
+{
+    void *font = g_CardMenu->kanjiFont;
+
+    if (g_GameState.language == 0) {
+        KanjiFont_Reset(font);
+        KanjiFont_CacheString(font, TEXT(MemoryCard1));
+        KanjiFont_CacheString(font, TEXT(MemoryCard2));
+    }
+}
+
+void CardMenu_CacheKanji(char *sjis)
+{
+    void *font = g_CardMenu->kanjiFont;
+
+    if (g_GameState.language == 0) {
+        KanjiFont_CacheString(font, sjis);
+    }
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_DrawKanji);
 
@@ -57,7 +231,22 @@ void CardMenu_CacheKanjiError(void)
     }
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_CacheKanjiListHints);
+// The replay list's hints, in Japanese only.
+void CardMenu_CacheKanjiListHints(void)
+{
+    if (g_GameState.language == 0) {
+        CardMenu_CacheKanjiSlotNames();
+        CardMenu_CacheKanji(TEXT(RenameTitle));
+        CardMenu_CacheKanji(TEXT(SaveChanges));
+        CardMenu_CacheKanji(TEXT(CreateNewFile));
+        CardMenu_CacheKanji(TEXT(OverwriteFile_2));
+        CardMenu_CacheKanji(TEXT(DeleteFile));
+        CardMenu_CacheKanji(TEXT(DataIsTooLarge));
+        CardMenu_CacheKanji(TEXT(Max32Files));
+        CardMenu_CacheKanji(TEXT(Play));
+        CardMenu_CacheKanji(TEXT(CannotPlayGhost));
+    }
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_EntryListCallback);
 
@@ -71,7 +260,40 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_ReplayEntryList);
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_EditTitle);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_CreateReplayFile);
+// State 12: creates the replay file; then writes its data (13).
+int CardState_CreateReplayFile(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int next = -1;
+
+    switch (event) {
+    case 0:
+        if (ReplayFile_Create(&m->dir, m->slot) != 0) {
+            goto failed;
+        }
+        m->line1 = TEXT(Saving);
+        m->line2 = TEXT(PleaseDoNotRemoveMemoryCard);
+        CardMenu_CacheKanjiLines();
+        break;
+    case 1:
+        switch (McCard_GetResult()) {
+        case 1:
+            break;
+        case 0:
+            next = 13;
+            break;
+        default:
+        failed:
+            m->errorMsg = TEXT(FailedToCreateReplayFile);
+            CardMenu_CacheKanjiError();
+            next = 1;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_WriteReplayData);
 
@@ -79,7 +301,41 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_WriteReplayDir);
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_SaveFailed);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_SaveComplete);
+// State 16: "Saving complete"; back to the slot choice (2), or leaves.
+int CardState_SaveComplete(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int r = m->dlgComplete.result;
+    int next = -1;
+
+    switch (event) {
+    case 0: {
+        CardDialog *dlg = &m->dlgComplete;
+
+        CardDialog_Open(dlg);
+        dlg->choice = 1;
+        m->line1 = TEXT(SavingComplete);
+        m->line2 = D_8008FAC8;
+        CardMenu_CacheKanjiLines();
+        break;
+    }
+    case 1:
+        switch (r) {
+        case -1:
+        case 1:
+            next = CARD_EXIT;
+            break;
+        case 0:
+            Sfx_PlayMenu(1);
+            next = 2;
+            break;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_PlayList);
 
@@ -105,11 +361,67 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_ReadGameSave);
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_LoadComplete);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_Start);
+// Waits 24 frames, then goes to state 2.
+int CardState_Start(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int next = -1;
+
+    switch (event) {
+    case 0:
+        m->timer = 24;
+        break;
+    case 1:
+        if (--m->timer < 0) {
+            next = 2;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_Error);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_SelectSlot);
+// State 2: "Select a slot"; goes on to check the slot (3), or leaves on cancel.
+int CardState_SelectSlot(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int r = m->dlgSelectSlot.result;
+    int next = -1;
+
+    switch (event) {
+    case 0: {
+        WipeBar *bar = &m->slotBar;
+
+        if (bar->t >= 0) {
+            bar->t = ~bar->duration;
+        }
+        CardDialog_Open(&m->dlgSelectSlot);
+        m->line1 = TEXT(SelectASlot);
+        m->line2 = D_8008FAC8;
+        CardMenu_CacheKanjiLines();
+        break;
+    }
+    case 1:
+        switch (r) {
+        case -1:
+            next = CARD_EXIT;
+            break;
+        case 0:
+        case 1:
+            Sfx_PlayMenu(1);
+            m->slot = r;
+            next = 3;
+            break;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_CheckSlot);
 
@@ -117,7 +429,41 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_NoCard);
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_NotFormatted);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_Format);
+// State 6: formats the card; then checks it again (3), or creates the game file (31)
+// when saving a game.
+int CardState_Format(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int next = -1;
+
+    switch (event) {
+    case 0:
+        McCard_StartFormat(m->slot);
+        m->line1 = TEXT(Formatting);
+        m->line2 = TEXT(PleaseDoNotRemoveMemoryCard);
+        CardMenu_CacheKanjiLines();
+        break;
+    case 1:
+        switch (McCard_GetResult()) {
+        case 1:
+            break;
+        case 0:
+            next = 3;
+            if ((short)m->mode == CARDMODE_SAVE_GAME) {
+                next = 31;
+            }
+            break;
+        default:
+            m->errorMsg = TEXT(FormattingFailed);
+            CardMenu_CacheKanjiError();
+            next = 1;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_NoSpace);
 
@@ -130,15 +476,76 @@ int CardState_Idle(int event, void *arg)
     return -1;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_SetState);
+// Enters state (Idle when negative) by calling its handler with event 0.
+void CardMenu_SetState(int state)
+{
+    CardMenu *m = g_CardMenu;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_PrepareReplayEntry);
+    if (state < 0) {
+        m->handler = (void *)CardState_Idle;
+    } else {
+        m->handler = (void *)g_CardMenu_States[state];
+    }
+    m->state = state;
+    ((CardStateFn)m->handler)(0, 0);
+}
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_PrepareGhostEntry);
+// Builds the race's replay data and its directory entry.
+void CardMenu_PrepareReplayEntry(void)
+{
+    CardMenu *m = g_CardMenu;
+    char *base = (char *)&g_GameState;
+    int offset = 0xbf7c;
+    RaceSetup *setup = (RaceSetup *)(base + offset);
+    ReplayDirEntry *e;
+
+    m->replaySize = ReplayData_BuildRace(m->replayData);
+    e = &m->newEntry;
+    ReplayEntry_SetTitle(e->title, D_8008FB14);
+    e->unk40 = setup->game;
+    e->raceMode = setup->raceType;
+    e->kind = 0;
+    e->courseId = setup->courseHash;
+    *(uint *)e->unk48 = setup->cars[0].carId;
+    ReplayEntry_SetCarName(e, setup->cars[0].name);
+}
+
+// Builds the ghost's replay data and its directory entry.
+void CardMenu_PrepareGhostEntry(void)
+{
+    CardMenu *m = g_CardMenu;
+    char *base = (char *)&g_GameState;
+    int offset = 0xbf7c;
+    RaceSetup *setup = (RaceSetup *)(base + offset);
+    ReplayDirEntry *e;
+
+    m->replaySize = ReplayData_BuildGhost(m->replayData);
+    e = &m->newEntry;
+    ReplayEntry_SetTitle(e->title, D_8008FB14);
+    e->unk40 = setup->game;
+    e->raceMode = setup->raceType;
+    e->kind = 1;
+    e->courseId = setup->courseHash;
+    *(uint *)e->unk48 = setup->cars[0].carId;
+    ReplayEntry_SetCarName(e, setup->cars[0].name);
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_InitWidgets);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_Setup);
+// Sets up the card menu in config's work buffer; returns the end of the buffer.
+CardMenu *CardMenu_Setup(CardMenuConfig *config)
+{
+    CardMenu *m = config->work;
+
+    g_CardMenu_FontSmall = *config->fontSmall;
+    g_CardMenu_FontMedium = *config->fontMedium;
+    g_CardMenu_FontLarge = *config->fontLarge;
+    m->kanjiFont = config->kanjiFont;
+    m->slotStatus = config->slotStatus;
+    g_CardMenu = m;
+    m->textPri = config->textPri;
+    return m + 1;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_Update);
 
@@ -182,9 +589,25 @@ void CardMenu_StartLoadGhost(void)
     g_CardMenu_GhostLoaded = '\0';
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_GhostLoaded);
+int CardMenu_GhostLoaded(void)
+{
+    return g_CardMenu_GhostLoaded != 0;
+}
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_StartSave);
+void CardMenu_StartSave(GameSaveFile *file)
+{
+    CardMenu *m = g_CardMenu;
+
+    m->saveFile = (GameSaveFile *)m->replayData;
+    if (file != 0) {
+        m->saveFile = file;
+    }
+    SaveFile_InitHeader(m->saveFile);
+    GameState_WriteSave(m->saveFile, m->saveFile, 0x8000);
+    m->mode = CARDMODE_SAVE_GAME;
+    CardMenu_InitWidgets();
+    CardMenu_SetState(0);
+}
 
 void CardMenu_StartLoad(GameSaveFile *file)
 {
