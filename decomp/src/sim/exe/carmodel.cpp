@@ -1438,7 +1438,763 @@ void CarBody_DrawUnclipped(CarMesh *mesh, MATRIX *light)
 INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", CarBody_DrawUnclipped);
 #endif
 
+// Draws a car body mesh that crosses the screen's edges or comes near the camera. It first
+// transforms every vertex (up to 256) into a table with its view-space position, screen
+// position and clip code, as ShadowMesh_Draw does, then draws the 8 primitive lists as
+// CarBody_DrawUnclipped does. A face wholly outside one plane is skipped. One with a
+// vertex the GTE couldn't project is dropped when untextured; a textured one is clipped
+// by subdividing it in view space until each part projects (Body_ClipSubdivTri,
+// Body_ClipSubdivQuad), and gets no environment map layer.
+#ifdef NON_MATCHING
+// A transformed vertex (CarBody_DrawClipped, ShadowMesh_Draw): view-space x, y, z, the
+// clip code (bit 0 nearer than half the near plane, bits 1-4 outside the planes in the
+// light and light colour matrices, bit 5 a GTE error), the screen position and the or of
+// |x|, |y| and |z|.
+struct ShadowVert {
+    short x;
+    short y;
+    short clip;
+    short z;
+    int sxy;
+    unsigned int extent;
+};
+
+// The clip code word (clip, then z in the top half) of a vertex.
+static inline int ShadowVert_ClipZ(ShadowVert *v)
+{
+    return *(int *)&v->clip;
+}
+
+// The clip code of a subdivision vertex is the top byte of its colour word.
+static inline unsigned int SubVert_Clip(SubVert *s)
+{
+    return s->rgb >> 24;
+}
+
+static inline void SubVert_SetClip(SubVert *s, unsigned int code)
+{
+    s->rgb = (s->rgb & 0xffffff) | code << 24;
+}
+
+// Projects a midpoint with the identity transform (the positions are in view space) and
+// codes it against the near plane and the screen's edges: bit 0 nearer than nearZ, bits
+// 1-4 left of, right of, above and below the screen, bit 5 a GTE error.
+static void SubVert_ProjectClip(CarScratch *sp, SubVert *s)
+{
+    int flags;
+    int z;
+    int x;
+    int y;
+    unsigned int code;
+
+    gte_SetDataReg(GTE_VXY0, *(int *)&s->x);
+    gte_SetDataReg(GTE_VZ0, s->z);
+    gte_rtps();
+    flags = gte_GetCtrlReg(GTE_FLAG);
+    z = gte_GetDataReg(GTE_IR3);
+    s->sxy = gte_GetDataReg(GTE_SXY2);
+    x = (short)s->sxy;
+    y = s->sxy >> 16;
+    code = z < (unsigned short)sp->nearZ;
+    if (x < 0) {
+        code |= 2;
+    }
+    if (x > (unsigned short)sp->screenW - 1) {
+        code |= 4;
+    }
+    if (y < 0) {
+        code |= 8;
+    }
+    if (y > (unsigned short)sp->screenH - 1) {
+        code |= 0x10;
+    }
+    if (flags < 0) {
+        code |= 0x20;
+    }
+    SubVert_SetClip(s, code);
+}
+
+// The corner records of a clipped face, from the vertex table. The original's records
+// keep their colour words' low three bytes from earlier use of the scratchpad
+// (0x1f8000b4 on, every 16 bytes): it never sets them, so a subdivided Gouraud-textured
+// face gets those stale colours. A vertex that didn't project is projected again with the
+// identity transform, and loses its error bit when that works.
+static void SubVert_SetClipped(SubVert *s, ShadowVert *v, unsigned int uv, int k)
+{
+    *(int *)&s->x = *(int *)&v->x;
+    s->z = v->z;
+    *(unsigned short *)&s->u = uv;
+    s->sxy = v->sxy;
+    s->rgb = (((unsigned int *)0x1f8000b4)[k * 4] & 0xffffff) | (v->clip & 0xff) << 24;
+    if (SubVert_Clip(s) & 0x20) {
+        gte_SetDataReg(GTE_VXY0, *(int *)&s->x);
+        gte_SetDataReg(GTE_VZ0, s->z);
+        gte_rtps();
+        s->sxy = gte_GetDataReg(GTE_SXY2);
+        if (gte_GetCtrlReg(GTE_FLAG) >= 0) {
+            SubVert_SetClip(s, SubVert_Clip(s) & 0x1f);
+        }
+    }
+}
+
+// Body_SubdivTri's clipping version: slivers aren't drawn when a point didn't project;
+// a part wholly outside one plane is skipped, and one with a point that didn't project is
+// subdivided again whatever its size.
+static int Body_ClipSubdivTri(CarScratch *sp, SubFace *f, SubVert **c, int depth)
+{
+    SubVert m[3];
+    int a;
+
+    SubVert_Mid(&m[0], c[0], c[1]);
+    SubVert_Mid(&m[1], c[1], c[2]);
+    SubVert_Mid(&m[2], c[2], c[0]);
+    SubVert_ProjectClip(sp, &m[0]);
+    SubVert_ProjectClip(sp, &m[1]);
+    SubVert_ProjectClip(sp, &m[2]);
+    for (a = 2; a >= 0; a--) {
+        int prev = a == 0 ? 2 : a - 1;
+
+        if ((SubVert_Clip(c[a]) | SubVert_Clip(&m[prev]) | SubVert_Clip(c[prev])) & 0x20) {
+            continue;
+        }
+        if (Body_NClip(c[a]->sxy, m[prev].sxy, c[prev]->sxy) != 0) {
+            Sub_EmitTri(sp, f, f->code, c[a], &m[prev], c[prev]);
+        }
+    }
+    if (sp->packetLimit < sp->packetPtr) {
+        return 0;
+    }
+    for (a = 3; a >= 0; a--) {
+        SubVert *t[3];
+        unsigned int all;
+        unsigned int any;
+        int area;
+
+        if (a == 3) {
+            t[0] = &m[0];
+            t[1] = &m[1];
+            t[2] = &m[2];
+        } else {
+            t[0] = c[a];
+            t[1] = &m[a];
+            t[2] = &m[a == 0 ? 2 : a - 1];
+        }
+        all = SubVert_Clip(t[0]) & SubVert_Clip(t[1]) & SubVert_Clip(t[2]);
+        any = SubVert_Clip(t[0]) | SubVert_Clip(t[1]) | SubVert_Clip(t[2]);
+        if (all & 0x1f) {
+            continue;
+        }
+        if (!(any & 0x20)) {
+            area = Body_NClip(t[0]->sxy, t[1]->sxy, t[2]->sxy);
+            if (area < 0) {
+                area = -area;
+            }
+            if ((unsigned int)area <= (unsigned int)f->threshold) {
+                Sub_EmitTri(sp, f, f->code, t[0], t[1], t[2]);
+                continue;
+            }
+        }
+        if (depth < SUBDIV_MAX_DEPTH && !Body_ClipSubdivTri(sp, f, t, depth + 1)) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+// Body_SubdivQuad's clipping version, with the same rules as Body_ClipSubdivTri. The
+// Gouraud version doesn't call Gpu_DrawSync and gives each point its own colour, but
+// starts the corner list as Body_SubdivQuad's does.
+static int Body_ClipSubdivQuad(CarScratch *sp, SubFace *f, SubVert **c, int depth)
+{
+    SubVert ctr;
+    SubVert m[4];
+    unsigned int slivers = f->code - 0x08000000;     // the triangle version of the code
+    int a;
+
+    ctr.x = (c[0]->x + c[1]->x + (c[2]->x + c[3]->x)) >> 2;
+    ctr.y = (c[0]->y + c[1]->y + (c[2]->y + c[3]->y)) >> 2;
+    ctr.z = (c[0]->z + c[1]->z + (c[2]->z + c[3]->z)) >> 2;
+    ctr.u = (c[0]->u + c[1]->u + (c[2]->u + c[3]->u)) >> 2;
+    ctr.v = (c[0]->v + c[1]->v + (c[2]->v + c[3]->v)) >> 2;
+    for (a = 0; a < 4; a++) {
+        SubVert_Mid(&m[a], c[a], c[(a + 1) & 3]);
+    }
+    ctr.rgb = Sub_Mid(m[0].rgb, m[2].rgb);
+    SubVert_ProjectClip(sp, &ctr);
+    for (a = 0; a < 4; a++) {
+        SubVert_ProjectClip(sp, &m[a]);
+    }
+    for (a = 3; a >= 0; a--) {
+        int prev = (a - 1) & 3;
+
+        if ((SubVert_Clip(c[a]) | SubVert_Clip(&m[prev]) | SubVert_Clip(c[prev])) & 0x20) {
+            continue;
+        }
+        if (Body_NClip(c[a]->sxy, m[prev].sxy, c[prev]->sxy) != 0) {
+            Sub_EmitTri(sp, f, slivers, c[a], &m[prev], c[prev]);
+        }
+    }
+    if (sp->packetLimit < sp->packetPtr) {
+        return 0;
+    }
+    for (a = 3; a >= 0; a--) {
+        SubVert *corner = c[a];
+        SubVert *next = &m[a];
+        SubVert *prev = &m[(a - 1) & 3];
+        unsigned int all = SubVert_Clip(corner) & SubVert_Clip(next) & SubVert_Clip(&ctr) & SubVert_Clip(prev);
+        unsigned int any = SubVert_Clip(corner) | SubVert_Clip(next) | SubVert_Clip(&ctr) | SubVert_Clip(prev);
+        SubVert *t[4];
+        int odd;
+
+        if (all & 0x1f) {
+            continue;
+        }
+        if (!(any & 0x20)) {
+            int area = Body_NClip(next->sxy, corner->sxy, ctr.sxy) - Body_NClip(prev->sxy, corner->sxy, ctr.sxy);
+
+            if (area < 0) {
+                area = -area;
+            }
+            if ((unsigned int)area <= (unsigned int)f->threshold) {
+                if (f->gouraud) {
+                    // The colours go with their own points here.
+                    PolyGT4 *p = (PolyGT4 *)sp->packetPtr;
+
+                    p->rgbc0 = (corner->rgb & 0xffffff) | (f->code & 0xff000000);
+                    p->xy0 = corner->sxy;
+                    p->uv0 = SubVert_UV(corner);
+                    p->clut = f->texWord;
+                    p->rgb1 = next->rgb;
+                    p->xy1 = next->sxy;
+                    p->uv1 = SubVert_UV(next);
+                    p->tpage = f->texWord >> 16;
+                    p->rgb2 = prev->rgb;
+                    p->xy2 = prev->sxy;
+                    p->uv2 = SubVert_UV(prev);
+                    p->rgb3 = ctr.rgb;
+                    p->xy3 = ctr.sxy;
+                    p->uv3 = SubVert_UV(&ctr);
+                    Sub_Chain(sp, f, p, 12, sizeof(PolyGT4));
+                } else {
+                    Sub_EmitQuad(sp, f, corner, next, prev, &ctr);
+                }
+                continue;
+            }
+        }
+        if (depth >= SUBDIV_MAX_DEPTH) {
+            continue;
+        }
+        odd = f->gouraud ? a != 0 : a & 1;
+        if (odd) {
+            t[0] = prev;
+            t[1] = corner;
+            t[2] = next;
+            t[3] = &ctr;
+        } else {
+            t[0] = corner;
+            t[1] = next;
+            t[2] = &ctr;
+            t[3] = prev;
+        }
+        if (!Body_ClipSubdivQuad(sp, f, t, depth + 1)) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+// A face's vertices in the table (a byte index each, 16 bytes a record).
+static inline ShadowVert *Body_ClipVert(CarScratch *sp, unsigned int w, int shift)
+{
+    return &((ShadowVert *)sp->verts)[(w >> shift) & 0xff];
+}
+
+// The OT entry of a clipped face: its sort word (clip code, z on top) shifted down.
+static inline unsigned int *Body_ClipOtEntry(CarScratch *sp, unsigned int flags, int word)
+{
+    int z = (word >> 16) << sp->otShift;
+    unsigned int i;
+
+    if (z < 0) {
+        z = 0;
+    }
+    i = (unsigned int)z >> 13;
+    if (i >= 0x1000) {
+        i = 0xfff;
+    }
+    return sp->ot + i + ((flags >> 1) & 0xf) - 8;
+}
+
+// The visibility tests with clip codes: a face with a point that didn't project passes
+// (its nclip can't be trusted); a mirrored triangle passes up to an nclip of 1.
+static inline int Body_ClipTriVisible(CarScratch *sp, int area, unsigned int any)
+{
+    int err = any & 0x20;
+    int v = area - 1;
+
+    if ((area | err) == 0) {
+        return 0;
+    }
+    if (sp->mirror < 0) {
+        v = -v;
+    }
+    return (v & (err - 0x20)) >= 0;
+}
+
+static inline int Body_ClipQuadVisible(CarScratch *sp, int n1, int n2, unsigned int any)
+{
+    int err = any & 0x20;
+    int a = -n1 - 1;
+    int b = n2 - 1;
+    int v;
+
+    if ((-n1 | n2 | err) == 0) {
+        return 0;
+    }
+    v = sp->mirror >= 0 ? a & b : ~(a | b);
+    return (v & (err - 0x20)) >= 0;
+}
+
+// Handwritten: like CarBody_DrawUnclipped, with the vertex loop software-pipelined (its
+// first pass writes a record before the table from stale registers).
+void CarBody_DrawClipped(CarMesh *mesh, MATRIX *light)
+{
+    CarScratch *sp = (CarScratch *)0x1f800000;
+    ShadowVert table[256];
+    unsigned short env[0x204];
+    BodyVert *bv;
+    unsigned int *w;
+    unsigned int *end;
+    ShadowVert *v[4];
+    int xy[4];
+    int cz[4];
+    int n1;
+    int n2;
+    int nearHalf;
+    unsigned int all;
+    unsigned int any;
+    unsigned int *ot;
+    SubFace face;
+    SubVert rec[4];
+    SubVert *c[4];
+    int i;
+
+    if (mesh->vertCount == 0) {
+        return;
+    }
+    nearHalf = (unsigned short)sp->nearZ >> 1;
+    sp->verts = (char *)table;
+    bv = (BodyVert *)mesh->verts;
+    for (i = 0; i < mesh->vertCount; i++) {
+        ShadowVert *t = &table[i];
+        int x;
+        int y;
+        int z;
+        int flags;
+        int code;
+        int l1;
+        int l2;
+        int c1;
+        int c2;
+
+        gte_SetDataReg(GTE_VXY0, bv[i].xy);
+        gte_SetDataReg(GTE_VZ0, bv[i].z);
+        gte_rtps();
+        x = gte_GetDataReg(GTE_IR1);
+        y = gte_GetDataReg(GTE_IR2);
+        z = gte_GetDataReg(GTE_IR3);
+        flags = gte_GetCtrlReg(GTE_FLAG);
+        t->sxy = gte_GetDataReg(GTE_SXY2);
+        gte_mvmva(1, GTE_MX_LL, GTE_V_IR, GTE_CV_NONE, 0);
+        gte_SetDataReg(GTE_VXY1, (x & 0xffff) | y << 16);
+        gte_SetDataReg(GTE_VZ1, z);
+        l1 = gte_GetDataReg(GTE_IR1);
+        l2 = gte_GetDataReg(GTE_IR2);
+        gte_mvmva(1, GTE_MX_LC, GTE_V_V1, GTE_CV_NONE, 0);
+        c1 = gte_GetDataReg(GTE_IR1);
+        c2 = gte_GetDataReg(GTE_IR2);
+        code = z < nearHalf;
+        if (l1 < 0) {
+            code |= 2;
+        }
+        if (l2 < 0) {
+            code |= 4;
+        }
+        if (c1 < 0) {
+            code |= 8;
+        }
+        if (c2 < 0) {
+            code |= 0x10;
+        }
+        if (flags < 0) {
+            code |= 0x20;
+        }
+        t->x = x;
+        t->y = y;
+        t->z = z;
+        t->clip = code;
+        t->extent = (x < 0 ? -x : x) | (y < 0 ? -y : y) | (z < 0 ? -z : z);
+    }
+    Mesh_NormalsToEnvUV(mesh, light, (unsigned char *)env);
+    // The subdivision projects view-space points.
+    gte_SetCtrlReg(GTE_TRX, 0);
+    gte_SetCtrlReg(GTE_TRY, 0);
+    gte_SetCtrlReg(GTE_TRZ, 0);
+    gte_SetCtrlReg(GTE_R11R12, 0x1000);
+    gte_SetCtrlReg(GTE_R13R21, 0);
+    gte_SetCtrlReg(GTE_R22R23, 0x1000);
+    gte_SetCtrlReg(GTE_R31R32, 0);
+    gte_SetCtrlReg(GTE_R33, 0x1000);
+    c[0] = &rec[0];
+    c[1] = &rec[1];
+    c[2] = &rec[2];
+    c[3] = &rec[3];
+
+#define CLIP_TRI_SETUP()                                                        \
+    v[0] = Body_ClipVert(sp, w[BODY_VERTS], 0);                                 \
+    v[1] = Body_ClipVert(sp, w[BODY_VERTS], 8);                                 \
+    v[2] = Body_ClipVert(sp, w[BODY_VERTS], 16);                                \
+    cz[0] = ShadowVert_ClipZ(v[0]);                                             \
+    cz[1] = ShadowVert_ClipZ(v[1]);                                             \
+    cz[2] = ShadowVert_ClipZ(v[2]);                                             \
+    all = cz[0] & cz[1] & cz[2];                                                \
+    any = cz[0] | cz[1] | cz[2];                                                \
+    if (all & 0x1f) {                                                           \
+        continue;                                                               \
+    }                                                                           \
+    xy[0] = v[0]->sxy;                                                          \
+    xy[1] = v[1]->sxy;                                                          \
+    xy[2] = v[2]->sxy;                                                          \
+    n1 = Body_NClip(xy[0], xy[2], xy[1]);                                       \
+    ot = Body_ClipOtEntry(sp, w[BODY_FLAGS], Body_SortZ(w[BODY_FLAGS], cz, 3)); \
+    if (!Body_ClipTriVisible(sp, n1, any)) {                                    \
+        continue;                                                               \
+    }
+
+#define CLIP_QUAD_SETUP()                                                       \
+    v[0] = Body_ClipVert(sp, w[BODY_VERTS], 0);                                 \
+    v[1] = Body_ClipVert(sp, w[BODY_VERTS], 8);                                 \
+    v[2] = Body_ClipVert(sp, w[BODY_VERTS], 16);                                \
+    v[3] = Body_ClipVert(sp, w[BODY_VERTS], 24);                                \
+    cz[0] = ShadowVert_ClipZ(v[0]);                                             \
+    cz[1] = ShadowVert_ClipZ(v[1]);                                             \
+    cz[2] = ShadowVert_ClipZ(v[2]);                                             \
+    cz[3] = ShadowVert_ClipZ(v[3]);                                             \
+    all = cz[0] & cz[1] & cz[2] & cz[3];                                        \
+    any = cz[0] | cz[1] | cz[2] | cz[3];                                        \
+    if (all & 0x1f) {                                                           \
+        continue;                                                               \
+    }                                                                           \
+    xy[0] = v[0]->sxy;                                                          \
+    xy[1] = v[1]->sxy;                                                          \
+    xy[2] = v[2]->sxy;                                                          \
+    xy[3] = v[3]->sxy;                                                          \
+    n1 = Body_NClip(xy[1], xy[2], xy[0]);                                       \
+    n2 = Body_NClip(xy[2], xy[0], xy[3]);                                       \
+    ot = Body_ClipOtEntry(sp, w[BODY_FLAGS], Body_SortZ(w[BODY_FLAGS], cz, 4)); \
+    if (!Body_ClipQuadVisible(sp, n1, n2, any)) {                               \
+        continue;                                                               \
+    }
+
+    // Type 0: flat triangles (dropped when a point didn't project).
+    w = (unsigned int *)mesh->prims[0];
+    end = w + mesh->primCount[0] * 4;
+    for (; w != end; w += 4) {
+        PolyF3 *p;
+
+        CLIP_TRI_SETUP();
+        if (any & 0x20) {
+            continue;
+        }
+        if ((int)(w[BODY_FLAGS] & sp->lit) < 0) {
+            Body_EnvTri(sp, ot, w, xy);
+        }
+        p = (PolyF3 *)sp->packetPtr;
+        p->rgbc = w[BODY_DATA];
+        p->xy0 = xy[0];
+        p->xy1 = xy[1];
+        p->xy2 = xy[2];
+        Ot_Link(ot, p, 4);
+        sp->packetPtr = (char *)(p + 1);
+        if (sp->packetLimit < sp->packetPtr) {
+            break;
+        }
+    }
+
+    // Type 1: flat quads.
+    w = (unsigned int *)mesh->prims[1];
+    end = w + mesh->primCount[1] * 4;
+    for (; w != end; w += 4) {
+        PolyF4 *p;
+
+        CLIP_QUAD_SETUP();
+        if (any & 0x20) {
+            continue;
+        }
+        if ((int)(w[BODY_FLAGS] & sp->lit) < 0) {
+            Body_EnvQuad(sp, ot, w, xy);
+        }
+        p = (PolyF4 *)sp->packetPtr;
+        p->rgbc = w[BODY_DATA];
+        p->xy0 = xy[0];
+        p->xy1 = xy[1];
+        p->xy2 = xy[3];
+        p->xy3 = xy[2];
+        Ot_Link(ot, p, 5);
+        sp->packetPtr = (char *)(p + 1);
+        if (sp->packetLimit < sp->packetPtr) {
+            break;
+        }
+    }
+
+    // Type 2: Gouraud triangles.
+    w = (unsigned int *)mesh->prims[2];
+    end = w + mesh->primCount[2] * 6;
+    for (; w != end; w += 6) {
+        PolyG3 *p;
+
+        CLIP_TRI_SETUP();
+        if (any & 0x20) {
+            continue;
+        }
+        if ((int)(w[BODY_FLAGS] & sp->lit) < 0) {
+            Body_EnvTri(sp, ot, w, xy);
+        }
+        p = (PolyG3 *)sp->packetPtr;
+        p->rgbc0 = w[BODY_DATA];
+        p->xy0 = xy[0];
+        p->rgb1 = w[BODY_DATA + 1];
+        p->xy1 = xy[1];
+        p->rgb2 = w[BODY_DATA + 2];
+        p->xy2 = xy[2];
+        Ot_Link(ot, p, 6);
+        sp->packetPtr = (char *)(p + 1);
+        if (sp->packetLimit < sp->packetPtr) {
+            break;
+        }
+    }
+
+    // Type 3: Gouraud quads.
+    w = (unsigned int *)mesh->prims[3];
+    end = w + mesh->primCount[3] * 7;
+    for (; w != end; w += 7) {
+        PolyG4 *p;
+
+        CLIP_QUAD_SETUP();
+        if (any & 0x20) {
+            continue;
+        }
+        if ((int)(w[BODY_FLAGS] & sp->lit) < 0) {
+            Body_EnvQuad(sp, ot, w, xy);
+        }
+        p = (PolyG4 *)sp->packetPtr;
+        p->rgbc0 = w[BODY_DATA];
+        p->xy0 = xy[0];
+        p->rgb1 = w[BODY_DATA + 1];
+        p->xy1 = xy[1];
+        p->rgb2 = w[BODY_DATA + 3];
+        p->xy2 = xy[3];
+        p->rgb3 = w[BODY_DATA + 2];
+        p->xy3 = xy[2];
+        Ot_Link(ot, p, 8);
+        sp->packetPtr = (char *)(p + 1);
+        if (sp->packetLimit < sp->packetPtr) {
+            break;
+        }
+    }
+
+    // Type 4: textured triangles.
+    w = (unsigned int *)mesh->prims[4];
+    end = w + mesh->primCount[4] * 7;
+    for (; w != end; w += 7) {
+        unsigned int clut;
+
+        CLIP_TRI_SETUP();
+        if (n1 < 0) {
+            n1 = -n1;
+        }
+        if (!(any & 0x20)) {
+            if ((int)(w[BODY_FLAGS] & sp->lit) < 0) {
+                Body_EnvTri(sp, ot, w, xy);
+            }
+            if (n1 <= 0x480) {
+                PolyFT3 *p = (PolyFT3 *)sp->packetPtr;
+
+                p->rgbc = w[BODY_DATA];
+                p->xy0 = xy[0];
+                *(unsigned int *)&p->uv0 = Body_ClutWord(sp, w[BODY_DATA + 1], w[BODY_FLAGS]);
+                p->xy1 = xy[1];
+                *(unsigned int *)&p->uv1 = w[BODY_DATA + 2];
+                p->xy2 = xy[2];
+                *(unsigned int *)&p->uv2 = w[BODY_DATA + 3];
+                Ot_Link(ot, p, 7);
+                sp->packetPtr = (char *)(p + 1);
+                if (sp->packetLimit < sp->packetPtr) {
+                    break;
+                }
+                continue;
+            }
+        }
+        clut = Body_ClutWord(sp, w[BODY_DATA + 1], w[BODY_FLAGS]);
+        SubFace_Begin(sp, &face, ot, w[BODY_DATA], (w[BODY_DATA + 2] & 0xffff0000) | clut >> 16, 0x480, 0);
+        SubVert_SetClipped(&rec[0], v[0], w[BODY_DATA + 1], 0);
+        SubVert_SetClipped(&rec[1], v[1], w[BODY_DATA + 2], 1);
+        SubVert_SetClipped(&rec[2], v[2], w[BODY_DATA + 3], 2);
+        SubFace_End(sp, &face, Body_ClipSubdivTri(sp, &face, c, 0));
+        if (!(sp->packetPtr < sp->packetLimit)) {
+            break;
+        }
+    }
+
+    // Type 5: textured quads.
+    w = (unsigned int *)mesh->prims[5];
+    end = w + mesh->primCount[5] * 7;
+    for (; w != end; w += 7) {
+        unsigned int clut;
+        int area;
+
+        CLIP_QUAD_SETUP();
+        area = n2 - n1;
+        if (area < 0) {
+            area = -area;
+        }
+        if (!(any & 0x20)) {
+            if ((int)(w[BODY_FLAGS] & sp->lit) < 0) {
+                Body_EnvQuad(sp, ot, w, xy);
+            }
+            if (area <= 0x800) {
+                PolyFT4 *p = (PolyFT4 *)sp->packetPtr;
+
+                p->rgbc = w[BODY_DATA];
+                p->xy0 = xy[0];
+                *(unsigned int *)&p->uv0 = Body_ClutWord(sp, w[BODY_DATA + 1], w[BODY_FLAGS]);
+                p->xy1 = xy[1];
+                *(unsigned int *)&p->uv1 = w[BODY_DATA + 2];
+                p->xy2 = xy[3];
+                p->uv2 = w[BODY_DATA + 3] >> 16;
+                p->xy3 = xy[2];
+                *(unsigned int *)&p->uv3 = w[BODY_DATA + 3];
+                Ot_Link(ot, p, 9);
+                sp->packetPtr = (char *)(p + 1);
+                if (sp->packetLimit < sp->packetPtr) {
+                    break;
+                }
+                continue;
+            }
+        }
+        clut = Body_ClutWord(sp, w[BODY_DATA + 1], w[BODY_FLAGS]);
+        SubFace_Begin(sp, &face, ot, w[BODY_DATA], (w[BODY_DATA + 2] & 0xffff0000) | clut >> 16, 0x800, 0);
+        SubVert_SetClipped(&rec[0], v[0], clut, 0);
+        SubVert_SetClipped(&rec[1], v[1], w[BODY_DATA + 2], 1);
+        SubVert_SetClipped(&rec[2], v[2], w[BODY_DATA + 3], 2);
+        SubVert_SetClipped(&rec[3], v[3], w[BODY_DATA + 3] >> 16, 3);
+        SubFace_End(sp, &face, Body_ClipSubdivQuad(sp, &face, c, 0));
+        if (!(sp->packetPtr < sp->packetLimit)) {
+            break;
+        }
+    }
+
+    // Type 6: Gouraud-textured triangles.
+    w = (unsigned int *)mesh->prims[6];
+    end = w + mesh->primCount[6] * 9;
+    for (; w != end; w += 9) {
+        unsigned int clut;
+
+        CLIP_TRI_SETUP();
+        if (n1 < 0) {
+            n1 = -n1;
+        }
+        if (!(any & 0x20)) {
+            if ((int)(w[BODY_FLAGS] & sp->lit) < 0) {
+                Body_EnvTri(sp, ot, w, xy);
+            }
+            if (n1 <= 0x480) {
+                PolyGT3 *p = (PolyGT3 *)sp->packetPtr;
+
+                p->rgbc0 = w[BODY_DATA];
+                p->xy0 = xy[0];
+                *(unsigned int *)&p->uv0 = Body_ClutWord(sp, w[BODY_DATA + 3], w[BODY_FLAGS]);
+                p->rgb1 = w[BODY_DATA + 1];
+                p->xy1 = xy[1];
+                *(unsigned int *)&p->uv1 = w[BODY_DATA + 4];
+                p->rgb2 = w[BODY_DATA + 2];
+                p->xy2 = xy[2];
+                *(unsigned int *)&p->uv2 = w[BODY_DATA + 5];
+                Ot_Link(ot, p, 9);
+                sp->packetPtr = (char *)(p + 1);
+                if (sp->packetLimit < sp->packetPtr) {
+                    break;
+                }
+                continue;
+            }
+        }
+        clut = Body_ClutWord(sp, w[BODY_DATA + 3], w[BODY_FLAGS]);
+        SubFace_Begin(sp, &face, ot, w[BODY_DATA], (w[BODY_DATA + 4] & 0xffff0000) | clut >> 16, 0x480, 1);
+        SubVert_SetClipped(&rec[0], v[0], w[BODY_DATA + 3], 0);
+        SubVert_SetClipped(&rec[1], v[1], w[BODY_DATA + 4], 1);
+        SubVert_SetClipped(&rec[2], v[2], w[BODY_DATA + 5], 2);
+        SubFace_End(sp, &face, Body_ClipSubdivTri(sp, &face, c, 0));
+        if (!(sp->packetPtr < sp->packetLimit)) {
+            break;
+        }
+    }
+
+    // Type 7: Gouraud-textured quads.
+    w = (unsigned int *)mesh->prims[7];
+    end = w + mesh->primCount[7] * 10;
+    for (; w != end; w += 10) {
+        unsigned int clut;
+        int area;
+
+        CLIP_QUAD_SETUP();
+        area = n2 - n1;
+        if (area < 0) {
+            area = -area;
+        }
+        if (!(any & 0x20)) {
+            if ((int)(w[BODY_FLAGS] & sp->lit) < 0) {
+                Body_EnvQuad(sp, ot, w, xy);
+            }
+            if (area <= 0x800) {
+                PolyGT4 *p = (PolyGT4 *)sp->packetPtr;
+
+                p->rgbc0 = w[BODY_DATA];
+                p->xy0 = xy[0];
+                *(unsigned int *)&p->uv0 = Body_ClutWord(sp, w[BODY_DATA + 4], w[BODY_FLAGS]);
+                p->rgb1 = w[BODY_DATA + 1];
+                p->xy1 = xy[1];
+                *(unsigned int *)&p->uv1 = w[BODY_DATA + 5];
+                p->rgb2 = w[BODY_DATA + 3];
+                p->xy2 = xy[3];
+                p->uv2 = w[BODY_DATA + 6] >> 16;
+                p->rgb3 = w[BODY_DATA + 2];
+                p->xy3 = xy[2];
+                *(unsigned int *)&p->uv3 = w[BODY_DATA + 6];
+                Ot_Link(ot, p, 12);
+                sp->packetPtr = (char *)(p + 1);
+                if (sp->packetLimit < sp->packetPtr) {
+                    break;
+                }
+                continue;
+            }
+        }
+        clut = Body_ClutWord(sp, w[BODY_DATA + 4], w[BODY_FLAGS]);
+        SubFace_Begin(sp, &face, ot, w[BODY_DATA], (w[BODY_DATA + 5] & 0xffff0000) | clut >> 16, 0x800, 1);
+        SubVert_SetClipped(&rec[0], v[0], clut, 0);
+        SubVert_SetClipped(&rec[1], v[1], w[BODY_DATA + 5], 1);
+        SubVert_SetClipped(&rec[2], v[2], w[BODY_DATA + 6], 2);
+        SubVert_SetClipped(&rec[3], v[3], w[BODY_DATA + 6] >> 16, 3);
+        SubFace_End(sp, &face, Body_ClipSubdivQuad(sp, &face, c, 0));
+        if (!(sp->packetPtr < sp->packetLimit)) {
+            break;
+        }
+    }
+#undef CLIP_TRI_SETUP
+#undef CLIP_QUAD_SETUP
+}
+#else
 INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", CarBody_DrawClipped);
+#endif
 
 // Draws a wheel mesh (from CarModel_DrawWheel, with the wheel's transform loaded): strips
 // of vertex pairs, each pair of pairs a flat quad in the wheel colour when it faces the
@@ -1884,18 +2640,6 @@ struct ShadowMesh {
     unsigned int data[1];
 };
 
-// A transformed shadow vertex: view-space x, y, z, the clip code (bit 0 nearer than half
-// the near plane, bits 1-4 outside the planes in the light and light colour matrices,
-// bit 5 a GTE error), the screen position and the or of |x|, |y| and |z|.
-struct ShadowVert {
-    short x;
-    short y;
-    short clip;
-    short z;
-    int sxy;
-    unsigned int extent;
-};
-
 // Poly_Clip's input, in the scratchpad at 0x1f80009c.
 struct ShadowClipVert {
     int xy;
@@ -1914,12 +2658,6 @@ struct ShadowClip {
 };
 
 void Poly_Clip(void *scratch, int count);
-
-// The clip code word (clip, then z in the top half) of a vertex.
-static inline int ShadowVert_ClipZ(ShadowVert *v)
-{
-    return *(int *)&v->clip;
-}
 
 static inline void ShadowClip_SetVert(ShadowClipVert *c, ShadowVert *v, unsigned int rgb)
 {
