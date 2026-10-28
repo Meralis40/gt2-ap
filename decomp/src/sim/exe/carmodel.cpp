@@ -137,9 +137,10 @@ struct CarScratch {
     unsigned int *ot;           // 0x64
     char *packetPtr;            // 0x68
     char *packetLimit;
-    char *verts;                // 0x70; ShadowMesh_Draw's transformed vertices
-    char *normals;
-    char unk78[0x20];
+    char *verts;                // 0x70: the mesh's vertices (ShadowMesh_Draw: transformed ones)
+    char *normals;              // the environment map coordinates of the normals
+    int savedTrans[3];          // 0x78: the body transform, which CarBody_Draw* reload
+    int savedRot[5];
     short otShift;              // 0x98: depth << otShift >> 13 is the OT index
     short pad9a;
     MATRIX wheelMat;            // 0x9c: CarModel_DrawWheel's wheel rotation and position
@@ -147,12 +148,12 @@ struct CarScratch {
     signed char mirror;         // 0x398
     signed char lit;
     char pad39a[2];
-    unsigned int detail;        // 0x39c
-    unsigned int unk3a0;
-    unsigned int rgbF3;         // 0x3a4: the brightness, with POLY_FT3's code
-    unsigned int rgbG3;         // 0x3a8
-    short unk3ac;
-    unsigned short tpage;
+    unsigned int detail;        // 0x39c: added to the textured faces' CLUT word
+    unsigned int clutSelect;    // 0x3a0: masks a face's flags >> 14 into its CLUT word
+    unsigned int envFT3;        // 0x3a4: the brightness, with semi-transparent POLY_FT3's code
+    unsigned int envFT4;        // 0x3a8: the same with POLY_FT4's
+    short envClut;              // 0x3ac: the environment map's CLUT and texture page
+    unsigned short envTpage;
     unsigned int wheelColor;    // 0x3b0
 };
 
@@ -203,6 +204,64 @@ struct PolyG4 {
     int xy2;
     unsigned int rgb3;
     int xy3;
+};
+
+struct PolyF3 {
+    unsigned int tag;
+    unsigned int rgbc;
+    int xy0;
+    int xy1;
+    int xy2;
+};
+
+struct PolyFT3 {
+    unsigned int tag;
+    unsigned int rgbc;
+    int xy0;
+    unsigned short uv0;
+    unsigned short clut;
+    int xy1;
+    unsigned short uv1;
+    unsigned short tpage;
+    int xy2;
+    unsigned short uv2;
+    unsigned short pad1e;
+};
+
+struct PolyGT3 {
+    unsigned int tag;
+    unsigned int rgbc0;
+    int xy0;
+    unsigned short uv0;
+    unsigned short clut;
+    unsigned int rgb1;
+    int xy1;
+    unsigned short uv1;
+    unsigned short tpage;
+    unsigned int rgb2;
+    int xy2;
+    unsigned short uv2;
+    unsigned short pad26;
+};
+
+struct PolyGT4 {
+    unsigned int tag;
+    unsigned int rgbc0;
+    int xy0;
+    unsigned short uv0;
+    unsigned short clut;
+    unsigned int rgb1;
+    int xy1;
+    unsigned short uv1;
+    unsigned short tpage;
+    unsigned int rgb2;
+    int xy2;
+    unsigned short uv2;
+    unsigned short pad26;
+    unsigned int rgb3;
+    int xy3;
+    unsigned short uv3;
+    unsigned short pad32;
 };
 
 struct DrawMode {
@@ -522,7 +581,862 @@ void Mesh_NormalsToEnvUV(CarMesh *mesh, MATRIX *m, unsigned char *out)
 INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", Mesh_NormalsToEnvUV);
 #endif
 
+// Draws a car body mesh that is wholly on screen, from its 8 primitive lists: flat,
+// Gouraud, textured and Gouraud-textured triangles and quads (types 0-7). light is the
+// light matrix CarModel_Draw built, which turns the normals into environment map
+// coordinates. A face is drawn when the GTE projects it without error and it faces the
+// camera; it is sorted on its nearest or farthest corner (flags bit 0) plus a bias
+// (bits 1-4), and when the car is lit and flags bit 31 is set an environment map layer
+// goes over it. Large textured faces are subdivided (Body_SubdivTri, Body_SubdivQuad).
+#ifdef NON_MATCHING
+// The words of a body primitive: the vertex indices (a byte each), the flags, the normal
+// indices of the vertices after the first (9 bits each; the first's are flags bits 5-13),
+// then the type's colours and texture words.
+enum {
+    BODY_VERTS,
+    BODY_FLAGS,
+    BODY_NORMALS,
+    BODY_DATA
+};
+
+// A body vertex as the GTE loads it (VXY, VZ).
+struct BodyVert {
+    int xy;
+    int z;
+};
+
+// A vertex of a face being subdivided: its model position, texture coordinates, screen
+// position and colour.
+struct SubVert {
+    short x;
+    short y;
+    short z;
+    unsigned char u;
+    unsigned char v;
+    int sxy;
+    unsigned int rgb;
+};
+
+// What the subdivision of one face shares: where its packets go, its code and texture
+// words, the area above which a part is subdivided again, and the chain of packets.
+struct SubFace {
+    unsigned int *ot;
+    unsigned int code;          // the face's colour and command word
+    unsigned int texWord;       // the texture page (top half) and CLUT (bottom half)
+    int threshold;
+    int gouraud;
+    char *first;
+    char *last;
+};
+
+// The original keeps up to 7 subdivision frames in the scratchpad (0x1f8000e8-0x1f800387);
+// a part that is still too large at the last one is dropped.
+#define SUBDIV_MAX_DEPTH 6
+
+static inline int Body_NClip(int a, int b, int c)
+{
+    gte_SetDataReg(GTE_SXY0, a);
+    gte_SetDataReg(GTE_SXY1, b);
+    gte_SetDataReg(GTE_SXY2, c);
+    gte_nclip();
+    return gte_GetDataReg(GTE_MAC0);
+}
+
+static inline unsigned int *Body_OtEntry(CarScratch *sp, unsigned int flags, unsigned int z)
+{
+    unsigned int i = (z << sp->otShift) >> 13;
+
+    if (i >= 0x1000) {
+        i = 0xfff;
+    }
+    return sp->ot + i + ((flags >> 1) & 0xf) - 8;
+}
+
+// The sort depth: the nearest corner, or the farthest when flags bit 0 is set.
+static inline unsigned int Body_SortZ(unsigned int flags, int *sz, int n)
+{
+    int z = sz[0];
+    int k;
+
+    for (k = 1; k < n; k++) {
+        if ((flags & 1) ? sz[k] > z : sz[k] < z) {
+            z = sz[k];
+        }
+    }
+    return z;
+}
+
+// Links a packet of len words into an OT entry.
+static inline void Ot_Link(unsigned int *ot, void *prim, int len)
+{
+    *(unsigned int *)prim = len << 24 | (*ot & 0xffffff);
+    *ot = (*ot & 0xff000000) | ((unsigned int)prim & 0xffffff);
+}
+
+static inline unsigned short Body_EnvUV(CarScratch *sp, unsigned int normal)
+{
+    return ((unsigned short *)sp->normals)[normal & 0x1ff];
+}
+
+// Projects a triangle. The original loads the vertices as V0, V2, V1 (so the nclip's
+// sign is that of the first, third and second); xy gets them in index order.
+static int Body_ProjectTri(CarScratch *sp, unsigned int *w, BodyVert **v, int *xy, int *sz, int *area)
+{
+    BodyVert *verts = (BodyVert *)sp->verts;
+    int flags;
+
+    v[0] = &verts[w[BODY_VERTS] & 0xff];
+    v[1] = &verts[(w[BODY_VERTS] >> 8) & 0xff];
+    v[2] = &verts[(w[BODY_VERTS] >> 16) & 0xff];
+    gte_SetDataReg(GTE_VXY0, v[0]->xy);
+    gte_SetDataReg(GTE_VZ0, v[0]->z);
+    gte_SetDataReg(GTE_VXY2, v[1]->xy);
+    gte_SetDataReg(GTE_VZ2, v[1]->z);
+    gte_SetDataReg(GTE_VXY1, v[2]->xy);
+    gte_SetDataReg(GTE_VZ1, v[2]->z);
+    gte_rtpt();
+    flags = gte_GetCtrlReg(GTE_FLAG);
+    sz[0] = gte_GetDataReg(GTE_SZ1);
+    sz[1] = gte_GetDataReg(GTE_SZ2);
+    sz[2] = gte_GetDataReg(GTE_SZ3);
+    gte_nclip();
+    *area = gte_GetDataReg(GTE_MAC0);
+    xy[0] = gte_GetDataReg(GTE_SXY0);
+    xy[1] = gte_GetDataReg(GTE_SXY2);
+    xy[2] = gte_GetDataReg(GTE_SXY1);
+    return flags;
+}
+
+// Projects a quad (its vertices in order round the face): the second, third and first
+// vertices, then the fourth, with an nclip after each projection.
+static int Body_ProjectQuad(CarScratch *sp, unsigned int *w, BodyVert **v, int *xy, int *sz, int *n1, int *n2)
+{
+    BodyVert *verts = (BodyVert *)sp->verts;
+    int flags;
+
+    v[0] = &verts[w[BODY_VERTS] & 0xff];
+    v[1] = &verts[(w[BODY_VERTS] >> 8) & 0xff];
+    v[2] = &verts[(w[BODY_VERTS] >> 16) & 0xff];
+    v[3] = &verts[w[BODY_VERTS] >> 24];
+    gte_SetDataReg(GTE_VXY2, v[0]->xy);
+    gte_SetDataReg(GTE_VZ2, v[0]->z);
+    gte_SetDataReg(GTE_VXY0, v[1]->xy);
+    gte_SetDataReg(GTE_VZ0, v[1]->z);
+    gte_SetDataReg(GTE_VXY1, v[2]->xy);
+    gte_SetDataReg(GTE_VZ1, v[2]->z);
+    gte_rtpt();
+    flags = gte_GetCtrlReg(GTE_FLAG);
+    xy[1] = gte_GetDataReg(GTE_SXY0);
+    sz[0] = gte_GetDataReg(GTE_SZ1);
+    sz[1] = gte_GetDataReg(GTE_SZ2);
+    sz[2] = gte_GetDataReg(GTE_SZ3);
+    gte_nclip();
+    *n1 = gte_GetDataReg(GTE_MAC0);
+    gte_SetDataReg(GTE_VXY0, v[3]->xy);
+    gte_SetDataReg(GTE_VZ0, v[3]->z);
+    gte_rtps();
+    flags |= gte_GetCtrlReg(GTE_FLAG);
+    sz[3] = gte_GetDataReg(GTE_SZ3);
+    gte_nclip();
+    *n2 = gte_GetDataReg(GTE_MAC0);
+    xy[2] = gte_GetDataReg(GTE_SXY0);
+    xy[0] = gte_GetDataReg(GTE_SXY1);
+    xy[3] = gte_GetDataReg(GTE_SXY2);
+    return flags;
+}
+
+// A triangle is drawn when its nclip (negated in a mirror) is positive.
+static inline int Body_TriVisible(CarScratch *sp, int flags, int area)
+{
+    if (flags < 0) {
+        return 0;
+    }
+    if (sp->mirror < 0) {
+        area = -area;
+    }
+    return area > 0;
+}
+
+// A quad is drawn when either half faces the camera (in a mirror, when either doesn't),
+// and not when both nclips are 0.
+static inline int Body_QuadVisible(CarScratch *sp, int flags, int n1, int n2)
+{
+    int a = -n1;
+
+    if (flags < 0 || (a | n2) == 0) {
+        return 0;
+    }
+    if (sp->mirror >= 0) {
+        return a > 0 || n2 > 0;
+    }
+    return a <= 0 || n2 <= 0;
+}
+
+// The environment map layer over a triangle or quad.
+static void Body_EnvTri(CarScratch *sp, unsigned int *ot, unsigned int *w, int *xy)
+{
+    PolyFT3 *p = (PolyFT3 *)sp->packetPtr;
+
+    p->rgbc = sp->envFT3;
+    p->xy0 = xy[0];
+    p->uv0 = Body_EnvUV(sp, w[BODY_FLAGS] >> 5);
+    p->clut = sp->envClut;
+    p->xy1 = xy[1];
+    p->uv1 = Body_EnvUV(sp, w[BODY_NORMALS]);
+    p->tpage = sp->envTpage;
+    p->xy2 = xy[2];
+    p->uv2 = Body_EnvUV(sp, w[BODY_NORMALS] >> 9);
+    Ot_Link(ot, p, 7);
+    sp->packetPtr = (char *)(p + 1);
+}
+
+static void Body_EnvQuad(CarScratch *sp, unsigned int *ot, unsigned int *w, int *xy)
+{
+    PolyFT4 *p = (PolyFT4 *)sp->packetPtr;
+
+    p->rgbc = sp->envFT4;
+    p->xy0 = xy[0];
+    p->uv0 = Body_EnvUV(sp, w[BODY_FLAGS] >> 5);
+    p->clut = sp->envClut;
+    p->xy1 = xy[1];
+    p->uv1 = Body_EnvUV(sp, w[BODY_NORMALS]);
+    p->tpage = sp->envTpage;
+    p->xy2 = xy[3];
+    p->uv2 = Body_EnvUV(sp, w[BODY_NORMALS] >> 18);
+    p->xy3 = xy[2];
+    p->uv3 = Body_EnvUV(sp, w[BODY_NORMALS] >> 9);
+    Ot_Link(ot, p, 9);
+    sp->packetPtr = (char *)(p + 1);
+}
+
+// A textured face's CLUT word: its own, with flags >> 14 masked by clutSelect and the
+// instance's detail added.
+static inline unsigned int Body_ClutWord(CarScratch *sp, unsigned int word, unsigned int flags)
+{
+    return word + (((int)flags >> 14) & sp->clutSelect) + sp->detail;
+}
+
+static inline void SubVert_Set(SubVert *s, BodyVert *v, int sxy, unsigned int uv, unsigned int rgb)
+{
+    *(int *)&s->x = v->xy;
+    s->z = v->z;
+    *(unsigned short *)&s->u = uv;
+    s->sxy = sxy;
+    s->rgb = rgb;
+}
+
+static inline unsigned int SubVert_UV(SubVert *s)
+{
+    return *(unsigned short *)&s->u;
+}
+
+static inline unsigned int Sub_Mid(unsigned int a, unsigned int b)
+{
+    return ((a & 0xfefefe) + (b & 0xfefefe)) >> 1;
+}
+
+// m = the midpoint of a and b (position, texture coordinates and colour).
+static void SubVert_Mid(SubVert *m, SubVert *a, SubVert *b)
+{
+    m->x = (a->x + b->x) >> 1;
+    m->y = (a->y + b->y) >> 1;
+    m->z = (a->z + b->z) >> 1;
+    m->u = (a->u + b->u) >> 1;
+    m->v = (a->v + b->v) >> 1;
+    m->rgb = Sub_Mid(a->rgb, b->rgb);
+}
+
+static void SubVert_Project(SubVert *s)
+{
+    gte_SetDataReg(GTE_VXY0, *(int *)&s->x);
+    gte_SetDataReg(GTE_VZ0, s->z);
+    gte_rtps();
+    s->sxy = gte_GetDataReg(GTE_SXY2);
+}
+
+// Adds a packet to the face's chain: each one's tag points to the next address, and the
+// chain goes into the OT when the face is done.
+static void Sub_Chain(CarScratch *sp, SubFace *f, void *p, int len, int size)
+{
+    *(unsigned int *)p = len << 24 | (((unsigned int)p + size) & 0xffffff);
+    f->last = (char *)p;
+    sp->packetPtr = (char *)p + size;
+}
+
+// A textured (FT3) or Gouraud-textured (GT3) triangle of a subdivided face; code is the
+// command word (its top byte for GT3).
+static void Sub_EmitTri(CarScratch *sp, SubFace *f, unsigned int code, SubVert *a, SubVert *b, SubVert *c)
+{
+    if (!f->gouraud) {
+        PolyFT3 *p = (PolyFT3 *)sp->packetPtr;
+
+        p->rgbc = code;
+        p->xy0 = a->sxy;
+        p->uv0 = SubVert_UV(a);
+        p->clut = f->texWord;
+        p->xy1 = b->sxy;
+        p->uv1 = SubVert_UV(b);
+        p->tpage = f->texWord >> 16;
+        p->xy2 = c->sxy;
+        p->uv2 = SubVert_UV(c);
+        Sub_Chain(sp, f, p, 7, sizeof(PolyFT3));
+    } else {
+        PolyGT3 *p = (PolyGT3 *)sp->packetPtr;
+
+        p->rgbc0 = (a->rgb & 0xffffff) | (code & 0xff000000);
+        p->xy0 = a->sxy;
+        p->uv0 = SubVert_UV(a);
+        p->clut = f->texWord;
+        p->rgb1 = b->rgb;
+        p->xy1 = b->sxy;
+        p->uv1 = SubVert_UV(b);
+        p->tpage = f->texWord >> 16;
+        p->rgb2 = c->rgb;
+        p->xy2 = c->sxy;
+        p->uv2 = SubVert_UV(c);
+        Sub_Chain(sp, f, p, 9, sizeof(PolyGT3));
+    }
+}
+
+// A quad (corner a, then b and c next to it, d opposite) of a subdivided face. The
+// Gouraud version gives the third and fourth points each other's colour, as the original.
+static void Sub_EmitQuad(CarScratch *sp, SubFace *f, SubVert *a, SubVert *b, SubVert *c, SubVert *d)
+{
+    if (!f->gouraud) {
+        PolyFT4 *p = (PolyFT4 *)sp->packetPtr;
+
+        p->rgbc = f->code;
+        p->xy0 = a->sxy;
+        p->uv0 = SubVert_UV(a);
+        p->clut = f->texWord;
+        p->xy1 = b->sxy;
+        p->uv1 = SubVert_UV(b);
+        p->tpage = f->texWord >> 16;
+        p->xy2 = c->sxy;
+        p->uv2 = SubVert_UV(c);
+        p->xy3 = d->sxy;
+        p->uv3 = SubVert_UV(d);
+        Sub_Chain(sp, f, p, 9, sizeof(PolyFT4));
+    } else {
+        PolyGT4 *p = (PolyGT4 *)sp->packetPtr;
+
+        p->rgbc0 = (a->rgb & 0xffffff) | (f->code & 0xff000000);
+        p->xy0 = a->sxy;
+        p->uv0 = SubVert_UV(a);
+        p->clut = f->texWord;
+        p->rgb1 = b->rgb;
+        p->xy1 = b->sxy;
+        p->uv1 = SubVert_UV(b);
+        p->tpage = f->texWord >> 16;
+        p->rgb2 = d->rgb;
+        p->xy2 = c->sxy;
+        p->uv2 = SubVert_UV(c);
+        p->rgb3 = c->rgb;
+        p->xy3 = d->sxy;
+        p->uv3 = SubVert_UV(d);
+        Sub_Chain(sp, f, p, 12, sizeof(PolyGT4));
+    }
+}
+
+// Splits triangle c into four at its edges' midpoints (m[k] between c[k] and c[k + 1]).
+// First come the three slivers between each edge and its midpoint, which fill the cracks
+// the projected midpoints leave; then the corner triangles and the middle one, each
+// subdivided again while its area is above the threshold. Returns 0 when the packets ran
+// out (the original then drops the whole face).
+static int Body_SubdivTri(CarScratch *sp, SubFace *f, SubVert **c, int depth)
+{
+    SubVert m[3];
+    int a;
+
+    SubVert_Mid(&m[0], c[0], c[1]);
+    SubVert_Mid(&m[1], c[1], c[2]);
+    SubVert_Mid(&m[2], c[2], c[0]);
+    SubVert_Project(&m[0]);
+    SubVert_Project(&m[1]);
+    SubVert_Project(&m[2]);
+    for (a = 2; a >= 0; a--) {
+        int prev = a == 0 ? 2 : a - 1;
+
+        if (Body_NClip(c[a]->sxy, m[prev].sxy, c[prev]->sxy) != 0) {
+            Sub_EmitTri(sp, f, f->code, c[a], &m[prev], c[prev]);
+        }
+    }
+    if (sp->packetLimit < sp->packetPtr) {
+        return 0;
+    }
+    for (a = 3; a >= 0; a--) {
+        SubVert *t[3];
+        int area;
+
+        if (a == 3) {
+            t[0] = &m[0];
+            t[1] = &m[1];
+            t[2] = &m[2];
+        } else {
+            t[0] = c[a];
+            t[1] = &m[a];
+            t[2] = &m[a == 0 ? 2 : a - 1];
+        }
+        area = Body_NClip(t[0]->sxy, t[1]->sxy, t[2]->sxy);
+        if (area < 0) {
+            area = -area;
+        }
+        if ((unsigned int)area > (unsigned int)f->threshold) {
+            if (depth < SUBDIV_MAX_DEPTH && !Body_SubdivTri(sp, f, t, depth + 1)) {
+                return 0;
+            }
+        } else {
+            Sub_EmitTri(sp, f, f->code, t[0], t[1], t[2]);
+        }
+    }
+    return 1;
+}
+
+// Splits quad c (corners in order round it) into four at its centre and edge midpoints,
+// with the same crack slivers (as triangles), alternating where each part's corner list
+// starts. The Gouraud version calls Gpu_DrawSync before each projection after the
+// centre's, and starts the list at the part's corner only for the last part (it tests
+// the byte it keeps the part index in rather than its low bit).
+static int Body_SubdivQuad(CarScratch *sp, SubFace *f, SubVert **c, int depth)
+{
+    SubVert ctr;
+    SubVert m[4];
+    unsigned int slivers = f->code - 0x08000000;     // the triangle version of the code
+    int a;
+
+    ctr.x = (c[0]->x + c[1]->x + (c[2]->x + c[3]->x)) >> 2;
+    ctr.y = (c[0]->y + c[1]->y + (c[2]->y + c[3]->y)) >> 2;
+    ctr.z = (c[0]->z + c[1]->z + (c[2]->z + c[3]->z)) >> 2;
+    ctr.u = (c[0]->u + c[1]->u + (c[2]->u + c[3]->u)) >> 2;
+    ctr.v = (c[0]->v + c[1]->v + (c[2]->v + c[3]->v)) >> 2;
+    for (a = 0; a < 4; a++) {
+        SubVert_Mid(&m[a], c[a], c[(a + 1) & 3]);
+    }
+    ctr.rgb = Sub_Mid(m[0].rgb, m[2].rgb);
+    SubVert_Project(&ctr);
+    for (a = 0; a < 4; a++) {
+        if (f->gouraud) {
+            Gpu_DrawSync();
+        }
+        SubVert_Project(&m[a]);
+    }
+    if (f->gouraud) {
+        Gpu_DrawSync();
+    }
+    for (a = 3; a >= 0; a--) {
+        int prev = (a - 1) & 3;
+
+        if (Body_NClip(c[a]->sxy, m[prev].sxy, c[prev]->sxy) != 0) {
+            Sub_EmitTri(sp, f, slivers, c[a], &m[prev], c[prev]);
+        }
+    }
+    if (sp->packetLimit < sp->packetPtr) {
+        return 0;
+    }
+    for (a = 3; a >= 0; a--) {
+        SubVert *corner = c[a];
+        SubVert *next = &m[a];
+        SubVert *prev = &m[(a - 1) & 3];
+        int area = Body_NClip(next->sxy, corner->sxy, ctr.sxy) - Body_NClip(prev->sxy, corner->sxy, ctr.sxy);
+
+        if (area < 0) {
+            area = -area;
+        }
+        if ((unsigned int)area > (unsigned int)f->threshold) {
+            SubVert *t[4];
+            int odd = f->gouraud ? a != 0 : a & 1;
+
+            if (depth >= SUBDIV_MAX_DEPTH) {
+                continue;
+            }
+            if (odd) {
+                t[0] = prev;
+                t[1] = corner;
+                t[2] = next;
+                t[3] = &ctr;
+            } else {
+                t[0] = corner;
+                t[1] = next;
+                t[2] = &ctr;
+                t[3] = prev;
+            }
+            if (!Body_SubdivQuad(sp, f, t, depth + 1)) {
+                return 0;
+            }
+        } else {
+            Sub_EmitQuad(sp, f, corner, next, prev, &ctr);
+        }
+    }
+    return 1;
+}
+
+// Starts and finishes a subdivided face: the packets go into the face's OT entry as one
+// chain, or all go when the packet area ran out.
+static void SubFace_Begin(CarScratch *sp, SubFace *f, unsigned int *ot, unsigned int code, unsigned int tex, int threshold, int gouraud)
+{
+    f->ot = ot;
+    f->code = code;
+    f->texWord = tex;
+    f->threshold = threshold;
+    f->gouraud = gouraud;
+    f->first = sp->packetPtr;
+    f->last = sp->packetPtr;
+}
+
+static void SubFace_End(CarScratch *sp, SubFace *f, int ok)
+{
+    if (!ok || sp->packetLimit < sp->packetPtr) {
+        sp->packetPtr = f->first;
+        return;
+    }
+    if (sp->packetPtr != f->first) {
+        unsigned int head = *f->ot;
+
+        *f->ot = (head & 0xff000000) | ((unsigned int)f->first & 0xffffff);
+        *(unsigned int *)f->last = (*(unsigned int *)f->last & 0xff000000) | (head & 0xffffff);
+    }
+}
+
+// Handwritten: each type has its own loop in the original, with the packet writes in the
+// GTE's latency slots; the subdivision keeps its frames in the scratchpad and is not
+// recursive there.
+void CarBody_DrawUnclipped(CarMesh *mesh, MATRIX *light)
+{
+    CarScratch *sp = (CarScratch *)0x1f800000;
+    unsigned short env[0x204];
+    unsigned int *w;
+    unsigned int *end;
+    BodyVert *v[4];
+    int xy[4];
+    int sz[4];
+    int n1;
+    int n2;
+    unsigned int *ot;
+    SubFace face;
+    SubVert rec[4];
+    SubVert *c[4];
+
+    sp->verts = mesh->verts;
+    Mesh_NormalsToEnvUV(mesh, light, (unsigned char *)env);
+    gte_SetCtrlReg(GTE_TRX, sp->savedTrans[0]);
+    gte_SetCtrlReg(GTE_TRY, sp->savedTrans[1]);
+    gte_SetCtrlReg(GTE_TRZ, sp->savedTrans[2]);
+    gte_SetRotMatrixWords(sp->savedRot);
+    c[0] = &rec[0];
+    c[1] = &rec[1];
+    c[2] = &rec[2];
+    c[3] = &rec[3];
+
+    // Type 0: flat triangles.
+    w = (unsigned int *)mesh->prims[0];
+    end = w + mesh->primCount[0] * 4;
+    for (; w != end; w += 4) {
+        PolyF3 *p;
+
+        if (!Body_TriVisible(sp, Body_ProjectTri(sp, w, v, xy, sz, &n1), n1)) {
+            continue;
+        }
+        ot = Body_OtEntry(sp, w[BODY_FLAGS], Body_SortZ(w[BODY_FLAGS], sz, 3));
+        if ((int)(w[BODY_FLAGS] & sp->lit) < 0) {
+            Body_EnvTri(sp, ot, w, xy);
+        }
+        p = (PolyF3 *)sp->packetPtr;
+        p->rgbc = w[BODY_DATA];
+        p->xy0 = xy[0];
+        p->xy1 = xy[1];
+        p->xy2 = xy[2];
+        Ot_Link(ot, p, 4);
+        sp->packetPtr = (char *)(p + 1);
+        if (sp->packetLimit < sp->packetPtr) {
+            break;
+        }
+    }
+
+    // Type 1: flat quads.
+    w = (unsigned int *)mesh->prims[1];
+    end = w + mesh->primCount[1] * 4;
+    for (; w != end; w += 4) {
+        PolyF4 *p;
+        int flags = Body_ProjectQuad(sp, w, v, xy, sz, &n1, &n2);
+
+        if (!Body_QuadVisible(sp, flags, n1, n2)) {
+            continue;
+        }
+        ot = Body_OtEntry(sp, w[BODY_FLAGS], Body_SortZ(w[BODY_FLAGS], sz, 4));
+        if ((int)(w[BODY_FLAGS] & sp->lit) < 0) {
+            Body_EnvQuad(sp, ot, w, xy);
+        }
+        p = (PolyF4 *)sp->packetPtr;
+        p->rgbc = w[BODY_DATA];
+        p->xy0 = xy[0];
+        p->xy1 = xy[1];
+        p->xy2 = xy[3];
+        p->xy3 = xy[2];
+        Ot_Link(ot, p, 5);
+        sp->packetPtr = (char *)(p + 1);
+        if (sp->packetLimit < sp->packetPtr) {
+            break;
+        }
+    }
+
+    // Type 2: Gouraud triangles.
+    w = (unsigned int *)mesh->prims[2];
+    end = w + mesh->primCount[2] * 6;
+    for (; w != end; w += 6) {
+        PolyG3 *p;
+
+        if (!Body_TriVisible(sp, Body_ProjectTri(sp, w, v, xy, sz, &n1), n1)) {
+            continue;
+        }
+        ot = Body_OtEntry(sp, w[BODY_FLAGS], Body_SortZ(w[BODY_FLAGS], sz, 3));
+        if ((int)(w[BODY_FLAGS] & sp->lit) < 0) {
+            Body_EnvTri(sp, ot, w, xy);
+        }
+        p = (PolyG3 *)sp->packetPtr;
+        p->rgbc0 = w[BODY_DATA];
+        p->xy0 = xy[0];
+        p->rgb1 = w[BODY_DATA + 1];
+        p->xy1 = xy[1];
+        p->rgb2 = w[BODY_DATA + 2];
+        p->xy2 = xy[2];
+        Ot_Link(ot, p, 6);
+        sp->packetPtr = (char *)(p + 1);
+        if (sp->packetLimit < sp->packetPtr) {
+            break;
+        }
+    }
+
+    // Type 3: Gouraud quads (the colours in vertex order).
+    w = (unsigned int *)mesh->prims[3];
+    end = w + mesh->primCount[3] * 7;
+    for (; w != end; w += 7) {
+        PolyG4 *p;
+        int flags = Body_ProjectQuad(sp, w, v, xy, sz, &n1, &n2);
+
+        if (!Body_QuadVisible(sp, flags, n1, n2)) {
+            continue;
+        }
+        ot = Body_OtEntry(sp, w[BODY_FLAGS], Body_SortZ(w[BODY_FLAGS], sz, 4));
+        if ((int)(w[BODY_FLAGS] & sp->lit) < 0) {
+            Body_EnvQuad(sp, ot, w, xy);
+        }
+        p = (PolyG4 *)sp->packetPtr;
+        p->rgbc0 = w[BODY_DATA];
+        p->xy0 = xy[0];
+        p->rgb1 = w[BODY_DATA + 1];
+        p->xy1 = xy[1];
+        p->rgb2 = w[BODY_DATA + 3];
+        p->xy2 = xy[3];
+        p->rgb3 = w[BODY_DATA + 2];
+        p->xy3 = xy[2];
+        Ot_Link(ot, p, 8);
+        sp->packetPtr = (char *)(p + 1);
+        if (sp->packetLimit < sp->packetPtr) {
+            break;
+        }
+    }
+
+    // Type 4: textured triangles: code, uv0 and CLUT, uv1 and texture page, uv2.
+    w = (unsigned int *)mesh->prims[4];
+    end = w + mesh->primCount[4] * 7;
+    for (; w != end; w += 7) {
+        unsigned int clut;
+
+        if (!Body_TriVisible(sp, Body_ProjectTri(sp, w, v, xy, sz, &n1), n1)) {
+            continue;
+        }
+        if (sp->mirror < 0) {
+            n1 = -n1;
+        }
+        ot = Body_OtEntry(sp, w[BODY_FLAGS], Body_SortZ(w[BODY_FLAGS], sz, 3));
+        if ((int)(w[BODY_FLAGS] & sp->lit) < 0) {
+            Body_EnvTri(sp, ot, w, xy);
+        }
+        clut = Body_ClutWord(sp, w[BODY_DATA + 1], w[BODY_FLAGS]);
+        if (n1 > 0x480) {
+            SubFace_Begin(sp, &face, ot, w[BODY_DATA], (w[BODY_DATA + 2] & 0xffff0000) | clut >> 16, 0x480, 0);
+            SubVert_Set(&rec[0], v[0], xy[0], clut, 0);
+            SubVert_Set(&rec[1], v[1], xy[1], w[BODY_DATA + 2], 0);
+            SubVert_Set(&rec[2], v[2], xy[2], w[BODY_DATA + 3], 0);
+            SubFace_End(sp, &face, Body_SubdivTri(sp, &face, c, 0));
+            if (!(sp->packetPtr < sp->packetLimit)) {
+                break;
+            }
+        } else {
+            PolyFT3 *p = (PolyFT3 *)sp->packetPtr;
+
+            p->rgbc = w[BODY_DATA];
+            p->xy0 = xy[0];
+            *(unsigned int *)&p->uv0 = clut;
+            p->xy1 = xy[1];
+            *(unsigned int *)&p->uv1 = w[BODY_DATA + 2];
+            p->xy2 = xy[2];
+            *(unsigned int *)&p->uv2 = w[BODY_DATA + 3];
+            Ot_Link(ot, p, 7);
+            sp->packetPtr = (char *)(p + 1);
+            if (sp->packetLimit < sp->packetPtr) {
+                break;
+            }
+        }
+    }
+
+    // Type 5: textured quads: code, uv0 and CLUT, uv1 and texture page, uv2 | uv3 << 16
+    // (the third and fourth vertices').
+    w = (unsigned int *)mesh->prims[5];
+    end = w + mesh->primCount[5] * 7;
+    for (; w != end; w += 7) {
+        unsigned int clut;
+        int area;
+        int flags = Body_ProjectQuad(sp, w, v, xy, sz, &n1, &n2);
+
+        if (!Body_QuadVisible(sp, flags, n1, n2)) {
+            continue;
+        }
+        area = n2 - n1;
+        ot = Body_OtEntry(sp, w[BODY_FLAGS], Body_SortZ(w[BODY_FLAGS], sz, 4));
+        if ((int)(w[BODY_FLAGS] & sp->lit) < 0) {
+            Body_EnvQuad(sp, ot, w, xy);
+        }
+        clut = Body_ClutWord(sp, w[BODY_DATA + 1], w[BODY_FLAGS]);
+        if (area < 0) {
+            area = -area;
+        }
+        if (area > 0x800) {
+            SubFace_Begin(sp, &face, ot, w[BODY_DATA], (w[BODY_DATA + 2] & 0xffff0000) | clut >> 16, 0x800, 0);
+            SubVert_Set(&rec[0], v[0], xy[0], clut, 0);
+            SubVert_Set(&rec[1], v[1], xy[1], w[BODY_DATA + 2], 0);
+            SubVert_Set(&rec[2], v[2], xy[2], w[BODY_DATA + 3], 0);
+            SubVert_Set(&rec[3], v[3], xy[3], w[BODY_DATA + 3] >> 16, 0);
+            SubFace_End(sp, &face, Body_SubdivQuad(sp, &face, c, 0));
+            if (!(sp->packetPtr < sp->packetLimit)) {
+                break;
+            }
+        } else {
+            PolyFT4 *p = (PolyFT4 *)sp->packetPtr;
+
+            p->rgbc = w[BODY_DATA];
+            p->xy0 = xy[0];
+            *(unsigned int *)&p->uv0 = clut;
+            p->xy1 = xy[1];
+            *(unsigned int *)&p->uv1 = w[BODY_DATA + 2];
+            p->xy2 = xy[3];
+            p->uv2 = w[BODY_DATA + 3] >> 16;
+            p->xy3 = xy[2];
+            *(unsigned int *)&p->uv3 = w[BODY_DATA + 3];
+            Ot_Link(ot, p, 9);
+            sp->packetPtr = (char *)(p + 1);
+            if (sp->packetLimit < sp->packetPtr) {
+                break;
+            }
+        }
+    }
+
+    // Type 6: Gouraud-textured triangles: three colours (the first with the code), uv0
+    // and CLUT, uv1 and texture page, uv2.
+    w = (unsigned int *)mesh->prims[6];
+    end = w + mesh->primCount[6] * 9;
+    for (; w != end; w += 9) {
+        unsigned int clut;
+
+        if (!Body_TriVisible(sp, Body_ProjectTri(sp, w, v, xy, sz, &n1), n1)) {
+            continue;
+        }
+        if (sp->mirror < 0) {
+            n1 = -n1;
+        }
+        ot = Body_OtEntry(sp, w[BODY_FLAGS], Body_SortZ(w[BODY_FLAGS], sz, 3));
+        if ((int)(w[BODY_FLAGS] & sp->lit) < 0) {
+            Body_EnvTri(sp, ot, w, xy);
+        }
+        clut = Body_ClutWord(sp, w[BODY_DATA + 3], w[BODY_FLAGS]);
+        if (n1 > 0x480) {
+            SubFace_Begin(sp, &face, ot, w[BODY_DATA], (w[BODY_DATA + 4] & 0xffff0000) | clut >> 16, 0x480, 1);
+            SubVert_Set(&rec[0], v[0], xy[0], clut, w[BODY_DATA]);
+            SubVert_Set(&rec[1], v[1], xy[1], w[BODY_DATA + 4], w[BODY_DATA + 1]);
+            SubVert_Set(&rec[2], v[2], xy[2], w[BODY_DATA + 5], w[BODY_DATA + 2]);
+            SubFace_End(sp, &face, Body_SubdivTri(sp, &face, c, 0));
+            if (!(sp->packetPtr < sp->packetLimit)) {
+                break;
+            }
+        } else {
+            PolyGT3 *p = (PolyGT3 *)sp->packetPtr;
+
+            p->rgbc0 = w[BODY_DATA];
+            p->xy0 = xy[0];
+            *(unsigned int *)&p->uv0 = clut;
+            p->rgb1 = w[BODY_DATA + 1];
+            p->xy1 = xy[1];
+            *(unsigned int *)&p->uv1 = w[BODY_DATA + 4];
+            p->rgb2 = w[BODY_DATA + 2];
+            p->xy2 = xy[2];
+            *(unsigned int *)&p->uv2 = w[BODY_DATA + 5];
+            Ot_Link(ot, p, 9);
+            sp->packetPtr = (char *)(p + 1);
+            if (sp->packetLimit < sp->packetPtr) {
+                break;
+            }
+        }
+    }
+
+    // Type 7: Gouraud-textured quads: four colours, uv0 and CLUT, uv1 and texture page,
+    // uv2 | uv3 << 16.
+    w = (unsigned int *)mesh->prims[7];
+    end = w + mesh->primCount[7] * 10;
+    for (; w != end; w += 10) {
+        unsigned int clut;
+        int area;
+        int flags = Body_ProjectQuad(sp, w, v, xy, sz, &n1, &n2);
+
+        if (!Body_QuadVisible(sp, flags, n1, n2)) {
+            continue;
+        }
+        area = n2 - n1;
+        ot = Body_OtEntry(sp, w[BODY_FLAGS], Body_SortZ(w[BODY_FLAGS], sz, 4));
+        if ((int)(w[BODY_FLAGS] & sp->lit) < 0) {
+            Body_EnvQuad(sp, ot, w, xy);
+        }
+        clut = Body_ClutWord(sp, w[BODY_DATA + 4], w[BODY_FLAGS]);
+        if (area < 0) {
+            area = -area;
+        }
+        if (area > 0x800) {
+            // The original gives the last three corners the GTE's RGB0-RGB2 instead of the
+            // face's colours (it stores both, the FIFO last).
+            SubFace_Begin(sp, &face, ot, w[BODY_DATA], (w[BODY_DATA + 5] & 0xffff0000) | clut >> 16, 0x800, 1);
+            SubVert_Set(&rec[0], v[0], xy[0], clut, w[BODY_DATA]);
+            SubVert_Set(&rec[1], v[1], xy[1], w[BODY_DATA + 5], gte_GetDataReg(GTE_RGB0));
+            SubVert_Set(&rec[2], v[2], xy[2], w[BODY_DATA + 6], gte_GetDataReg(GTE_RGB1));
+            SubVert_Set(&rec[3], v[3], xy[3], w[BODY_DATA + 6] >> 16, gte_GetDataReg(GTE_RGB2));
+            SubFace_End(sp, &face, Body_SubdivQuad(sp, &face, c, 0));
+            if (!(sp->packetPtr < sp->packetLimit)) {
+                break;
+            }
+        } else {
+            PolyGT4 *p = (PolyGT4 *)sp->packetPtr;
+
+            p->rgbc0 = w[BODY_DATA];
+            p->xy0 = xy[0];
+            *(unsigned int *)&p->uv0 = clut;
+            p->rgb1 = w[BODY_DATA + 1];
+            p->xy1 = xy[1];
+            *(unsigned int *)&p->uv1 = w[BODY_DATA + 5];
+            p->rgb2 = w[BODY_DATA + 3];
+            p->xy2 = xy[3];
+            p->uv2 = w[BODY_DATA + 6] >> 16;
+            p->rgb3 = w[BODY_DATA + 2];
+            p->xy3 = xy[2];
+            *(unsigned int *)&p->uv3 = w[BODY_DATA + 6];
+            Ot_Link(ot, p, 12);
+            sp->packetPtr = (char *)(p + 1);
+            if (sp->packetLimit < sp->packetPtr) {
+                break;
+            }
+        }
+    }
+}
+#else
 INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", CarBody_DrawUnclipped);
+#endif
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", CarBody_DrawClipped);
 
@@ -790,12 +1704,12 @@ int CarModel_Draw(Camera *cam, CarModelInst *inst, int mirror)
         sp->mirror = 0;
     }
     sp->detail = detail << 24;
-    sp->unk3a0 = unk02 << 16;
+    sp->clutSelect = unk02 << 16;
     rgb = brightness | brightness << 8 | brightness << 16;
-    sp->rgbF3 = rgb | 0x26000000;
-    sp->rgbG3 = rgb | 0x2e000000;
-    sp->unk3ac = unk06;
-    sp->tpage = tpage | 0x20;
+    sp->envFT3 = rgb | 0x26000000;
+    sp->envFT4 = rgb | 0x2e000000;
+    sp->envClut = unk06;
+    sp->envTpage = tpage | 0x20;
     if (brightness) {
         sp->lit = -1;
     } else {
