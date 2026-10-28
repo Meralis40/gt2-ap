@@ -66,6 +66,10 @@ enum {
 // The arguments must be literal constants (or the GTE_* defines above).
 #define gte_mvmva(sf, mx, v, cv, lm) \
     GTE_COMMAND("mvmva " GTE_STR(sf) ", " GTE_STR(mx) ", " GTE_STR(v) ", " GTE_STR(cv) ", " GTE_STR(lm))
+// sf is 1 to shift the results right by 12 bits, 0 not to.
+#define gte_sqr(sf) GTE_COMMAND("sqr " GTE_STR(sf))
+#define gte_gpf(sf) GTE_COMMAND("gpf " GTE_STR(sf))
+#define gte_gpl(sf) GTE_COMMAND("gpl " GTE_STR(sf))
 
 #else
 
@@ -81,6 +85,9 @@ void gte_rtpt(void);
 void gte_nclip(void);
 void gte_intpl(void);
 void gte_mvmva(int sf, int mx, int v, int cv, int lm);
+void gte_sqr(int sf);
+void gte_gpf(int sf);
+void gte_gpl(int sf);
 }
 
 #endif
