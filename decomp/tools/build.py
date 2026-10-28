@@ -44,12 +44,13 @@ CC1_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fsigned-char", "-fstrict-aliasing"
 MOVE = re.compile(rb"(?m)^\tmove\t(\$\w+),(\$\w+)")
 MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
 # C++ sources assembled by GNU as, like the C ones: ScreenViewLoop::Run,
-# Credits_FormatCommas and CardMenu_SetState jump past the load delay nop before a
-# label, as only GNU as places it. GCC 2.8.1 writes divisions as assembler macros, which GNU as
+# Credits_FormatCommas, CardMenu_SetState and CarInfoA_FindIndex jump past the load
+# delay nop before a label, as only GNU as places it. GCC 2.8.1 writes divisions as assembler macros, which GNU as
 # expands with divide-by-zero checks the game doesn't have, so they are written
 # out as div $0 and mflo (mfhi for rem), as GCC 2.95 does. ASPSX would put a nop
 # after the mflo when the next instruction reads it; the game has none.
-GAS_CXX = {"src/sim/exe/screenviewloop.cpp", "src/sim/exe/format.cpp", "src/sim/exe/cardmenu.cpp"}
+GAS_CXX = {"src/sim/exe/screenviewloop.cpp", "src/sim/exe/format.cpp", "src/sim/exe/cardmenu.cpp",
+           "src/sim/exe/carinfo.cpp"}
 DIV = re.compile(rb"(?m)^\t(div|divu|rem|remu)\t(\$\w+),(\$\w+),(\$\w+)$")
 
 
