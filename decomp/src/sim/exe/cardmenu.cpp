@@ -55,6 +55,16 @@ int ReplayFile_StartReadEntry(ReplayDir *dir, int port, int entry, void *data, s
 int ReplayDir_CheckEntryCrc(ReplayDir *dir, int entry, void *data);
 void Replay_Unpack(void *data, int arg);
 void GhostReplay_Unpack(void *data);
+struct PolyFT4;
+PolyFT4 *KanjiFont_AddGlyphQuad(void *glyph, uint *ot, uint rgb);
+void *Prim_AddDrawMode(uint *ot, uint tpage);
+int ReplayFile_StartReadDir(ReplayDir *dir, int port);
+int ReplayDir_IsValid(ReplayDir *dir);
+// Through an inline function, as the game tests the result with xori and beqz.
+static inline int ReplayDir_IsOk(ReplayDir *dir)
+{
+    return ReplayDir_IsValid(dir) == 1;
+}
 typedef int (*CardStateFn)(int event, void *arg);
 extern CardStateFn g_CardMenu_States[];
 // The menu text, one block of strings (sB_LbFt is the first). The game addresses them
@@ -189,6 +199,23 @@ struct CardSystem {
 
 extern CardSystem g_Card;
 
+// The textured quad of a glyph (PsyQ POLY_FT4 after its tag).
+struct PolyFT4 {
+    uint rgb;
+    short x0, y0;
+    uchar u0, v0;
+    ushort clut;
+    short x1, y1;
+    uchar u1, v1;
+    ushort tpage;
+    short x2, y2;
+    uchar u2, v2;
+    ushort pad1;
+    short x3, y3;
+    uchar u3, v3;
+    ushort pad2;
+};
+
 // What an overlay hands CardMenu_Setup.
 struct CardMenuConfig {
     CardMenu *work; // becomes g_CardMenu
@@ -247,7 +274,49 @@ void CardMenu_CacheKanji(char *sjis)
     }
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_DrawKanji);
+// Draws SJIS text from the kanji cache, 12 pixels a character (centred on x if center is
+// set), in Japanese only.
+void CardMenu_DrawKanji(uint *ot, char *sjis, int x, int y, int center, uint rgb)
+{
+    void *font = g_CardMenu->kanjiFont;
+    unsigned char *p;
+    uint semi;
+    int w = 0;
+
+    if (g_GameState.language != 0) {
+        return;
+    }
+    if (center) {
+        unsigned char *s;
+
+        for (s = (unsigned char *)sjis; *s != 0; s += 2) {
+            w += 12;
+        }
+        x -= w >> 1;
+    }
+    p = (unsigned char *)sjis;
+    semi = 0x2000000;
+    while (*p != 0) {
+        void *glyph = KanjiFont_FindGlyph(font, p[0] << 8 | p[1]);
+
+        if (glyph != 0) {
+            PolyFT4 *q = KanjiFont_AddGlyphQuad(glyph, ot, rgb | semi);
+
+            q->x0 = x;
+            q->y0 = y;
+            q->x1 = x + 15;
+            q->y1 = y;
+            q->x2 = x;
+            q->y2 = y + 31;
+            q->x3 = x + 15;
+            q->y3 = y + 31;
+            q->tpage = (q->tpage & ~0x60) | 0x20;
+        }
+        x += 12;
+        p += 2;
+    }
+    Prim_AddDrawMode(ot, 0x220);
+}
 
 void CardMenu_CacheKanjiLines(void)
 {
@@ -349,7 +418,91 @@ int CardState_PickReplayFileSize(int event, void *arg)
     return next;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_ReadReplayDir);
+// State 8: reads the replay directory, with the progress bar; then goes on by mode, or
+// "No replay data" (20) when it is empty.
+int CardState_ReadReplayDir(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int next = -1;
+
+    switch (event) {
+    case 0:
+        if (ReplayFile_StartReadDir(&m->dir, m->slot) != 0) {
+            m->errorMsg = TEXT(LoadingDataFailed);
+            CardMenu_CacheKanjiError();
+            next = 1;
+        } else {
+            CardProgressBar *bar = &m->progress;
+
+            bar->total = 0x150c;
+            bar->color = 0x90500c;
+            CardProgress_Reset(bar);
+            m->line1 = TEXT(CheckingReplayFile);
+            m->line2 = D_8008FAC8;
+            CardMenu_CacheKanjiLines();
+        }
+        break;
+    case 1:
+        switch (McCard_GetResult()) {
+        case 1:
+            CardProgress_Update(&m->progress, g_McOp_Remaining);
+            break;
+        case 0:
+            m->progress.visible = -1;
+            switch ((short)m->mode) {
+            case CARDMODE_SAVE_REPLAY:
+                m->delay = 1;
+                next = 10;
+                break;
+            case CARDMODE_EDIT_REPLAY:
+                next = 23;
+                m->delay = 1;
+                m->editEntry = 0;
+                if ((signed char)m->dir.count == 0) {
+                    m->line1 = TEXT(NoReplayDataInFile);
+                    m->line2 = D_8008FAC8;
+                    CardMenu_CacheKanjiLines();
+                    next = 24;
+                }
+                break;
+            case CARDMODE_PLAY_REPLAY:
+                next = 18;
+                if ((signed char)m->dir.count == 0) {
+                    m->line1 = TEXT(NoReplayDataInFile);
+                    m->line2 = D_8008FAC8;
+                    CardMenu_CacheKanjiLines();
+                    next = 20;
+                }
+                break;
+            case CARDMODE_LOAD_GHOST:
+                next = 26;
+                if ((signed char)m->dir.count == 0) {
+                    m->line1 = TEXT(NoReplayDataInFile);
+                    m->line2 = D_8008FAC8;
+                    CardMenu_CacheKanjiLines();
+                    next = 20;
+                }
+                break;
+            }
+            if (!ReplayDir_IsOk(&m->dir)) {
+                m->errorMsg = TEXT(LoadingFailed_2);
+                CardMenu_CacheKanjiError();
+                next = 1;
+            }
+            break;
+        default:
+            m->progress.visible = -1;
+            m->errorMsg = TEXT(LoadingDataFailed);
+            CardMenu_CacheKanjiError();
+            next = 1;
+        }
+        break;
+    case 2:
+        CardProgress_Draw(&m->progress);
+        break;
+    }
+    return next;
+}
 
 // State 11: "Changes are not saved"; leaves the list without saving (10, after a
 // frame), or back to the slot choice (2).
