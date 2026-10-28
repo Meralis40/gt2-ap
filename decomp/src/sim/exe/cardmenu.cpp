@@ -65,6 +65,9 @@ static inline int ReplayDir_IsOk(ReplayDir *dir)
 {
     return ReplayDir_IsValid(dir) == 1;
 }
+void MenuList_Open(MenuList *list);
+void MenuList_Close(MenuList *list);
+unsigned char ReplayDir_IsPlayable(ReplayDir *dir, int entry);
 typedef int (*CardStateFn)(int event, void *arg);
 extern CardStateFn g_CardMenu_States[];
 // The menu text, one block of strings (sB_LbFt is the first). The game addresses them
@@ -177,6 +180,7 @@ void SaveFile_InitHeader(GameSaveFile *file);
 extern CardMenu *g_CardMenu;
 extern signed char g_CardMenu_GhostLoaded;
 extern GameState g_GameState;
+extern MenuList g_CardMenu_EntryList;      // the replay files
 extern NumberPicker g_CardMenu_BlockPicker; // the replay file's size, in blocks
 extern Font g_CardMenu_FontSmall;
 extern Font g_CardMenu_FontMedium;
@@ -807,7 +811,87 @@ int CardState_SaveComplete(int event, void *arg)
     return next;
 }
 
+// State 18: the replays to play (ghosts can't be); loads the chosen one (19).
+// Not matching: the game doesn't strength-reduce the rows loop (it indexes rows with i
+// on each pass, through four copies of the row address); GCC here keeps a row pointer
+// in its own register.
+#ifdef NON_MATCHING
+int CardState_PlayList(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int r = m->listResult;
+    int count = (signed char)m->dir.count;
+    int next = -1;
+    short *status;
+    int i;
+
+    switch (event) {
+    case 0: {
+        MenuList *list;
+
+        m->line1 = D_8008FAC8;
+        m->line2 = D_8008FAC8;
+        CardMenu_CacheKanjiLines();
+        CardMenu_CacheKanjiListHints();
+        list = &g_CardMenu_EntryList;
+        list->count = count;
+        list->selected = 0;
+        MenuList_Open(list);
+        Sfx_PlayMenu(7);
+        for (i = 0; i < count; i++) {
+            unsigned char ok = ReplayDir_IsPlayable(&m->dir, i);
+
+            m->rows[i][0] = i;
+            m->rows[i][1] = 0;
+            m->rows[i][2] = ok;
+            m->rows[i][3] = ok;
+        }
+        break;
+    }
+    case 1:
+        status = m->slotStatus + m->slot;
+        if (*status != 0) {
+            MenuList_Close(&g_CardMenu_EntryList);
+            next = 3;
+            break;
+        }
+        switch (r) {
+        case -1:
+            MenuList_Close(&g_CardMenu_EntryList);
+            Sfx_PlayMenu(2);
+            next = 2;
+            break;
+        case -3:
+            Sfx_PlayMenu(6);
+            break;
+        case -4:
+            Sfx_PlayMenu(0);
+            break;
+        case -2:
+            break;
+        default:
+            Sfx_PlayMenu(1);
+            m->selEntry = r;
+            MenuList_Close(&g_CardMenu_EntryList);
+            next = 19;
+            break;
+        }
+        break;
+    case 2: {
+        char *text = TEXT(Play);
+
+        if (m->rows[g_CardMenu_EntryList.selected][3] == 0) {
+            text = TEXT(CannotPlayGhost);
+        }
+        CardMenu_DrawKanji((uint *)arg, text, 0xb0, 0x1a4, 1, 0x808080);
+        break;
+    }
+    }
+    return next;
+}
+#else
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_PlayList);
+#endif
 
 // State 20: reads the selected replay, with the progress bar, and unpacks it if its CRC is
 // right; then leaves with CARD_REPLAY_LOADED.
