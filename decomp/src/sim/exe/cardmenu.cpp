@@ -32,6 +32,18 @@ void McCard_StartFormat(int port);
 int ReplayFile_Create(ReplayDir *dir, int port);
 void CardMenu_CacheKanjiLines(void);
 void CardMenu_CacheKanjiError(void);
+void CardDialog_Close(CardDialog *dlg);
+int SaveFile_Create(GameSaveFile *file, int port);
+int ReplayFile_StartWriteDir(ReplayDir *dir, int port);
+void CardProgress_Update(CardProgressBar *bar, int remaining);
+void CardProgress_Draw(CardProgressBar *bar);
+extern int g_McOp_Remaining;
+int SaveFile_StartWrite(GameSaveFile *file, int port, void *data);
+int SaveFile_StartRead(GameSaveFile *file, int port, void *data);
+int SaveFile_GetFileSize(GameSaveFile *file);
+int SaveFile_CheckCrc(GameSaveFile *file, void *data);
+void GameState_ReadSave(void *file, void *data);
+void CardProgress_Reset(CardProgressBar *bar);
 typedef int (*CardStateFn)(int event, void *arg);
 extern CardStateFn g_CardMenu_States[];
 // The menu text, one block of strings (sB_LbFt is the first). The game addresses them
@@ -254,7 +266,51 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_PickReplayFileSize);
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_ReadReplayDir);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_DiscardChanges);
+// State 11: "Changes are not saved"; leaves the list without saving (10, after a
+// frame), or back to the slot choice (2).
+int CardState_DiscardChanges(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int r = m->dlgDiscard.result;
+    int next = -1;
+    short *status;
+
+    switch (event) {
+    case 0: {
+        CardDialog *dlg = &m->dlgDiscard;
+
+        CardDialog_Open(dlg);
+        dlg->choice = 1;
+        m->line1 = TEXT(ChangesAreNotSaved);
+        m->line2 = TEXT(Cancel_2);
+        CardMenu_CacheKanjiLines();
+        break;
+    }
+    case 1:
+        status = m->slotStatus + m->slot;
+        if (*status != 0) {
+            CardDialog_Close(&m->dlgDiscard);
+            next = 3;
+            break;
+        }
+        switch (r) {
+        case -1:
+        case 1:
+            Sfx_PlayMenu(1);
+            m->delay = 1;
+            next = 10;
+            break;
+        case 0:
+            Sfx_PlayMenu(1);
+            next = 2;
+            break;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_ReplayEntryList);
 
@@ -269,11 +325,14 @@ int CardState_CreateReplayFile(int event, void *arg)
     switch (event) {
     case 0:
         if (ReplayFile_Create(&m->dir, m->slot) != 0) {
-            goto failed;
+            m->errorMsg = TEXT(FailedToCreateReplayFile);
+            CardMenu_CacheKanjiError();
+            next = 1;
+        } else {
+            m->line1 = TEXT(Saving);
+            m->line2 = TEXT(PleaseDoNotRemoveMemoryCard);
+            CardMenu_CacheKanjiLines();
         }
-        m->line1 = TEXT(Saving);
-        m->line2 = TEXT(PleaseDoNotRemoveMemoryCard);
-        CardMenu_CacheKanjiLines();
         break;
     case 1:
         switch (McCard_GetResult()) {
@@ -283,7 +342,6 @@ int CardState_CreateReplayFile(int event, void *arg)
             next = 13;
             break;
         default:
-        failed:
             m->errorMsg = TEXT(FailedToCreateReplayFile);
             CardMenu_CacheKanjiError();
             next = 1;
@@ -297,7 +355,46 @@ int CardState_CreateReplayFile(int event, void *arg)
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_WriteReplayData);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_WriteReplayDir);
+// State 14: writes the replay directory, with the progress bar; then "Saving complete" (16).
+int CardState_WriteReplayDir(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int next = -1;
+
+    switch (event) {
+    case 0:
+        if (ReplayFile_StartWriteDir(&m->dir, m->slot) != 0) {
+            m->errorMsg = TEXT(SavingDataFailed);
+            CardMenu_CacheKanjiError();
+            next = 15;
+        } else {
+            m->line1 = TEXT(Saving);
+            m->line2 = TEXT(PleaseDoNotRemoveMemoryCard);
+            CardMenu_CacheKanjiLines();
+        }
+        break;
+    case 1:
+        switch (McCard_GetResult()) {
+        case 1:
+            CardProgress_Update(&m->progress, g_McOp_Remaining);
+            break;
+        case 0:
+            m->progress.visible = -1;
+            next = 16;
+            break;
+        default:
+            m->progress.visible = -1;
+            m->errorMsg = TEXT(SavingDataFailed);
+            CardMenu_CacheKanjiError();
+            next = 15;
+        }
+        break;
+    case 2:
+        CardProgress_Draw(&m->progress);
+        break;
+    }
+    return next;
+}
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_SaveFailed);
 
@@ -345,21 +442,363 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_GhostList);
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_LoadGhost);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_ConfirmSave);
+// State 29: "Start saving?"; creates the game file (31), or back to the slot choice (2).
+int CardState_ConfirmSave(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int r = m->dlgConfirmSave.result;
+    int next = -1;
+    short *status;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_CreateGameFile);
+    switch (event) {
+    case 0: {
+        CardDialog *dlg = &m->dlgConfirmSave;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_ConfirmOverwrite);
+        CardDialog_Open(dlg);
+        dlg->choice = 1;
+        m->line1 = TEXT(StartSaving);
+        m->line2 = D_8008FAC8;
+        CardMenu_CacheKanjiLines();
+        break;
+    }
+    case 1:
+        status = m->slotStatus + m->slot;
+        if (*status != 0) {
+            CardDialog_Close(&m->dlgConfirmSave);
+            next = 3;
+            break;
+        }
+        switch (r) {
+        case -1:
+            Sfx_PlayMenu(2);
+            next = 2;
+            break;
+        case 0:
+            Sfx_PlayMenu(1);
+            next = 31;
+            break;
+        case 1:
+            Sfx_PlayMenu(1);
+            next = 2;
+            break;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_WriteGameSave);
+// State 31: creates the game file; then writes the save (30), or reports the failure (33).
+int CardState_CreateGameFile(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int next = -1;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_SaveError);
+    switch (event) {
+    case 0:
+        if (SaveFile_Create(m->saveFile, m->slot) != 0) {
+            m->errorMsg = TEXT(FailedToCreateGameFile);
+            CardMenu_CacheKanjiError();
+            next = 33;
+        } else {
+            m->line1 = TEXT(Saving);
+            m->line2 = TEXT(PleaseDoNotRemoveMemoryCard);
+            CardMenu_CacheKanjiLines();
+        }
+        break;
+    case 1:
+        switch (McCard_GetResult()) {
+        case 1:
+            break;
+        case 0:
+            next = 30;
+            break;
+        default:
+            m->errorMsg = TEXT(FailedToCreateGameFile);
+            CardMenu_CacheKanjiError();
+            next = 33;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_ConfirmLoad);
+// State 32: "A game file already exists. Overwrite it?"; writes the save (30), or back to
+// the slot choice (2).
+int CardState_ConfirmOverwrite(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int r = m->dlgOverwrite.result;
+    int next = -1;
+    short *status;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_ReadGameSave);
+    switch (event) {
+    case 0: {
+        CardDialog *dlg = &m->dlgOverwrite;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_LoadComplete);
+        CardDialog_Open(dlg);
+        dlg->choice = 1;
+        m->line1 = TEXT(GameFileAlreadyExists);
+        m->line2 = TEXT(OverwriteFile);
+        CardMenu_CacheKanjiLines();
+        break;
+    }
+    case 1:
+        status = m->slotStatus + m->slot;
+        if (*status != 0) {
+            CardDialog_Close(&m->dlgOverwrite);
+            next = 3;
+            break;
+        }
+        switch (r) {
+        case -1:
+            Sfx_PlayMenu(2);
+            next = 2;
+            break;
+        case 0:
+            Sfx_PlayMenu(1);
+            next = 30;
+            break;
+        case 1:
+            Sfx_PlayMenu(1);
+            next = 2;
+            break;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
+
+// State 30: writes the game save, with the progress bar; then "Saving complete" (16).
+int CardState_WriteGameSave(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int next = -1;
+
+    switch (event) {
+    case 0:
+        if (SaveFile_StartWrite(m->saveFile, m->slot, m->saveFile) != 0) {
+            m->errorMsg = TEXT(SavingDataFailed);
+            CardMenu_CacheKanjiError();
+            next = 33;
+        } else {
+            CardProgressBar *bar = &m->progress;
+
+            bar->total = SaveFile_GetFileSize(m->saveFile);
+            bar->color = 0xc5090;
+            CardProgress_Reset(bar);
+            m->line1 = TEXT(Saving);
+            m->line2 = TEXT(PleaseDoNotRemoveMemoryCard);
+            CardMenu_CacheKanjiLines();
+        }
+        break;
+    case 1:
+        switch (McCard_GetResult()) {
+        case 1:
+            CardProgress_Update(&m->progress, g_McOp_Remaining);
+            break;
+        case 0:
+            m->progress.visible = -1;
+            next = 16;
+            break;
+        default:
+            m->progress.visible = -1;
+            m->errorMsg = TEXT(SavingDataFailed);
+            CardMenu_CacheKanjiError();
+            next = 33;
+        }
+        break;
+    case 2:
+        CardProgress_Draw(&m->progress);
+        break;
+    }
+    return next;
+}
+
+// State 34: "Saving data failed"; back to the slot choice (2), or leaves.
+int CardState_SaveError(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int r = m->dlgSaveError.result;
+    int next = -1;
+
+    switch (event) {
+    case 0: {
+        CardDialog *dlg;
+
+        Sfx_PlayMenu(0);
+        dlg = &m->dlgSaveError;
+        CardDialog_Open(dlg);
+        dlg->choice = 0;
+        m->line1 = TEXT(SavingDataFailed);
+        m->line2 = D_8008FAC8;
+        CardMenu_CacheKanjiLines();
+        break;
+    }
+    case 1:
+        switch (r) {
+        case -1:
+            Sfx_PlayMenu(0);
+            break;
+        case 1:
+            CardDialog_Close(&m->dlgSaveError);
+            Sfx_PlayMenu(1);
+            next = CARD_EXIT;
+            break;
+        case 0:
+            CardDialog_Close(&m->dlgSaveError);
+            Sfx_PlayMenu(1);
+            next = 2;
+            break;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
+
+// State 37: "Start loading?"; reads the save (35), or back to the slot choice (2).
+int CardState_ConfirmLoad(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int r = m->dlgConfirmLoad.result;
+    int next = -1;
+    short *status;
+
+    switch (event) {
+    case 0: {
+        CardDialog *dlg = &m->dlgConfirmLoad;
+
+        CardDialog_Open(dlg);
+        dlg->choice = 1;
+        m->line1 = TEXT(StartLoading);
+        m->line2 = D_8008FAC8;
+        CardMenu_CacheKanjiLines();
+        break;
+    }
+    case 1:
+        status = m->slotStatus + m->slot;
+        if (*status != 0) {
+            CardDialog_Close(&m->dlgConfirmLoad);
+            next = 3;
+            break;
+        }
+        switch (r) {
+        case -1:
+            Sfx_PlayMenu(2);
+            next = 2;
+            break;
+        case 0:
+            Sfx_PlayMenu(1);
+            next = 35;
+            break;
+        case 1:
+            Sfx_PlayMenu(1);
+            next = 2;
+            break;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
+
+// State 35: reads the game save, with the progress bar, and loads it if its CRC is right;
+// then "Loading complete" (37).
+int CardState_ReadGameSave(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int next = -1;
+
+    switch (event) {
+    case 0:
+        if (SaveFile_StartRead(m->saveFile, m->slot, m->saveFile) != 0) {
+            m->errorMsg = TEXT(LoadingDataFailed);
+            CardMenu_CacheKanjiError();
+            next = 1;
+        } else {
+            CardProgressBar *bar = &m->progress;
+
+            bar->total = SaveFile_GetFileSize(m->saveFile);
+            bar->color = 0x90500c;
+            CardProgress_Reset(bar);
+            m->line1 = TEXT(Loading);
+            m->line2 = TEXT(PleaseDoNotRemoveMemoryCard);
+            CardMenu_CacheKanjiLines();
+        }
+        break;
+    case 1:
+        switch (McCard_GetResult()) {
+        case 1:
+            CardProgress_Update(&m->progress, g_McOp_Remaining);
+            break;
+        case 0:
+            m->progress.visible = -1;
+            if (SaveFile_CheckCrc(m->saveFile, m->saveFile) != 0) {
+                next = 37;
+                GameState_ReadSave(m->saveFile, m->saveFile);
+            } else {
+                m->errorMsg = TEXT(LoadingFailed);
+                CardMenu_CacheKanjiError();
+                next = 1;
+            }
+            break;
+        default:
+            m->progress.visible = -1;
+            m->errorMsg = TEXT(LoadingDataFailed);
+            CardMenu_CacheKanjiError();
+            next = 1;
+        }
+        break;
+    case 2:
+        CardProgress_Draw(&m->progress);
+        break;
+    }
+    return next;
+}
+
+// State 38: "Loading complete"; back to the slot choice (2), or leaves.
+int CardState_LoadComplete(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int r = m->dlgComplete.result;
+    int next = -1;
+
+    switch (event) {
+    case 0: {
+        CardDialog *dlg = &m->dlgComplete;
+
+        CardDialog_Open(dlg);
+        dlg->choice = 1;
+        m->line1 = TEXT(LoadingComplete);
+        m->line2 = D_8008FAC8;
+        CardMenu_CacheKanjiLines();
+        break;
+    }
+    case 1:
+        switch (r) {
+        case -1:
+        case 1:
+            next = CARD_EXIT;
+            break;
+        case 0:
+            Sfx_PlayMenu(1);
+            next = 2;
+            break;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
 
 // Waits 24 frames, then goes to state 2.
 int CardState_Start(int event, void *arg)
@@ -425,9 +864,89 @@ int CardState_SelectSlot(int event, void *arg)
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_CheckSlot);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_NoCard);
+// "No memory card detected", until the slot's status changes (3).
+int CardState_NoCard(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int r = m->dlgNoCard.result;
+    int next = -1;
+    short *status;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_NotFormatted);
+    switch (event) {
+    case 0:
+        CardDialog_Open(&m->dlgNoCard);
+        m->line1 = TEXT(NoMemoryCardDetected);
+        m->line2 = D_8008FAC8;
+        CardMenu_CacheKanjiLines();
+        break;
+    case 1:
+        status = m->slotStatus + m->slot;
+        if (*status != 2) {
+            CardDialog_Close(&m->dlgNoCard);
+            next = 3;
+            break;
+        }
+        switch (r) {
+        case -1:
+        case 1:
+            next = CARD_EXIT;
+            break;
+        case 0:
+            Sfx_PlayMenu(1);
+            next = 2;
+            break;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
+
+// State 5: "The memory card is not formatted. Format it?"; formats (6), or back to the
+// slot choice (2).
+int CardState_NotFormatted(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int r = m->dlgFormat.result;
+    int next = -1;
+    short *status;
+
+    switch (event) {
+    case 0: {
+        CardDialog *dlg = &m->dlgFormat;
+
+        CardDialog_Open(dlg);
+        dlg->choice = 1;
+        m->line1 = TEXT(MemoryCardIsNotFormatted);
+        m->line2 = TEXT(DoYouWantToFormat);
+        CardMenu_CacheKanjiLines();
+        break;
+    }
+    case 1:
+        status = m->slotStatus + m->slot;
+        if (*status != 3) {
+            CardDialog_Close(&m->dlgFormat);
+            next = 3;
+            break;
+        }
+        switch (r) {
+        case -1:
+        case 1:
+            Sfx_PlayMenu(1);
+            next = 2;
+            break;
+        case 0:
+            Sfx_PlayMenu(1);
+            next = 6;
+            break;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
 
 // State 6: formats the card; then checks it again (3), or creates the game file (31)
 // when saving a game.
@@ -467,9 +986,92 @@ int CardState_Format(int event, void *arg)
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_NoSpace);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_NoReplayData);
+// "No replay data": the error dialog, until a card shows up in the slot (3).
+int CardState_NoReplayData(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int r = m->dlgError.result;
+    int next = -1;
+    short *status;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_NoGameFile);
+    switch (event) {
+    case 0: {
+        CardDialog *dlg;
+
+        Sfx_PlayMenu(0);
+        dlg = &m->dlgError;
+        CardDialog_Open(dlg);
+        dlg->choice = 0;
+        break;
+    }
+    case 1:
+        status = m->slotStatus + m->slot;
+        if (*status != 0) {
+            CardDialog_Close(&m->dlgError);
+            next = 3;
+            break;
+        }
+        switch (r) {
+        case -1:
+        case 1:
+            next = CARD_EXIT;
+            break;
+        case 0:
+            Sfx_PlayMenu(1);
+            next = 2;
+            break;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
+
+// "No game file found", until the slot has no card or another card (3).
+int CardState_NoGameFile(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int r = m->dlgError.result;
+    int next = -1;
+    short *status;
+
+    switch (event) {
+    case 0: {
+        CardDialog *dlg;
+
+        Sfx_PlayMenu(0);
+        dlg = &m->dlgError;
+        CardDialog_Open(dlg);
+        dlg->choice = 0;
+        m->line1 = TEXT(NoGameFileFound);
+        m->line2 = D_8008FAC8;
+        CardMenu_CacheKanjiLines();
+        break;
+    }
+    case 1:
+        status = m->slotStatus + m->slot;
+        if (*status == 2 || *status == 4) {
+            CardDialog_Close(&m->dlgError);
+            next = 3;
+            break;
+        }
+        switch (r) {
+        case -1:
+        case 1:
+            next = CARD_EXIT;
+            break;
+        case 0:
+            Sfx_PlayMenu(1);
+            next = 2;
+            break;
+        }
+        break;
+    case 2:
+        break;
+    }
+    return next;
+}
 
 int CardState_Idle(int event, void *arg)
 {
