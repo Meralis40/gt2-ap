@@ -5,6 +5,7 @@
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
 #include "resident.h"
+#include "gte.h"
 
 extern "C" {
 void CarModel_Init(CarModelHeader *model, unsigned int slot);
@@ -119,13 +120,30 @@ struct CameraView {
 
 // What CarModel_Draw sets up in the scratchpad (0x1f800000) for the body and wheel drawing.
 struct CarScratch {
-    MATRIX view;                // the camera's, composed with the car's world matrix
-    int camRest[0x12];
+    // A copy of the Camera from view to ot (CameraView), the view composed with the
+    // car's world matrix.
+    MATRIX view;
+    int negPos[3];
+    short clipX[9];
+    short pad3e;
+    short clipY[9];
+    short pad52;
+    int ofx;
+    int ofy;
+    short projH;
+    short screenW;
+    short screenH;
+    short nearZ;                // 0x62
+    unsigned int *ot;           // 0x64
     char *packetPtr;            // 0x68
     char *packetLimit;
-    char *verts;                // 0x70
+    char *verts;                // 0x70; ShadowMesh_Draw's transformed vertices
     char *normals;
-    char unk78[0x320];
+    char unk78[0x20];
+    short otShift;              // 0x98: depth << otShift >> 13 is the OT index
+    short pad9a;
+    MATRIX wheelMat;            // 0x9c: CarModel_DrawWheel's wheel rotation and position
+    char unkbc[0x2dc];
     signed char mirror;         // 0x398
     signed char lit;
     char pad39a[2];
@@ -137,6 +155,81 @@ struct CarScratch {
     unsigned short tpage;
     unsigned int wheelColor;    // 0x3b0
 };
+
+// GPU primitives the handwritten code builds.
+struct PolyF4 {
+    unsigned int tag;
+    unsigned int rgbc;
+    int xy0;
+    int xy1;
+    int xy2;
+    int xy3;
+};
+
+struct PolyFT4 {
+    unsigned int tag;
+    unsigned int rgbc;
+    int xy0;
+    unsigned short uv0;
+    unsigned short clut;
+    int xy1;
+    unsigned short uv1;
+    unsigned short tpage;
+    int xy2;
+    unsigned short uv2;
+    unsigned short pad1e;
+    int xy3;
+    unsigned short uv3;
+    unsigned short pad26;
+};
+
+struct PolyG3 {
+    unsigned int tag;
+    unsigned int rgbc0;
+    int xy0;
+    unsigned int rgb1;
+    int xy1;
+    unsigned int rgb2;
+    int xy2;
+};
+
+struct PolyG4 {
+    unsigned int tag;
+    unsigned int rgbc0;
+    int xy0;
+    unsigned int rgb1;
+    int xy1;
+    unsigned int rgb2;
+    int xy2;
+    unsigned int rgb3;
+    int xy3;
+};
+
+struct DrawMode {
+    unsigned int tag;
+    unsigned int code;
+};
+
+// Links a primitive into an OT entry (the handwritten code's lwl/swl pairs, which keep
+// both top bytes).
+static inline void Ot_AddPrim(unsigned int *ot, void *prim)
+{
+    unsigned int *tag = (unsigned int *)prim;
+
+    *tag = (*tag & 0xff000000) | (*ot & 0xffffff);
+    *ot = (*ot & 0xff000000) | ((unsigned int)prim & 0xffffff);
+}
+
+// The OT index of a depth, as the handwritten code computes it.
+static inline int Ot_Index(int z, int shift)
+{
+    int i = (z << shift) >> 13;
+
+    if (i >= 0x1000) {
+        i = 0xfff;
+    }
+    return i;
+}
 
 extern char *g_PacketPtr;
 extern char *g_PacketEnd;
@@ -391,15 +484,268 @@ void FUN_800616a0(unsigned int param_1)
     FUN_800608e8(param_1, &D_801C946C);
 }
 
+// Turns each normal of a body mesh into environment map texture coordinates: the normal
+// (10 bits a component) rotated by m, plus 64, gives u and v. The coordinates go from
+// out + 2 (the scratchpad's normals), after a zero pair.
+#ifdef NON_MATCHING
+// Handwritten: the original is a software-pipelined loop (it stores each result in the
+// next pass), which is where the zero pair at out comes from.
+void Mesh_NormalsToEnvUV(CarMesh *mesh, MATRIX *m, unsigned char *out)
+{
+    CarScratch *sp = (CarScratch *)0x1f800000;
+    unsigned int *n = (unsigned int *)mesh->normals;
+    unsigned int *end = n + mesh->normalCount;
+
+    gte_SetCtrlReg(GTE_TRX, 0x40);
+    gte_SetCtrlReg(GTE_TRY, 0x40);
+    gte_SetRotMatrixWords(m);
+    sp->normals = (char *)(out + 2);
+    if (n == end) {
+        return;
+    }
+    out[0] = 0;
+    out[1] = 0;
+    out += 2;
+    for (; n != end; n++) {
+        int w = *n;
+
+        gte_SetDataReg(GTE_IR1, (w << 20) >> 22);
+        gte_SetDataReg(GTE_IR2, (w << 10) >> 22);
+        gte_SetDataReg(GTE_IR3, w >> 22);
+        gte_mvmva(1, GTE_MX_RT, GTE_V_IR, GTE_CV_TR, 0);
+        out[0] = gte_GetDataReg(GTE_IR1);
+        out[1] = gte_GetDataReg(GTE_IR2);
+        out += 2;
+    }
+}
+#else
 INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", Mesh_NormalsToEnvUV);
+#endif
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", CarBody_DrawUnclipped);
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", CarBody_DrawClipped);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", WheelMesh_Draw);
+// Draws a wheel mesh (from CarModel_DrawWheel, with the wheel's transform loaded): strips
+// of vertex pairs, each pair of pairs a flat quad in the wheel colour when it faces the
+// camera (black otherwise), sorted on its nearest or farthest corner.
+#ifdef NON_MATCHING
+// One vertex pair of a wheel strip: the first vertex's x and y, both z, the second's x and y.
+struct WheelPair {
+    int xyA;
+    unsigned short zA;
+    unsigned short zB;
+    int xyB;
+};
 
+// Handwritten: the original projects one pair ahead (its first pass builds a quad from
+// stale registers, which its flags test throws away). mesh is a list of strips, each a
+// pair count and the pairs, ended by a zero count.
+void WheelMesh_Draw(CarScratch *sp, int *mesh)
+{
+    char *pkt = sp->packetPtr;
+    int shift = (unsigned short)sp->otShift;
+    unsigned int *ot = sp->ot + 1;
+    int mirror = sp->mirror;
+    unsigned int color = sp->wheelColor;
+    int n = *mesh++;
+
+    do {
+        WheelPair *pair = (WheelPair *)mesh;
+        unsigned int prevFlags;
+        int prevA;
+        int i;
+
+        gte_SetDataReg(GTE_VXY0, pair[0].xyA);
+        gte_SetDataReg(GTE_VZ0, pair[0].zA);
+        gte_rtps();
+        prevFlags = gte_GetCtrlReg(GTE_FLAG);
+        prevA = gte_GetDataReg(GTE_SXY2);
+        gte_SetDataReg(GTE_VXY0, pair[0].xyB);
+        gte_SetDataReg(GTE_VZ0, pair[0].zB);
+        gte_rtps();
+        prevFlags |= gte_GetCtrlReg(GTE_FLAG);
+        for (i = 1; i < n; i++) {
+            PolyF4 *poly = (PolyF4 *)pkt;
+            unsigned int flags;
+            int n1;
+            int n2;
+            int front;
+            int sz[4];
+            int z;
+            int k;
+
+            // Each nclip takes the last three points: (A, B of the last pair, this A),
+            // then (B of the last pair, this A, this B).
+            gte_SetDataReg(GTE_VXY0, pair[i].xyA);
+            gte_SetDataReg(GTE_VZ0, pair[i].zA);
+            gte_rtps();
+            flags = gte_GetCtrlReg(GTE_FLAG);
+            gte_nclip();
+            n1 = gte_GetDataReg(GTE_MAC0);
+            gte_SetDataReg(GTE_VXY0, pair[i].xyB);
+            gte_SetDataReg(GTE_VZ0, pair[i].zB);
+            gte_rtps();
+            flags |= gte_GetCtrlReg(GTE_FLAG);
+            gte_nclip();
+            n2 = gte_GetDataReg(GTE_MAC0);
+
+            poly->xy0 = prevA;
+            poly->xy1 = gte_GetDataReg(GTE_SXY0);
+            poly->xy2 = gte_GetDataReg(GTE_SXY1);
+            poly->xy3 = gte_GetDataReg(GTE_SXY2);
+            prevA = poly->xy2;
+            sz[0] = gte_GetDataReg(GTE_SZ0);
+            sz[1] = gte_GetDataReg(GTE_SZ1);
+            sz[2] = gte_GetDataReg(GTE_SZ2);
+            sz[3] = gte_GetDataReg(GTE_SZ3);
+
+            // Facing: the first triangle's nclip not negative and the second's negative
+            // (the other way round in a mirror).
+            if (mirror >= 0) {
+                front = ~n1 & n2;
+            } else {
+                front = ~n1 | n2;
+            }
+            front = (front ^ mirror) < 0;
+            z = sz[0];
+            for (k = 1; k < 4; k++) {
+                if (front ? sz[k] > z : sz[k] < z) {
+                    z = sz[k];
+                }
+            }
+            poly->rgbc = (front ? color & 0xffffff : 0) | 0x28000000;
+            ((unsigned char *)poly)[3] = 5;
+            if ((int)(prevFlags | flags) >= 0) {
+                Ot_AddPrim(ot + Ot_Index(z, shift), poly);
+                pkt += sizeof(PolyF4);
+            }
+            prevFlags = flags;
+        }
+        mesh = (int *)(pair + n);
+        sp->packetPtr = pkt;
+        n = *mesh++;
+    } while (n != 0);
+}
+#else
+INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", WheelMesh_Draw);
+#endif
+
+// Draws wheel index (0-3; bit 0 the right side, bit 1 the rear) of a car: the wheel mesh
+// of LOD lod rotated by the wheel's angles (mirrored on the right) and, over it, the hub
+// as two textured quads around its centre.
+#ifdef NON_MATCHING
+void Matrix_SetEuler(MATRIX *m, int x, int y, int z);
+void WheelMesh_Draw(CarScratch *sp, int *mesh);
+
+// Handwritten: the original is close to compiler output, with the hub's packets written
+// in the GTE's latency slots.
+void CarModel_DrawWheel(Camera *cam, MATRIX *world, WheelInst *wheel, CarModelHeader *model, int lod, int index)
+{
+    CarScratch *sp = (CarScratch *)0x1f800000;
+    WheelGeom *geom = (WheelGeom *)&model->wheelTexture;
+    int rear = (index >> 1) & 1;
+    int right = index & 1;
+    int *mesh;
+    int spin;
+    signed char mirror;
+    unsigned int *quad;
+    int z;
+    unsigned int tex;
+    PolyFT4 *p;
+    PolyFT4 *q;
+    unsigned int flags;
+    unsigned int *ot;
+
+    if (sp->packetLimit < sp->packetPtr) {
+        return;
+    }
+    mesh = rear ? geom->rearLod0 : geom->frontLod0;
+    if (lod == 1) {
+        mesh = rear ? geom->rearLod1 : geom->frontLod1;
+    }
+    if (lod == 2) {
+        mesh = rear ? geom->rearLod2 : geom->frontLod2;
+    }
+    spin = wheel->spin;
+    if (right) {
+        spin += 0x800;
+    }
+    Matrix_SetEuler(&sp->wheelMat, spin, wheel->angleA, wheel->angleB);
+    sp->wheelMat.t[0] = wheel->x << 4;
+    sp->wheelMat.t[1] = wheel->y << 4;
+    sp->wheelMat.t[2] = wheel->z << 4;
+    *(CameraView *)sp = *(CameraView *)&cam->view;
+    Matrix_Comp(&sp->view, world);
+    Matrix_Comp(&sp->view, &sp->wheelMat);
+    if (right) {
+        sp->view.m[0][2] = -sp->view.m[0][2];
+        sp->view.m[2][2] = -sp->view.m[2][2];
+        sp->view.m[1][2] = -sp->view.m[1][2];
+    }
+    Gte_LoadTransform(sp, 0x1000, 0x10, 0xc);
+    mirror = sp->mirror;
+    if (right) {
+        sp->mirror = mirror ? 0 : -1;
+    }
+    WheelMesh_Draw(sp, mesh);
+    sp->mirror = mirror;
+
+    // The hub: corners q0-q3 and the centre, at the hub's z.
+    quad = rear ? geom->rearQuad : geom->frontQuad;
+    z = (unsigned short)(rear ? geom->rearHalfWidth : geom->frontHalfWidth);
+    p = (PolyFT4 *)sp->packetPtr;
+    q = p + 1;
+    gte_SetDataReg(GTE_VZ0, z);
+    gte_SetDataReg(GTE_VZ1, z);
+    gte_SetDataReg(GTE_VZ2, z);
+    gte_SetDataReg(GTE_VXY0, quad[0]);
+    gte_SetDataReg(GTE_VXY1, quad[1]);
+    gte_SetDataReg(GTE_VXY2, quad[2]);
+    gte_rtpt();
+    tex = model->wheelTexture + sp->detail;
+    p->tag = 0x09000000;
+    p->rgbc = 0x2c808080;
+    p->uv0 = 0x2f;
+    p->clut = tex >> 16;
+    p->uv1 = 0;
+    p->tpage = tex;
+    p->uv2 = 0x1717;
+    p->uv3 = 0x2f00;
+    flags = gte_GetCtrlReg(GTE_FLAG);
+    gte_StoreDataReg(GTE_SXY0, &p->xy1);
+    gte_StoreDataReg(GTE_SXY1, &p->xy0);
+    gte_StoreDataReg(GTE_SXY1, &q->xy0);
+    gte_StoreDataReg(GTE_SXY2, &q->xy2);
+    // q3 and the centre; the third point is q2 again.
+    gte_SetDataReg(GTE_VXY0, quad[3]);
+    gte_SetDataReg(GTE_VXY1, 0);
+    gte_rtpt();
+    q->tag = 0x09000000;
+    q->rgbc = 0x2c808080;
+    q->uv0 = 0x2f;
+    q->clut = tex >> 16;
+    q->uv1 = 0x2f2f;
+    q->tpage = tex;
+    q->uv2 = 0x1717;
+    q->uv3 = 0x2f00;
+    gte_StoreDataReg(GTE_SXY0, &p->xy3);
+    gte_StoreDataReg(GTE_SXY0, &q->xy3);
+    gte_StoreDataReg(GTE_SXY1, &p->xy2);
+    gte_StoreDataReg(GTE_SXY1, &q->xy1);
+    flags |= gte_GetCtrlReg(GTE_FLAG);
+    if ((int)flags < 0) {
+        return;
+    }
+    // Sorted on the centre's depth, one entry before Ot_Index's.
+    ot = sp->ot + Ot_Index(gte_GetDataReg(GTE_SZ2), sp->otShift) - 1;
+    Ot_AddPrim(ot, p);
+    Ot_AddPrim(ot, q);
+    sp->packetPtr = (char *)(q + 1);
+}
+#else
 INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", CarModel_DrawWheel);
+#endif
 
 // Draws a car: copies the camera to the scratchpad, composes the world matrix, picks the LOD
 // (inst->lod - 1, or by distance; -1 when too far), culls the bounding box, then draws the
@@ -563,9 +909,335 @@ void Tim_LoadToSlot(char *tim, unsigned int slot, int withClut)
 INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", Tim_LoadToSlot);
 #endif
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", Clut_Blend);
+// Blends a 256-colour CLUT towards rgb (24-bit) by t/4096 with the GTE's intpl, leaving
+// the colours whose bit is set in the 16 row masks after it. A colour that blends to 0
+// (transparent) becomes 0x8000; the blend of 0 stays as it is.
+#ifdef NON_MATCHING
+// Handwritten: written with the GTE loads in the latency slots.
+void Clut_Blend(unsigned short *dst, unsigned short *src, unsigned int rgb, int t)
+{
+    unsigned short *masks = src + 0x100;
+    int row;
+    int col;
 
+    gte_SetDataReg(GTE_RGBC, 0);
+    gte_SetCtrlReg(GTE_RFC, (rgb << 4) & 0xff0);
+    gte_SetCtrlReg(GTE_GFC, (rgb >> 4) & 0xff0);
+    gte_SetCtrlReg(GTE_BFC, (rgb >> 12) & 0xff0);
+    for (row = 0; row < 16; row++) {
+        unsigned int keep = masks[row];
+
+        for (col = 0; col < 16; col++) {
+            unsigned int c = *src++;
+            unsigned int out = c;
+
+            if (!(keep & 1)) {
+                gte_SetDataReg(GTE_IR0, t);
+                gte_SetDataReg(GTE_IRGB, c);
+                gte_intpl();
+                out = gte_GetDataReg(GTE_ORGB);
+                if (c != 0) {
+                    if (out == 0) {
+                        out = 0x8000;
+                    } else {
+                        out |= c & 0x8000;
+                    }
+                }
+            }
+            *dst++ = out;
+            keep >>= 1;
+        }
+    }
+}
+#else
+INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", Clut_Blend);
+#endif
+
+// Draws a car's shadow mesh (with CarModel_DrawShadow's transform loaded) as
+// subtractive Gouraud triangles and quads: transforms the vertices (up to 64) into a
+// stack table with their clip codes, then draws each face that isn't wholly outside one
+// plane, through Poly_Clip when it crosses one.
+#ifdef NON_MATCHING
+// A shadow mesh: the counts, then the vertices (x and z, a word each), the triangles and
+// the quads (6-bit vertex indices packed in a word, bit 31 darkening the first two).
+struct ShadowMesh {
+    unsigned short vertCount;
+    unsigned short triCount;
+    unsigned short quadCount;
+    char unk6[0x12];
+    unsigned short unk18;
+    unsigned short unk1a;
+    unsigned int data[1];
+};
+
+// A transformed shadow vertex: view-space x, y, z, the clip code (bit 0 nearer than half
+// the near plane, bits 1-4 outside the planes in the light and light colour matrices,
+// bit 5 a GTE error), the screen position and the or of |x|, |y| and |z|.
+struct ShadowVert {
+    short x;
+    short y;
+    short clip;
+    short z;
+    int sxy;
+    unsigned int extent;
+};
+
+// Poly_Clip's input, in the scratchpad at 0x1f80009c.
+struct ShadowClipVert {
+    int xy;
+    short z;
+    short extent;
+    int sxy;
+    unsigned int rgbc;          // the colour, with the clip code in the top byte
+};
+
+struct ShadowClip {
+    unsigned int *ot;
+    unsigned int code;
+    int pad;
+    ShadowClipVert v[4];
+    ShadowVert *src[4];
+};
+
+void Poly_Clip(void *scratch, int count);
+
+// The clip code word (clip, then z in the top half) of a vertex.
+static inline int ShadowVert_ClipZ(ShadowVert *v)
+{
+    return *(int *)&v->clip;
+}
+
+static inline void ShadowClip_SetVert(ShadowClipVert *c, ShadowVert *v, unsigned int rgb)
+{
+    c->xy = *(int *)&v->x;
+    c->z = v->z;
+    c->extent = v->extent;
+    c->sxy = v->sxy;
+    c->rgbc = (rgb & 0xffffff) | (v->clip & 0xff) << 24;
+}
+
+static inline unsigned int *ShadowFace_Ot(CarScratch *sp, unsigned int *ot, int zMax)
+{
+    if (zMax < 0) {
+        zMax = 0;
+    }
+    return ot + Ot_Index(zMax >> 16, sp->otShift);
+}
+
+// Adds the subtractive draw mode packet that goes before each face.
+static inline char *Shadow_AddDrawMode(char *pkt, unsigned int *ot)
+{
+    DrawMode *m = (DrawMode *)pkt;
+
+    m->tag = 0x01000000;
+    m->code = 0xe1000240;
+    Ot_AddPrim(ot, m);
+    return pkt + sizeof(DrawMode);
+}
+
+// Handwritten: the original's vertex loop is software-pipelined (its first pass writes a
+// record before the table from stale registers). Around Poly_Clip it also keeps its face
+// pointers in the scratchpad's mirror and detail words, which this version doesn't.
+void ShadowMesh_Draw(void *meshData)
+{
+    ShadowMesh *mesh = (ShadowMesh *)meshData;
+    CarScratch *sp = (CarScratch *)0x1f800000;
+    ShadowClip *clip = (ShadowClip *)0x1f80009c;
+    ShadowVert verts[64];
+    int nearHalf;
+    unsigned int *face;
+    unsigned int *end;
+    unsigned int *ot;
+    char *pkt;
+    int i;
+
+    if (mesh->vertCount == 0) {
+        return;
+    }
+    nearHalf = (unsigned short)sp->nearZ >> 1;
+    sp->verts = (char *)verts;
+    for (i = 0; i < mesh->vertCount; i++) {
+        ShadowVert *v = &verts[i];
+        unsigned int w = mesh->data[i];
+        int x;
+        int y;
+        int z;
+        int flags;
+        int code;
+        int l1;
+        int l2;
+        int c1;
+        int c2;
+
+        gte_SetDataReg(GTE_VXY0, w & 0xffff);
+        gte_SetDataReg(GTE_VZ0, w >> 16);
+        gte_rtps();
+        x = gte_GetDataReg(GTE_IR1);
+        y = gte_GetDataReg(GTE_IR2);
+        z = gte_GetDataReg(GTE_IR3);
+        flags = gte_GetCtrlReg(GTE_FLAG);
+        v->sxy = gte_GetDataReg(GTE_SXY2);
+        // The view-space point against the planes held in the light matrix, then in the
+        // light colour matrix.
+        gte_mvmva(1, GTE_MX_LL, GTE_V_IR, GTE_CV_NONE, 0);
+        gte_SetDataReg(GTE_VXY1, (x & 0xffff) | y << 16);
+        gte_SetDataReg(GTE_VZ1, z);
+        l1 = gte_GetDataReg(GTE_IR1);
+        l2 = gte_GetDataReg(GTE_IR2);
+        gte_mvmva(1, GTE_MX_LC, GTE_V_V1, GTE_CV_NONE, 0);
+        c1 = gte_GetDataReg(GTE_IR1);
+        c2 = gte_GetDataReg(GTE_IR2);
+        code = z < nearHalf;
+        if (l1 < 0) {
+            code |= 2;
+        }
+        if (l2 < 0) {
+            code |= 4;
+        }
+        if (c1 < 0) {
+            code |= 8;
+        }
+        if (c2 < 0) {
+            code |= 0x10;
+        }
+        if (flags < 0) {
+            code |= 0x20;
+        }
+        v->x = x;
+        v->y = y;
+        v->z = z;
+        v->clip = code;
+        v->extent = (x < 0 ? -x : x) | (y < 0 ? -y : y) | (z < 0 ? -z : z);
+    }
+
+    // Poly_Clip projects the clipped points itself, with no rotation or translation.
+    gte_SetCtrlReg(GTE_TRX, 0);
+    gte_SetCtrlReg(GTE_TRY, 0);
+    gte_SetCtrlReg(GTE_TRZ, 0);
+    gte_SetCtrlReg(GTE_R11R12, 0x1000);
+    gte_SetCtrlReg(GTE_R13R21, 0);
+    gte_SetCtrlReg(GTE_R22R23, 0x1000);
+    gte_SetCtrlReg(GTE_R31R32, 0);
+    gte_SetCtrlReg(GTE_R33, 0x1000);
+
+    ot = sp->ot + 4;
+    face = mesh->data + mesh->vertCount;
+    end = face + mesh->triCount;
+    pkt = sp->packetPtr;
+    for (; face != end; face++) {
+        unsigned int f = *face;
+        ShadowVert *a = &verts[f & 0x3f];
+        ShadowVert *b = &verts[(f >> 6) & 0x3f];
+        ShadowVert *c = &verts[(f >> 12) & 0x3f];
+        int ca = ShadowVert_ClipZ(a);
+        int cb = ShadowVert_ClipZ(b);
+        int cc = ShadowVert_ClipZ(c);
+        int zMax;
+        unsigned int rgb;
+        unsigned int *entry;
+
+        if (ca & cb & cc & 0x1f) {
+            continue;
+        }
+        zMax = ca > cb ? ca : cb;
+        if (cc > zMax) {
+            zMax = cc;
+        }
+        entry = ShadowFace_Ot(sp, ot, zMax);
+        rgb = (int)f >> 31 & 0xffffff;
+        if ((ca | cb | cc) & 0x3f) {
+            sp->packetPtr = pkt;
+            clip->ot = entry;
+            clip->code = 0x32000000;
+            ShadowClip_SetVert(&clip->v[0], a, rgb);
+            ShadowClip_SetVert(&clip->v[1], b, rgb);
+            ShadowClip_SetVert(&clip->v[2], c, 0xffffffff);
+            clip->src[0] = a;
+            clip->src[1] = b;
+            clip->src[2] = c;
+            Poly_Clip(sp, 3);
+            pkt = sp->packetPtr;
+        } else {
+            PolyG3 *g = (PolyG3 *)pkt;
+
+            g->tag = 0x06000000;
+            g->rgbc0 = 0x32000000 | rgb;
+            g->xy0 = a->sxy;
+            g->rgb1 = rgb;
+            g->xy1 = b->sxy;
+            g->rgb2 = 0xffffffff;
+            g->xy2 = c->sxy;
+            Ot_AddPrim(entry, g);
+            pkt += sizeof(PolyG3);
+        }
+        pkt = Shadow_AddDrawMode(pkt, entry);
+    }
+    sp->packetPtr = pkt;
+
+    end = face + mesh->quadCount;
+    for (; face != end; face++) {
+        unsigned int f = *face;
+        ShadowVert *a = &verts[f & 0x3f];
+        ShadowVert *b = &verts[(f >> 6) & 0x3f];
+        ShadowVert *c = &verts[(f >> 12) & 0x3f];
+        ShadowVert *d = &verts[(f >> 18) & 0x3f];
+        int ca = ShadowVert_ClipZ(a);
+        int cb = ShadowVert_ClipZ(b);
+        int cc = ShadowVert_ClipZ(c);
+        int cd = ShadowVert_ClipZ(d);
+        int zMax;
+        unsigned int rgb;
+        unsigned int *entry;
+
+        if (ca & cb & cc & cd & 0x1f) {
+            continue;
+        }
+        zMax = ca > cb ? ca : cb;
+        if (cc > zMax) {
+            zMax = cc;
+        }
+        if (cd > zMax) {
+            zMax = cd;
+        }
+        entry = ShadowFace_Ot(sp, ot, zMax);
+        rgb = (int)f >> 31 & 0xffffff;
+        if ((ca | cb | cc | cd) & 0x3f) {
+            sp->packetPtr = pkt;
+            clip->ot = entry;
+            clip->code = 0x3a000000;
+            ShadowClip_SetVert(&clip->v[0], a, rgb);
+            ShadowClip_SetVert(&clip->v[1], b, rgb);
+            ShadowClip_SetVert(&clip->v[2], c, 0xffffffff);
+            ShadowClip_SetVert(&clip->v[3], d, 0xffffffff);
+            clip->src[0] = a;
+            clip->src[1] = b;
+            clip->src[2] = c;
+            clip->src[3] = d;
+            Poly_Clip(sp, 4);
+            pkt = sp->packetPtr;
+        } else {
+            // The GPU's quad order: the third point is d, the fourth c.
+            PolyG4 *g = (PolyG4 *)pkt;
+
+            g->tag = 0x08000000;
+            g->rgbc0 = 0x3a000000 | rgb;
+            g->xy0 = a->sxy;
+            g->rgb1 = rgb;
+            g->xy1 = b->sxy;
+            g->rgb2 = 0xffffffff;
+            g->xy2 = d->sxy;
+            g->rgb3 = 0xffffffff;
+            g->xy3 = c->sxy;
+            Ot_AddPrim(entry, g);
+            pkt += sizeof(PolyG4);
+        }
+        pkt = Shadow_AddDrawMode(pkt, entry);
+    }
+    sp->packetPtr = pkt;
+}
+#else
 INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", ShadowMesh_Draw);
+#endif
 
 void CarModel_DrawShadow(Camera *cam, CarModelInst *inst, CarModelHeader *model)
 {
