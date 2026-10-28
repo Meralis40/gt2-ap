@@ -532,12 +532,12 @@ void CarWork_ComputeStats(CarWork *work, unsigned short *out)
 
 // Sets setting from count values (CarWork_GetSettingRange's records).
 #ifdef NON_MATCHING
-// Close, but the game tests CarWork_HasFullSuspension with xori and beqz, keeps the
-// gear index's increment in another register and uses other saved registers.
-// Its jump table is in resident_data_8008f990.
+// Close, but the game swaps the saved registers of work and the gear index. Its jump
+// table is in resident_data_8008f990.
 void CarWork_ApplySetting(CarWork *work, int setting, SettingRange *values, int count)
 {
     int i, j;
+    int none;
 
     switch (setting) {
     case 0:
@@ -549,7 +549,9 @@ void CarWork_ApplySetting(CarWork *work, int setting, SettingRange *values, int 
         work->setup.t12_5a[3] = values[1].value;
         break;
     case 2:
-        if (!CarWork_HasFullSuspension(work)) {
+        // ^ 1 into a local gives the game's xori.
+        none = CarWork_HasFullSuspension(work) ^ 1;
+        if (none) {
             work->setup.t12_60[6] = values[0].value;
             work->setup.t12_60[10] = values[1].value;
             work->setup.t12_60[7] = values[0].value;
@@ -819,12 +821,13 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/garage", CarWork_GetSettingRange);
 
 // Sets setting back to the fitted parts' defaults.
 #ifdef NON_MATCHING
-// Close, but the game tests CarWork_HasFullSuspension with xori and beqz, keeps the
-// gear index's increment in another register and adds some entry offsets the other
-// way round. Its jump table is in resident_data_8008f990.
+// Matches but for its jump table, which is in resident_data_8008f990 after the tables
+// of CarWork_ApplySetting and CarWork_GetSettingRange; a switch in C++ puts it in
+// garage.cpp's .rodata, before them.
 void CarWork_ResetSetting(CarWork *work, int setting)
 {
     int i, j;
+    int none;
     short ratios[8];
     short minRatios[8];
     short maxRatios[8];
@@ -848,7 +851,9 @@ void CarWork_ResetSetting(CarWork *work, int setting)
         work->setup.t12_60[5] = e[0x2d];
         work->setup.t12_60[8] = e[0x38];
         work->setup.t12_60[9] = e[0x3b];
-        if (!CarWork_HasFullSuspension(work)) {
+        // ^ 1 into a local gives the game's xori.
+        none = CarWork_HasFullSuspension(work) ^ 1;
+        if (none) {
             work->setup.t12_60[6] = e[0x31];
             work->setup.t12_60[7] = e[0x34];
             work->setup.t12_60[10] = e[0x3f];
@@ -892,10 +897,9 @@ void CarWork_ResetSetting(CarWork *work, int setting)
         i = 0;
     loop:
         if (i < CarWork_GetGearCount(work)) {
-            short r = ((short *)&e[0xc])[i];
             int n = i + 1;
+            work->setup.t11_values[n] = ((short *)&e[0xc])[i];
             i = n;
-            work->setup.t11_values[i] = r;
             goto loop;
         }
         if (CarWork_TransIsCustom(work, work->partSlots[6])) {
@@ -907,20 +911,20 @@ void CarWork_ResetSetting(CarWork *work, int setting)
         break;
     }
     case 9: {
-        work->setup.t11_4e = work->transEntries[work->partSlots[6]][0x21];
+        work->setup.t11_4e = (work->transEntries + work->partSlots[6])[0][0x21];
         break;
     }
     case 0x10: {
-        unsigned char *e = work->racingModEntries[work->partSlots[0x13]];
+        unsigned char *e = *(work->racingModEntries + work->partSlots[0x13]);
         work->setup.t05_52 = e[0x12];
         work->setup.t05_53 = e[0x15];
         break;
     }
     case 0xe:
-        work->setup.t1b_74 = work->ascEntries[work->partSlots[0x14]][0xb];
+        work->setup.t1b_74 = (work->ascEntries + work->partSlots[0x14])[0][0xb];
         break;
     case 0xf:
-        work->setup.t1c_75 = work->tcsEntries[work->partSlots[0x15]][0xc];
+        work->setup.t1c_75 = (work->tcsEntries + work->partSlots[0x15])[0][0xc];
         break;
     case 10:
     case 13: {
