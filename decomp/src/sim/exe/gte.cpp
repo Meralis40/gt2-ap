@@ -5,7 +5,6 @@
 #include "resident.h"
 #include "gte.h"
 
-#ifdef NON_MATCHING
 // The scratchpad's first 0x9c bytes as the drawing code lays them out (carmodel.cpp's
 // CarScratch): a copy of a Camera from its view matrix on, then the drawing state.
 struct ViewScratch {
@@ -31,21 +30,83 @@ struct ViewScratch {
     short otShift;              // 0x98: the translation's shift
     short rotShift;             // 0x9a: the rotation's shift
 };
-#endif
+
+// A point for Clip_TestPoints.
+struct ClipPoint {
+    short x;
+    short y;
+    short z;
+    short pad;
+};
+
+// As carmodel.cpp: a model's LOD count and entries.
+struct LodEntry {
+    int dist;
+    void *mesh;
+};
+
+struct LodTable {
+    int count;
+    LodEntry lods[1];
+};
+
+// A MATRIX's rotation alone, for the temporary matrices that Matrix_Mul takes.
+struct MatrixRot {
+    short m[3][3];
+};
 
 extern "C" {
+extern short g_SinTable[];
+extern GfxIrqState g_GfxIrq;
+
+unsigned int Clip_TestPoints(ViewScratch *sp, ClipPoint *pts, int count);
 void Dma_WaitGpu(...);
+void FUN_800824ac(void *ot, RECT *r);
+void Gte_LoadScaled(ViewScratch *sp, int msb, int bits, int rotBits);
+int Gte_TransMsb(MATRIX *m, int bias);
+VECTOR *Matrix_ApplyAdd(VECTOR *dst, MATRIX *m, VECTOR *v, VECTOR *add);
+VECTOR *Matrix_ApplyLV(VECTOR *dst, MATRIX *m, VECTOR *v);
+MATRIX *Matrix_FromEuler(MATRIX *m, int x, int y, int z);
+void Matrix_Transpose(MATRIX *dst, MATRIX *src);
+RECT *Prim_AddTile(void *ot, unsigned int rgb);
 void Gpu_DrawSync(void);
 void *Gpu_LoadImageBlock(int *block, RECT *rect);
 int Gpu_TransferImage(RECT *rect, unsigned int *data, int store);
 void Gpu_WaitReady(...);
-void Matrix_Mul(MATRIX *dst, MATRIX *a, MATRIX *b);
+MATRIX *Matrix_Mul(MATRIX *dst, MATRIX *a, MATRIX *b);
 MATRIX *Matrix_Translate(MATRIX *m, VECTOR *v);
 void *Tim_LoadClut(void *tim, RECT *rect);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", LodTable_SquareDistances);
+// Squares each LOD distance (in 14-bit units), for comparing with Lod_DistanceSq.
+#ifdef NON_MATCHING
+// The game keeps the pointer in $a0 and the end in $v1; GCC 2.8 swaps them. Permuter
+// didn't find a form.
+void LodTable_SquareDistances(LodTable *table)
+{
+    LodEntry *e = table->lods;
+    LodEntry *end = e + table->count;
+    unsigned int d;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", FUN_8007ae08);
+loop:
+    if (e == end) {
+        return;
+    }
+    d = (unsigned int)e->dist >> 14;
+    e->dist = d * d;
+    e++;
+    goto loop;
+}
+#else
+INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", LodTable_SquareDistances);
+#endif
+
+// Sets LOD i's distance to dist (squared, in 14-bit units), if there is one.
+void FUN_8007ae08(LodTable *table, int i, int dist)
+{
+    if (i < table->count) {
+        table->lods[i].dist = (dist >> 14) * (dist >> 14);
+    }
+}
 
 // The squared length of pos (a view translation, in 14-bit units), scaled twice by
 // depthScale (a 4.12 fraction).
@@ -69,7 +130,25 @@ int Lod_DistanceSq(void *table, int *pos, int depthScale)
 INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Lod_DistanceSq);
 #endif
 
+// The first LOD whose squared distance is beyond distSq, or -1.
+#ifdef NON_MATCHING
+// The game walks the entries with a pointer from table - 8, loading the next distance
+// one pass ahead, and returns the index from that pointer; no loop form tried gives it.
+int Lod_Select(LodTable *table, unsigned int distSq)
+{
+    int n = table->count;
+    int i;
+
+    for (i = 0; n != 0; n--, i++) {
+        if (distSq < (unsigned int)table->lods[i].dist) {
+            return i;
+        }
+    }
+    return -1;
+}
+#else
 INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Lod_Select);
+#endif
 
 void Gpu_DrawSync(void)
 {
@@ -78,11 +157,36 @@ void Gpu_DrawSync(void)
     Gpu_WaitReady();
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Matrix_Identity);
+MATRIX *Matrix_Identity(MATRIX *m)
+{
+    int *w = (int *)m;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Matrix_SetEuler);
+    w[0] = 0x1000;
+    w[1] = 0;
+    w[2] = 0x1000;
+    w[3] = 0;
+    w[4] = 0x1000;
+    w[5] = 0;
+    w[6] = 0;
+    w[7] = 0;
+    return m;
+}
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Matrix_Copy);
+// m = the rotation by the Euler angles x, y and z, with no translation.
+MATRIX *Matrix_SetEuler(MATRIX *m, int x, int y, int z)
+{
+    Matrix_FromEuler(m, x, y, z);
+    m->t[0] = 0;
+    m->t[1] = 0;
+    m->t[2] = 0;
+    return m;
+}
+
+MATRIX *Matrix_Copy(MATRIX *dst, MATRIX *src)
+{
+    *dst = *src;
+    return dst;
+}
 
 MATRIX *Matrix_Comp(MATRIX *m, MATRIX *n)
 {
@@ -91,17 +195,107 @@ MATRIX *Matrix_Comp(MATRIX *m, MATRIX *n)
     return m;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Matrix_Translate);
+// m's translation += m's rotation * v.
+MATRIX *Matrix_Translate(MATRIX *m, VECTOR *v)
+{
+    Matrix_ApplyAdd((VECTOR *)m->t, m, v, (VECTOR *)m->t);
+    return m;
+}
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Matrix_RotEuler);
+// m's rotation *= the rotation by the Euler angles x, y and z.
+MATRIX *Matrix_RotEuler(MATRIX *m, int x, int y, int z)
+{
+    MatrixRot r;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Matrix_RotX);
+    Matrix_FromEuler((MATRIX *)&r, x, y, z);
+    Matrix_Mul(m, m, (MATRIX *)&r);
+    return m;
+}
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Matrix_RotY);
+// m's rotation *= a rotation by angle (4096 to a turn) about X, Y or Z.
+MATRIX *Matrix_RotX(MATRIX *m, int angle)
+{
+    MatrixRot r;
+    int c;
+    int s;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Matrix_RotZ);
+    c = g_SinTable[(angle & 0xfff) + 0x400];
+    s = g_SinTable[angle & 0xfff];
+    r.m[0][0] = 0x1000;
+    r.m[0][1] = 0;
+    r.m[0][2] = 0;
+    r.m[1][0] = 0;
+    r.m[1][1] = c;
+    r.m[1][2] = -s;
+    r.m[2][0] = 0;
+    r.m[2][1] = s;
+    r.m[2][2] = c;
+    Matrix_Mul(m, m, (MATRIX *)&r);
+    return m;
+}
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Matrix_Scale);
+MATRIX *Matrix_RotY(MATRIX *m, int angle)
+{
+    MatrixRot r;
+    int c;
+    int s;
+
+    c = g_SinTable[(angle & 0xfff) + 0x400];
+    s = g_SinTable[angle & 0xfff];
+    r.m[0][0] = c;
+    r.m[0][1] = 0;
+    r.m[0][2] = s;
+    r.m[1][0] = 0;
+    r.m[1][1] = 0x1000;
+    r.m[1][2] = 0;
+    r.m[2][0] = -s;
+    r.m[2][1] = 0;
+    r.m[2][2] = c;
+    Matrix_Mul(m, m, (MATRIX *)&r);
+    return m;
+}
+
+MATRIX *Matrix_RotZ(MATRIX *m, int angle)
+{
+    MatrixRot r;
+    int c;
+    int s;
+
+    c = g_SinTable[(angle & 0xfff) + 0x400];
+    s = g_SinTable[angle & 0xfff];
+    r.m[0][0] = c;
+    r.m[0][1] = -s;
+    r.m[0][2] = 0;
+    r.m[1][0] = s;
+    r.m[1][1] = c;
+    r.m[1][2] = 0;
+    r.m[2][0] = 0;
+    r.m[2][1] = 0;
+    r.m[2][2] = 0x1000;
+    Matrix_Mul(m, m, (MATRIX *)&r);
+    return m;
+}
+
+// m's rotation *= a scale by x, y and z (4.12), unless all three are 1.
+MATRIX *Matrix_Scale(MATRIX *m, int x, int y, int z)
+{
+    MatrixRot r;
+
+    if (x == y && y == z && z == 0x1000) {
+        return m;
+    }
+    r.m[0][0] = x;
+    r.m[0][1] = 0;
+    r.m[0][2] = 0;
+    r.m[1][0] = 0;
+    r.m[1][1] = y;
+    r.m[1][2] = 0;
+    r.m[2][0] = 0;
+    r.m[2][1] = 0;
+    r.m[2][2] = z;
+    Matrix_Mul(m, m, (MATRIX *)&r);
+    return m;
+}
 
 // The index of the highest bit set in any of m's translation components (as magnitudes,
 // each plus bias), from the GTE's leading zero counter.
@@ -138,11 +332,125 @@ void Camera_SetFrustum(Camera *cam, int left, int right, int top, int bottom, in
     cam->centerY = (short)(((bottom + top >> 1) << 0xc) / h);
 }
 
+// Sets up cam for drawing from the camera transform view into ot (an OT and its packet
+// area, 0x417c bytes on): the view matrix (the inverse of view, then mirrored in Y and Z
+// and offset to the frustum's centre), the projection (the screen centre and a
+// projection distance of frustumH / 2), the LOD depth scale and the side planes of the
+// frustum, widened by margin pixels.
+#ifdef NON_MATCHING
+// Register allocation differs throughout: the game keeps cam in $s1, &cam->invRot in
+// $s2 and one product in $s0. Permuter didn't find a form.
+void Camera_Update(Camera *cam, MATRIX *view, void *ot, int margin)
+{
+    MatrixRot proj;
+    int w = cam->width;
+    int h = cam->height;
+    int sx = (w << 12) / cam->extentX;
+    int sy = (h << 12) / cam->extentY;
+    int fh;
+    int size;
+    int c;
+    int s;
+    int ex;
+    int ey;
+
+    proj.m[0][0] = sx;
+    proj.m[0][1] = 0;
+    proj.m[0][2] = cam->centerX * sx >> 12;
+    proj.m[1][0] = 0;
+    proj.m[1][1] = -sy;
+    proj.m[1][2] = -(cam->centerY * sy >> 12);
+    proj.m[2][0] = 0;
+    proj.m[2][1] = 0;
+    proj.m[2][2] = -0x1000;
+    fh = cam->frustumH;
+    cam->ot2 = ot;
+    cam->otEnd = (char *)ot + 0x417c;
+    size = h;
+    if (h < w) {
+        size = w;
+    }
+    cam->ofx = w << 15;
+    cam->ofy = h << 15;
+    cam->projH = fh;
+    cam->screenW = w;
+    cam->screenH = h;
+    cam->nearZ = fh >> 1;
+    cam->ot = ot;
+    cam->depthScale = ((size >> 1) << 12) / fh;
+    ex = (w >> 1) + margin;
+    ey = (h >> 1) + margin;
+    if (ex < fh) {
+        c = (ex << 12) / fh;
+        s = 0x1000;
+    } else {
+        c = 0x1000;
+        s = (fh << 12) / ex;
+    }
+    cam->clipX[0] = s;
+    cam->clipX[1] = 0;
+    cam->clipX[2] = c;
+    cam->clipX[3] = -s;
+    cam->clipX[4] = 0;
+    cam->clipX[5] = c;
+    cam->clipX[6] = 0;
+    cam->clipX[7] = 0;
+    cam->clipX[8] = 0;
+    if (ey < fh) {
+        c = (ey << 12) / fh;
+        s = 0x1000;
+    } else {
+        c = 0x1000;
+        s = (fh << 12) / ey;
+    }
+    cam->clipY[0] = 0;
+    cam->clipY[1] = s;
+    cam->clipY[2] = c;
+    cam->clipY[3] = 0;
+    cam->clipY[4] = -s;
+    cam->clipY[5] = c;
+    cam->clipY[6] = 0;
+    cam->clipY[7] = 0;
+    cam->clipY[8] = 0;
+    cam->negPos[0] = -view->t[0];
+    cam->negPos[1] = -view->t[1];
+    cam->negPos[2] = -view->t[2];
+    Matrix_Transpose((MATRIX *)cam->invRot, view);
+    Matrix_Mul(&cam->view, (MATRIX *)&proj, (MATRIX *)cam->invRot);
+    Matrix_ApplyLV((VECTOR *)cam->view.t, &cam->view, (VECTOR *)cam->negPos);
+}
+#else
 INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Camera_Update);
+#endif
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", FUN_8007b5ac);
+// Queues a clear of cam's viewport, moved down by dy, at the end of its OT.
+void FUN_8007b5ac(Camera *cam, int dy)
+{
+    RECT r;
+    int x = cam->vpX;
+    int y = cam->vpY;
+    int w = cam->width;
+    int h = cam->height;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", FUN_8007b5fc);
+    r.x = x;
+    r.y = y + dy;
+    r.w = w - 1;
+    r.h = h - 1;
+    FUN_800824ac(cam->otEnd, &r);
+}
+
+// Fills cam's screen with rgb, at the end of its OT.
+void FUN_8007b5fc(Camera *cam, unsigned int rgb)
+{
+    RECT *r = Prim_AddTile(cam->otEnd, rgb);
+    int w = cam->width;
+    int h = cam->height;
+
+    r->x = 0;
+    r->y = 0;
+    r->w = w;
+    r->h = h;
+}
 
 // Transforms count points with the loaded view (Gte_LoadScaled) and codes each against
 // the view's planes: bit 0 nearer than nearZ, bits 1-4 outside the left, right, top and
@@ -151,13 +459,6 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", FUN_8007b5fc);
 // with the AND of the screen codes, then the OR of the plane codes in bits 16 on. With no
 // points that is 0xffffffff.
 #ifdef NON_MATCHING
-struct ClipPoint {
-    short x;
-    short y;
-    short z;
-    short pad;
-};
-
 // Handwritten: the original projects each point one pass ahead (its last pass projects
 // the word after the array, unused).
 unsigned int Clip_TestPoints(ViewScratch *sp, ClipPoint *pts, int count)
@@ -283,15 +584,60 @@ void Gte_LoadScaled(ViewScratch *sp, int msb, int bits, int rotBits)
 INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Gte_LoadScaled);
 #endif
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Gte_LoadTransform);
+// Gte_LoadScaled with the shift that the scratchpad's view (scaled by scale) needs.
+void Gte_LoadTransform(ViewScratch *sp, int scale, int bits, int rotBits)
+{
+    Gte_LoadScaled(sp, Gte_TransMsb(&sp->view, scale << (bits - rotBits)), bits, rotBits);
+}
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Clip_TestBox);
+// The scratchpad with Clip_TestBox's corners after the drawing state.
+struct BoxScratch {
+    ViewScratch view;
+    ClipPoint box[8];
+};
+
+// Clip_TestPoints on the eight corners of the box from min to max.
+unsigned int Clip_TestBox(ViewScratch *sp, short *min, short *max)
+{
+    BoxScratch *b = (BoxScratch *)sp;
+    int x0 = min[0];
+    int y0 = min[1];
+    int z0 = min[2];
+    int x1 = max[0];
+    int y1 = max[1];
+    int z1 = max[2];
+
+    b->box[0].x = x0;
+    b->box[0].y = y0;
+    b->box[0].z = z0;
+    b->box[1].x = x1;
+    b->box[1].y = y0;
+    b->box[1].z = z0;
+    b->box[2].x = x0;
+    b->box[2].y = y1;
+    b->box[2].z = z0;
+    b->box[3].x = x1;
+    b->box[3].y = y1;
+    b->box[3].z = z0;
+    b->box[4].x = x0;
+    b->box[4].y = y0;
+    b->box[4].z = z1;
+    b->box[5].x = x1;
+    b->box[5].y = y0;
+    b->box[5].z = z1;
+    b->box[6].x = x0;
+    b->box[6].y = y1;
+    b->box[6].z = z1;
+    b->box[7].x = x1;
+    b->box[7].y = y1;
+    b->box[7].z = z1;
+    return Clip_TestPoints(sp, b->box, 8);
+}
 
 // dst = a * b, rotations only (the translation is left alone). dst may be a or b.
 #ifdef NON_MATCHING
-// Handwritten: the original loads all of b's columns into V0-V2 before storing, and also
-// returns dst.
-void Matrix_Mul(MATRIX *dst, MATRIX *a, MATRIX *b)
+// Handwritten: the original loads all of b's columns into V0-V2 before storing.
+MATRIX *Matrix_Mul(MATRIX *dst, MATRIX *a, MATRIX *b)
 {
     int i;
 
@@ -304,12 +650,88 @@ void Matrix_Mul(MATRIX *dst, MATRIX *a, MATRIX *b)
         dst->m[1][i] = gte_GetDataReg(GTE_IR2);
         dst->m[2][i] = gte_GetDataReg(GTE_IR3);
     }
+    return dst;
 }
 #else
 INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Matrix_Mul);
 #endif
 
+// Copies rect of VRAM from data (store 0) or to it (store 1), the first words (the
+// size mod 16) through GP0 and the 16-word blocks by DMA, which is left running. Returns
+// the number of blocks.
+#define GPU ((volatile unsigned int *)0x1f801810)
+#define DMA ((volatile unsigned int *)0x1f801080)
+#ifdef NON_MATCHING
+// Two registers swapped (the DMA mode and CHCR values) and the w * h multiply one slot
+// later than the game's. Permuter didn't find a form.
+int Gpu_TransferImage(RECT *rect, unsigned int *data, int store)
+{
+    volatile unsigned int *gpu;
+    volatile unsigned int *dma;
+    unsigned int cmd;
+    unsigned int mode;
+    unsigned int chcr;
+    int x;
+    int y;
+    int w;
+    int h;
+    int n;
+    int blocks;
+
+    unsigned char *f = &g_GfxIrq.imageTransferBusy;
+
+    f[0] = 1;
+    Gpu_DrawSync();
+    dma = (volatile unsigned int *)0x1f801080;
+    gpu = (volatile unsigned int *)0x1f801810;
+    cmd = 0xa0000000;
+    mode = 0x4000002;
+    chcr = 0x1000201;
+    f[1] = 1;
+    x = rect->x;
+    y = rect->y;
+    w = rect->w;
+    h = rect->h;
+    if (store) {
+        cmd = 0xc0000000;
+        mode = 0x4000003;
+        chcr = 0x1000200;
+    }
+    gpu[1] = 0x4000000;
+    gpu[0] = 0x1000000;
+    gpu[0] = cmd;
+    gpu[0] = x | y << 16;
+    gpu[0] = w | h << 16;
+    blocks = w * h + 1 >> 1;
+    n = blocks & 0xf;
+    blocks >>= 4;
+    if (n) {
+        unsigned int *p = data;
+        if (!store) {
+            do {
+                *gpu = *p++;
+            } while (--n);
+        } else {
+            do {
+                *p++ = *gpu;
+            } while (--n);
+        }
+        data = p;
+    }
+    if (blocks) {
+        gpu[1] = mode;
+        dma[8] = (unsigned int)data;
+        dma[9] = blocks << 16 | 0x10;
+        dma[10] = chcr;
+    } else {
+        g_GfxIrq.imageDmaPending = 0;
+    }
+    g_GfxIrq.imageTransferBusy = 0;
+    return blocks;
+}
+#else
 INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Gpu_TransferImage);
+#endif
 
 void *Gpu_LoadImageBlock(int *block, RECT *rect)
 {
@@ -321,7 +743,19 @@ void *Gpu_LoadImageBlock(int *block, RECT *rect)
     return (void *)((int)block + *block);
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Tim_LoadClut);
+// Loads tim's CLUT block, if it has one (flag bit 3), to rect or its own rectangle.
+// Returns the block after it: the image block.
+void *Tim_LoadClut(void *tim, RECT *rect)
+{
+    int has = *(unsigned int *)((int)tim + 4) >> 3 & 1;
+    // The test as the game's xori: !has gives sltiu.
+    int none = has ^ 1;
+
+    if (none) {
+        return (int *)((int)tim + 8);
+    }
+    return Gpu_LoadImageBlock((int *)((int)tim + 8), rect);
+}
 
 void Tim_LoadImage(void *tim, RECT *rect)
 {
