@@ -106,6 +106,12 @@ void NumberPicker_Draw(NumberPicker *p, uint *ot, TextCtx *ctx);
 void MenuList_Draw(MenuList *list, uint *ot);
 void TextEntry_Draw(TextEntry *entry, uint *ot);
 extern char *D_800921B4[2]; // the slot names
+char *strcpy(char *dst, const char *src);
+int strlen(const char *s);
+void TextEntry_Open(TextEntry *entry);
+void TextEntry_Close(TextEntry *entry);
+int ReplayDir_AddEntry(ReplayDir *dir, int at, ReplayDirEntry *entry, void *data, int size, short *sectors);
+int Text_MeasureString(TextCtx *ctx, char *s, int a2);
 typedef int (*CardStateFn)(int event, void *arg);
 extern CardStateFn g_CardMenu_States[];
 // The menu text, one block of strings (sB_LbFt is the first). The game addresses them
@@ -210,6 +216,10 @@ enum {
     T_BN = 0x7a4,
 };
 #define TEXT(name) (sB_LbFt + T_##name)
+
+// m->dir.entries + i, added up as the game does in CardState_EditTitle: the entry's offset
+// and m first, then the offset of the entries.
+#define DIR_ENTRY(m, i)     ((ReplayDirEntry *)((char *)(m) + (i) * sizeof(ReplayDirEntry) + (int)((CardMenu *)0)->dir.entries))
 
 // This file's .rodata, in the game's order: the empty line, CardState_CheckSlot's three
 // jump tables, the default replay title and CardMenu_Update's jump table.
@@ -409,7 +419,6 @@ void CardMenu_CacheKanjiListHints(void)
 // Not matching: the game tests the event against 4 first (then < 5, 6 and 8), where GCC
 // here balances the three cases on 6; it also keeps the row test as (state >= 0) |
 // (state < -1), which GCC folds to state != -1.
-#ifdef NON_MATCHING
 int CardMenu_EntryListCallback(int event, MenuListEvent *ev, int row)
 {
     CardMenu *m = g_CardMenu;
@@ -428,12 +437,17 @@ int CardMenu_EntryListCallback(int event, MenuListEvent *ev, int row)
     t = &ctx;
     t->unk1c = 1;
     switch (event) {
+    case 3:
+        break;
     case 4: {
         int alpha;
         int slide;
         int empty;
 
-        if (!(list->state >= 0 || list->state < -1)) {
+        int open = list->state >= 0;
+        int closing = list->state < -1;
+
+        if (!(open | closing)) {
             break;
         }
         alpha = ((list->fade << 7) / list->fadeMax * brightness) >> 7;
@@ -451,7 +465,7 @@ int CardMenu_EntryListCallback(int event, MenuListEvent *ev, int row)
         slide = slide * 176 >> 7;
         empty = (signed char)m->rows[row][1];
         if (empty == 0) {
-            entry = &m->dir.entries[(signed char)m->rows[row][0]];
+            entry = DIR_ENTRY(m, (signed char)m->rows[row][0]);
         }
         ReplayEntry_Draw(D_800921BC, ot, t, entry, x + slide, y, alpha, empty);
         break;
@@ -468,9 +482,6 @@ int CardMenu_EntryListCallback(int event, MenuListEvent *ev, int row)
     }
     return result;
 }
-#else
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_EntryListCallback);
-#endif
 
 // State 9 of a new replay card: picks the replay file's size in blocks (3 to the free
 // blocks), then sets up the directory (10, after 12 frames); "No space" (9) under 3.
@@ -664,7 +675,103 @@ int CardState_DiscardChanges(int event, void *arg)
 
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_ReplayEntryList);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_EditTitle);
+// State 21: edits the replay's title (after `delay` frames); saving a new replay adds its
+// entry and creates the file (12) or writes it (13), editing renames the entry. Both then
+// leave through state 10.
+int CardState_EditTitle(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    int sel = m->selEntry;
+    int next = -1;
+
+    switch (event) {
+    case 0:
+        break;
+    case 1: {
+        short *status;
+
+        if (m->delay > 0 && --m->delay == 0) {
+            TextEntry *entry;
+
+            m->titleBuf[0] = 0;
+            if (sel >= 0) {
+                strcpy(m->titleBuf, DIR_ENTRY(m, sel)->title);
+            }
+            entry = &m->titleEntry;
+            TextEntry_Open(entry);
+            entry->cursorPos = strlen(entry->text);
+        }
+        status = m->slotStatus + m->slot;
+        if (*status != 0) {
+            TextEntry_Close(&m->titleEntry);
+            next = 3;
+            goto done;
+        }
+        switch (m->titleResult) {
+        case -2:
+            break;
+        case -1:
+            Sfx_PlayMenu(2);
+            TextEntry_Close(&m->titleEntry);
+            m->delay = 12;
+            next = 10;
+            break;
+        case 0:
+            Sfx_PlayMenu(1);
+            TextEntry_Close(&m->titleEntry);
+            switch ((short)m->mode) {
+            case CARDMODE_EDIT_REPLAY:
+                ReplayEntry_SetTitle(DIR_ENTRY(m, sel)->title, m->titleBuf);
+                m->delay = 12;
+                next = 10;
+                break;
+            case CARDMODE_SAVE_REPLAY: {
+                ReplayDirEntry *e = &m->newEntry;
+                ReplayDir *dir;
+
+                ReplayEntry_SetTitle(e->title, m->titleBuf);
+                dir = &m->dir;
+                if (ReplayDir_AddEntry(dir, sel, e, m->replayData, m->replaySize, m->newSectors) == 0) {
+                    goto failed;
+                }
+                if (!ReplayDir_IsOk(dir)) {
+                failed:
+                    m->errorMsg = TEXT(LoadingFailed_2);
+                    CardMenu_CacheKanjiError();
+                    next = 1;
+                    goto done;
+                }
+                next = 13;
+                if (ReplayFile_Find(dir, m->slot) == 0) {
+                    next = 12;
+                }
+                break;
+            }
+            }
+            break;
+        }
+    }
+        // fall through
+    case 2: {
+        TextCtx ctx;
+        TextCtx *t;
+        char *title;
+
+        Text_Init(&ctx, m->textPri);
+        t = &ctx;
+        *(uint *)&t->clut = (*(uint *)&t->clut & 0xff9fffff) | 0x200000;
+        Text_SetFont(t, &g_CardMenu_FontMedium);
+        title = TEXT(EditReplayDataFile);
+        t->unk1c = 1;
+        t->ot = (uint *)arg;
+        t->rgb = 0x20c3060;
+        Text_DrawString(t, title, 0x148 - Text_MeasureString(t, title, 0), 0x7c, 0);
+        break;
+    }
+    }
+done:
+    return next;
+}
 
 // State 12: creates the replay file; then writes its data (13).
 int CardState_CreateReplayFile(int event, void *arg)
