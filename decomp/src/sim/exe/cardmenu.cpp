@@ -416,9 +416,8 @@ void CardMenu_CacheKanjiListHints(void)
 }
 
 // The replay list's callback: draws a row (4), and says whether a row can be chosen (8).
-// Not matching: the game tests the event against 4 first (then < 5, 6 and 8), where GCC
-// here balances the three cases on 6; it also keeps the row test as (state >= 0) |
-// (state < -1), which GCC folds to state != -1.
+// Not matching: GCC swaps the registers of m and list (the game has m in s0, list in s1).
+#ifdef NON_MATCHING
 int CardMenu_EntryListCallback(int event, MenuListEvent *ev, int row)
 {
     CardMenu *m = g_CardMenu;
@@ -482,6 +481,9 @@ int CardMenu_EntryListCallback(int event, MenuListEvent *ev, int row)
     }
     return result;
 }
+#else
+INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_EntryListCallback);
+#endif
 
 // State 9 of a new replay card: picks the replay file's size in blocks (3 to the free
 // blocks), then sets up the directory (10, after 12 frames); "No space" (9) under 3.
