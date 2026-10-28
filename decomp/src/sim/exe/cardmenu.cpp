@@ -112,6 +112,12 @@ void TextEntry_Open(TextEntry *entry);
 void TextEntry_Close(TextEntry *entry);
 int ReplayDir_AddEntry(ReplayDir *dir, int at, ReplayDirEntry *entry, void *data, int size, short *sectors);
 int Text_MeasureString(TextCtx *ctx, char *s, int a2);
+int sprintf(char *buf, char *fmt, ...);
+int SectorMap_CountUsed(short *map);
+int SectorMap_CountFree(short *map);
+int ReplayDir_CheckFits(ReplayDir *dir, int at, int size);
+void ReplayDir_DeleteEntry(ReplayDir *dir, int entry);
+void ReplayDir_DrawUsageBar(short *usage, uint *ot, int x, int y, int alpha, int need, int needNew);
 typedef int (*CardStateFn)(int event, void *arg);
 extern CardStateFn g_CardMenu_States[];
 // The menu text, one block of strings (sB_LbFt is the first). The game addresses them
@@ -629,7 +635,7 @@ int CardState_ReadReplayDir(int event, void *arg)
     return next;
 }
 
-// State 11: "Changes are not saved"; leaves the list without saving (10, after a
+// State 21: "Changes are not saved"; leaves the list without saving (10, after a
 // frame), or back to the slot choice (2).
 int CardState_DiscardChanges(int event, void *arg)
 {
@@ -675,9 +681,285 @@ int CardState_DiscardChanges(int event, void *arg)
     return next;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_ReplayEntryList);
+// m->rows[i], added up the game's way: the row's offset first, then m. A row is the
+// directory entry (-1 for the last row), what it is (0 an entry, 1 a new file, 2 save the
+// changes) and, when saving, whether the replay fits and why not.
+#define ROW(m, i) ((signed char *)((i) * 4 + (char *)(m) + (int)((CardMenu *)0)->rows))
 
-// State 21: edits the replay's title (after `delay` frames); saving a new replay adds its
+// Through an inline function, as the game tests the result with xori and beqz.
+static inline int Row_IsOk(CardMenu *m, int row)
+{
+    return ROW(m, row)[2] == 1;
+}
+
+// States 10 and 23: the replay files, to save the new replay to (a new file or over one)
+// or to edit. A chosen file goes on to its title (11), "Save changes" to writing them (25);
+// in delete mode the file is deleted instead (10 again, after a frame). Leaving goes back to
+// the slot choice (2), or to "Changes are not saved" (21) when editing.
+// Not matching: as in CardState_PlayList, the game indexes the rows with i on each pass
+// (and stores each field of a row through its own copy of the row's address); GCC here
+// strength-reduces both loops, and shares a row's address between blocks in the drawing.
+#ifdef NON_MATCHING
+int CardState_ReplayEntryList(int event, void *arg)
+{
+    CardMenu *m = g_CardMenu;
+    ReplayDir *dir = &m->dir;
+    int r = m->listResult;
+    int count = (signed char)dir->count;
+    int next = -1;
+    int i;
+
+    switch (event) {
+    case 0: {
+        MenuList *list;
+        short *usage;
+
+        m->line1 = EMPTY;
+        m->line2 = EMPTY;
+        CardMenu_CacheKanjiLines();
+        CardMenu_CacheKanjiListHints();
+        m->usedSectors = dir->totalSectors;
+        usage = &m->usedSectors;
+        usage[1] = SectorMap_CountUsed(&m->dir.sectorMapCount);
+        switch ((short)m->mode) {
+        case CARDMODE_SAVE_REPLAY: {
+            int fits;
+
+            list = &g_CardMenu_EntryList;
+            list->count = count + 1;
+            list->selected = count;
+            for (i = 0; i < count; i++) {
+                ROW(m, i)[0] = i;
+                ROW(m, i)[1] = 0;
+                fits = ReplayDir_CheckFits(&m->dir, i, m->replaySize);
+                ROW(m, i)[2] = fits == 0;
+                ROW(m, i)[3] = fits;
+            }
+            ROW(m, i)[0] = -1;
+            ROW(m, i)[1] = 1;
+            fits = ReplayDir_CheckFits(&m->dir, -1, m->replaySize);
+            ROW(m, i)[2] = fits == 0;
+            ROW(m, i)[3] = fits;
+            break;
+        }
+        case CARDMODE_EDIT_REPLAY:
+            list = &g_CardMenu_EntryList;
+            list->count = count + 1;
+            list->selected = m->editEntry;
+            for (i = 0; i < count; i++) {
+                ROW(m, i)[0] = i;
+                ROW(m, i)[1] = 0;
+                ROW(m, i)[2] = 1;
+            }
+            ROW(m, i)[0] = -1;
+            ROW(m, i)[1] = 2;
+            ROW(m, i)[2] = 1;
+            break;
+        }
+        break;
+    }
+    case 1: {
+        short *status;
+        int sel;
+
+        if (m->delay > 0 && --m->delay == 0) {
+            Sfx_PlayMenu(7);
+            MenuList_Open(&g_CardMenu_EntryList);
+        }
+        status = m->slotStatus + m->slot;
+        if (*status != 0) {
+            MenuList_Close(&g_CardMenu_EntryList);
+            next = 3;
+            break;
+        }
+        switch (r) {
+        case -1:
+            MenuList_Close(&g_CardMenu_EntryList);
+            Sfx_PlayMenu(2);
+            switch ((short)m->mode) {
+            case CARDMODE_SAVE_REPLAY:
+                next = 2;
+                break;
+            case CARDMODE_EDIT_REPLAY:
+                next = 0x15;
+                break;
+            }
+            break;
+        case -3:
+            Sfx_PlayMenu(6);
+            break;
+        case -4:
+            Sfx_PlayMenu(0);
+            break;
+        case -2:
+            break;
+        default:
+            Sfx_PlayMenu(1);
+            sel = -1;
+            switch ((short)m->mode) {
+            case CARDMODE_SAVE_REPLAY:
+                if (ROW(m, r)[1] == 0) {
+                    sel = r;
+                }
+                break;
+            case CARDMODE_EDIT_REPLAY: {
+                int kind;
+
+                m->editEntry = r;
+                kind = ROW(m, r)[1];
+                if (kind == 0) {
+                    sel = r;
+                } else if (kind == 2) {
+                    MenuList_Close(&g_CardMenu_EntryList);
+                    next = 0x19;
+                    goto done;
+                }
+                break;
+            }
+            }
+            MenuList_Close(&g_CardMenu_EntryList);
+            if ((signed char)m->deleteMode != 0) {
+                ReplayDir_DeleteEntry(&m->dir, sel);
+                m->delay = 1;
+                next = 10;
+            } else {
+                next = 11;
+                m->selEntry = sel;
+                m->delay = 12;
+            }
+            break;
+        }
+        break;
+    }
+    case 2: {
+        char buf[256];
+        TextCtx ctx;
+        TextCtx *t;
+        TextCtx *p;
+        char *text;
+        uint rgb;
+        int row;
+        char *hint;
+
+        Text_Init(&ctx, m->textPri);
+        t = &ctx;
+        ctx.ot = (uint *)arg;
+        *(uint *)&ctx.clut = (*(uint *)&ctx.clut & 0xff9fffff) | 0x200000;
+        t->unk1c = 1;
+        text = EMPTY;
+        rgb = 0x606060;
+        row = g_CardMenu_EntryList.selected;
+        switch ((short)m->mode) {
+        case CARDMODE_SAVE_REPLAY:
+            switch (ROW(m, row)[1]) {
+            case 0:
+                text = TEXT(OverwriteFile_2);
+                if (!Row_IsOk(m, row)) {
+                    text = TEXT(DataIsTooLarge);
+                    rgb = 0xb2460;
+                }
+                if ((signed char)m->deleteMode != 0) {
+                    text = TEXT(DeleteFile);
+                }
+                break;
+            case 1:
+                text = TEXT(CreateNewFile);
+                if (!Row_IsOk(m, row)) {
+                    rgb = 0xb2460;
+                    if (ROW(m, row)[3] == 1) {
+                        text = TEXT(Max32Files);
+                    } else {
+                        text = TEXT(DataIsTooLarge);
+                    }
+                }
+                if ((signed char)m->deleteMode != 0) {
+                    text = EMPTY;
+                }
+                break;
+            }
+            break;
+        case CARDMODE_EDIT_REPLAY:
+            switch (ROW(m, row)[1]) {
+            case 0:
+                text = TEXT(RenameTitle);
+                if ((signed char)m->deleteMode != 0) {
+                    text = TEXT(DeleteFile);
+                }
+                break;
+            case 2:
+                text = TEXT(SaveChanges);
+                if ((signed char)m->deleteMode != 0) {
+                    text = EMPTY;
+                }
+                break;
+            }
+            break;
+        }
+        CardMenu_DrawKanji((uint *)arg, text, 0x18, 0x19a, 0, rgb);
+        p = &ctx;
+        Text_SetFont(p, &g_CardMenu_FontMedium);
+        p->rgb = 0x20c3060;
+        hint = TEXT(PressL1R1ForDeleteMode);
+        Text_DrawString(p, hint, 0x148 - Text_MeasureString(p, hint, 0), 0x7c, 0);
+        switch ((short)m->mode) {
+        case CARDMODE_SAVE_REPLAY: {
+            MenuList *list = &g_CardMenu_EntryList;
+            int need = 0;
+            ReplayDir *d;
+            int w;
+            int x;
+
+            row = list->selected;
+            if (ROW(m, row)[1] == 0) {
+                need = m->dir.entries[ROW(m, row)[0]].sectorCount;
+            }
+            ReplayDir_DrawUsageBar(&m->usedSectors, (uint *)arg, 0xb0, 0x1c2, (list->fade << 7) / list->fadeMax,
+                                   need, (uint)(m->replaySize + 0x7f) >> 7);
+            Text_SetFont(p, &g_CardMenu_FontSmall);
+            p->rgb = 0x24a4136;
+            d = &m->dir;
+            sprintf(buf, TEXT(TotalNReplay), (signed char)d->count);
+            Text_DrawString(p, buf, 0x148 - Text_MeasureString(p, buf, 1), 0x1a4, 1);
+            sprintf(buf, TEXT(NNSectorFree), SectorMap_CountFree(&m->dir.sectorMapCount), d->totalSectors);
+            w = Text_MeasureString(p, buf, 1);
+            Text_DrawString(p, buf, 0x148 - w, 0x1b4, 1);
+            sprintf(buf, TEXT(NeedNSector), (uint)(m->replaySize + 0x7f) >> 7);
+            x = 0x148 - Text_MeasureString(p, buf, 1);
+            Text_DrawString(p, buf, x - w - 8, 0x1b4, 1);
+            break;
+        }
+        case CARDMODE_EDIT_REPLAY: {
+            MenuList *list = &g_CardMenu_EntryList;
+            int need = 0;
+            ReplayDir *d;
+
+            row = list->selected;
+            if (ROW(m, row)[1] == 0) {
+                need = m->dir.entries[ROW(m, row)[0]].sectorCount;
+            }
+            ReplayDir_DrawUsageBar(&m->usedSectors, (uint *)arg, 0xb0, 0x1c2, (list->fade << 7) / list->fadeMax,
+                                   need, need);
+            Text_SetFont(p, &g_CardMenu_FontSmall);
+            p->rgb = 0x24a4136;
+            d = &m->dir;
+            sprintf(buf, TEXT(TotalNReplay), (signed char)d->count);
+            Text_DrawString(p, buf, 0x148 - Text_MeasureString(p, buf, 1), 0x1a4, 1);
+            sprintf(buf, TEXT(NNSectorFree), SectorMap_CountFree(&m->dir.sectorMapCount), d->totalSectors);
+            Text_DrawString(p, buf, 0x148 - Text_MeasureString(p, buf, 1), 0x1b4, 1);
+            break;
+        }
+        }
+        break;
+    }
+    }
+done:
+    return next;
+}
+#else
+INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardState_ReplayEntryList);
+#endif
+
+// State 11: edits the replay's title (after `delay` frames); saving a new replay adds its
 // entry and creates the file (12) or writes it (13), editing renames the entry. Both then
 // leave through state 10.
 int CardState_EditTitle(int event, void *arg)
