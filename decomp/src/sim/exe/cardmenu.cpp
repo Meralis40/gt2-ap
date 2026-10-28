@@ -75,6 +75,37 @@ int CardDialog_Update(CardDialog *dlg, PadState *pad);
 int NumberPicker_Update(NumberPicker *p, PadState *pad);
 int MenuList_Update(MenuList *list, PadState *pad);
 int TextEntry_Update(TextEntry *entry, PadState *pad);
+struct CardDialogDesc;
+void CardDialog_Init(CardDialog *dlg, CardDialogDesc *desc, int choice);
+void NumberPicker_Init(NumberPicker *p);
+void MenuList_Init(MenuList *list, void *callback, int arg);
+void TextEntry_Init(TextEntry *entry, TextEntry *desc);
+int CardMenu_EntryListCallback(int event, MenuListEvent *ev, int row);
+extern WipeBar D_80091EE8;          // the slot bar
+extern CardDialogDesc D_80091F04;   // the dialogs, in CardMenu order
+extern CardDialogDesc D_80091F34;
+extern CardDialogDesc D_80091F64;
+extern CardDialogDesc D_80091F94;
+extern CardDialogDesc D_80092018;
+extern CardDialogDesc D_80092048;
+extern CardDialogDesc D_80092078;
+extern CardDialogDesc D_800920A8;
+extern CardDialogDesc D_800920D8;
+extern CardDialogDesc D_80092108;
+extern CardDialogDesc D_80092138;
+extern CardProgressBar D_80092168;  // the progress bar
+extern TextEntry D_800921A0;        // the title entry
+void ReplayEntry_Draw(uint *style, uint *ot, TextCtx *ctx, ReplayDirEntry *entry, int x, int y, int alpha, int empty);
+extern uint D_800921BC[]; // the entry list's style; [4] is the row colour
+int WipeBar_GetLevel(WipeBar *bar);
+void WipeBar_Draw(WipeBar *bar, uint *ot, int x, int y);
+uint Rgb_Lerp(uchar *from, uchar *to, int t, int range);
+void Text_DrawString(TextCtx *ctx, char *s, int x, int y, int a4);
+void CardDialog_Draw(CardDialog *dlg, uint *ot, TextCtx *ctx);
+void NumberPicker_Draw(NumberPicker *p, uint *ot, TextCtx *ctx);
+void MenuList_Draw(MenuList *list, uint *ot);
+void TextEntry_Draw(TextEntry *entry, uint *ot);
+extern char *D_800921B4[2]; // the slot names
 typedef int (*CardStateFn)(int event, void *arg);
 extern CardStateFn g_CardMenu_States[];
 // The menu text, one block of strings (sB_LbFt is the first). The game addresses them
@@ -374,7 +405,72 @@ void CardMenu_CacheKanjiListHints(void)
     }
 }
 
+// The replay list's callback: draws a row (4), and says whether a row can be chosen (8).
+// Not matching: the game tests the event against 4 first (then < 5, 6 and 8), where GCC
+// here balances the three cases on 6; it also keeps the row test as (state >= 0) |
+// (state < -1), which GCC folds to state != -1.
+#ifdef NON_MATCHING
+int CardMenu_EntryListCallback(int event, MenuListEvent *ev, int row)
+{
+    CardMenu *m = g_CardMenu;
+    int result = 0;
+    ReplayDirEntry *entry = 0;
+    uint rgb = 0x5a4a3e;
+    uint *ot = (uint *)ev->ot + 1;
+    MenuList *list = ev->list;
+    int x = ev->x;
+    int y = ev->y;
+    int brightness = ev->brightness;
+    TextCtx ctx;
+    TextCtx *t;
+
+    Text_Init(&ctx, m->textPri);
+    t = &ctx;
+    t->unk1c = 1;
+    switch (event) {
+    case 4: {
+        int alpha;
+        int slide;
+        int empty;
+
+        if (!(list->state >= 0 || list->state < -1)) {
+            break;
+        }
+        alpha = ((list->fade << 7) / list->fadeMax * brightness) >> 7;
+        if (alpha == 0) {
+            break;
+        }
+        if ((signed char)m->deleteMode != 0) {
+            rgb = 0x324052;
+        }
+        D_800921BC[4] = rgb;
+        slide = 128 - (list->fade << 7) / list->fadeMax;
+        if (slide < 0) {
+            slide = 0;
+        }
+        slide = slide * 176 >> 7;
+        empty = (signed char)m->rows[row][1];
+        if (empty == 0) {
+            entry = &m->dir.entries[(signed char)m->rows[row][0]];
+        }
+        ReplayEntry_Draw(D_800921BC, ot, t, entry, x + slide, y, alpha, empty);
+        break;
+    }
+    case 6:
+        break;
+    case 8:
+        if ((signed char)m->deleteMode != 0) {
+            result = (signed char)m->rows[row][1] == 0;
+        } else {
+            result = (signed char)m->rows[row][2] == 1;
+        }
+        break;
+    }
+    return result;
+}
+#else
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_EntryListCallback);
+#endif
 
 // State 9 of a new replay card: picks the replay file's size in blocks (3 to the free
 // blocks), then sets up the directory (10, after 12 frames); "No space" (9) under 3.
@@ -2099,7 +2195,39 @@ void CardMenu_PrepareGhostEntry(void)
     ReplayEntry_SetCarName(e, setup->cars[0].name);
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_InitWidgets);
+// Sets up the menu's widgets from their templates.
+void CardMenu_InitWidgets(void)
+{
+    CardMenu *m = g_CardMenu;
+    TextEntry *entry;
+
+    m->slotBar = D_80091EE8;
+    m->slotBar.t = -1;
+    CardDialog_Init(&m->dlgError, &D_80091F04, 0);
+    CardDialog_Init(&m->dlgSelectSlot, &D_80091F34, 0);
+    CardDialog_Init(&m->dlgNoCard, &D_80091F64, 0);
+    CardDialog_Init(&m->dlgFormat, &D_80091F94, 0);
+    NumberPicker_Init(&g_CardMenu_BlockPicker);
+    MenuList_Init(&g_CardMenu_EntryList, (void *)CardMenu_EntryListCallback, 0);
+    CardDialog_Init(&m->dlgSaveFailed, &D_80092018, 0);
+    CardDialog_Init(&m->dlgSaveError, &D_80092048, 0);
+    CardDialog_Init(&m->dlgComplete, &D_80092078, 0);
+    m->progress = D_80092168;
+    CardDialog_Init(&m->dlgOverwrite, &D_800920A8, 0);
+    CardDialog_Init(&m->dlgConfirmSave, &D_800920D8, 0);
+    CardDialog_Init(&m->dlgConfirmLoad, &D_80092108, 0);
+    CardDialog_Init(&m->dlgDiscard, &D_80092138, 0);
+    entry = &m->titleEntry;
+    D_800921A0.textPri = m->textPri;
+    TextEntry_Init(entry, &D_800921A0);
+    entry->text = m->titleBuf;
+    entry->maxLen = 31;
+    entry->maxWidth = 0x100;
+    m->titleBuf[0] = 0;
+    m->line1 = EMPTY;
+    m->line2 = EMPTY;
+    CardMenu_CacheKanjiLines();
+}
 
 // Sets up the card menu in config's work buffer; returns the end of the buffer.
 CardMenu *CardMenu_Setup(CardMenuConfig *config)
@@ -2199,7 +2327,68 @@ next:
     return result;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cardmenu", CardMenu_Draw);
+// Each frame: the two text lines, the slot bar with its slot's name, the widgets, then the
+// state's own drawing (event 2).
+void CardMenu_Draw(uint *ot)
+{
+    CardMenu *m = g_CardMenu;
+    TextCtx ctx;
+    uint from;
+    uint to;
+    int level;
+
+    from = 0x2000000;
+    to = 0x242362a;
+    Text_Init(&ctx, m->textPri);
+    Text_SetFont(&ctx, &g_CardMenu_FontLarge);
+    {
+        TextCtx *t = &ctx;
+        int center;
+
+        *(uint *)&t->clut = (*(uint *)&t->clut & 0xff9fffff) | 0x200000;
+        t->unk1c = 1;
+        t->ot = ot;
+        t->rgb = 0x25c5248;
+
+        center = 1;
+        if (g_GameState.language == 0) {
+            CardMenu_DrawKanji(ot, m->line1, 0xb0, 0xc6, center, 0x808080);
+            CardMenu_DrawKanji(ot, m->line2, 0xb0, 0xea, center, 0x808080);
+        } else {
+            Text_DrawCentered(t, m->line1, 0xb0, 0xd6, center);
+            Text_DrawCentered(t, m->line2, 0xb0, 0xfa, center);
+        }
+    }
+    level = WipeBar_GetLevel(&m->slotBar);
+    if (level != 0) {
+        if (g_GameState.language == 0) {
+            CardMenu_DrawKanji(ot, D_800921B4[m->slot], 0x1c, 0x66, 0, level | level << 8 | level << 16);
+        } else {
+            TextCtx *t = &ctx;
+
+            t->rgb = Rgb_Lerp((uchar *)&from, (uchar *)&to, level, 0x80);
+            Text_DrawString(t, D_800921B4[m->slot], 0x1c, 0x7e, 1);
+        }
+        WipeBar_Draw(&m->slotBar, ot, 0x18, 0x6e);
+        Prim_AddDrawMode(ot, 0x220);
+    }
+    CardDialog_Draw(&m->dlgError, ot, &ctx);
+    CardDialog_Draw(&m->dlgSelectSlot, ot, &ctx);
+    CardDialog_Draw(&m->dlgNoCard, ot, &ctx);
+    CardDialog_Draw(&m->dlgFormat, ot, &ctx);
+    NumberPicker_Draw(&g_CardMenu_BlockPicker, ot, &ctx);
+    Prim_AddDrawMode(ot, 0x20);
+    MenuList_Draw(&g_CardMenu_EntryList, ot);
+    CardDialog_Draw(&m->dlgSaveFailed, ot, &ctx);
+    CardDialog_Draw(&m->dlgSaveError, ot, &ctx);
+    CardDialog_Draw(&m->dlgComplete, ot, &ctx);
+    CardDialog_Draw(&m->dlgOverwrite, ot, &ctx);
+    CardDialog_Draw(&m->dlgConfirmSave, ot, &ctx);
+    CardDialog_Draw(&m->dlgConfirmLoad, ot, &ctx);
+    CardDialog_Draw(&m->dlgDiscard, ot, &ctx);
+    TextEntry_Draw(&m->titleEntry, ot);
+    ((CardStateFn)m->handler)(2, ot);
+}
 
 void CardMenu_StartSaveReplay(void)
 {
