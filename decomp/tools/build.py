@@ -50,7 +50,7 @@ MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
 # out as div $0 and mflo (mfhi for rem), as GCC 2.95 does. ASPSX would put a nop
 # after the mflo when the next instruction reads it; the game has none.
 GAS_CXX = {"src/sim/exe/screenviewloop.cpp", "src/sim/exe/format.cpp", "src/sim/exe/cardmenu.cpp",
-           "src/sim/exe/carinfo.cpp"}
+           "src/sim/exe/carinfo.cpp", "src/sim/exe/carmodel.cpp"}
 DIV = re.compile(rb"(?m)^\t(div|divu|rem|remu)\t(\$\w+),(\$\w+),(\$\w+)$")
 
 
