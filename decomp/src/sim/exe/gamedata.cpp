@@ -4,24 +4,115 @@
 #include "include_asm.h"
 #include "resident.h"
 
+// A game data file: a header, then tableCount tables, the second half being the
+// string pools of the first half's tables.
+struct GameData {
+    int unk0;
+    ushort unk4;
+    ushort tableCount;
+    GameDataTable tables[1];
+};
+
+// The table of race events, in the base data and the GT mode race data.
+#define GAMEDATA_EVENTS 30
+
+struct IdList {
+    int count;
+    unsigned int ids[16];
+};
+
 extern "C" {
 void CarSetup_FromCarEntry(void *carEntry, CarSetup *setup);
 void CarSetup_InitFromCarEntry(void *carEntry, CarSetup *setup);
+void *GameDataTable_GetEntry(GameDataTable *table, int index);
+void *GameDataTable_At(GameDataTable *table, int index);
+int GameDataTable_SearchId(GameDataTable *table, unsigned int id);
+int GameData_FindEventIndex(GameData *data, char *code);
+char *StrPool_Get(void *pool, int index);
+int StrPool_Find(void *pool, char *str);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gamedata", GameData_GetEntryIn);
+extern int g_GameDataMode;
+extern GameData *g_GtModeRaceData;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gamedata", GameData_GetTableString);
+// Entry index of table.
+void *GameData_GetEntryIn(GameData *data, int table, int index)
+{
+    return GameDataTable_GetEntry(&data->tables[table], index);
+}
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gamedata", GameData_FindEntryById);
+// String index of table's string pool.
+char *GameData_GetTableString(GameData *data, int table, int index)
+{
+    return StrPool_Get(data->tables[table + (data->tableCount >> 1)].entries, index);
+}
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gamedata", GameData_BinarySearch);
+// The entry of table whose first word is id (the table is sorted by it), or 0.
+void *GameData_FindEntryById(GameData *data, int table, unsigned int id)
+{
+    int lo = -1;
+    int hi = data->tables[table].count;
+    int mid;
+    unsigned int *e;
+
+    do {
+        mid = (lo + hi) >> 1;
+        e = (unsigned int *)GameData_GetEntryIn(data, table, mid);
+        if (*e == id) return e;
+        if (*e < id) {
+            lo = mid;
+        } else {
+            hi = mid;
+        }
+    } while (lo + 1 != hi);
+    return 0;
+}
+
+// The index of that entry, or -1.
+int GameData_BinarySearch(GameData *data, int table, unsigned int id)
+{
+    int lo = -1;
+    int hi = data->tables[table].count;
+    int mid;
+    unsigned int v;
+
+    do {
+        mid = (lo + hi) >> 1;
+        v = *(unsigned int *)GameData_GetEntryIn(data, table, mid);
+        if (v == id) return mid;
+        if (v < id) {
+            lo = mid;
+        } else {
+            hi = mid;
+        }
+    } while (lo + 1 != hi);
+    return -1;
+}
 
 void *GameDataTable_GetEntry(GameDataTable *table, int index)
 {
     return (void *)((int)table->entries + (unsigned int)table->entrySize * index);
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gamedata", GameDataTable_FindById);
+// GameData_FindEntryById for a table on its own.
+void *GameDataTable_FindById(GameDataTable *table, unsigned int id)
+{
+    int lo = -1;
+    int hi = table->count;
+    int mid;
+    unsigned int *e;
+
+    do {
+        mid = (lo + hi) >> 1;
+        e = (unsigned int *)GameDataTable_GetEntry(table, mid);
+        if (*e == id) return e;
+        if (*e < id) {
+            lo = mid;
+        } else {
+            hi = mid;
+        }
+    } while (lo + 1 != hi);
+    return 0;
+}
 
 void Car_SetupFromEntry(void *entry, CarSetup *out)
 {
@@ -38,15 +129,109 @@ void *GameDataTable_At(GameDataTable *table, int index)
     return (void *)((int)table->entries + (unsigned int)table->entrySize * index);
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gamedata", GameDataTable_SearchId);
+// The index of the entry whose first word is id, or -1. Like GameData_BinarySearch,
+// but the bounds start at 0 and count.
+int GameDataTable_SearchId(GameDataTable *table, unsigned int id)
+{
+    int lo = 0;
+    int hi = table->count;
+    int mid;
+    unsigned int v;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gamedata", GameDataTable_FindId);
+    for (;;) {
+        mid = (lo + hi) >> 1;
+        v = *(unsigned int *)GameDataTable_At(table, mid);
+        if (id == v) return mid;
+        if (lo == hi) return -1;
+        if (v < id) {
+            lo = mid;
+        } else {
+            hi = mid;
+        }
+    }
+}
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gamedata", IdList_Count);
+void *GameDataTable_FindId(GameDataTable *table, unsigned int id)
+{
+    int i = GameDataTable_SearchId(table, id);
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gamedata", GameData_GetString);
+    if (i < 0) return 0;
+    return GameDataTable_At(table, i);
+}
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gamedata", GameData_FindEventIndex);
+// Number of ids before the first 0 (at most 16).
+int IdList_Count(IdList *list)
+{
+    int n;
+    unsigned int *id;
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/gamedata", GameData_FindEvent);
+    n = 0;
+    id = list->ids;
+loop:
+    if (n < 16 && *id++ != 0) {
+        n++;
+        goto loop;
+    }
+    return n;
+}
+
+// The race event string pool: the GT mode race data's first table's, in GT mode.
+static inline void *GameData_EventStrings(GameData *data)
+{
+    if (g_GameDataMode == 2) {
+        return g_GtModeRaceData->tables[g_GtModeRaceData->tableCount >> 1].entries;
+    }
+    return (&data->tables[GAMEDATA_EVENTS])[data->tableCount >> 1].entries;
+}
+
+static inline GameDataTable *GameData_Events(GameData *data)
+{
+    if (g_GameDataMode == 2) {
+        return &g_GtModeRaceData->tables[0];
+    }
+    return &data->tables[GAMEDATA_EVENTS];
+}
+
+// String id of the race event string pool.
+char *GameData_GetString(GameData *data, int id)
+{
+    return StrPool_Get(GameData_EventStrings(data), id);
+}
+
+// The index of the race event whose code is code, or -1. The events are sorted by
+// the code's string id.
+int GameData_FindEventIndex(GameData *data, char *code)
+{
+    int str = StrPool_Find(GameData_EventStrings(data), code);
+    GameDataTable *t;
+    GameDataTable *events;
+    int lo, hi, mid;
+    int v;
+
+    if (str < 0) return -1;
+    // A copy of the table pointer, made after lo is set (found with permuter).
+    t = GameData_Events(data);
+    lo = 0;
+    events = t;
+    hi = events->count;
+    for (;;) {
+        mid = (lo + hi) >> 1;
+        v = *(unsigned short *)GameDataTable_At(events, mid);
+        if (str == v) return mid;
+        if (lo == hi) return -1;
+        if (v < str) {
+            lo = mid;
+        } else {
+            hi = mid;
+        }
+    }
+}
+
+void *GameData_FindEvent(GameData *data, char *code)
+{
+    int i = GameData_FindEventIndex(data, code);
+
+    if (i >= 0) return GameDataTable_At(GameData_Events(data), i);
+    return 0;
+}
 }
