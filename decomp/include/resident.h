@@ -905,7 +905,9 @@ struct ChampRaceList { /* Races of the current championship (ChampRaceList_Build
 
     char raceCode[6][16]; /* race event codes (base + %02d) */
 
-    uchar unk88[12];
+    signed char points[6]; /* championship standings (ChampRaceList_SortStandings) */
+
+    signed char racePoints[6]; /* the last race's, added by ChampRaceList_AddPoints */
 };
 
 typedef struct EngineCurve EngineCurve, *PEngineCurve;
@@ -982,9 +984,9 @@ typedef struct PadAxisRange PadAxisRange, *PPadAxisRange;
 
 struct TimeRecord { /* Initialised by TimeRecord_Init. Also used by the 0x24-byte records at g_GameState+0x218. */
 
-    int time; /* -1 = empty */
+    uint time; /* -1 = empty: compared unsigned */
 
-    int splits[3]; /* -1 on init (tentative: sector/lap splits) */
+    uint splits[3]; /* -1 on init: the time at each sector line (Records_GetSectorTime). TimeRecord_Init fills a fourth, unk10 and unk12 */
 
     short unk10; /* 0 on init */
 
@@ -1071,23 +1073,12 @@ struct MachineTestEntry { /* One machine test result (tentative). */
     int carId;
     int result; /* time, or speed for the top-speed list */
 
-    undefined field2_0x8;
-    undefined field3_0x9;
-    undefined field4_0xa;
-    undefined field5_0xb;
-    undefined field6_0xc;
-    undefined field7_0xd;
-    undefined field8_0xe;
-    undefined field9_0xf;
-    undefined field10_0x10;
-    undefined field11_0x11;
-    undefined field12_0x12;
-    undefined field13_0x13;
+    char name[12]; /* MachineTestRecords_SetName */
 };
 
 struct MachineTestRecords { /* Ranking for one machine test (race modes 7, 8, 9; mode 9 shows speeds). Tentatively the 0-400m, 0-1000m and top-speed tests. */
 
-    char count;
+    signed char count;
     undefined field1_0x1;
     undefined field2_0x2;
     undefined field3_0x3;
@@ -1126,38 +1117,7 @@ struct PortConfig { /* Saved controller settings for one pad port (GameState.por
 
 struct PlayerStats { /* Player career statistics (0x160, cleared by PlayerStats_Init). Read by the OVL4 status page (FUN_OVL4__80019c60..80019e2c) and OVL2 80023610/8001d434. */
 
-    undefined field0_0x0;
-    undefined field1_0x1;
-    undefined field2_0x2;
-    undefined field3_0x3;
-    undefined field4_0x4;
-    undefined field5_0x5;
-    undefined field6_0x6;
-    undefined field7_0x7;
-    undefined field8_0x8;
-    undefined field9_0x9;
-    undefined field10_0xa;
-    undefined field11_0xb;
-    undefined field12_0xc;
-    undefined field13_0xd;
-    undefined field14_0xe;
-    undefined field15_0xf;
-    undefined field16_0x10;
-    undefined field17_0x11;
-    undefined field18_0x12;
-    undefined field19_0x13;
-    undefined field20_0x14;
-    undefined field21_0x15;
-    undefined field22_0x16;
-    undefined field23_0x17;
-    undefined field24_0x18;
-    undefined field25_0x19;
-    undefined field26_0x1a;
-    undefined field27_0x1b;
-    undefined field28_0x1c;
-    undefined field29_0x1d;
-    undefined field30_0x1e;
-    undefined field31_0x1f;
+    uchar arcadeCourses[32]; /* per arcade course (PlayerStats_SetArcadeCourseFlags): flags 1, 2 and 4, bits 3-5 count the wins with flags 2 (up to 5, then 2 and 4 are set) */
     undefined field32_0x20;
     undefined field33_0x21;
     undefined field34_0x22;
