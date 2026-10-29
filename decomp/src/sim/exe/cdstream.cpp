@@ -95,22 +95,20 @@ struct OtTag {
 };
 
 // Links a 13-word packet from g_PacketPtr in after ot and returns its body.
-#ifdef NON_MATCHING
-// The game reads and writes the 24-bit links with lwl and swl; GCC 2.8 masks whole
-// words.
+// The 24-bit links are copied with lwl and swl, one asm statement each.
 void *FUN_80081cc8(OtTag *ot)
 {
-    OtTag *p = (OtTag *)g_PacketPtr;
+    unsigned int *p;
+    unsigned int link;
 
-    p->len = 12;
-    p->addr = ot->addr;
-    ot->addr = (unsigned int)p;
+    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+    p = (unsigned int *)g_PacketPtr;
+    ((unsigned char *)p)[3] = 12;
+    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
     g_PacketPtr = (unsigned char *)p + 0x34;
     return p + 1;
 }
-#else
-INCLUDE_ASM("asm/sim/exe/nonmatchings/cdstream", FUN_80081cc8);
-#endif
 
 // Enters (leave == 0) or leaves a nested critical section; returns what to pass to
 // leave it again (0 inside a callback, where interrupts are already off).
