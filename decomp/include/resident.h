@@ -170,6 +170,7 @@ struct Font {
     uchar digitWidth; /* cell width for fixed-width digits */
 
     char spacing; /* added to every advance */
+    uchar unk0a; /* added to the y of FUN_80082af8 */
 
 };
 
@@ -1484,7 +1485,7 @@ typedef struct McDirEntry McDirEntry, *PMcDirEntry;
 
 struct McDirEntry {
     int size;
-    uchar unk04;
+    uchar frame; /* its directory frame, 1-15 */
     uchar unk05;
     uchar state;
     signed char next; /* next block, -1 ends the chain */

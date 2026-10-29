@@ -9,9 +9,9 @@ struct McPort {
     int (*op)(int event, int *sector, void **buf); // the running operation, 0 when idle
     unsigned char unk004[8];
     McDirEntry dir[15];
-    unsigned char unk1ec[0x50];
+    int badSectors[20]; // the bad sectors remapped to frames 36-55, -1 for none
     signed char dirState[15]; // 0 for a free directory frame
-    unsigned char unk24b[0xf];
+    signed char freeList[15]; // the free directory frames, freeBlocks of them
     unsigned char freeBlocks;
     unsigned char unk25b[2];
     unsigned char state; // 0 ready
