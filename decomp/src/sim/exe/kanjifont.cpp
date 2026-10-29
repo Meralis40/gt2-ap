@@ -69,11 +69,11 @@ KanjiQuad *KanjiFont_AddGlyphQuad(KanjiGlyph *glyph, unsigned int *ot, unsigned 
     int h;
     unsigned short uv;
 
-    __asm__ volatile("lwl	%0,2(%1)" : "=r"(link) : "r"(ot));
+    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
     p = (KanjiPrim *)g_PacketPtr;
     p->len = 9;
-    __asm__ volatile("swl	%0,2(%1)" : : "r"(link), "r"(p) : "memory");
-    __asm__ volatile("swl	%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
     h = 0x1700;
     if (!glyph->wide) {
         h = 0xf00;

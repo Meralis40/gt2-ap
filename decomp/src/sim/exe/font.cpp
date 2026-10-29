@@ -47,23 +47,21 @@ struct OtTag {
 };
 
 // Links a draw-mode packet (E1 command mode) from g_PacketPtr in after ot.
-#ifdef NON_MATCHING
-// The game reads and writes the 24-bit links with lwl and swl; GCC 2.8 masks whole
-// words.
+// The 24-bit links are copied with lwl and swl, one asm statement each.
 void *Prim_AddDrawMode(OtTag *ot, unsigned int mode)
 {
-    OtTag *p = (OtTag *)g_PacketPtr;
+    unsigned int *p;
+    unsigned int link;
 
-    p->len = 1;
-    p->addr = ot->addr;
-    ot->addr = (unsigned int)p;
-    ((unsigned int *)p)[1] = mode | 0xe1000000;
-    g_PacketPtr = (char *)p + 8;
+    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+    p = (unsigned int *)g_PacketPtr;
+    ((unsigned char *)p)[3] = 1;
+    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+    p[1] = mode | 0xe1000000;
+    g_PacketPtr = (char *)(p + 2);
     return p + 1;
 }
-#else
-INCLUDE_ASM("asm/sim/exe/nonmatchings/font", Prim_AddDrawMode);
-#endif
 
 void Text_SetFont(TextCtx *ctx, Font *font)
 {
@@ -156,13 +154,9 @@ void Text_SetTexturePage(TextCtx *ctx, int tpageId)
 
 // Advance from left to right: left's advance plus the spacing, less the kerning.
 #ifdef NON_MATCHING
-// GCC loads the kerning word with ulw, which GNU as expands as lwl then lwr with
-// the rows offset folded in; the game has lwr then lwl from a separate rows pointer.
-// The loads at the start and some registers differ too.
-struct Unaligned32 {
-    int v;
-} __attribute__((packed));
-
+// The kerning word's lwr and lwl are an asm statement each, which gives the game's
+// order (GCC's ulw is lwl first). The game adds the rows offset to a separate rows
+// pointer, multiplies with multu, and schedules the loads at the start differently.
 int Text_GetAdvance(TextCtx *ctx, int left, int right)
 {
     FontKerning *kern = ctx->font.kerning;
@@ -189,7 +183,12 @@ int Text_GetAdvance(TextCtx *ctx, int left, int right)
             int bit = col * 4;
             if (bits & 1) bit += col;
             if (bits & 2) bit += col * 2;
-            k = (((Unaligned32 *)(kern->rows + (bit >> 3) + rowOff))->v >> (bit & 7)) & ((1 << n) - 1);
+            unsigned char *q = kern->rows + (bit >> 3) + rowOff;
+            int w;
+
+            __asm__("lwr\t%0,0(%1)" : "=r"(w) : "r"(q));
+            __asm__("lwl\t%0,3(%1)" : "+r"(w) : "r"(q));
+            k = (w >> (bit & 7)) & ((1 << n) - 1);
         }
     }
     return advance - k;
@@ -201,7 +200,9 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/font", Text_GetAdvance);
 // Adds the SPRT for glyph code & 0xff at (x, y) and its accent, if any. Bit 0x100
 // moves it by the glyph's fixed-width offset and bit 0x200 centers it on x.
 #ifdef NON_MATCHING
-// The game links the packets with lwl and swl, and its registers and order differ.
+// The links are lwl and swl asm statements, as in Prim_AddDrawMode. The game computes
+// every field before storing any, reads the CLUT and texture page as one word, and its
+// registers differ.
 void Text_DrawGlyph(TextCtx *ctx, int code, int x, int y)
 {
     FontGlyphTable *tbl = ctx->font.glyphs;
@@ -214,6 +215,7 @@ void Text_DrawGlyph(TextCtx *ctx, int code, int x, int y)
     int top;
     int hw;
     OtTag *ot;
+    unsigned int link;
 
     if (!sprite) return;
     center = 0;
@@ -233,9 +235,10 @@ void Text_DrawGlyph(TextCtx *ctx, int code, int x, int y)
     ((ushort *)p)[9] = ctx->clut + ((s >> 27) & 3);
     ((ushort *)p)[8] = s;
     ot = (OtTag *)ctx->ot;
-    ((OtTag *)p)->len = 5;
-    ((OtTag *)p)->addr = ot->addr;
-    ot->addr = (unsigned int)p;
+    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+    ((unsigned char *)p)[3] = 5;
+    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
     if ((g0 >> 14) & 7) {
         s = ((unsigned int *)tbl->accents)[((g0 >> 14) & 7) - 1];
         p += 6;
@@ -248,9 +251,10 @@ void Text_DrawGlyph(TextCtx *ctx, int code, int x, int y)
         ((short *)p)[11] = (s >> 21) & 0x3f;
         ((ushort *)p)[9] = ctx->clut + ((s >> 27) & 3);
         ot = (OtTag *)ctx->ot;
-        ((OtTag *)p)->len = 5;
-        ((OtTag *)p)->addr = ot->addr;
-        ot->addr = (unsigned int)p;
+        __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+        ((unsigned char *)p)[3] = 5;
+        __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+        __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
     }
     g_PacketPtr = (char *)(p + 6);
 }
