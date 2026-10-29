@@ -5,29 +5,13 @@
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
 #include "viewloop.h"
-
-// Raw buffer of a controller port (PsyQ PadInitDirect, 34 bytes).
-struct PadRawBuffer {
-    unsigned char status;       // 0 when the read succeeded
-    unsigned char typeLen;
-    unsigned char buttons[2];   // active low
-    unsigned char analog[4];
-    unsigned char extra[26];
-};
-
-struct PadSystem {
-    VSyncCallback vsync;
-    struct PadDevice *devices[2];
-    unsigned char ports[2][8];
-    volatile PadRawBuffer raw[2];   // written by the pad interrupt
-};
+#include "pad.h"
 
 // L2 + R2 + L1 + R1 + START + SELECT held on port 2: Step skips Update and
 // returns 1.
 #define PAD_RAW_RESET 0xef79
 
 extern "C" {
-extern PadSystem g_PadSystem;
 extern unsigned char g_CurrentVideoMode;
 extern unsigned short g_VideoModeWidths[5];
 
