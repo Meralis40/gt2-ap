@@ -45,7 +45,7 @@ MOVE = re.compile(rb"(?m)^\tmove\t(\$\w+),(\$\w+)")
 MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
 # C++ sources assembled by GNU as, like the C ones: ScreenViewLoop::Run,
 # Credits_FormatCommas, CardMenu_SetState, CarInfoA_FindIndex, CdAudio_ExecScript,
-# GameDataTable_SearchId and CarWork_GetPartIdx jump past the load delay nop before a
+# GameDataTable_SearchId, CarWork_GetPartIdx and Records_GetSectorTime jump past the load delay nop before a
 # label, as only GNU as places it (garage2.cpp, the rest of garage.cpp, needs it too), and Gpu_SetDisplayStart has its GPU
 # store in the return's delay slot, which GCC leaves empty for a volatile store.
 # GCC 2.8.1 writes divisions as assembler macros, which GNU as
@@ -57,7 +57,7 @@ GAS_CXX = {"src/sim/exe/screenviewloop.cpp", "src/sim/exe/format.cpp", "src/sim/
            "src/sim/exe/carinfo.cpp", "src/sim/exe/carmodel.cpp", "src/sim/exe/cdaudio.cpp",
            "src/sim/exe/cdstream.cpp", "src/sim/exe/gamedata.cpp", "src/sim/exe/garage.cpp",
            "src/sim/exe/garage2.cpp", "src/sim/exe/padbuttons.cpp",
-           "src/sim/exe/powergraph.cpp"}
+           "src/sim/exe/powergraph.cpp", "src/sim/exe/records.cpp"}
 DIV = re.compile(rb"(?m)^\t(div|divu|rem|remu)\t(\$\w+),(\$\w+),(\$\w+)$")
 
 
