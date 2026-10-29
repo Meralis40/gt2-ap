@@ -119,6 +119,8 @@ decomp.me's PsyQ packages (`psyq4.3` to `psyq4.6`) run Sony's executables under 
 
 ## Decompiling a function
 
+[matching-quirks.md](matching-quirks.md) collects the source forms that give the game's code, and the patterns no form has matched yet.
+
 1. In the unit's yaml, give the function's address range its own subsegment: `[0x0, cpp, carwork]` makes `src/sim/<unit>/carwork.cpp`, and the next `asm` subsegment starts after the function.
    A function that another unit has too uses that unit's file: OVL4's `[0x5404, cpp, ../ovl3/carwork]` builds `src/sim/ovl3/carwork.cpp`. `build.py` creates `src/sim/<unit>/` before splitting, so the `..` resolves and splat sees the existing file.
    When the copy has other names there (`Demo_PickRandomCar` in OVL1, the `_OVL2` suffixes, OVL4's second CarWork copy), the unit gets its own file that `#define`s them and `#include`s the shared source, as `src/sim/ovl1/randompick.cpp` does.

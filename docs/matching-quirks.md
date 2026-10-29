@@ -1,0 +1,96 @@
+# Matching quirks
+
+What it takes to get the game's code back out of GCC 2.8.1, as found while matching the resident code, the overlays and the game's C library. [decomp.md](decomp.md) describes the build and each file; this page collects the patterns across files: the source forms that give the game's instructions, and the ones that no form tried has given yet, with where each shows up.
+
+"Permuter" is [decomp-permuter](https://github.com/simonlindholm/decomp-permuter). A function that doesn't match stays `INCLUDE_ASM`, with its C++ under `#ifdef NON_MATCHING` and a comment saying why.
+
+## Toolchain
+
+- **ASPSX against GNU as.** When a load is followed by a label and then an instruction that reads the loaded register, ASPSX (and maspsx, which copies it) puts the label first and then the load delay `nop`, so a jump to the label lands on the `nop`. GNU as puts the `nop` before the label, so a jump lands past it. The game has GNU as's form in some files, which are assembled by GNU as (`GAS_CXX` in `build.py`): `screenviewloop.cpp` (`ScreenViewLoop::Run`), `format.cpp`, `cardmenu.cpp` (`CardMenu_SetState`), `carinfo.cpp` (`CarInfoA_FindIndex`), `carmodel.cpp` (`CarTex_FindColorIndex`), `cdaudio.cpp` (`CdAudio_ExecScript`), `cdstream.cpp`, `gamedata.cpp` (`GameDataTable_SearchId`), `garage.cpp` and `garage2.cpp` (`CarWork_GetPartIdx`), and the C library (`Printf_ParseInt`). Assembling everything with GNU as breaks the other files, so it is per file.
+- **Divisions in GNU as files.** GNU as expands GCC's `div` and `divu` macros with division checks, which the game doesn't have, so `build.py` writes them out as `div $0` and `mflo` (`mfhi` for a remainder) in those files.
+- **No `nop` after `mflo`.** After a division, ASPSX (every version from 2.56 to 2.86) adds a `nop` when the next instruction reads the quotient. The game never has it (7 places). `Credits_FormatCommas` matches by being assembled with GNU as. `setup_toolchain.py` patches maspsx not to add it past a label, for OVL3's `Rgb555_ToHsv`; the original source probably differs before that branch, and the patch could go once it matches without it.
+- **`move`.** The GNU as of the time encoded `move` as `addu`, where binutils 2.42 uses `or`. `build.py` rewrites it for the GNU as files and the C library.
+- **Plain `char` is unsigned** with this `cc1plus` (`mips-sony-psx`). Where the game loads a character or a byte field with `lb`, the source says `signed char`: the font strings, `CardDialog.sfx` and `choice` (`sfx >= 0` is tested), `McDirEntry.next` (set to -1), the plus-minus sign in `Time_FormatDiff` (loaded as `-79`). The C library is built with `-fsigned-char` instead, so it uses plain `char`.
+- **`bool`** is 4 bytes in GCC 2.8.1; `resident.h` makes it a byte, as in Ghidra.
+- **The C library is another compiler.** `syslib` matches GCC 2.95.2 `-O2` (18 functions) better than 2.8 (11), and needs `-fstrict-aliasing`: in `Heap_SplitBlock` the load of the new block's `size` moves above stores through other pointer types. The game's C++ has no strict aliasing (see [Loads before stores](#loads-and-stores)).
+- **No loop unrolling.** `-funroll-loops` doesn't give `KanjiFont_RenderGlyph`'s weight sums (below); nothing in the game needs it.
+
+## Source forms that match
+
+### Loops
+
+- **Where the test goes.** GCC 2.8 usually turns a `for` or `while` into a test at the bottom with a test on entry (`IdList_Count`'s top-tested loop needs a `goto` loop). A loop whose body declares a local keeps its test at the top with a `j` back to it (`Boot_ClearVram`, `CarModel_Init`'s inner loops, `McHeader_SetTitle`), and every `for` and `while` in `inflate.cpp` kept its test at the top.
+  - The game's bottom-tested loops then come from `if (...) do { ... } while (...);` (`KanjiFont_FindGlyph`, `McOp_Create`) or a `do`-`while` entered at its test with a `goto` (`Inflate_BuildHuft`).
+  - The game's top-tested loops come from a `goto` loop (`IdList_Count`, `Str_FindCharNoCase`, `CarTex_FindColorIndex`) or a local declared in the body.
+- **Keeping things in the loop.** A `goto` loop also stops GCC's loop optimizer from hoisting code (`CardMenu_Update`'s state loop) and from recognising the loop at all (`Credits_FormatCommas`'s copy loop, where the game reloads `','` on each pass).
+- **Binary searches** are `while (1)` loops that return when found, then return 0 when `lo >= hi` (`CarInfoA_FindIndex`, `Wheel_GetFileId`, `EngineSound_FindIndex`).
+- **Unrolled by hand.** `KanjiFont_RenderGlyph` adds a row's weight one to three times with chained tests: `n = phase - 1; if (n != 0) { ...; n = phase - 2; } ... if (n != 0) { ... }`, not a loop.
+
+### Addresses of globals
+
+- **Through an inline accessor.** Written directly, `&g_Card.ports[i]` has its offset folded into the symbol (`g_Card + 0x44`), where the game adds `0x44` to `i * 0x264` and then the address. An inline function returning `&g_Card` gives the game's form (`Card_Get()` in `carddialog.cpp`, `McCard_FindFile`, `McCard_StartCreate`, `McCard_StartTransfer`). The same goes for `CourseAt(c, i)` in `carinfo.cpp`, `Cd_BcdMsfToSector`'s byte reads, and the inline taking the request in `CdAudio_SetupStream` and `CdAudio_ResetStream` (base register plus `0x20`). `DemoRace_LoadSetup` gets it by adding `0xbf7c` to a `GameState *` local.
+- **Adjacent globals as one struct.** When the game reaches several globals from one base register (`addiu v0,%lo(g_McOp_Port)`, then `0x18(v0)`, `0x24(v0)`...), they are one struct: `McOpState` is declared over `g_McOp_Port` and the `g_McOp_` variables after it.
+- **One block of strings.** The memory card menu text is addressed from one base (`sB_LbFt`), so `TEXT(name)` is `sB_LbFt + T_name`.
+
+### Register choice and variables
+
+- **One variable for several values.** The game often reuses one register where a natural source has several variables, and one variable gives it: the digit quotient `d` in `format.cpp`, the milliseconds, hours and tenths in `Time_FormatMs`, the animation step `t` in `CardDialog_Draw`, the front and rear tyre stages in `CarSpec_FromCarWork`, the child pointer `link` in `KanjiFont_FindGlyph` (the one followed in the walk and the one set after it), the texture position read into `u` and `v` themselves in the same function, and the table lookups in `KanjiFont_RenderGlyph`, which go through the two sums' variables.
+- **Two steps for one expression.** `ax = x; ax += w;` gives the `addu` its operands the game's way round (`NumberPicker_Draw`), and so does `(work->ascEntries + slot)[0]`. `stride = font->cols; stride <<= phase;` (not one expression) moves `stride` from a saved register to `$a0` in `KanjiFont_RenderGlyph`. `*(slotStatus + slot)` swaps the operands where `slotStatus + slot` doesn't.
+- **A local of a narrower or wider type.** An `unsigned char` local for a buffer index (`psxViewLoop::Enter`), a `short` for an arrow width (`NumberPicker_Draw`) or a boost rpm (`EngineCurve_SetupTurbo`), `int` copies of values the game compares more than once (`CardMenu`'s slot status, `psxViewLoop::UpdateDisplay`), an `int` for an `lb`'d spacing (`ButtonPrompt_Init`), and an `int` command parameter where callers pass an `unsigned char` (`McCard_StartTransfer`).
+- **Returning a value keeps `$v0` live.** `Timer_StartFrame` returns the time it stores, `CarParams_BuildFromSetup` returns `CarParams_Build`'s result, and `Matrix_FromEuler` and `Matrix_Mul` return their matrix (which gives `Matrix_SetEuler`'s stores through `$v0`).
+- **A pinned register.** `CdAudio_WaitIdle` keeps `&g_CdAudio` in a `register ... asm("a0")` variable.
+- **A frame with nothing in it.** `CarModel_InitStub` is empty but has a 16-byte frame: an unused `int[4]` local gives it.
+
+### Loads and stores
+
+- **Loads before stores.** The game's C++ was compiled without strict aliasing, so GCC won't move a load above a store through another pointer. Where the game loads first, the source reads into a local before the stores: `psxViewLoop::UpdateDisplay` and `psxViewLoopDoubleBuffer::BeginDraw` read their fields into `int` locals, `CarModel_Draw` reads the instance's fields up front, `McCard_StartTransfer` reads the file size before filling in the state, `McOp_Transfer` reads the buffer, remaining count, index, sector map and offset first, `McOp_Create` reads the index before setting `*buf`, and `KanjiFont_FindGlyph` reads the font's fields before the `wideMode` test.
+- **A load hoisted above a branch.** `KanjiFont_RenderGlyph` reads the glyph code (`int code = glyph->code & 0x7f7f`) before testing `rendered`, as the game does.
+- **Store order.** GCC keeps the source's store order, so it has to be the game's: `McCard_StartTransfer` needs command, sector map, buffer, offset (found by trying the 24 orders), `NumberPicker_Draw` stores the x fields before the y ones, `KanjiFont_AddGlyphQuad` sets the packet pointer between the CLUT and the texture page.
+- **Struct copies.** A camera copied as a struct of 26 `int`s gives word loads and stores; as a `char` array it gives `lwl`/`lwr` (`CarModel_DrawShadow`).
+- **Signed and unsigned halfwords.** The field types decide `lh` or `lhu`: `KanjiFont_FindGlyph` reads the texture page and CLUT as `short` for the game's `lh`.
+
+### Conditions
+
+- **`xori`.** `x ^ 1` in an `int` local gives the game's `xori` (`Tim_LoadClut`, `CarWork_HasFullSuspension`), and so does an inline function returning `== 1` that is then tested (`ReplayDir_IsOk`); `!x` gives `sltiu`.
+- **A result computed before the test.** An inline function returning `a && b` (`FUN_80060efc`), or `|` instead of `||` (`Time_FormatDiff`'s `0xffffffff` tests, `Credits_FormatCommas` with an `int` holding `d != 0`).
+- **Branch sense.** `h = 0x1700; if (!glyph->wide) h = 0xf00;` gives the game's `bnez` with the first value in the delay slot; `h = wide ? 0x1700 : 0xf00` gives `beqz`. `NumberPicker_Update` puts its body inside `if (pad != 0)` so the `pad == 0` test jumps to the final `return`.
+- **Early returns.** `CarInfoA_IsAvailable` returns from each `case` (the `xori`s are copied into the branches). `KanjiFont_RenderGlyph` wraps its body in `if (!glyph->rendered)` rather than returning early.
+- **Nested `if`s with the result set before each test.** `McCard_StartCreate` sets `result` to 5, then 1, 6, 7 and 9 before each nested test (`McCard_StartTransfer` to 5, 1 and 8), which puts each value in the branch's delay slot.
+
+### `switch`
+
+- **Case order follows the game's tests.** A `switch` on an event that the game tests `== 1`, `< 2`, `== 0` has an empty `case 2` (the card menu states). Where the decision tree tests `< n + 1` right after `== n`, the `switch` has an empty case below n (`case 0: break;`). `ButtonPrompt_Init` has a `case 0` beside `default` and its cases in the order 0, 4, 2, 6. The case bodies follow the game's block layout, which also shows which cases fall through or share a tail through a `goto` (`McOp_Transfer`'s remap block, shared by phase 1 and the retry path).
+- **Per-case assignments.** `Part_Lookup` sets the field offset in every case rather than once after the `switch`.
+- **`switch (st = *status)`** gives the game's copy of the index (`CardState_CheckSlot`).
+- **Jump tables** go in the file's own `.rodata`, so a file whose table sits between other files' tables has to be split (`garage2.cpp`).
+
+### `setjmp`, varargs and inline assembly
+
+- **`setjmp`.** `switch (setjmp(&ctx)) { case 0: ...; break; case 1: return 0; } return 1;` gives the game's test (`GzipStream_Continue`).
+- **Varargs.** There is no `stdarg.h`; `Overlay_StartAt` reads its arguments from `__builtin_next_arg(entry)`. Indexing the argument area directly keeps a pointer in a register, and taking `&entry` puts `entry` in memory.
+- **Unaligned and 24-bit accesses.** GCC emits `lwl` and `lwr` as a pair, `lwl` first, and masks whole words for a 24-bit OT link. Where the game splits the pair, orders it the other way, or copies a link with `lwl`/`swl`, each instruction is its own `asm` statement: `memset`'s lone `swr` and `swl`, `Lz_Decompress`'s loads (`lwr`, then `lwl` only for a copy) and its word copy, and `KanjiFont_AddGlyphQuad`'s link. An `asm` output written `=r` instead of `+r` gives the value a short live range, which got `Lz_Decompress` the game's register. Non-`volatile` `asm` can be scheduled away from where it is written; `volatile` keeps the game's order (`KanjiFont_AddGlyphQuad`).
+- **A delay slot.** `GzipStream_Begin` puts `move $sp` in the `jal`'s delay slot with a `.set noreorder` `asm` around the call.
+- **GTE code** goes through `include/gte.h`'s register moves and commands.
+
+## Not solved yet
+
+- **The address in `$a0` first.** The game loads a global's address into `$a0` (sometimes before the prologue), moves the incoming arguments up to `$a1`-`$a3`, and then copies the address to a saved register, as if setting up a call. GCC loads the saved register directly. Seen in `Overlay_Load`, `CdAudio_Init`, `Music_Stop`, `CdAudio_VSync`, `CdAudio_OnSync`, `CdAudio_OnReady`, `CdAudio_ResetRead`, `CdAudio_ResetStream`, `CdStream_ReleaseSector`, `CdStream_WaitSector`, `CdAudio_OnReadSector`, `RaceFont_OnSector`, `McOp_Create` and `McOp_Transfer`. `McCard_GetResult` is related: it keeps `&g_McOp_Port` in `$a0` and loads through it, where GCC builds the address into each load. Tried without success: inline helpers (with the pointer as their first parameter too), references, `register` variables (also pinned to `$s1`), C++ member functions (inline, called on the global), casts through `void *`, other orders, GCC 2.95 and permuter.
+- **Code that falls through into the next function, and tail calls.** GCC 2.8 makes neither. `CdAudio_RunScript` sets up arguments and falls into the next function; `Cd_ReadSync`, `FUN_8007abf8` and `FUN_8007ad1c` shift a sector into a byte offset and fall into the byte-offset function; `FUN_8007da9c` falls into `FUN_8007daac`; `FUN_80081ff8` loads `&g_CdAudio` and falls into `CdStream_GetReadPtr`; `CdGetSector_Thunk` is a lone `j CdGetSector`.
+- **Strength reduction the game doesn't do.** GCC gives a loop's fields their own pointer: `Boot_ShowSplashScreens` (which takes the register the game uses for `D_80033DC0`'s high half; 2.5 hours of permuter didn't remove it), and `CardState_PlayList`, `CardState_GhostList` and `CardState_ReplayEntryList`, where the game hoists the invariants but stores each field of a row through its own copy of the row's address. Tried: `goto` and `while (1)` loops, a row struct, bitfields, references, inline accessors, `-O1`, turning off strength reduction or the CSE passes.
+- **A load a pass ahead.** `Lod_Select` walks a pointer from `table - 8`, loading the next distance one pass early; no loop form gives it.
+- **Division by a constant.** `Cd_LbaToPos` divides with `div`, where GCC multiplies by the reciprocal. Inline functions give `div`, but the registers still differ.
+- **`lwr` before `lwl` from GNU as.** `Text_GetAdvance`'s unaligned kerning load comes out of GNU as `lwl` first, the game's `lwr` first. Single-instruction `asm` statements, which give `Lz_Decompress` its `lwr`-first order, are worth trying there.
+- **24-bit OT links.** `FUN_80081cc8`, `Prim_AddDrawMode` and `Text_DrawGlyph` link packets with `lwl`/`swl`. Their C++ masks words; the single-instruction `asm` that matches `KanjiFont_AddGlyphQuad` is worth trying on them.
+- **One byte loaded twice.** `McHeader_SetTitle` loads the first title byte with `lb` for the loop test and `lbu` for the code, and the second byte before both; GCC loads it once.
+- **Constants in registers before a loop.** `EngineCurve_BoostFactor` matches but for its `switch` case values, which the game loads into registers before the loop.
+- **The argument registers.** The twelve rounding multiplies in `enginecurve.cpp` (`Fixed_Mul32`, `Fixed_Mul`, `Fixed_MulShiftTrunc` and variants) don't reuse the argument registers where GCC does.
+- **Handwritten code.** Some functions keep values in registers in ways GCC never would, and stay assembly with readable C++ under `NON_MATCHING`: `Inflate_Codes` (keeps its locals in `$t` registers across the callbacks and loads its constants back into `$t8`, `$s3`, `$s2` and `$t9` after each), the GTE functions in `carmodel.cpp`, `gte.cpp` and `cdstream.cpp` (software-pipelined), and `Stack_Check` (copies `$sp` into `$s3`, which C++ gets only through an `asm`, two instructions off).
+- **Register allocation only.** The shape matches and only the registers differ, and nothing tried so far (permuter on most) fixed it: `CarModel_Init`, `CarModel_Draw`, `Tim_LoadToSlot`, `Setting_Interpolate`, `GameData_Relocate`, `GameData_RelocateTable`, `Desc_ScaleFields`, `CarSpec_Resolve`, `CarParams_GetDriveLayout`, `CarParams_Build`, `CarWork_ApplySetting` (the saved registers of `work` and the gear index swapped), `LodTable_SquareDistances` (pointer and end swapped), `Gpu_TransferImage`, `Camera_Update`, `FUN_8007db9c`, `Cd_ReadInflate` (`$t0` and `$t1` swapped), `CardMenu_EntryListCallback`, `FUN_800824ac`, `Matrix_ShiftRot`, `Inflate_Run` and `Inflate_BuildHuft` (which variables get saved registers), and `KanjiFont_RenderGlyph` (`font` and `glyph` swap saved registers, and the row bits and the first sum swap `$a1` and `$a2`).
+- **Scheduling only.** `CarInfoA_GetData` (the data offset's `and` before the colour count's `andi`), `GzipStream_Begin` (one copy of `stream` three instructions early), `WheelMesh_Scale` and `CarModel_BuildWheels` (loads and multiplies), `CdAudio_ApplyVolume` (products and clamps).
+- **Further off.** `CarWork_GetSettingRange` (one more saved register, more shared case tails), `EngineCurve_Resample`, `Gearbox_ComputeRatios`, `EngineCurve_Build`, `EngineCurve_GetPerf` and `EngineCurve_TorqueAt` (frame layout, statement order, registers).
+
+## Working notes
+
+- **Permuter results need checking.** Its best candidates often change what the code does: an `if` around a call that must always run (`Inflate_Run`), a call doubled into both branches (`GzipStream_Begin`), a `do { } while (0)` around a few statements, or a temporary reused across unrelated values. Some gains are real but come from an odd form that points at the real one: reusing `phase` for `code & 0x7f7f` led to the `code` local in `KanjiFont_RenderGlyph`, and a split `stride` assignment was kept as it is.
+- **Trying every order.** For a few statements whose order matters, compiling every permutation is quicker than the permuter (`McCard_StartTransfer`'s four stores).
+- **Declaration order** of locals made no difference in the cases tried (`McCard_StartTransfer`, `KanjiFont_RenderGlyph`).
