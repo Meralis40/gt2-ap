@@ -1560,16 +1560,10 @@ struct PadDevice {
 
     ushort analog[4]; /* 0..0xff, centre 0x80 (NeGcon twist / sticks) */
 
-    undefined field8_0x52;
-    undefined field9_0x53;
-    undefined field10_0x54;
-    undefined field11_0x55;
-    undefined field12_0x56;
-    undefined field13_0x57;
-    undefined field14_0x58;
-    undefined field15_0x59;
-    undefined field16_0x5a;
-    undefined field17_0x5b;
+    undefined field8_0x52[6];
+    short unk58;
+    short force; /* signed: its sign picks the direction bit of FUN_800834fc's actuator byte */
+
     short vibration1; /* 12.4 fixed point, sent as actuator byte 1 */
 
     short vibration0; /* 12.4 fixed point, sent as actuator byte 0 */
