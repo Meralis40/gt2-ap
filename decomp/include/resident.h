@@ -325,7 +325,7 @@ struct CardProgressBar {
     short pad0a;
     uint color;
     uint total;
-    char segFade[32];
+    signed char segFade[32];
     short visible;
     short pad36;
 };
