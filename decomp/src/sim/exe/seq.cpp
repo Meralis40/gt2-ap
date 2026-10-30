@@ -262,8 +262,7 @@ void SeqChannel_NoteOn(SeqPlayer *p, SeqTrack *t, int note, int velocity, int du
         c->releaseTime = duration + p->ticksThisFrame;
         c->lastVol = t->effVol;
         c->lastPan = t->pan;
-        params.adsr1 = r->adsr1;
-        params.adsr2 = r->adsr2;
+        params.adsr = r->adsr;
         params.addr = r->addr;
         params.priority = r->priority;
         params.duration = r->duration;
@@ -276,7 +275,7 @@ void SeqChannel_NoteOn(SeqPlayer *p, SeqTrack *t, int note, int velocity, int du
             }
         }
         params.pitch = Spu_NoteToPitch(pitch, r->root);
-        Spu_PanVolume((short *)&params.volL, (rvol * rvol) >> 14, n);
+        Spu_PanVolume(params.vol, (rvol * rvol) >> 14, n);
         SfxVoice_Start(&c->spuVoice, &params);
     }
 }
@@ -1155,12 +1154,12 @@ void SfxVoice_Setup(int voice, SfxParams *params)
     v->playing = 0;
     v->age = 0;
     v->elapsed = 0;
-    v->volL = params->volL;
-    v->volR = params->volR;
+    v->volL = params->vol[0];
+    v->volR = params->vol[1];
     v->pitch = params->pitch;
     v->addr = params->addr;
-    v->adsr1 = params->adsr1;
-    v->adsr2 = params->adsr2;
+    v->adsr1 = params->adsr;
+    v->adsr2 = params->adsr >> 16;
     v->duration = params->duration * g_SoundDriver.tickScale;
     v->reverb = params->flags & 1;
     g_SoundDriver.reverbDirty = 1;

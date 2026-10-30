@@ -1788,8 +1788,7 @@ struct SeqRegion {
     uchar high;
     uchar bendDown; /* pitch bend range */
     uchar bendUp;
-    ushort adsr1;
-    ushort adsr2;
+    uint adsr; /* ADSR registers 1 (low half) and 2 (high half) */
 };
 
 /* An instrument: count regions, each note played on all that cover it. */
@@ -1800,10 +1799,17 @@ struct SeqProgram {
     uchar regions[1]; /* count of them, SeqBank.regions indices */
 };
 
+/* An instrument file ("INST"), relocated by Inst_Relocate. */
 struct SeqBank {
-    uchar unk00[0x1c];
+    int magic;
+    int base; /* the address its pointers are relative to */
+    uchar unk08[4];
+    int spu; /* the SPU address its regions' addr are relative to */
+    int spuSize; /* bytes of sample data */
+    void *unk14;
+    uint regionCount;
     struct SeqRegion *regions;
-    uchar unk20[4];
+    uint programCount;
     struct SeqProgram **programs;
 };
 typedef struct SeqPlayer SeqPlayer, *PSeqPlayer;
@@ -1869,10 +1875,54 @@ struct SeqChannel {
 
 typedef struct SfxLoop SfxLoop, *PSfxLoop;
 
+/* A looping sound effect (SfxLoop_Update), started on its first update. */
 struct SfxLoop {
-    void *sample;
-    uchar voice;
+    struct SeqRegion *sample;
+    signed char voice; /* the SfxVoice handle, -1 = none */
     uchar pad05[3];
+};
+
+/* An RPM range of an engine sound file ("ENGN", 0x10 bytes): a sample and the RPMs it plays. */
+typedef struct EngnRange EngnRange, *PEngnRange;
+
+struct EngnRange {
+    short rpm; /* the RPM the sample plays at pitch */
+    short lo; /* the RPMs it plays alone */
+    short hi;
+    short vol;
+    int pitch;
+    uint addr; /* SPU address */
+};
+
+/* One of an engine sound's two voices, which cross-fade between ranges (0xc bytes). */
+typedef struct EngineVoice EngineVoice, *PEngineVoice;
+
+struct EngineVoice {
+    signed char voice; /* the SfxVoice handle, -1 = none */
+    signed char range; /* -1 = none */
+    signed char prevRange;
+    uchar pad03;
+    union {
+        short vol[2]; /* left, right */
+        int volPair; /* both, copied as one word */
+    };
+    ushort pitch;
+    ushort addr; /* SPU address / 8 */
+};
+
+/* A car's engine sound (0x28 bytes), playing one set of an ENGN file. */
+typedef struct EngineSound EngineSound, *PEngineSound;
+
+struct EngineSound {
+    struct EngnRange *ranges;
+    uchar count;
+    uchar priority;
+    short unk06;
+    ushort rpm;
+    short pitchScale; /* 0x1000 = 1 */
+    short volL;
+    short volR;
+    struct EngineVoice voices[2];
 };
 
 /* The sound driver's state (g_Seq, 0x2d4 bytes): the playing sequences and the 25 channels they play on. */
@@ -1892,12 +1942,13 @@ struct SeqState {
 typedef struct SfxParams SfxParams, *PSfxParams;
 
 struct SfxParams {
-    ushort volL;
-    ushort volR;
+    union {
+        short vol[2]; /* left, right */
+        int volPair; /* both, copied as one word */
+    };
     ushort pitch;
     ushort addr; /* SPU start address / 8 */
-    ushort adsr1;
-    ushort adsr2;
+    uint adsr; /* ADSR registers 1 (low half) and 2 (high half) */
     ushort duration; /* in 1/256 ticks; 0 = until the envelope ends */
     uchar priority;
     char flags; /* bit 0: reverb */
