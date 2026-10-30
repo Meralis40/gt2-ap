@@ -1,7 +1,4 @@
-// Resident code 80069ff8-8006a3fc (savefile). Ghidra's decompilation; the functions
-// that don't match yet are the original assembly.
-#define INCLUDE_ASM_USE_MACRO_INC 1
-#include "include_asm.h"
+// Resident code 80069ff8-8006a3fc (savefile): the game save on the memory card.
 #include "resident.h"
 
 extern "C" {
@@ -12,15 +9,22 @@ int McCard_StartTransfer(unsigned char cmd, int port, char *name, void *buf, int
 void Options_ApplyNeGconCalib(GameState *state);
 int SaveFile_GetDataSize(void);
 void *memcpy(void *__dest, void *__src, size_t __n);
+void bcopy(const void *src, void *dst, size_t n);
+void McHeader_Init(McFileHeader *h);
+void McHeader_SetTitle(McFileHeader *h, char *title);
 extern char D_80091C94[];
+extern char D_80091CA8[];
+extern char D_80091CC4[];
+extern char D_80091CE4[];
 extern GameState g_GameState;
+extern NeGconCalib g_NeGconCalib[2];
 
 int SaveFile_GetDataSize(void)
 {
     return 0x7ea0;
 }
 
-int SaveFile_GetBlockCount(void)
+int SaveFile_GetBlockCount(GameSaveFile *file)
 {
     int iVar1;
     unsigned int uVar2;
@@ -33,7 +37,18 @@ int SaveFile_GetBlockCount(void)
     return (int)uVar2 >> 0xd;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/savefile", SaveFile_InitHeader);
+// The card header: the icon and title, and the blocks the save takes.
+void SaveFile_InitHeader(GameSaveFile *file)
+{
+    McHeader_Init(&file->header);
+    file->header.blockCount = SaveFile_GetBlockCount(file);
+    file->header.iconType = 0x13;
+    McHeader_SetTitle(&file->header, D_80091CA8);
+    memcpy(file->header.clut, D_80091CC4, sizeof(file->header.clut));
+    memcpy(file->header.icon[0], D_80091CE4, 0x80);
+    memcpy(file->header.icon[1], D_80091CE4 + 0x80, 0x80);
+    memcpy(file->header.icon[2], D_80091CE4 + 0x100, 0x80);
+}
 
 void *SaveFile_Find(GameSaveFile *file, int port)
 {
@@ -82,7 +97,15 @@ int SaveFile_StartRead(GameSaveFile *file, int port, GameSaveFile *dst)
     return iVar1;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/savefile", GameState_WriteSave);
+// The save image: the header, the game state, and a CRC of both.
+void GameState_WriteSave(GameSaveFile *header, GameSaveFile *file)
+{
+    GameState *state = &g_GameState;
+
+    memcpy(file, header, sizeof(file->header));
+    memcpy(file->state, state, sizeof(file->state));
+    file->crc = Crc32((unsigned char *)file, 0x7e9c);
+}
 
 void GameState_ReadSave(unsigned int param_1, int param_2)
 {
@@ -90,7 +113,13 @@ void GameState_ReadSave(unsigned int param_1, int param_2)
     Options_ApplyNeGconCalib(&g_GameState);
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/savefile", SaveFile_CopyGarageToPlayer2);
+// The save's garage into garages[1], which the save doesn't hold.
+void SaveFile_CopyGarageToPlayer2(GameSaveFile *self, GameSaveFile *file)
+{
+    GameState *state = &g_GameState;
+
+    bcopy(&((GameState *)file->state)->garages[0], &state->garages[1], sizeof(Garage));
+}
 
 void *SaveFile_GetGarages(GameSaveFile *self, GameSaveFile *file)
 {
@@ -132,5 +161,9 @@ bool SaveFile_CheckCrc(GameSaveFile *file, GameSaveFile *data)
     return uVar2 == uVar1;
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/savefile", Options_ApplyNeGconCalib);
+void Options_ApplyNeGconCalib(GameState *state)
+{
+    g_NeGconCalib[0] = state->ports[0].negconCalib;
+    g_NeGconCalib[1] = state->ports[1].negconCalib;
+}
 }

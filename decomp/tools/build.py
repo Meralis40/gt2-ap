@@ -50,7 +50,8 @@ MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
 # GameDataTable_SearchId, CarWork_GetPartIdx and Records_GetSectorTime jump past the load delay nop before a
 # label, as only GNU as places it (garage2.cpp, the rest of garage.cpp, needs it too), and Gpu_SetDisplayStart has its GPU
 # store in the return's delay slot, which GCC leaves empty for a volatile store, and
-# ReplayEntry_GetInfo has a store in a j's delay slot that GCC leaves empty (replaydir.cpp).
+# ReplayEntry_GetInfo has a store in a j's delay slot that GCC leaves empty (replaydir.cpp),
+# as Options_ApplyNeGconCalib has in its return's (savefile.cpp).
 # GCC 2.8.1 writes divisions as assembler macros, which GNU as
 # expands with divide-by-zero checks the game doesn't have, so they are written
 # out as div $0 and mflo (mfhi for rem), as GCC 2.95 does. ASPSX would put a nop
@@ -60,7 +61,8 @@ GAS_CXX = {"src/sim/exe/screenviewloop.cpp", "src/sim/exe/format.cpp", "src/sim/
            "src/sim/exe/carinfo.cpp", "src/sim/exe/carmodel.cpp", "src/sim/exe/cdaudio.cpp",
            "src/sim/exe/cdstream.cpp", "src/sim/exe/gamedata.cpp", "src/sim/exe/garage.cpp",
            "src/sim/exe/garage2.cpp", "src/sim/exe/padbuttons.cpp",
-           "src/sim/exe/powergraph.cpp", "src/sim/exe/records.cpp", "src/sim/exe/replaydir.cpp"}
+           "src/sim/exe/powergraph.cpp", "src/sim/exe/records.cpp", "src/sim/exe/replaydir.cpp",
+           "src/sim/exe/savefile.cpp"}
 DIV = re.compile(rb"(?m)^\t(div|divu|rem|remu)\t(\$\w+),(\$\w+),(\$\w+)$")
 
 
