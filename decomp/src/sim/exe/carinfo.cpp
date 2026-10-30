@@ -17,13 +17,6 @@ int strcmp(const char *a, const char *b);
 extern CarInfoA *g_CurrentCarInfoA;
 extern GameState g_GameState;
 
-// A car asset group: the cars from firstCarIndex up to the next group's use value.
-struct CarAsset {
-    unsigned int value;
-    unsigned short firstCarIndex;
-    unsigned short pad;
-};
-
 struct CourseEntry {
     char *name;
     unsigned int hash;
@@ -65,11 +58,11 @@ unsigned int FUN_8006098c(unsigned int index)
     int i;
 
     for (i = 0; i < 0x460; i++) {
-        if (g_CarAssets[i].firstCarIndex <= index && index < g_CarAssets[i + 1].firstCarIndex) {
-            return g_CarAssets[i].value;
+        if (g_CarAssets[i].file <= index && index < g_CarAssets[i + 1].file) {
+            return g_CarAssets[i].carCode;
         }
     }
-    return g_CarAssets[0].value;
+    return g_CarAssets[0].carCode;
 }
 
 void LoadCarInfoA(CarInfoA *buffer)
