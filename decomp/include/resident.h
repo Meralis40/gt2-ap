@@ -2042,6 +2042,14 @@ struct VECTOR {
 
 enum {  };
 typedef unsigned int VolBootId;
+typedef struct CarAsset CarAsset;
+
+struct CarAsset { /* g_CarAssets, sorted by carCode: a car's files start at file, up to the next entry's */
+    uint carCode; /* CarCode_Encode */
+    ushort file;
+    ushort pad;
+};
+
 typedef struct VolHeader VolHeader, *PVolHeader;
 
 struct VolHeader { /* First 0xc000 bytes of GT2.VOL, copied to g_VolHeader at boot */
