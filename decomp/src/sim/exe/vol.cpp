@@ -117,7 +117,7 @@ void Vol_ReadFileAsync(int file, void *dst)
 // The game computes g_CarAssets' address first, before lo and the count, and adds
 // it after the index. With the array's address in a local, GCC adds it first; with
 // g_CarAssets indexed directly, the loop optimizer moves its address after the count's
-// load. A goto loop keeps the address first but changes the registers; a do-while
+// load. A goto loop keeps the address first but changes the registers; a do-while,
 // an inline search function and carinfo.cpp's binary-search form gave the same
 // code as the for loop.
 CarAsset *CarAsset_Find(unsigned int carCode)
