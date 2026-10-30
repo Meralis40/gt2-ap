@@ -35,7 +35,9 @@ BUILD = "build/sim"
 TOOLCHAIN = os.path.join(ROOT, "tools", "toolchain")
 CPP_FLAGS = ["-nostdinc", "-undef", "-D__GNUC__=2", "-D__GNUC_MINOR__=8", "-Dmips", "-D__mips__",
              "-DMIPSEL", "-Iinclude"]
-CC1PLUS_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fvtable-thunks", "-fno-exceptions"]
+# -fno-builtin: the game calls memcpy for constant sizes (ReplayDir_Init), where GCC's
+# builtin copies inline; nothing else changes with it.
+CC1PLUS_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fvtable-thunks", "-fno-exceptions", "-fno-builtin"]
 # C sources (the game's libc, syslib): GCC 2.95.2 with signed char and type based
 # alias analysis (Heap_SplitBlock needs it), assembled by
 # GNU as instead of ASPSX (it puts a load delay nop before a label, where ASPSX
@@ -47,7 +49,8 @@ MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
 # Credits_FormatCommas, CardMenu_SetState, CarInfoA_FindIndex, CdAudio_ExecScript,
 # GameDataTable_SearchId, CarWork_GetPartIdx and Records_GetSectorTime jump past the load delay nop before a
 # label, as only GNU as places it (garage2.cpp, the rest of garage.cpp, needs it too), and Gpu_SetDisplayStart has its GPU
-# store in the return's delay slot, which GCC leaves empty for a volatile store.
+# store in the return's delay slot, which GCC leaves empty for a volatile store, and
+# ReplayEntry_GetInfo has a store in a j's delay slot that GCC leaves empty (replaydir.cpp).
 # GCC 2.8.1 writes divisions as assembler macros, which GNU as
 # expands with divide-by-zero checks the game doesn't have, so they are written
 # out as div $0 and mflo (mfhi for rem), as GCC 2.95 does. ASPSX would put a nop
@@ -57,7 +60,7 @@ GAS_CXX = {"src/sim/exe/screenviewloop.cpp", "src/sim/exe/format.cpp", "src/sim/
            "src/sim/exe/carinfo.cpp", "src/sim/exe/carmodel.cpp", "src/sim/exe/cdaudio.cpp",
            "src/sim/exe/cdstream.cpp", "src/sim/exe/gamedata.cpp", "src/sim/exe/garage.cpp",
            "src/sim/exe/garage2.cpp", "src/sim/exe/padbuttons.cpp",
-           "src/sim/exe/powergraph.cpp", "src/sim/exe/records.cpp"}
+           "src/sim/exe/powergraph.cpp", "src/sim/exe/records.cpp", "src/sim/exe/replaydir.cpp"}
 DIV = re.compile(rb"(?m)^\t(div|divu|rem|remu)\t(\$\w+),(\$\w+),(\$\w+)$")
 
 
