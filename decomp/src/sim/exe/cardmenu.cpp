@@ -113,8 +113,8 @@ void TextEntry_Close(TextEntry *entry);
 int ReplayDir_AddEntry(ReplayDir *dir, int at, ReplayDirEntry *entry, void *data, int size, short *sectors);
 int Text_MeasureString(TextCtx *ctx, char *s, int a2);
 int sprintf(char *buf, char *fmt, ...);
-int SectorMap_CountUsed(short *map);
-int SectorMap_CountFree(short *map);
+int SectorMap_CountUsed(SectorMap *map);
+int SectorMap_CountFree(SectorMap *map);
 int ReplayDir_CheckFits(ReplayDir *dir, int at, int size);
 void ReplayDir_DeleteEntry(ReplayDir *dir, int entry);
 void ReplayDir_DrawUsageBar(short *usage, uint *ot, int x, int y, int alpha, int need, int needNew);
@@ -720,7 +720,7 @@ int CardState_ReplayEntryList(int event, void *arg)
         CardMenu_CacheKanjiListHints();
         m->usedSectors = dir->totalSectors;
         usage = &m->usedSectors;
-        usage[1] = SectorMap_CountUsed(&m->dir.sectorMapCount);
+        usage[1] = SectorMap_CountUsed(&m->dir.sectorMap);
         switch ((short)m->mode) {
         case CARDMODE_SAVE_REPLAY: {
             int fits;
@@ -920,7 +920,7 @@ int CardState_ReplayEntryList(int event, void *arg)
             d = &m->dir;
             sprintf(buf, TEXT(TotalNReplay), (signed char)d->count);
             Text_DrawString(p, buf, 0x148 - Text_MeasureString(p, buf, 1), 0x1a4, 1);
-            sprintf(buf, TEXT(NNSectorFree), SectorMap_CountFree(&m->dir.sectorMapCount), d->totalSectors);
+            sprintf(buf, TEXT(NNSectorFree), SectorMap_CountFree(&m->dir.sectorMap), d->totalSectors);
             w = Text_MeasureString(p, buf, 1);
             Text_DrawString(p, buf, 0x148 - w, 0x1b4, 1);
             sprintf(buf, TEXT(NeedNSector), (uint)(m->replaySize + 0x7f) >> 7);
@@ -944,7 +944,7 @@ int CardState_ReplayEntryList(int event, void *arg)
             d = &m->dir;
             sprintf(buf, TEXT(TotalNReplay), (signed char)d->count);
             Text_DrawString(p, buf, 0x148 - Text_MeasureString(p, buf, 1), 0x1a4, 1);
-            sprintf(buf, TEXT(NNSectorFree), SectorMap_CountFree(&m->dir.sectorMapCount), d->totalSectors);
+            sprintf(buf, TEXT(NNSectorFree), SectorMap_CountFree(&m->dir.sectorMap), d->totalSectors);
             Text_DrawString(p, buf, 0x148 - Text_MeasureString(p, buf, 1), 0x1b4, 1);
             break;
         }

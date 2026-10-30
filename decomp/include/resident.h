@@ -184,6 +184,8 @@ typedef unsigned int PadButton;
 typedef struct WipeBar WipeBar, *PWipeBar;
 typedef struct TextEntry TextEntry, *PTextEntry;
 typedef struct CardProgressBar CardProgressBar, *PCardProgressBar;
+typedef struct SectorMap SectorMap;
+typedef struct SectorChain SectorChain;
 typedef struct ReplayDir ReplayDir, *PReplayDir;
 typedef struct ReplayDirEntry ReplayDirEntry, *PReplayDirEntry;
 typedef struct GameSaveFile GameSaveFile, *PGameSaveFile;
@@ -199,7 +201,7 @@ typedef struct PadState PadState, *PPadState;
 struct ReplayDirEntry {
     char title[32];
     char info[31];
-    uchar infoTruncated;
+    signed char infoTruncated;
     uchar unk40;
     uchar raceMode;
     uchar kind;
@@ -222,13 +224,25 @@ struct McFileHeader {
     uchar icon[3][128];
 };
 
+// The replay file's sectors: each one's next sector in its chain (-1 ends a chain,
+// SECTOR_FREE marks a free sector).
+struct SectorMap {
+    short count;
+    short next[960];
+};
+
+// A replay's sectors, in order.
+struct SectorChain {
+    short count;
+    short sectors[960];
+};
+
 struct ReplayDir {
     struct McFileHeader header;
-    char count;
+    signed char count;
     uchar pad201;
     short totalSectors;
-    short sectorMapCount;
-    short sectorMap[960];
+    struct SectorMap sectorMap;
     uchar pad986[2];
     struct ReplayDirEntry entries[32];
     uint crc;
