@@ -1,7 +1,4 @@
-// Resident code 800686a0-80068734 (soundvsync). Ghidra's decompilation; the functions
-// that don't match yet are the original assembly.
-#define INCLUDE_ASM_USE_MACRO_INC 1
-#include "include_asm.h"
+// Resident code 800686a0-80068734 (soundvsync): the sound driver's vsync callback.
 #include "resident.h"
 
 extern "C" {
@@ -9,6 +6,7 @@ void Seq_Tick(...);
 void Sound_Tick(...);
 void Sound_VSyncTick(void);
 void VSyncList_Add(VSyncCallback **list, VSyncCallback *node);
+void VSyncList_Remove(VSyncCallback **list, VSyncCallback *node);
 extern GfxIrqState g_GfxIrq;
 extern VSyncCallback g_SoundVSync;
 
@@ -25,5 +23,11 @@ void Sound_InstallVSync(void)
     VSyncList_Add(&g_GfxIrq.vsyncCallbacks, &g_SoundVSync);
 }
 
-INCLUDE_ASM("asm/sim/exe/nonmatchings/soundvsync", FUN_80068708);
+// Removes the callback Sound_InstallVSync added.
+void FUN_80068708(void)
+{
+    VSyncCallback *cb = &g_SoundVSync;
+
+    VSyncList_Remove(&g_GfxIrq.vsyncCallbacks, cb);
+}
 }
