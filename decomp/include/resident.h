@@ -1770,6 +1770,42 @@ struct ScreenViewLoop_vtbl {
 };
 
 typedef struct SeqChannel SeqChannel, *PSeqChannel;
+typedef struct SeqRegion SeqRegion, *PSeqRegion;
+typedef struct SeqProgram SeqProgram, *PSeqProgram;
+typedef struct SeqBank SeqBank, *PSeqBank;
+
+/* A sample and the notes it plays (0x14 bytes). */
+struct SeqRegion {
+    ushort addr; /* SPU address / 8 */
+    short vol;
+    ushort root; /* the note the sample plays at its pitch, in 1/256 semitones */
+    ushort duration;
+    uchar priority;
+    uchar pan; /* 0x40 = centre */
+    uchar flags;
+    uchar pad0b;
+    uchar low; /* notes played */
+    uchar high;
+    uchar bendDown; /* pitch bend range */
+    uchar bendUp;
+    ushort adsr1;
+    ushort adsr2;
+};
+
+/* An instrument: count regions, each note played on all that cover it. */
+struct SeqProgram {
+    uchar count;
+    uchar pan;
+    short vol;
+    uchar regions[1]; /* count of them, SeqBank.regions indices */
+};
+
+struct SeqBank {
+    uchar unk00[0x1c];
+    struct SeqRegion *regions;
+    uchar unk20[4];
+    struct SeqProgram **programs;
+};
 typedef struct SeqPlayer SeqPlayer, *PSeqPlayer;
 typedef struct SeqTrack SeqTrack, *PSeqTrack;
 typedef struct SeqFade SeqFade, *PSeqFade;
@@ -1785,19 +1821,17 @@ struct SeqTrack {
 
     uchar program; /* event 0x03 */
 
-    uchar loopDepth; /* loop stack depth (events 0x01/0x20-0x3f push, 0x02 pops) */
+    signed char loopDepth; /* loop stack depth (events 0x01/0x20-0x3f push, 0x02 pops), -1 = none */
 
     uchar pad13;
-    uchar unk14[4];
-    uchar *loopStart[3]; /* loop start pointers */
+    uchar *loopStart[4]; /* loop start pointers */
 
-    uchar unk24;
-    uchar loopCount[3]; /* remaining loop counts (0xff = forever) */
+    uchar loopCount[4]; /* remaining loop counts (0xff = forever) */
 
 };
 
 struct SeqFade {
-    short count;
+    ushort count;
     short step;
     short extra;
     short rate;
@@ -1813,7 +1847,7 @@ struct SeqPlayer {
     int tickAcc;
     int tickPeriod;
     int ticksThisFrame;
-    void *instBank;
+    struct SeqBank *instBank;
     struct SeqFade fade; /* volume fade (SeqFade_Step each tick); count 0 = idle */
 
     struct SeqTrack tracks[16];
@@ -1822,15 +1856,15 @@ struct SeqPlayer {
 struct SeqChannel {
     struct SeqPlayer *player;
     struct SeqTrack *track;
-    uchar *program;
-    void *sample;
+    struct SeqProgram *program;
+    struct SeqRegion *region;
     int releaseTime;
     ushort lastVol;
     short lastBend;
     uchar note;
     uchar velocity;
     uchar lastPan;
-    char spuVoice;
+    signed char spuVoice; /* -1 = none */
 };
 
 typedef struct SfxLoop SfxLoop, *PSfxLoop;
@@ -1839,6 +1873,74 @@ struct SfxLoop {
     void *sample;
     uchar voice;
     uchar pad05[3];
+};
+
+/* The sound driver's state (g_Seq, 0x2d4 bytes): the playing sequences and the 25 channels they play on. */
+typedef struct SeqState SeqState, *PSeqState;
+
+struct SeqState {
+    struct SeqPlayer *players; /* linked through next (SeqPlayer_Link) */
+    ushort tickRate; /* Seq_SetTickRate */
+    ushort masterVol;
+    uchar nextChannel; /* where the channel search starts */
+    uchar pad09[3];
+    struct SeqFade masterFade;
+    struct SeqChannel channels[25];
+};
+
+/* A sound effect's SPU settings, given to SfxVoice_Start (0x10 bytes). */
+typedef struct SfxParams SfxParams, *PSfxParams;
+
+struct SfxParams {
+    ushort volL;
+    ushort volR;
+    ushort pitch;
+    ushort addr; /* SPU start address / 8 */
+    ushort adsr1;
+    ushort adsr2;
+    ushort duration; /* in 1/256 ticks; 0 = until the envelope ends */
+    uchar priority;
+    char flags; /* bit 0: reverb */
+};
+
+/* One of the 24 SPU voices (0x28 bytes). The main code sets lock while it edits one, so
+   SfxVoices_Update (in the vsync) skips it; lock 2 means its key-on and registers wait. */
+typedef struct SfxVoice SfxVoice, *PSfxVoice;
+
+struct SfxVoice {
+    uchar state; /* 1 = started by SfxVoice_Start, owned through owner */
+    uchar playing;
+    uchar keyedOn;
+    uchar priority;
+    uchar lock;
+    uchar dirty; /* registers to write: 1 pitch, 2 volume, 4 address and ADSR */
+    uchar keyOn;
+    uchar keyOff;
+    ushort volL;
+    ushort volR;
+    ushort pitch;
+    ushort addr;
+    ushort adsr1;
+    ushort adsr2;
+    signed char *owner; /* the caller's voice handle, set to -1 when the voice stops */
+    int age; /* ticks since key-on */
+    uint duration;
+    uint elapsed; /* sums the SPU pitch each tick, against duration */
+    uchar reverb;
+    uchar pad25[3];
+};
+
+/* g_SoundDriver (0x3c8 bytes). */
+typedef struct SoundDriver SoundDriver, *PSoundDriver;
+
+struct SoundDriver {
+    signed char nextVoice; /* where the voice search starts */
+    uchar reverbOn;
+    uchar reverbDirty; /* the voices' reverb bits need writing */
+    uchar pad03;
+    ushort tickRate; /* Sound_SetTickRate */
+    ushort tickScale; /* tickRate * 256 / 60 */
+    struct SfxVoice voices[24];
 };
 
 typedef uint size_t;
