@@ -1578,7 +1578,7 @@ struct ViewDrawContext {
 
     ushort otHalf; /* 0 or otSize/2 */
 
-    int field_18;
+    uint drawMode; /* texture page bits of the E1 draw-mode packet ViewDrawContext_End appends */
     void *tailPackets; /* terminator packets EndDraw appends (draw mode, cache flush), allocated from g_PacketPtr */
 
 };
