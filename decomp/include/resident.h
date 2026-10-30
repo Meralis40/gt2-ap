@@ -72,8 +72,8 @@ struct TextItem {
     short zoomWidth;
     short closeSteps;
     short fadeSteps;
-    char spacing;
-    char height;
+    signed char spacing;
+    signed char height;
     ushort flags;
     ushort pad0e;
     struct Font *font;
