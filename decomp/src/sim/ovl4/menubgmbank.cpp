@@ -1,6 +1,4 @@
 // OVL4 800226a0-80022964 (menubgmbank): Menu music bank.
-// Ghidra's decompilation; the functions that don't match yet are the original
-// assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
 #include "ovl4.h"
@@ -20,15 +18,34 @@ void MenuBgmBank_Play(MenuBgmBank *bank, int seq);
 extern unsigned char DAT_OVL4__80050000;
 extern int g_MenuBgm_Loaded;
 extern VolBootId g_MenuBgm_Files;
+extern GameState g_GameState;
+void *memset(void *dst, int c, unsigned int n);
+void SpuBank_Init(void *bank, void *ram, int size);
+int SpuBank_Load(void *bank, int id, int isEngine, int negId);
+void Seq_SetMasterVolume(unsigned short volume);
+void SeqPlayer_Setup(SeqPlayer *p, void *song, void *bank);
+void SeqPlayer_Start(SeqPlayer *p);
+void MenuBgmBank_Stop(MenuBgmBank *bank);
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/menubgmbank", MenuBgmBank_Init);
+// Clears the bank and sets up its sample bank in work (size bytes).
+void MenuBgmBank_Init(MenuBgmBank *bank, void *work, int size)
+{
+    memset(bank, 0, sizeof(MenuBgmBank));
+    SpuBank_Init(bank, work, size);
+}
 
 void FUN_OVL4__800226f4(MenuBgmBank *param_1)
 {
     MenuBgmBank_Stop(param_1);
 }
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/menubgmbank", MenuBgmBank_Load);
+// Loads the sample bank volId; the sequence goes after it in the buffer.
+void MenuBgmBank_Load(MenuBgmBank *bank, int volId)
+{
+    int size = SpuBank_Load(bank, volId, 0, 1);
+
+    bank->seqData = (char *)bank->buffer + ((size + 3) & ~3);
+}
 
 // Reads a sequence file into seqData and prepares it.
 void MenuBgmBank_LoadSeq(MenuBgmBank *bank, VolBootId id)
@@ -37,7 +54,15 @@ void MenuBgmBank_LoadSeq(MenuBgmBank *bank, VolBootId id)
     SeqFile_Relocate(bank->seqData);
 }
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/menubgmbank", MenuBgmBank_Play);
+// Starts song seq of the loaded sequence, at the music volume option.
+void MenuBgmBank_Play(MenuBgmBank *bank, int seq)
+{
+    MenuBgmBank_Stop(bank);
+    Seq_SetMasterVolume(g_GameState.options2[5] * 0x4000 / 0xff);
+    SeqPlayer_Setup(&bank->seq, (char *)bank->seqData + (seq * 0x48 + 0xc), bank->buffer);
+    SeqPlayer_Start(&bank->seq);
+    bank->playing = 1;
+}
 
 // Stops the sequence if playing.
 void MenuBgmBank_Stop(MenuBgmBank *bank)
