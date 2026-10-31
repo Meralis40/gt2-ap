@@ -63,7 +63,8 @@ GAS_CXX = {"src/sim/exe/screenviewloop.cpp", "src/sim/exe/format.cpp", "src/sim/
            "src/sim/exe/cdstream.cpp", "src/sim/exe/gamedata.cpp", "src/sim/exe/garage.cpp",
            "src/sim/exe/garage2.cpp", "src/sim/exe/padbuttons.cpp",
            "src/sim/exe/powergraph.cpp", "src/sim/exe/records.cpp", "src/sim/exe/replaydir.cpp",
-           "src/sim/exe/savefile.cpp", "src/sim/exe/seq.cpp", "src/sim/exe/sfx.cpp"}
+           "src/sim/exe/savefile.cpp", "src/sim/exe/seq.cpp", "src/sim/exe/sfx.cpp",
+           "src/sim/ovl4/battletable.cpp"}
 # C++ sources compiled with -mhard-float: the sound driver (seq.cpp) was built on its
 # own. GCC then counts the FPU registers as free, which raises its threshold for moving
 # constants out of loops: SfxVoices_Update loads 2, 1 and -1 into registers before its
