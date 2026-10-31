@@ -310,7 +310,7 @@ struct CarPreview {
     void *texBuf;
     void *wheelBuf;
     uchar model2c[312];
-    uchar colorDirty;
+    signed char colorDirty;
     uchar pad165;
     uchar carParams[448];
     ushort perf[55];
@@ -909,7 +909,7 @@ struct MapCursor { /* GT mode map cursor (tentative); init FUN_OVL4__8001e22c */
 };
 
 struct GTMenuView { /* GT mode menu pages and widgets (tentative); init FUN_OVL4__8001d118. Sub-objects at +0x28 (FUN_OVL4__8001aaf4) and +0x478 (FUN_OVL4__8001d090) */
-    uchar loaded; /* set by MenuPage_Enter */
+    signed char loaded; /* set by MenuPage_Enter */
     undefined field1_0x1;
     undefined field2_0x2;
     undefined field3_0x3;
