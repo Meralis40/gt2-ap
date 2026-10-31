@@ -410,7 +410,7 @@ struct OpponentPool { /* Car indices (GT race data car table) the AI opponents a
 typedef struct ShopTxn ShopTxn, *PShopTxn;
 
 struct ShopTxn { /* Pending shop transaction (g_ShopTxn). type: 0 none, 1 buy car, 2 bought car (make current), 3 buy part, 4 install owned part, 5 wheels, 6 sell car, 7 select car. */
-    ushort type;
+    short type;
     ushort pad02;
     int sellSlot;
     int selectSlot;
