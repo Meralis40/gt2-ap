@@ -1,36 +1,78 @@
 // OVL4 80021a40-80021c38 (gtracedata): Race data events and wheels.
-// Ghidra's decompilation; the functions that don't match yet are the original
-// assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
 #include "ovl4.h"
 
+// An entry of game-data table 0x1d (the wheels).
+struct WheelEntry {
+    unsigned int code;              // 0x0, 0 for the car's own wheels
+    unsigned short unk4;
+    unsigned char altVariant;       // 0x6, for a racing modified car's own wheels
+    unsigned char variant;          // 0x7
+};
+
 extern "C" {
 void *GameData_GetEntryIn(void *data, int table, int index);
-extern void *g_GtModeRaceData;
+char *GameData_GetTableString(void *data, int table, unsigned int index);
 int GameData_BinarySearch(void *data, int table, unsigned int carCode);
-extern unsigned int g_GtModeData;
+extern void *g_GtModeRaceData;
+extern void *g_GtModeData;
 
 // Entry index of table 0 of g_GtModeRaceData.
 unsigned short *GtRaceData_GetEvent(int index)
 {
-    unsigned short *puVar1;
-
-    puVar1 = GameData_GetEntryIn(g_GtModeRaceData, 0, index);
-    return puVar1;
+    return (unsigned short *)GameData_GetEntryIn(g_GtModeRaceData, 0, index);
 }
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/gtracedata", GtRaceData_FindEvent);
+// The event of the race data whose code is eventCode, or 0.
+unsigned short *GtRaceData_FindEvent(char *eventCode)
+{
+    void *data = g_GtModeRaceData;
+    int count = *(unsigned short *)((char *)data + 0xe);
+    int i;
+    unsigned short *event;
 
+    for (i = 0; i < count; i++) {
+        event = GtRaceData_GetEvent(i);
+        if (strcmp(eventCode, GameData_GetTableString(data, 0, *event)) == 0)
+            return event;
+    }
+    return 0;
+}
+
+// The index of the wheel wheelCode in table 0x1d.
 int Wheel_FindIndex(int wheelCode)
 {
-    int iVar1;
-
-    iVar1 = GameData_BinarySearch(g_GtModeData, 0x1d, wheelCode);
-    return iVar1;
+    return GameData_BinarySearch(g_GtModeData, 0x1d, wheelCode);
 }
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/gtracedata", CarSetup_SetWheels);
+// Fits the wheels of table 0x1d's entry wheelIndex; the car's own wheels
+// (code 0) take their other variant on a racing modified car.
+void CarSetup_SetWheels(CarSetup *setup, int wheelIndex)
+{
+    void *data = g_GtModeData;
+    WheelEntry *wheel = (WheelEntry *)GameData_GetEntryIn(data, 0x1d, wheelIndex);
+    unsigned int code = wheel->code;
+    unsigned int variant = wheel->variant;
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/gtracedata", Wheel_GetVariant);
+    if (code == 0) {
+        unsigned char *rm = (unsigned char *)GameData_GetEntryIn(data, 5, (unsigned short)setup->idx_t05);
+
+        if (rm[0xe] != 0)
+            variant = wheel->altVariant;
+    }
+    setup->wheel = code | (variant & 0x1f) << 8;
+    setup->idx_t1d = wheelIndex;
+}
+
+// The variant of the wheel wheelCode, or its other one if altVariant.
+unsigned char Wheel_GetVariant(int wheelCode, int altVariant)
+{
+    WheelEntry *wheel = (WheelEntry *)GameData_GetEntryIn(g_GtModeData, 0x1d, Wheel_FindIndex(wheelCode));
+    unsigned char variant = wheel->variant;
+
+    if (altVariant != 0)
+        variant = wheel->altVariant;
+    return variant;
+}
 }
