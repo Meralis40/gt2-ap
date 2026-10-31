@@ -1,5 +1,6 @@
-// The GT mode screen loops of OVL4 (gtmenu.cpp): GTMenu, the menu itself, and
-// GTLoadingMenu, the dark screen shown after it. Both derive from the resident
+// The GT mode screen loops of OVL4: GTMenu, the menu itself, and GTLoadingMenu,
+// the dark screen shown after it (gtmenu.cpp), and GTBattleMenu, which picks the
+// battle opponents (gtbattlemenu.cpp). They derive from the resident
 // psxViewLoopDoubleBuffer (viewloop.h); the virtual functions are declared in
 // their vtable order. Include viewloop.h before ovl4.h, so that ovl4.h leaves
 // out its C versions of the screen loop types.
@@ -68,6 +69,21 @@ public:
 
     GTLoadingMenu();
     virtual ~GTLoadingMenu();
+    virtual void Enter();
+    virtual int Update();
+    virtual void Draw();
+};
+
+// Picks the battle opponents (0x84 bytes): not interactive, a progress bar while
+// every GT race data car is evaluated (one per frame), then the pool is picked.
+class GTBattleMenu : public psxViewLoopDoubleBuffer {
+public:
+    short state;                // 0 evaluating the cars, 1 sorting, 2 picking the pool
+    unsigned char pad72[2];
+    DrawLayer layer;
+
+    GTBattleMenu();
+    virtual ~GTBattleMenu();
     virtual void Enter();
     virtual int Update();
     virtual void Draw();

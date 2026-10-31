@@ -172,6 +172,11 @@ CXX_NAMES = {"exe": {
     "GTLoadingMenu__Enter": "Enter__13GTLoadingMenu", "GTLoadingMenu__Update": "Update__13GTLoadingMenu",
     "GTLoadingMenu__Draw": "Draw__13GTLoadingMenu", "GTLoadingMenu____tf": "__tf13GTLoadingMenu",
     "GTLoadingMenu__vtable": "__vt_13GTLoadingMenu", "__ti13GTLoadingMenu": "0x801C3050",
+    # GTBattleMenu (gtbattlemenu.cpp)
+    "GTBattleMenu__GTBattleMenu": "__12GTBattleMenu", "GTBattleMenu__GTBattleMenu_dtor": "_._12GTBattleMenu",
+    "GTBattleMenu__Enter": "Enter__12GTBattleMenu", "GTBattleMenu__Update": "Update__12GTBattleMenu",
+    "GTBattleMenu__Draw": "Draw__12GTBattleMenu", "GTBattleMenu____tf": "__tf12GTBattleMenu",
+    "GTBattleMenu__vtable": "__vt_12GTBattleMenu", "__ti12GTBattleMenu": "0x801C3070",
 }}
 
 
