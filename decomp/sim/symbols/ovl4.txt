@@ -344,6 +344,7 @@ g_GarageCar_Mark = 0x80050BB0;
 g_LicensePrizeEventFmt = 0x80050C1C;
 g_LicensePrefixes = 0x80050C34;
 g_RandomCourseNames = 0x80050C4C;
+g_LicenseRaceCodes = 0x80050D04;
 g_EventCodes = 0x80050D1C;
 g_PartNameStrIds = 0x800510FC;
 g_EventCount = 0x80051160;
