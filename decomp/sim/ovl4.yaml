@@ -45,11 +45,37 @@ segments:
       - [0x1160, cpp, racestart_clear] # src/sim/ovl4/racestart_clear.cpp, shared with OVL3
       - [0x1184, cpp, racestart_loadparts] # src/sim/ovl4/racestart_loadparts.cpp, shared with OVL3
       - [0x29b8, cpp, racestart_setstages] # src/sim/ovl4/racestart_setstages.cpp, shared with OVL3
-      - [0x2c6c, asm]
+      - [0x2c6c, asm, gtmode]  # 0x80012c6c
+      - [0x3a28, cpp, timload]  # 0x80013a28
+      - [0x3bd4, cpp, gtmenu]  # 0x80013bd4
+      - [0x4380, asm, simmap]  # 0x80014380
+      - [0x4e60, cpp, gtloadingmenu]  # 0x80014e60
+      - [0x508c, cpp, gtbattlemenu]  # 0x8001508c
       - [0x5404, cpp, ../ovl3/carwork] # src/sim/ovl3/carwork.cpp, shared with OVL3
       - [0x5428, cpp, ../ovl3/loadparts] # src/sim/ovl3/loadparts.cpp, shared with OVL3
       - [0x6c5c, cpp, ../ovl3/setstages] # src/sim/ovl3/setstages.cpp, shared with OVL3
       - [0x6f10, cpp, ../ovl3/storesetup] # src/sim/ovl3/storesetup.cpp, shared with OVL3
-      - [0x6fec, asm]
+      - [0x6fec, cpp, carwork2]  # 0x80016fec
+      - [0x7750, cpp, dealer]  # 0x80017750
+      - [0x83ec, cpp, events]  # 0x800183ec
+      - [0x8f6c, cpp, menubgm]  # 0x80018f6c
+      - [0x907c, cpp, eventrules]  # 0x8001907c
+      - [0x9c60, cpp, playerstats]  # 0x80019c60
+      - [0x9f5c, cpp, battletable]  # 0x80019f5c
+      - [0xa454, cpp, carpreview]  # 0x8001a454
+      - [0xb3ac, asm, menudraw]  # 0x8001b3ac
+      - [0xd090, cpp, menuview]  # 0x8001d090
+      - [0xda24, cpp, txn]  # 0x8001da24
+      - [0xe22c, cpp, mapcursor]  # 0x8001e22c
+      - [0xec0c, asm, garagecars]  # 0x8001ec0c
+      - [0xf210, cpp, gtfont]  # 0x8001f210
+      - [0xfcdc, asm, formatprice]  # 0x8001fcdc
+      - [0x10198, cpp, carlist]  # 0x80020198
+      - [0x10c50, cpp, menudata]  # 0x80020c50
+      - [0x11a40, cpp, gtracedata]  # 0x80021a40
+      - [0x11c38, cpp, background]  # 0x80021c38
+      - [0x122e4, asm, carcolor]  # 0x800222e4
+      - [0x124b0, cpp, usedcar]  # 0x800224b0
+      - [0x126a0, cpp, menubgmbank]  # 0x800226a0
       - [0x12964, rodata] # 0x80022964
   - [0x42a74]
