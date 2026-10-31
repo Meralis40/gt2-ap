@@ -257,11 +257,12 @@ struct CarCamera {
     int fieldB0;
     int fieldB4;
     int fieldB8;
-    uchar padBC[16];
+    short screen[4]; /* copied to the camera's first 4 shorts by CarPreview_DrawModel */
+    short frustum[4]; /* left, right, top, bottom for Camera_SetFrustum */
     short fieldCC;
-    uchar padCE[2];
-    uchar fieldD0;
-    uchar fieldD1;
+    short fieldCE;
+    signed char fieldD0;
+    signed char fieldD1;
     uchar padD2[2];
     uint ambient;
 };
@@ -297,13 +298,13 @@ struct CarPreview {
     int logoFile;
     int carId;
     uchar vramPage;
-    char colorIdx;
+    signed char colorIdx;
     uchar pad12[2];
     int dirt;
     short logoW;
     short logoH;
-    uchar loaded;
-    uchar isCurrentCar;
+    signed char loaded;
+    signed char isCurrentCar;
     uchar pad1e[2];
     void *modelBuf;
     void *texBuf;

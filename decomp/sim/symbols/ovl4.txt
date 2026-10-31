@@ -348,6 +348,7 @@ g_PartNameStrIds = 0x800510FC;
 g_EventCount = 0x80051160;
 g_License_EntryMsgPages = 0x80051164;
 g_GhostEventFiles = 0x8005117C;
+g_CarPreview_NoText = 0x8005125C;
 g_DrivetrainNames = 0x80051260;
 g_MapCursor_DirVectors = 0x80051274;
 g_GTNumFont_Glyphs = 0x8005129C;
