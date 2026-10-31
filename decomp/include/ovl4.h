@@ -820,6 +820,9 @@ struct PadState { /* Button events since the previous PadButtons_Read. */
     PadButton repeat;
 };
 
+// The resident screen loops, as C structs. A file that includes viewloop.h first
+// gets its classes instead.
+#ifndef VIEWLOOP_H
 struct ViewDrawContext {
     struct DrawLayer *layers; /* sorted DrawLayer list */
     void *otBase; /* both OT halves */
@@ -880,6 +883,7 @@ struct psxViewLoopDoubleBuffer {
     struct psxViewLoop base;
     short bufferY[2]; /* VRAM Y of each buffer */
 };
+#endif
 
 struct MapCursor { /* GT mode map cursor (tentative); init FUN_OVL4__8001e22c */
     short drawX; /* smoothed draw position (spring towards x) */
@@ -920,7 +924,7 @@ struct GTMenuView { /* GT mode menu pages and widgets (tentative); init FUN_OVL4
     struct CarPreview preview;
     struct CarCamera camera;
     short bgmTrack; /* menu music track of the current page (MenuBgm_Request), saved in 0x801ef5fc on exit */
-    uchar carWash; /* car wash spin in progress (MenuView_StartCarWash) */
+    signed char carWash; /* car wash spin in progress (MenuView_StartCarWash) */
     undefined field17_0x553;
     short carWashTimer; /* frames left of the car wash spin (0x40) */
     undefined field19_0x556;
@@ -973,312 +977,7 @@ struct DrawLayer {
     struct LayerHeader *header; /* draw area and offset packet sent before the layer's primitives */
 };
 
-struct GTMenu { /* GT mode main menu loop (OVL4). Constructed on GTMode_Run's stack. */
-    struct psxViewLoopDoubleBuffer base;
-    uchar frameParity; /* toggles every Update; passed to the view's draw */
-    uchar quit; /* Update returns 0 (leave the loop) once non-zero */
-    short blankFrames; /* draw.otHead is cleared (the next BeginDraw sends nothing) while > 0; 2 on Enter, 4 after a page change */
-    uchar hookActive; /* hook runs in BeginFrame and Update while it returns non-zero */
-    undefined field5_0x75;
-    undefined field6_0x76;
-    undefined field7_0x77;
-    uchar (*hook)(void *, int, int);
-    pointer hookArg;
-    struct DrawLayer layers[3]; /* priorities 1, 4, 3 */
-    struct PadDevice pads[2]; /* tentative: ports 0 and 1, as in BaseMenu */
-    struct PadState padState[2];
-    undefined field13_0x198;
-    undefined field14_0x199;
-    undefined field15_0x19a;
-    undefined field16_0x19b;
-    short inputDelay; /* 8 on Enter; pads are ignored while > 0 */
-    undefined field18_0x19e;
-    undefined field19_0x19f;
-    int pendingCarBaseId; /* pending MenuView_ShowCar call, queued by GTMenu_QueueCarPreview */
-    int pendingCarId;
-    int pendingCarColor; /* colour index in the car colour list */
-    int pendingCarSlot; /* garage slot, -1 = not owned (dealer default setup) */
-    char pendingCarDelay; /* frames until the call; 0 = none */
-    uchar pendingCarHasWheel;
-    undefined field26_0x1b2;
-    undefined field27_0x1b3;
-    int pendingCarWheel;
-    int pendingCarDirt;
-    int pendingPage; /* MenuPage_Enter arguments */
-    int pendingPageArg;
-    char pendingPageDelay; /* frames until MenuPage_Enter; 0 = none */
-    undefined field33_0x1c5;
-    undefined field34_0x1c6;
-    undefined field35_0x1c7;
-    int previewWheel; /* wheel shop: wheel code to show on the preview car (CarPreview_SetWheel) */
-    char previewDelay; /* frames until CarPreview_SetWheel */
-    char previewWheelColor; /* index into DAT_80091a70 (Wheel_GetVariant) */
-    short listMode; /* 0 map cursor, 1 garage list (g_GarageList), 2 used car list (g_UsedCarList), 3 car wash: waits for view.carWash to end */
-    struct MapCursor cursor;
-    int canGoBack; /* square/triangle go to view.backPage only when bit 0 is set; cleared on shop confirmation pages */
-    undefined field42_0x1fc;
-    undefined field43_0x1fd;
-    undefined field44_0x1fe;
-    undefined field45_0x1ff;
-    undefined field46_0x200;
-    undefined field47_0x201;
-    undefined field48_0x202;
-    undefined field49_0x203;
-    undefined field50_0x204;
-    undefined field51_0x205;
-    undefined field52_0x206;
-    undefined field53_0x207;
-    undefined field54_0x208;
-    undefined field55_0x209;
-    undefined field56_0x20a;
-    undefined field57_0x20b;
-    undefined field58_0x20c;
-    undefined field59_0x20d;
-    undefined field60_0x20e;
-    undefined field61_0x20f;
-    undefined field62_0x210;
-    undefined field63_0x211;
-    undefined field64_0x212;
-    undefined field65_0x213;
-    undefined field66_0x214;
-    undefined field67_0x215;
-    undefined field68_0x216;
-    undefined field69_0x217;
-    undefined field70_0x218;
-    undefined field71_0x219;
-    undefined field72_0x21a;
-    undefined field73_0x21b;
-    undefined field74_0x21c;
-    undefined field75_0x21d;
-    undefined field76_0x21e;
-    undefined field77_0x21f;
-    undefined field78_0x220;
-    undefined field79_0x221;
-    undefined field80_0x222;
-    undefined field81_0x223;
-    undefined field82_0x224;
-    undefined field83_0x225;
-    undefined field84_0x226;
-    undefined field85_0x227;
-    undefined field86_0x228;
-    undefined field87_0x229;
-    undefined field88_0x22a;
-    undefined field89_0x22b;
-    undefined field90_0x22c;
-    undefined field91_0x22d;
-    undefined field92_0x22e;
-    undefined field93_0x22f;
-    undefined field94_0x230;
-    undefined field95_0x231;
-    undefined field96_0x232;
-    undefined field97_0x233;
-    undefined field98_0x234;
-    undefined field99_0x235;
-    undefined field100_0x236;
-    undefined field101_0x237;
-    undefined field102_0x238;
-    undefined field103_0x239;
-    undefined field104_0x23a;
-    undefined field105_0x23b;
-    undefined field106_0x23c;
-    undefined field107_0x23d;
-    undefined field108_0x23e;
-    undefined field109_0x23f;
-    undefined field110_0x240;
-    undefined field111_0x241;
-    undefined field112_0x242;
-    undefined field113_0x243;
-    undefined field114_0x244;
-    undefined field115_0x245;
-    undefined field116_0x246;
-    undefined field117_0x247;
-    undefined field118_0x248;
-    undefined field119_0x249;
-    undefined field120_0x24a;
-    undefined field121_0x24b;
-    undefined field122_0x24c;
-    undefined field123_0x24d;
-    undefined field124_0x24e;
-    undefined field125_0x24f;
-    undefined field126_0x250;
-    undefined field127_0x251;
-    undefined field128_0x252;
-    undefined field129_0x253;
-    undefined field130_0x254;
-    undefined field131_0x255;
-    undefined field132_0x256;
-    undefined field133_0x257;
-    undefined field134_0x258;
-    undefined field135_0x259;
-    undefined field136_0x25a;
-    undefined field137_0x25b;
-    undefined field138_0x25c;
-    undefined field139_0x25d;
-    undefined field140_0x25e;
-    undefined field141_0x25f;
-    undefined field142_0x260;
-    undefined field143_0x261;
-    undefined field144_0x262;
-    undefined field145_0x263;
-    undefined field146_0x264;
-    undefined field147_0x265;
-    undefined field148_0x266;
-    undefined field149_0x267;
-    undefined field150_0x268;
-    undefined field151_0x269;
-    undefined field152_0x26a;
-    undefined field153_0x26b;
-    undefined field154_0x26c;
-    undefined field155_0x26d;
-    undefined field156_0x26e;
-    undefined field157_0x26f;
-    undefined field158_0x270;
-    undefined field159_0x271;
-    undefined field160_0x272;
-    undefined field161_0x273;
-    undefined field162_0x274;
-    undefined field163_0x275;
-    undefined field164_0x276;
-    undefined field165_0x277;
-    undefined field166_0x278;
-    undefined field167_0x279;
-    undefined field168_0x27a;
-    undefined field169_0x27b;
-    undefined field170_0x27c;
-    undefined field171_0x27d;
-    undefined field172_0x27e;
-    undefined field173_0x27f;
-    undefined field174_0x280;
-    undefined field175_0x281;
-    undefined field176_0x282;
-    undefined field177_0x283;
-    undefined field178_0x284;
-    undefined field179_0x285;
-    undefined field180_0x286;
-    undefined field181_0x287;
-    undefined field182_0x288;
-    undefined field183_0x289;
-    undefined field184_0x28a;
-    undefined field185_0x28b;
-    undefined field186_0x28c;
-    undefined field187_0x28d;
-    undefined field188_0x28e;
-    undefined field189_0x28f;
-    undefined field190_0x290;
-    undefined field191_0x291;
-    undefined field192_0x292;
-    undefined field193_0x293;
-    undefined field194_0x294;
-    undefined field195_0x295;
-    undefined field196_0x296;
-    undefined field197_0x297;
-    undefined field198_0x298;
-    undefined field199_0x299;
-    undefined field200_0x29a;
-    undefined field201_0x29b;
-    undefined field202_0x29c;
-    undefined field203_0x29d;
-    undefined field204_0x29e;
-    undefined field205_0x29f;
-    undefined field206_0x2a0;
-    undefined field207_0x2a1;
-    undefined field208_0x2a2;
-    undefined field209_0x2a3;
-    undefined field210_0x2a4;
-    undefined field211_0x2a5;
-    undefined field212_0x2a6;
-    undefined field213_0x2a7;
-    undefined field214_0x2a8;
-    undefined field215_0x2a9;
-    undefined field216_0x2aa;
-    undefined field217_0x2ab;
-    undefined field218_0x2ac;
-    undefined field219_0x2ad;
-    undefined field220_0x2ae;
-    undefined field221_0x2af;
-    undefined field222_0x2b0;
-    undefined field223_0x2b1;
-    undefined field224_0x2b2;
-    undefined field225_0x2b3;
-    undefined field226_0x2b4;
-    undefined field227_0x2b5;
-    undefined field228_0x2b6;
-    undefined field229_0x2b7;
-    undefined field230_0x2b8;
-    undefined field231_0x2b9;
-    undefined field232_0x2ba;
-    undefined field233_0x2bb;
-    undefined field234_0x2bc;
-    undefined field235_0x2bd;
-    undefined field236_0x2be;
-    undefined field237_0x2bf;
-    undefined field238_0x2c0;
-    undefined field239_0x2c1;
-    undefined field240_0x2c2;
-    undefined field241_0x2c3;
-    undefined field242_0x2c4;
-    undefined field243_0x2c5;
-    undefined field244_0x2c6;
-    undefined field245_0x2c7;
-    undefined field246_0x2c8;
-    undefined field247_0x2c9;
-    undefined field248_0x2ca;
-    undefined field249_0x2cb;
-    undefined field250_0x2cc;
-    undefined field251_0x2cd;
-    undefined field252_0x2ce;
-    undefined field253_0x2cf;
-    undefined field254_0x2d0;
-    undefined field255_0x2d1;
-    undefined field256_0x2d2;
-    undefined field257_0x2d3;
-    undefined field258_0x2d4;
-    undefined field259_0x2d5;
-    undefined field260_0x2d6;
-    undefined field261_0x2d7;
-    undefined field262_0x2d8;
-    undefined field263_0x2d9;
-    undefined field264_0x2da;
-    undefined field265_0x2db;
-    undefined field266_0x2dc;
-    undefined field267_0x2dd;
-    undefined field268_0x2de;
-    undefined field269_0x2df;
-    undefined field270_0x2e0;
-    undefined field271_0x2e1;
-    undefined field272_0x2e2;
-    undefined field273_0x2e3;
-    undefined field274_0x2e4;
-    undefined field275_0x2e5;
-    undefined field276_0x2e6;
-    undefined field277_0x2e7;
-    undefined field278_0x2e8;
-    undefined field279_0x2e9;
-    undefined field280_0x2ea;
-    undefined field281_0x2eb;
-    undefined field282_0x2ec;
-    undefined field283_0x2ed;
-    undefined field284_0x2ee;
-    undefined field285_0x2ef;
-    undefined field286_0x2f0;
-    undefined field287_0x2f1;
-    undefined field288_0x2f2;
-    undefined field289_0x2f3;
-    undefined field290_0x2f4;
-    undefined field291_0x2f5;
-    undefined field292_0x2f6;
-    undefined field293_0x2f7;
-    undefined field294_0x2f8;
-    undefined field295_0x2f9;
-    undefined field296_0x2fa;
-    undefined field297_0x2fb;
-    struct GTMenuView view;
-    int beginFrameTime; /* Timer_SinceFrameStart timestamps, for profiling */
-    int updateStartTime;
-    int drawStartTime;
-    int drawEndTime;
-};
-
+// struct GTMenu is the class in gtmenu.h.
 struct psxViewLoop_vtbl {
     int offset; /* always 0 */
     void * (*tf)(void *); /* __tf type_info function */
@@ -1375,11 +1074,21 @@ struct MenuListEvent {
 
 typedef struct RECT RECT, *PRECT;
 
+#ifndef VIEWLOOP_H
 struct RECT {
     short x;
     short y;
     short w;
     short h;
+};
+#endif
+
+typedef struct MenuCarList MenuCarList, *PMenuCarList;
+
+struct MenuCarList { /* garage or used car list widget (g_GarageList, g_UsedCarList) */
+    short count;
+    short selected;
+    struct MenuElement *element;
 };
 
 #endif

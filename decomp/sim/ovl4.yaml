@@ -47,9 +47,7 @@ segments:
       - [0x29b8, cpp, racestart_setstages] # src/sim/ovl4/racestart_setstages.cpp, shared with OVL3
       - [0x2c6c, asm, gtmode]  # 0x80012c6c
       - [0x3a28, cpp, timload]  # 0x80013a28
-      - [0x3bd4, cpp, gtmenu]  # 0x80013bd4
-      - [0x4380, asm, simmap]  # 0x80014380
-      - [0x4e60, cpp, gtloadingmenu]  # 0x80014e60
+      - [0x3bd4, cpp, gtmenu]  # 0x80013bd4 classes GTMenu and GTLoadingMenu
       - [0x508c, cpp, gtbattlemenu]  # 0x8001508c
       - [0x5404, cpp, ../ovl3/carwork] # src/sim/ovl3/carwork.cpp, shared with OVL3
       - [0x5428, cpp, ../ovl3/loadparts] # src/sim/ovl3/loadparts.cpp, shared with OVL3
@@ -78,4 +76,6 @@ segments:
       - [0x124b0, cpp, usedcar]  # 0x800224b0
       - [0x126a0, cpp, menubgmbank]  # 0x800226a0
       - [0x12964, rodata] # 0x80022964
+      - [0x129b4, .rodata, gtmenu]  # SimMap_Update's jump table, vtables and type names of GTLoadingMenu and GTMenu
+      - [0x12d00, rodata] # 0x80022d00, from the padding after gtmenu.cpp's .rodata
   - [0x42a74]

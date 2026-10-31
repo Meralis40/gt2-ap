@@ -144,6 +144,34 @@ CXX_NAMES = {"exe": {
     "ApplyVideoMode__11psxViewLoop": "psxViewLoop__ApplyVideoMode", "__tf11psxViewLoop": "psxViewLoop____tf",
     "__ti11psxViewLoop": "psxViewLoop__typeinfo",
     "Run__14ScreenViewLoop": "ScreenViewLoop__Run", "Execute__14ScreenViewLoop": "ScreenViewLoop__Execute",
+}, "ovl4": {
+    # GTMenu and GTLoadingMenu (gtmenu.cpp): their resident bases...
+    "__23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer",
+    "_._23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer_dtor",
+    "SetVideoMode__23psxViewLoopDoubleBufferUi": "psxViewLoopDoubleBuffer__SetVideoMode",
+    "Leave__23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__Leave",
+    "BeginDraw__23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__BeginDraw",
+    "SwapDisplay__23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__SwapDisplay",
+    "__tf23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer____tf",
+    "__ti23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__typeinfo",
+    "Enter__11psxViewLoop": "psxViewLoop__Enter", "Step__11psxViewLoop": "psxViewLoop__Step",
+    "Flip__11psxViewLoop": "psxViewLoop__Flip", "BeginFrame__11psxViewLoop": "psxViewLoop__BeginFrame",
+    "Update__11psxViewLoop": "psxViewLoop__Update", "Draw__11psxViewLoop": "psxViewLoop__Draw",
+    "EndDraw__11psxViewLoop": "psxViewLoop__EndDraw", "DrawFrame__11psxViewLoop": "psxViewLoop__DrawFrame",
+    "ApplyVideoMode__11psxViewLoop": "psxViewLoop__ApplyVideoMode",
+    "UpdateDisplay__11psxViewLoop": "psxViewLoop__UpdateDisplay",
+    "Run__14ScreenViewLoop": "ScreenViewLoop__Run",
+    # ...GTMenu's methods that are still assembly (BeginFrame in menudraw)...
+    "BeginFrame__6GTMenu": "GTMenu__BeginFrame", "Draw__6GTMenu": "GTMenu__Draw",
+    # ...and the names the assembly calls them by, and their typeinfo.
+    "GTMenu__GTMenu": "__6GTMenu", "GTMenu__GTMenu_dtor": "_._6GTMenu",
+    "GTMenu__Enter": "Enter__6GTMenu", "GTMenu__Update": "Update__6GTMenu",
+    "GTMenu__Leave": "Leave__6GTMenu", "GTMenu____tf": "__tf6GTMenu", "GTMenu__vtable": "__vt_6GTMenu",
+    "__ti6GTMenu": "0x801C3060",
+    "GTLoadingMenu__GTLoadingMenu": "__13GTLoadingMenu", "GTLoadingMenu__GTLoadingMenu_dtor": "_._13GTLoadingMenu",
+    "GTLoadingMenu__Enter": "Enter__13GTLoadingMenu", "GTLoadingMenu__Update": "Update__13GTLoadingMenu",
+    "GTLoadingMenu__Draw": "Draw__13GTLoadingMenu", "GTLoadingMenu____tf": "__tf13GTLoadingMenu",
+    "GTLoadingMenu__vtable": "__vt_13GTLoadingMenu", "__ti13GTLoadingMenu": "0x801C3050",
 }}
 
 
