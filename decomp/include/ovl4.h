@@ -889,9 +889,9 @@ struct psxViewLoopDoubleBuffer {
 struct MapCursor { /* GT mode map cursor (tentative); init FUN_OVL4__8001e22c */
     short drawX; /* smoothed draw position (spring towards x) */
     short drawY;
-    uchar moveFrames; /* 8 when a move to a new hotspot starts */
-    uchar lastDir;
-    uchar dir; /* last direction pressed: 2 up, 3 down, 4 left, 5 right, 6 up-right, 7 up-left, 8 down-right, 9 down-left */
+    signed char moveFrames; /* 8 when a move to a new hotspot starts */
+    signed char lastDir; /* the move's direction, 1 after a bump */
+    signed char dir; /* last direction pressed: 2 up, 3 down, 4 left, 5 right, 6 up-right, 7 up-left, 8 down-right, 9 down-left */
     undefined field5_0x7;
     short prevX;
     short prevY;
@@ -901,7 +901,7 @@ struct MapCursor { /* GT mode map cursor (tentative); init FUN_OVL4__8001e22c */
     int velY;
     int posX; /* 8.8 fixed point */
     int posY;
-    uchar blink; /* counts 0..64 */
+    signed char blink; /* counts 0..64 */
     undefined field15_0x21;
     undefined field16_0x22;
     undefined field17_0x23;

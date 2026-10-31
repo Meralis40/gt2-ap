@@ -84,4 +84,6 @@ segments:
       - [0x12e24, rodata] # 0x80022e24
       - [0x139bc, .rodata, eventrules]  # the jump tables of EventRules_GetRequiredLicense and Race_CheckEntry
       - [0x13a0c, rodata] # 0x80023a0c
+      - [0x14284, .rodata, mapcursor]  # MapCursor_Bump's jump table
+      - [0x142a4, rodata] # 0x800242a4
   - [0x42a74]
