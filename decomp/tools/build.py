@@ -52,7 +52,8 @@ MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
 # store in the return's delay slot, which GCC leaves empty for a volatile store, and
 # ReplayEntry_GetInfo has a store in a j's delay slot that GCC leaves empty (replaydir.cpp),
 # as Options_ApplyNeGconCalib has in its return's (savefile.cpp) and the SPU stores
-# in seq.cpp have in theirs and in a jal's.
+# in seq.cpp have in theirs and in a jal's, and OT_InsertChain has its last swl asm
+# in its return's (menudata.cpp).
 # GCC 2.8.1 writes divisions as assembler macros, which GNU as
 # expands with divide-by-zero checks the game doesn't have, so they are written
 # out as div $0 and mflo (mfhi for rem), as GCC 2.95 does. ASPSX would put a nop
@@ -64,7 +65,8 @@ GAS_CXX = {"src/sim/exe/screenviewloop.cpp", "src/sim/exe/format.cpp", "src/sim/
            "src/sim/exe/garage2.cpp", "src/sim/exe/padbuttons.cpp",
            "src/sim/exe/powergraph.cpp", "src/sim/exe/records.cpp", "src/sim/exe/replaydir.cpp",
            "src/sim/exe/savefile.cpp", "src/sim/exe/seq.cpp", "src/sim/exe/sfx.cpp",
-           "src/sim/ovl4/battletable.cpp", "src/sim/ovl4/carwork2.cpp"}
+           "src/sim/ovl4/battletable.cpp", "src/sim/ovl4/carwork2.cpp",
+           "src/sim/ovl4/menudata.cpp"}
 # C++ sources compiled with -mhard-float: the sound driver (seq.cpp) was built on its
 # own. GCC then counts the FPU registers as free, which raises its threshold for moving
 # constants out of loops: SfxVoices_Update loads 2, 1 and -1 into registers before its
