@@ -5,6 +5,9 @@
 #include "include_asm.h"
 #include "ovl4.h"
 
+// CarSpec_FromCarWorkWithPart's output, a resident type that ovl4.h doesn't have.
+struct CarSpec;
+
 extern "C" {
 void *GameData_GetEntry(int table, int index);
 int Car_GetDefaultSetup(int carId, CarSetup *out);
@@ -14,12 +17,104 @@ extern unsigned short g_GarageCar_NoMark[2];
 extern unsigned short g_GarageCar_Mark[2];
 short *UniStr_Get(int index);
 extern short g_PartNameStrIds;
+extern CarWork g_CarWork;
+extern short g_RacingMod_Variant;
+extern short g_IncludedTireParts[];
+extern signed char *g_Car_ExcludedCodes[];
+extern unsigned short u_NoName[];
+void *GameData_GetGtMode(void);
+void *GameData_FindEntryById(void *data, int table, unsigned int id);
+void CarWork_Clear(CarWork *work);
+void CarWork_LoadParts(CarWork *work, unsigned int carId);
+void CarWork_SetStagesFromSetup(CarWork *work, CarSetup *setup);
+void CarWork_ExportSetup(CarWork *work, CarSetup *out);
+void CarWork_SetPartSlot(CarWork *work, int slot, int stage);
+void CarWork_LoadFromGarage(int slot, int garage);
+void CarSpec_FromCarWorkWithPart(CarWork *work, CarSpec *spec, int slot, int stage);
+void PartsOwned_Set(int part, unsigned char *bits);
+int Car_HasPart(Car *car, int part);
+void Car_InstallPart(Car *car, int part, int cost);
+void Car_StoreSetup(Car *car, CarWork *work);
+int Garage_AddNewCar(Garage *garage, int carId, int color, CarSetup *setup, int price, int flag15,
+                     int flag14, unsigned char *parts);
+void Garage_RemoveCar(Garage *garage, int carSlot);
+void Garage_AddCredits(Garage *garage, int amount);
+unsigned int CarCode_Encode(signed char *code);
+int CarInfoA_GetColors(unsigned int carId, unsigned short **outRgb, signed char **outCodes);
+int Wheel_FindIndex(int wheelCode);
+void CarSetup_SetWheels(CarSetup *setup, int wheelIndex);
+void Part_GetSlot(PartId partId, short *out);
+int Car_GetTransFlag14(unsigned int carId);
+int Part_GetPrice(unsigned int carCode, PartId partId);
+int Tune_CanBuyPart(int carSlot, int partId, int garageIdx);
+int Tune_InstallPart(int carSlot, int partId, int garageIdx, unsigned int color);
+int Garage_CanAfford(int price, int garageIdx);
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", CarSetup_Finalize);
+// Car_HasPart(...) == 1, kept as a value: the game tests it with xori.
+inline int Car_PartFitted(Car *car, int part)
+{
+    return Car_HasPart(car, part) == 1;
+}
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", Car_GetNewPrice);
+// Completes a car's setup through g_RaceCarWork (g_GameState + 0x10bd8, rounded
+// down to a word): loads the car's parts, fits the setup's stages and exports the
+// setup back. Returns whether the racing modification is fitted.
+int CarSetup_Finalize(unsigned int carId, CarSetup *setup)
+{
+    GameState *gs = &g_GameState;
+    char *base = (char *)gs;
+    int offset = 0x10bd8;
+    CarWork *work = (CarWork *)((int)(base + offset) & ~3);
 
+    CarWork_Clear(work);
+    CarWork_LoadParts(work, carId);
+    CarWork_SetStagesFromSetup(work, setup);
+    CarWork_ExportSetup(work, setup);
+    return work->partSlots[0x13] > 0;
+}
+
+// The price of a new car (word 0x11 of its table 0x1e entry), 0 when it isn't there.
+int Car_GetNewPrice(unsigned int carCode)
+{
+    unsigned int *entry = (unsigned int *)GameData_FindEntryById(GameData_GetGtMode(), 0x1e, carCode);
+
+    if (entry)
+        return entry[0x11];
+    return 0;
+}
+
+// The tyres that come with a new car, as part bits in partsOwned: the tyre parts
+// (g_IncludedTireParts) available for it. Null when the car's entry has none.
+#ifdef NON_MATCHING
+unsigned char *Car_GetIncludedTires(unsigned int carCode, unsigned char *partsOwned)
+{
+    unsigned char *entry = (unsigned char *)GameData_FindEntryById(GameData_GetGtMode(), 0x1e, carCode);
+    short *part;
+    int id;
+    int i = 6;
+
+    if (entry[0x40] == 0)
+        return 0;
+    {
+        unsigned char *p = partsOwned + i;
+
+        do {
+            *p-- = 0;
+        } while (--i >= 0);
+    }
+    part = g_IncludedTireParts;
+    id = *part;
+    while (id >= 0) {
+        if (Part_Lookup(id, carCode, 0) >= 0)
+            PartsOwned_Set(id, partsOwned);
+        part++;
+        id = *part;
+    }
+    return partsOwned;
+}
+#else
 INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", Car_GetIncludedTires);
+#endif
 
 // Byte +9 of the stock transmission entry (table 0x11) < 3. Gives Car.flags98 bit 14
 // of a new car; meaning unknown.
@@ -33,9 +128,42 @@ int Car_GetTransFlag14(unsigned int carId)
     return (unsigned int)(*(unsigned char *)((int)pvVar1 + 9) < 3);
 }
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", Dealer_CanBuyNewCar);
+// 1, or -1 without the credits, -2 with a full garage.
+int Dealer_CanBuyNewCar(int carId, int price, int garageIdx)
+{
+    GameState *gs = &g_GameState;
+    Garage *g = &gs->garages[garageIdx];
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", Dealer_BuyNewCar);
+    if (g->credits < price)
+        return -1;
+    if (g->carCount == 100)
+        return -2;
+    return 1;
+}
+
+// Buys a new car into the garage: 1, or -1 without the credits, -2 when the garage
+// can't take it.
+int Dealer_BuyNewCar(int carId, int color, int price, int garageIdx)
+{
+    GameState *gs = &g_GameState;
+    Garage *g = &gs->garages[garageIdx];
+    CarSetup setup;
+    unsigned char parts[8];
+    int racingMod;
+    int flag14;
+    int added;
+
+    Car_GetDefaultSetup(carId, &setup);
+    racingMod = CarSetup_Finalize(carId, &setup);
+    if (g->credits < price)
+        return -1;
+    flag14 = Car_GetTransFlag14(carId);
+    added = Garage_AddNewCar(g, carId, color, &setup, price, racingMod, flag14, Car_GetIncludedTires(carId, parts)) == 1;
+    if (!added)
+        return -2;
+    g->credits -= price;
+    return 1;
+}
 
 // Always 0.
 int Car_GetSellPrice(unsigned int carId)
@@ -43,7 +171,16 @@ int Car_GetSellPrice(unsigned int carId)
     return 0;
 }
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", Garage_SellCar);
+// Sells a garage car for a quarter of its new price.
+void Garage_SellCar(int carSlot, int garageIdx)
+{
+    GameState *gs = &g_GameState;
+    Garage *g = &gs->garages[garageIdx];
+    int price = Car_GetNewPrice((g->cars + carSlot)->carId);
+
+    Garage_RemoveCar(g, carSlot);
+    Garage_AddCredits(g, price / 4);
+}
 
 // -1 when the part is not available for the car.
 int Part_GetPrice(unsigned int carCode, PartId partId)
@@ -58,21 +195,183 @@ int Part_GetPrice(unsigned int carCode, PartId partId)
     return local_10[0];
 }
 
+// 1, or -8 when the part isn't available for the car, -1 without the credits, -3
+// when it is fitted already, -5, -6 and -7 when weight reduction stages 2 and 3 and
+// the racing modification lack the previous stage.
+#ifdef NON_MATCHING
+int Tune_CanBuyPart(int carSlot, int partId, int garageIdx)
+{
+    GameState *gs = &g_GameState;
+    Garage *g = &gs->garages[garageIdx];
+    Car *car = &g->cars[carSlot];
+    int price = Part_GetPrice(car->carId, partId);
+
+    if (Part_Lookup(partId, car->carId, 0) < 0)
+        return -8;
+    if (g->credits < price)
+        return -1;
+    if (Car_HasPart(car, partId))
+        return -3;
+    switch (partId) {
+    case 19:
+        if (!Car_PartFitted(car, 18))
+            return -5;
+        break;
+    case 20:
+        if (!Car_PartFitted(car, 19))
+            return -6;
+        break;
+    case 34:
+        if (!Car_PartFitted(car, 20))
+            return -7;
+        break;
+    }
+    return 1;
+}
+#else
 INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", Tune_CanBuyPart);
+#endif
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", Tune_BuyPart);
+// Buys a part for a garage car: Tune_CanBuyPart's result.
+int Tune_BuyPart(int carSlot, int partId, int garageIdx)
+{
+    GameState *gs = &g_GameState;
+    Garage *g = &gs->garages[garageIdx];
+    Car *car = &g->cars[carSlot];
+    int cost = Part_GetPrice(car->carId, partId);
+    int result = Tune_CanBuyPart(carSlot, partId, garageIdx);
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", Tune_InstallPart);
+    if (result != 1)
+        return result;
+    Car_InstallPart(car, partId, cost);
+    g->credits -= cost;
+    return 1;
+}
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", CarWork_BuildSpecWithPart);
+// Fits an owned part to a garage car through g_CarWork: 1, or -4 when the car doesn't
+// have it, -8 when it isn't available. The racing modification also sets the car's
+// colour and model; tyres (39-45) go in both tyre slots.
+int Tune_InstallPart(int carSlot, int partId, int garageIdx, unsigned int color)
+{
+    GameState *gs = &g_GameState;
+    Garage *g = &gs->garages[garageIdx];
+    Car *car = &g->cars[carSlot];
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", GTMode_PreparePlayerCar);
+    if (!Car_PartFitted(car, partId))
+        return -4;
+    if (Part_Lookup(partId, car->carId, 0) < 0)
+        return -8;
+    if (partId == 34) {
+        CarWork *work = &g_CarWork;
+        unsigned int model;
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", WheelShop_BuyWheels);
+        CarWork_SetPartSlot(work, 0x13, g_RacingMod_Variant);
+        model = *(int *)(work->racingModEntries[g_RacingMod_Variant] + 8);
+        car->color = color;
+        car->baseCarId = model;
+        Car_StoreSetup(car, work);
+    } else {
+        short slot[2];
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", Garage_CanAfford);
+        if (partId >= 34) {
+            if (partId < 46) {
+                if (partId >= 39) {
+                    CarWork_SetPartSlot(&g_CarWork, 3, partId - 38);
+                    CarWork_SetPartSlot(&g_CarWork, 4, partId - 38);
+                    Car_StoreSetup(car, &g_CarWork);
+                    return 1;
+                }
+            }
+        }
+        Part_GetSlot(partId, slot);
+        CarWork_SetPartSlot(&g_CarWork, slot[0], slot[1]);
+        Car_StoreSetup(&g->cars[carSlot], &g_CarWork);
+    }
+    return 1;
+}
 
+// g_CarWork's CarSpec with part fitted (tyres not), for the tuning shop's preview.
+void CarWork_BuildSpecWithPart(int slot, int part, int garage, CarSpec *out)
+{
+    GameState *gs = &g_GameState;
+    Garage *g = &gs->garages[garage];
+
+    CarSpec_FromCarWorkWithPart(&g_CarWork, out, -1, 0);
+    if (Part_Lookup(part, (g->cars + slot)->carId, 0) >= 0) {
+        short s[2];
+
+        if (part < 46) {
+            if (part >= 39)
+                return;
+        }
+        Part_GetSlot(part, s);
+        CarSpec_FromCarWorkWithPart(&g_CarWork, out, s[0], s[1]);
+    }
+}
+
+// Loads the player's car for a race: fits the dirt tyres (part 45) for a dirt race
+// when the car has them, else takes them off.
+void GTMode_PreparePlayerCar(int slot, int garage, int dirtRace)
+{
+    GameState *gs = &g_GameState;
+    Garage *g = &gs->garages[garage];
+    Car *car;
+
+    CarWork_LoadFromGarage(slot, garage);
+    car = &g->cars[slot];
+    if (dirtRace & Car_HasPart(car, 45)) {
+        Tune_InstallPart(slot, 45, 0, 0);
+    } else {
+        CarWork *work = &g_CarWork;
+
+        if ((work->partSlots[3] == 7) | (work->partSlots[4] == 7)) {
+            CarWork_SetPartSlot(work, 3, 0);
+            CarWork_SetPartSlot(work, 4, 0);
+            Car_StoreSetup(car, work);
+        }
+    }
+}
+
+// Buys wheels for a garage car: 1, or Garage_CanAfford's -1.
+int WheelShop_BuyWheels(int carSlot, int wheelCode, int price, int garageIdx)
+{
+    GameState *gs = &g_GameState;
+    Garage *g = &gs->garages[garageIdx];
+    int result = Garage_CanAfford(price, garageIdx);
+
+    if (result != 1)
+        return result;
+    CarSetup_SetWheels(&g_CarWork.setup, Wheel_FindIndex(wheelCode));
+    Car_StoreSetup(&g->cars[carSlot], &g_CarWork);
+    g->credits -= price;
+    return 1;
+}
+
+// 1, or -1 without the credits.
+int Garage_CanAfford(int price, int garageIdx)
+{
+    if (g_GameState.garages[garageIdx].credits < price)
+        return -1;
+    return 1;
+}
+
+// 0 when the car's code is in g_Car_ExcludedCodes.
+#ifdef NON_MATCHING
+int Car_IsNotExcluded(unsigned int carId)
+{
+    signed char **p = g_Car_ExcludedCodes;
+    signed char *code = *p;
+
+    while (code) {
+        if (carId == CarCode_Encode(code))
+            return 0;
+        code = *++p;
+    }
+    return 1;
+}
+#else
 INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", Car_IsNotExcluded);
+#endif
 
 /* Credits >= 50. */
 
@@ -94,11 +393,40 @@ unsigned short *GarageCar_GetMark(int flag)
     return puVar1;
 }
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", Car_GetMakerName);
+// The car's maker name (string id at +0x3c of its table 0x1e entry).
+unsigned short *Car_GetMakerName(unsigned int carId)
+{
+    unsigned char *entry = (unsigned char *)GameData_FindEntryById(GameData_GetGtMode(), 0x1e, carId);
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", Car_GetModelName);
+    if (entry)
+        return (unsigned short *)UniStr_Get(*(unsigned short *)(entry + 0x3c));
+    return u_NoName;
+}
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/dealer", CarColor_FindIndex);
+// The car's model name (string id at +0x3e of its table 0x1e entry).
+unsigned short *Car_GetModelName(unsigned int carId)
+{
+    unsigned char *entry = (unsigned char *)GameData_FindEntryById(GameData_GetGtMode(), 0x1e, carId);
+
+    if (entry)
+        return (unsigned short *)UniStr_Get(*(unsigned short *)(entry + 0x3e));
+    return u_NoName;
+}
+
+// The index of colorCode among the car's colours, 0 when it isn't one.
+int CarColor_FindIndex(unsigned int carId, int colorCode)
+{
+    unsigned short *rgb;
+    signed char *codes;
+    int count = CarInfoA_GetColors(carId, &rgb, &codes);
+    int i;
+
+    for (i = 0; i < count; i++) {
+        if (codes[i] == colorCode)
+            return i;
+    }
+    return 0;
+}
 
 // String g_PartNameStrIds[index] from the game string table (UniStr_Get).
 unsigned short *PartName_GetW(int index)

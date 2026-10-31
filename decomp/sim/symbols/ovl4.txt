@@ -336,6 +336,7 @@ g_GTIcon_LicenseEarned = 0x80050A50;
 g_GTIcon_EventWon = 0x80050A5C;
 g_Battle_Progress = 0x80050A78;
 g_TuneSummaryRows = 0x80050AB0;
+g_IncludedTireParts = 0x80050B68;
 g_Car_ExcludedCodes = 0x80050B78;
 u_NoName = 0x80050B9C;
 g_GarageCar_NoMark = 0x80050BAC;
