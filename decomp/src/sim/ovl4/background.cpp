@@ -46,31 +46,27 @@ void *DisplayList_Begin(void *buf)
 
 // Reserves words in the current chunk; when it would exceed 16 words, closes the
 // chunk (length, link to p) and starts a new one at p. Returns where to write.
-#ifdef NON_MATCHING
-// Registers: the game copies p to $a3 in the branch's delay slot and shifts it
-// into $a0 after the chunk load, where GCC keeps p in $a0. Tried: the link
-// computed in the if, from a copy of p, before or after len; a copy returned
-// instead of p; a local for the chunk; char and int lengths; the asm statement
-// non-volatile or without the memory clobber.
 unsigned int *DisplayList_Reserve(unsigned int *p, int words)
 {
-    unsigned int link = (unsigned int)p << 8;
     unsigned int len = g_DisplayList_ChunkLen;
-
+    // those two registers variables with the forced registers are necessary for correct compilation.
+    register unsigned int link asm("a0");
+    register unsigned int *temp asm("v0");
+    unsigned int *a0 = p;
+    
     if ((int)(len + words) > 16) {
-        ((unsigned char *)g_DisplayList_Chunk)[3] = len;
-        __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(g_DisplayList_Chunk) : "memory");
+        link = (unsigned int)a0 << 8;
+        ((unsigned char*)g_DisplayList_Chunk)[3] = len;
+        temp = g_DisplayList_Chunk;
+        __asm__("swl\t%0,2(%1)" : : "r"(link), "r"(temp) : "memory");
         len = 0;
-        g_DisplayList_Chunk = p;
-        p++;
+        g_DisplayList_Chunk = a0;
+        a0++;
         g_DisplayList_ChunkLen = 0;
     }
     g_DisplayList_ChunkLen = len + words;
-    return p;
+    return a0;
 }
-#else
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/background", DisplayList_Reserve);
-#endif
 
 // Adds a draw mode word only when it differs from the last one.
 unsigned int *DisplayList_SetDrawMode(unsigned int *p, unsigned int mode)
