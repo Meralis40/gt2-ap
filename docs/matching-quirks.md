@@ -55,6 +55,9 @@ What it takes to get the game's code back out of GCC 2.8.1, as found while match
 - **A copy of a pointer for its second register.** OVL4's `MenuView_FindHotspotInDir` and `MenuPage_Enter` keep the element in `$a0` (or `$s1`) for the first tests and a copy in a saved register for the rest: `MenuElement *c = MenuPage_GetElement(i); MenuElement *e = c;`.
 - **A pinned register.** `CdAudio_WaitIdle` keeps `&g_CdAudio` in a `register ... asm("a0")` variable.
 - **A frame with nothing in it.** `CarModel_InitStub` is empty but has a 16-byte frame: an unused `int[4]` local gives it.
+- **Constants through locals give register operands.** OVL4's `RaceSetup_InitLicenseTest` sets `int two = 2; int one = 1;` after its `memset` and uses them for the setup's bytes, the turbo flags and the `g_GameDataMode == two` test: CSE then puts the registers where the constants were, which gives the game's `sllv` by 2 and 1 for the test number's `* 10` and `sltu` against 1 for `noIntro == 0`. `RaceSetup_InitMachineTest` uses `one` and a `zero` the same way. With literals GCC uses `sll` and `sltiu`.
+- **A digit through an `int` local.** In `(c3 - '0') * 10 - '0' + ones`, an `int ones = ((signed char *)code)[4]` keeps the `lb`; the expression with the load in it, assigned to a byte field, is narrowed to `lbu`, and `(c3 - '0') * 10 + (c4 - '0')` adds the second digit's `- '0'` separately (`RaceSetup_InitLicenseTest`).
+- **A pointer local for an offset table.** `return names + offsets[id]` with `unsigned short *offset = (unsigned short *)names + id` (or `offsets = (unsigned short *)(file + 8)`) gives the game's `addu base,index`; indexing the cast base adds `index,base` (`carcolor.cpp`).
 
 ### Loads and stores
 
@@ -116,6 +119,7 @@ What it takes to get the game's code back out of GCC 2.8.1, as found while match
 - **Per-case assignments.** `Part_Lookup` sets the field offset in every case rather than once after the `switch`.
 - **`switch (st = *status)`** gives the game's copy of the index (`CardState_CheckSlot`).
 - **Jump tables** go in the file's own `.rodata`, so a file whose table sits between other files' tables has to be split (`garage2.cpp`).
+- **Every case listed, for the table.** GCC uses a jump table when the range is at most 10 times the number of case nodes (a range counts twice); consecutive labels with one body make one range. `MenuElement_IsActive` lists its 188 kinds as GNU case ranges, the inactive ones too with a `break`, which makes 32 nodes and the game's table; with the active kinds alone GCC compares.
 
 ### `setjmp`, varargs and inline assembly
 

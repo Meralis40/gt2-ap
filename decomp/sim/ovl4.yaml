@@ -36,7 +36,7 @@ segments:
     start: 0x0
     vram: 0x80010000
     subsegments:
-      - [0x0, asm]
+      - [0x0, cpp, license]  # 0x80010000
       - [0x550, cpp, ../ovl3/minmax] # src/sim/ovl3/minmax.cpp, shared with OVL3
       - [0x714, cpp, ../ovl3/randompick] # src/sim/ovl3/randompick.cpp, shared with OVL3
       - [0x984, cpp, ../ovl3/setcolor] # src/sim/ovl3/setcolor.cpp, shared with OVL3
@@ -45,7 +45,7 @@ segments:
       - [0x1160, cpp, racestart_clear] # src/sim/ovl4/racestart_clear.cpp, shared with OVL3
       - [0x1184, cpp, racestart_loadparts] # src/sim/ovl4/racestart_loadparts.cpp, shared with OVL3
       - [0x29b8, cpp, racestart_setstages] # src/sim/ovl4/racestart_setstages.cpp, shared with OVL3
-      - [0x2c6c, asm, gtmode]  # 0x80012c6c
+      - [0x2c6c, cpp, gtmode]  # 0x80012c6c
       - [0x3a28, cpp, timload]  # 0x80013a28
       - [0x3bd4, cpp, gtmenu]  # 0x80013bd4 classes GTMenu and GTLoadingMenu
       - [0x508c, cpp, gtbattlemenu]  # 0x8001508c
@@ -61,18 +61,18 @@ segments:
       - [0x9c60, cpp, playerstats]  # 0x80019c60
       - [0x9f5c, cpp, battletable]  # 0x80019f5c
       - [0xa454, cpp, carpreview]  # 0x8001a454
-      - [0xb3ac, asm, menudraw]  # 0x8001b3ac
+      - [0xb3ac, cpp, menudraw]  # 0x8001b3ac
       - [0xd090, cpp, menuview]  # 0x8001d090
       - [0xda24, cpp, txn]  # 0x8001da24
       - [0xe22c, cpp, mapcursor]  # 0x8001e22c
-      - [0xec0c, asm, garagecars]  # 0x8001ec0c
+      - [0xec0c, cpp, garagecars]  # 0x8001ec0c
       - [0xf210, cpp, gtfont]  # 0x8001f210
-      - [0xfcdc, asm, formatprice]  # 0x8001fcdc
+      - [0xfcdc, cpp, formatprice]  # 0x8001fcdc
       - [0x10198, cpp, carlist]  # 0x80020198
       - [0x10c50, cpp, menudata]  # 0x80020c50
       - [0x11a40, cpp, gtracedata]  # 0x80021a40
       - [0x11c38, cpp, background]  # 0x80021c38
-      - [0x122e4, asm, carcolor]  # 0x800222e4
+      - [0x122e4, cpp, carcolor]  # 0x800222e4
       - [0x124b0, cpp, usedcar]  # 0x800224b0
       - [0x126a0, cpp, menubgmbank]  # 0x800226a0
       - [0x12964, rodata] # 0x80022964
@@ -83,7 +83,7 @@ segments:
       - [0x12d5c, .rodata, carwork2]  # Part_GetSlot's jump table
       - [0x12e24, rodata] # 0x80022e24
       - [0x139bc, .rodata, eventrules]  # the jump tables of EventRules_GetRequiredLicense and Race_CheckEntry
-      - [0x13a0c, rodata] # 0x80023a0c
+      - [0x13a0c, .rodata, menudraw]  # the jump tables of MenuElement_IsActive and MenuPage_DrawElements, and the latter's strings
       - [0x1405c, .rodata, txn]  # the jump tables of Txn_Back, Txn_Decline, Shop_ExecuteTransaction and Shop_CheckTransaction
       - [0x14284, .rodata, mapcursor]  # MapCursor_Bump's jump table
       - [0x142a4, rodata] # 0x800242a4

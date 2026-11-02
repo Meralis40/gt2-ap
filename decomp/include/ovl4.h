@@ -481,6 +481,31 @@ struct DirVector {
     short y;
 };
 
+// ovl4/license.cpp
+
+// A license test car (License_BuildTestCarTable): name, max power and drivetrain.
+struct LicenseTestCar {
+    char name[64];
+    unsigned short maxPower;
+    unsigned short drivetrain;
+};
+
+// ovl4/garagecars.cpp
+
+// A car of the machine test list: a record car or the player car.
+struct MachineTestCar {
+    unsigned int carId;
+    char name[0x44];
+};
+
+// The cars of a machine test (MachineTest_BuildCarList): the record cars, then
+// the player car.
+struct MachineTestCarList {
+    short count;
+    short pad;
+    MachineTestCar cars[9];
+};
+
 // ovl4/usedcar.cpp
 
 // The used car file: a header, then the offsets of the 60 periods and the end.
