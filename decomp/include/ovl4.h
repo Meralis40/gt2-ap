@@ -469,8 +469,13 @@ struct ViewAssets {
 
 // The flow state at 0x801ef5f0: the menu page and music track to come back to.
 struct FlowMenuState {
-    int introShown;
-    int field04;
+    signed char introShown;
+    signed char homeOverlay;    // g_Flow_HomeOverlay
+    signed char gameMode;       // g_Flow_GameMode
+    signed char mainMenuChoice;
+    signed char arcadeMenuExit;
+    signed char gtMenuExit;     // how GTMenu left: 2 start the event, 3 without the player car, 4 to OVL1's entry
+    unsigned char pad06[2];
     int page;
     short bgmTrack;
 };

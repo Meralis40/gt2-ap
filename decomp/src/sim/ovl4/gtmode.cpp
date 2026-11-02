@@ -1,5 +1,4 @@
 // OVL4 80012c6c-80013a28 (gtmode): Machine tests, event races and the GT mode loop.
-// GTMode_Run is still the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
 #include "common.h"
@@ -12,6 +11,12 @@ extern char *g_GtModeRaceData;
 extern char *g_GtModeRaceDataBuf;
 extern RaceEventParams g_RaceEventParams;
 extern char g_OVL4_storageCarColor[];
+extern char g_OVL4_storageCarInfoA[];
+extern char g_OVL4_someStorage[];
+extern char g_OVL4_SharedBuffer[];
+extern char g_GtMenu_SelectedEvent[];
+extern short g_FreeRacePoolParams[][2];
+extern FlowMenuState g_Flow_IntroShown;
 
 // Fills g_RaceSetup for the machine test raceCode (raceType 7 to 9, from
 // Event_GetMachineTestType): one lap with the current car of garage 0, against
@@ -241,5 +246,110 @@ void GTMode_SetupEventRace(char *raceCode, int noPlayerCar, unsigned int battleF
     }
 }
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/gtmode", GTMode_Run);
+// OVL4's entry: loads the GT mode data, runs GTMenu and GTLoadingMenu, then
+// starts what GTMenu left for (g_Flow_GtMenuExit): the selected event (a license
+// test, a machine test or a race, with GTBattleMenu picking a free race's
+// opponents) or the event without the player car, both through Race_Entry
+// (OVL0); OVL1's next demo (MainMenu_StartNextDemo); or OVL1. The race data is
+// reloaded first, as the menus use g_OVL4_SharedBuffer for their packets.
+void GTMode_Run(void)
+{
+    char *code;
+    int exit;
+    int r;
+
+    CarSpecStrings_Load();
+    Event_BuildLetterIndex();
+    LoadCarInfoA((CarInfoA *)g_OVL4_storageCarInfoA, 0xc800);
+    CarColor_Load(1, g_OVL4_storageCarColor, 0xc800);
+    UsedCar_LoadPeriod((unsigned int)g_GameState.stats.day / 10 % 60, g_OVL4_someStorage);
+    g_EventDataBuf = GameData_LoadGtMode(g_OVL4_someStorage, 0xc8000);
+    g_GtModeRaceDataBuf = (char *)GameData_LoadGtModeRace(g_OVL4_SharedBuffer, 0x2c4c0);
+    EventRules_BuildAll();
+    {
+        GTMenu menu;
+
+        // The conditional keeps the two tests: with || GCC makes one unsigned one.
+        do {
+            r = menu.Execute();
+        } while (r > 1 ? 1 : r < 0);
+    }
+    {
+        GTLoadingMenu loading;
+
+        do {
+            r = loading.Execute();
+        } while (r > 1 ? 1 : r < 0);
+        EnableDisplay(1);
+    }
+    exit = g_Flow_IntroShown.gtMenuExit;
+    switch (exit) {
+    case 4:
+        Overlay_StartAt(1, (void *)MainMenu_StartNextDemo, 0);
+        break;
+    case 3:
+        g_GtModeRaceDataBuf = (char *)GameData_LoadGtModeRace(g_OVL4_SharedBuffer, 0x2c4c0);
+        GTMode_SetupEventRace(g_GtMenu_SelectedEvent, 1, 0, 0);
+        g_Flow_IntroShown.homeOverlay = 4;
+        g_Flow_IntroShown.gameMode = exit; // 3, from the register the switch tested
+        Overlay_StartAt(0, (void *)Race_Entry, 0);
+        break;
+    case 2:
+        code = g_GtMenu_SelectedEvent;
+        if (Event_IsLicense(code)) {
+            char *base = (char *)&g_GameState;
+            // The game adds day's offset to the stats' address, and takes the
+            // prize info's before loading the race data.
+            PlayerStats *stats = &g_GameState.stats;
+            EventPrizeInfo *prize;
+
+            stats->day++;
+            prize = (EventPrizeInfo *)(base + 0xbccc);
+            g_GtModeRaceDataBuf = (char *)GameData_LoadGtModeRace(g_OVL4_SharedBuffer, 0x2c4c0);
+            Event_LoadPrizeInfo(prize, code);
+            g_EventDataBuf = GameData_LoadLicense(g_OVL4_SharedBuffer, 0x2c4c0);
+            GTMenu_StartLicenseTest(code);
+        } else {
+            int type = Event_GetMachineTestType(code);
+
+            if (type >= 0) {
+                g_GtModeRaceDataBuf = (char *)GameData_LoadGtModeRace(g_OVL4_SharedBuffer, 0x2c4c0);
+                RaceSetup_InitMachineTest(code, type);
+            } else {
+                char *base = (char *)&g_GameState;
+                PlayerStats *stats = &g_GameState.stats;
+
+                stats->day++;
+                g_GtModeRaceDataBuf = (char *)GameData_LoadGtModeRace(g_OVL4_SharedBuffer, 0x2c4c0);
+                ChampRaceList_Build((ChampRaceList *)(base + 0xc514), code);
+                Event_LoadPrizeInfo((EventPrizeInfo *)(base + 0xbccc), code);
+                if (Event_IsFreeRace(code)) {
+                    int index = Event_GetFreeRaceIndex(code);
+
+                    Battle_SetPlayer(g_FreeRacePoolParams[index][0], g_FreeRacePoolParams[index][1]);
+                    {
+                        GTBattleMenu battle;
+
+                        do {
+                            r = battle.Execute();
+                        } while (r > 1 ? 1 : r < 0);
+                    }
+                    GTMode_SetupEventRace(g_GtMenu_SelectedEvent, 0, 1, Battle_GetOpponentPool());
+                } else {
+                    GTMode_SetupEventRace(code, 0, 0, 0);
+                }
+            }
+        }
+        g_Flow_IntroShown.homeOverlay = 4;
+        g_Flow_IntroShown.gameMode = 3;
+        Overlay_StartAt(0, (void *)Race_Entry, 0);
+        break;
+    default:
+        g_Flow_IntroShown.homeOverlay = 0;
+        g_Flow_IntroShown.gameMode = 0;
+        Overlay_Start(1);
+        break;
+    }
+    Overlay_Start(1);
+}
 }

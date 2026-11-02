@@ -638,7 +638,7 @@ int StrPool_Find(unsigned short *pool, char *str)
     return -1;
 }
 
-void *GameData_LoadGtModeRace(void *buffer)
+void *GameData_LoadGtModeRace(void *buffer, int size)
 {
     g_DataLanguage = (unsigned int)g_GameState.language;
     VolId_ReadFileAsync((unsigned int)g_LangCarParamFiles[g_DataLanguage].gtmodeRace, buffer);
@@ -671,7 +671,7 @@ void *GameData_LoadArcade(void *buffer)
     return buffer;
 }
 
-void *GameData_LoadLicense(void *buffer)
+void *GameData_LoadLicense(void *buffer, int size)
 {
     g_GameDataMode = 3;
     g_DataLanguage = (unsigned int)g_GameState.language;

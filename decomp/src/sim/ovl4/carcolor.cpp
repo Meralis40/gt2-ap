@@ -10,7 +10,7 @@ extern char *g_CarColorNames;
 
 // Reads the car colour file (VolId 0) to buf and the colour names after it, the
 // Latin ones (VolId 5) or the others (VolId 4). Returns buf.
-char *CarColor_Load(int latin, char *buf)
+char *CarColor_Load(int latin, char *buf, int size)
 {
     g_CarColorIsLatin = latin;
     g_CarColor = buf;

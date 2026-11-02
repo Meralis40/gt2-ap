@@ -44,7 +44,7 @@ unsigned int FUN_8006098c(unsigned int index)
     return g_CarAssets[0].carCode;
 }
 
-void LoadCarInfoA(CarInfoA *buffer)
+void LoadCarInfoA(CarInfoA *buffer, int size)
 {
     g_CurrentCarInfoA = buffer;
     VolId_ReadFile(VOLID_CARINFOA, buffer);

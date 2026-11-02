@@ -100,7 +100,7 @@ void Sfx_PlayMenu(int sfx);
 int FUN_800608e8(unsigned int param_1, int param_2);
 unsigned int CarCode_Encode(signed char *code);
 unsigned int FUN_8006098c(unsigned int index);
-void LoadCarInfoA(CarInfoA *buffer);
+void LoadCarInfoA(CarInfoA *buffer, int size);
 int CarInfoA_FindIndex(unsigned int carId);
 int CarInfoA_GetData(unsigned int carId, char **outData);
 char *CarInfoA_GetName(unsigned int carId);
@@ -401,10 +401,10 @@ char *StrPool_Get(char *pool, int index);
 short *UniStr_Get(int index);
 short *UniStrDb_Get(void *db, int index);
 int StrPool_Find(unsigned short *pool, char *str);
-void *GameData_LoadGtModeRace(void *buffer);
+void *GameData_LoadGtModeRace(void *buffer, int size);
 void *GameData_LoadGtMode(void *buffer, int size);
 void *GameData_LoadArcade(void *buffer);
-void *GameData_LoadLicense(void *buffer);
+void *GameData_LoadLicense(void *buffer, int size);
 void *GameData_GetGtMode(void);
 void *FUN_80076f1c(void);
 void *GameData_GetEntry(int table, int index);
@@ -730,7 +730,11 @@ int ExitCriticalSection(void);
 void bcopy(const void *src, void *dst, unsigned int n);
 int printf(const char *fmt, ...);
 
+// OVL0 (the race).
+void Race_Entry(int arg);
+
 // OVL1.
+void MainMenu_StartNextDemo(void);
 int Max3(int a, int b, int c);
 int Min3(int a, int b, int c);
 void RaceCarPick_SetColor(RaceCarPick *pick, unsigned int carId, unsigned int colorIdx, unsigned int *seed);
@@ -1015,7 +1019,7 @@ unsigned int *Background_AddTileGrid(void *tiles, unsigned int *p);
 unsigned int *Background_AddOverlayTiles(void *tiles, unsigned int *p);
 unsigned int *Background_AddSpriteGroups(void *groups, unsigned int *p);
 void *MenuPage_BuildBackground(void *unused, void *buf);
-char *CarColor_Load(int latin, char *buf);
+char *CarColor_Load(int latin, char *buf, int size);
 unsigned short *CarColor_GetCarEntry(char *file, int carIdx);
 char *CarColor_GetName(unsigned short *entry, int colorIdx);
 char *ColorNames_Get(char *names, int id);

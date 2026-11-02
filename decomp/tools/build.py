@@ -163,7 +163,7 @@ CXX_NAMES = {"exe": {
     "EndDraw__11psxViewLoop": "psxViewLoop__EndDraw", "DrawFrame__11psxViewLoop": "psxViewLoop__DrawFrame",
     "ApplyVideoMode__11psxViewLoop": "psxViewLoop__ApplyVideoMode",
     "UpdateDisplay__11psxViewLoop": "psxViewLoop__UpdateDisplay",
-    "Run__14ScreenViewLoop": "ScreenViewLoop__Run",
+    "Run__14ScreenViewLoop": "ScreenViewLoop__Run", "Execute__14ScreenViewLoop": "ScreenViewLoop__Execute",
     # ...GTMenu's methods that are still assembly (BeginFrame in menudraw)...
     "BeginFrame__6GTMenu": "GTMenu__BeginFrame", "Draw__6GTMenu": "GTMenu__Draw",
     # ...and the names the assembly calls them by, and their typeinfo.
@@ -181,6 +181,14 @@ CXX_NAMES = {"exe": {
     "GTBattleMenu__Draw": "Draw__12GTBattleMenu", "GTBattleMenu____tf": "__tf12GTBattleMenu",
     "GTBattleMenu__vtable": "__vt_12GTBattleMenu", "__ti12GTBattleMenu": "0x801C3070",
 }}
+
+# Entries of other overlays that a unit's C++ passes to Overlay_StartAt, at
+# their addresses: the unit's symbol file can't name them, as they fall in its
+# own address range.
+OVERLAY_ENTRIES = {
+    "ovl3": {"Race_Entry": "0x80011F64"},
+    "ovl4": {"Race_Entry": "0x80011F64", "MainMenu_StartNextDemo": "0x8001172C"},
+}
 
 
 def run(cmd):
@@ -248,7 +256,8 @@ def cxx_script(unit, script):
         if text.count(section) != 1:
             sys.exit("%s: can't find the %s section" % (script, section))
         text = text.replace(section, ".%s_bss 0x%08X (NOLOAD)" % (unit, BSS_VRAM[unit]))
-    names = ["    %s = %s;" % n for n in sorted(CXX_NAMES.get(unit, {}).items())]
+    defs = dict(CXX_NAMES.get(unit, {}), **OVERLAY_ENTRIES.get(unit, {}))
+    names = ["    %s = %s;" % n for n in sorted(defs.items())]
     marker = "    /DISCARD/ :"
     if text.count(marker) != 1:
         sys.exit("%s: can't find the /DISCARD/ section" % script)
@@ -312,7 +321,7 @@ def build(unit, pool):
         libgcc.build_archive([name for lib, name in members if lib == "libgcc"])
         script = psyq_script(unit, members)
         libs = ["--whole-archive"] + sorted({"build/psyq/%s.a" % lib for lib, _ in members}) + ["--no-whole-archive"]
-    if unit in BSS_VRAM or unit in CXX_NAMES:
+    if unit in BSS_VRAM or unit in CXX_NAMES or unit in OVERLAY_ENTRIES:
         script = cxx_script(unit, script)
     run([CROSS + "ld", "-EL", "-nostdlib", "--no-check-sections",
          "-T", script,

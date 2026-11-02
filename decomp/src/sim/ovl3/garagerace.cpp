@@ -7,7 +7,6 @@ extern "C" {
 extern ArcadeRaceSel g_Ovl3_RaceSel;
 extern char g_Ovl3_GtData[];
 extern void *g_EventDataBuf;
-extern char D_80011F64[];  // Race_Entry (OVL0)
 
 }
 
@@ -26,5 +25,5 @@ extern "C" void ArcadeGarageRace_Entry(void)
             CarWork_LoadGarageCarAlt(sel->garage, sel->slot);
         }
     }
-    Overlay_StartAt(0, D_80011F64, 0);
+    Overlay_StartAt(0, (void *)Race_Entry, 0);
 }
