@@ -36,12 +36,51 @@ segments:
     start: 0x0
     vram: 0x80010000
     subsegments:
-      - [0x0, asm]
+      - [0x0, cpp, arcadecar] # 0x80010000
       - [0x74, cpp, minmax] # src/sim/ovl2/minmax.cpp, shared with OVL3
       - [0x238, cpp, randompick] # src/sim/ovl2/randompick.cpp, shared with OVL3
       - [0x4a8, cpp, setcolor] # src/sim/ovl2/setcolor.cpp, shared with OVL3
       - [0x554, cpp, initevent] # src/sim/ovl2/initevent.cpp, shared with OVL3
       - [0xa34, cpp, racesetup] # src/sim/ovl2/racesetup.cpp, shared with OVL3
-      - [0xc84, asm]
+      - [0xc84, asm, arcademode] # 0x80010c84
+      - [0x1a50, asm, sprite] # 0x80011a50
+      - [0x1ebc, cpp, gradientbar] # 0x80011ebc
+      - [0x21e0, asm, powergraph] # 0x800121e0
+      - [0x3218, cpp, garage] # 0x80013218
+      - [0x363c, asm, timload] # 0x8001363c
+      - [0x36f0, cpp, carlogoarc] # 0x800136f0
+      - [0x3844, cpp, arcademenu] # 0x80013844
+      - [0x4708, asm, arcaderacingmenu] # 0x80014708
+      - [0x5670, asm, menupages] # 0x80015670
+      - [0x5834, cpp, asyncread] # 0x80015834
+      - [0x5ab4, cpp, arccarview] # 0x80015ab4
+      - [0x6ad4, asm, grounddisc] # 0x80016ad4
+      - [0x6cc0, cpp, arclogo] # 0x80016cc0
+      - [0x73d4, cpp, coursepanel] # 0x800173d4
+      - [0x7b7c, cpp, coursemap] # 0x80017b7c
+      - [0x802c, cpp, coursemovie] # 0x8001802c
+      - [0x824c, cpp, colorchips] # 0x8001824c
+      - [0x8548, cpp, statbar] # 0x80018548
+      - [0x894c, cpp, spectable] # 0x8001894c
+      - [0x9064, cpp, carspecpanel] # 0x80019064
+      - [0x9e60, cpp, carrating] # 0x80019e60
+      - [0x9fe4, asm, textitem] # 0x80019fe4
+      - [0xaab4, cpp, dialog] # 0x8001aab4
+      - [0xb37c, asm, menuitem] # 0x8001b37c
+      - [0xc118, cpp, iconitem] # 0x8001c118
+      - [0xc7ac, asm, gridpicker] # 0x8001c7ac
+      - [0xd13c, cpp, arclists] # 0x8001d13c
+      - [0xd568, cpp, selectpages] # 0x8001d568
+      - [0xe53c, cpp, carselect] # 0x8001e53c
+      - [0xf238, cpp, garageselect] # 0x8001f238
+      - [0x10224, asm, battle2p] # 0x80020224
+      - [0x128c0, cpp, courseselect] # 0x800228c0
+      - [0x1344c, cpp, racelaunch] # 0x8002344c
+      - [0x13690, cpp, bonus] # 0x80023690
+      - [0x1445c, cpp, guestload] # 0x8002445c
+      - [0x15614, asm, menubgmbank] # 0x80025614
+      - [0x157e8, cpp, arcadebgm] # 0x800257e8
+      - [0x1589c, asm, movie] # 0x8002589c
+      - [0x1667c, cpp, strplayer] # 0x8002667c
       - [0x1678c, rodata] # 0x8002678c
   - [0x43544]

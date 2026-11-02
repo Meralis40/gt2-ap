@@ -1,11 +1,12 @@
 // Declarations shared by the decompiled sources: every game function that a
 // source file defines or calls, once, with the prototype of its definition when
 // there is one. The C library's are in syslib.h. Methods are declared in their
-// classes. The types are in resident.h, ovl4.h, gtmenu.h and movie.h.
+// classes. The types are in resident.h, ovl2.h, ovl4.h, gtmenu.h and movie.h.
 #ifndef COMMON_H
 #define COMMON_H
 
 #include "resident.h"
+#include "ovl2.h"
 #include "ovl4.h"
 #include "gtmenu.h"
 #include "movie.h"
@@ -741,6 +742,94 @@ void RaceCarPick_SetColor(RaceCarPick *pick, unsigned int carId, unsigned int co
 unsigned int Rand_Next(unsigned int *seed);
 
 // OVL2 (the arcade menus).
+void *ArcadeCar_GetEntry(unsigned int carId, int racingMod);
+void GradientBar_Init(short *bar, short *desc);
+void GradientBar_Start(short *bar);
+void GradientBar_Close(short *bar);
+void GradientBar_Update(short *bar);
+void *ArcadeMenu_GetCarGzBuf(void);
+void CarLogoArc_Init(short *state);
+void ArcadeMenu_SetRootPage(ArcadeMenu *this_, MenuPage *page);
+void OVL2_Nop(void);
+void AsyncRead_Init_OVL2(AsyncRead *r);
+void ArcCarView_LoadCarCode(ArcCarView *view, ArcadeMenu *menu, char *code, int color);
+void ArcCarView_Begin(ArcCarView *view, ArcadeMenu *menu, unsigned int carId);
+void ArcCarView_SetFastDecode(void);
+void ArcCarView_SetSlowDecode(void);
+void ArcCarView_GetStats(ArcCarView *view, unsigned short *out);
+void ArcLogo_Init(ArcLogo *logo, short vramPage, unsigned char *archive, void *timBuf);
+void ArcLogo_Reset(ArcLogo *logo);
+void CourseRecordPanel_Init(ArcRecordPanel *p);
+void CourseRecordPanel_Open(ArcRecordPanel *p, void *record);
+void CourseRecordPanel_Close(ArcRecordPanel *p);
+void CourseMap_Start(void *cm, void *menu, unsigned int nameHash);
+void CourseMap_Cancel(void *cm, void *menu);
+void CourseMap_Request(void *cm, void *menu, unsigned int nameHash);
+void CoursePreviewMovie_Init(ArcCoursePreviewMovie *m, void *buffer);
+void CoursePreviewMovie_Play(ArcCoursePreviewMovie *m, void *menu, short movie);
+void ColorChips_Init(ArcColorChips *c);
+void ColorChips_Close(ArcColorChips *c);
+void ColorChips_Update(ArcColorChips *c);
+void ColorChips_Select(ArcColorChips *c, short index);
+void StatBar_Show(ArcStatBar *b);
+void TextItem_Show_OVL2(ArcTextItem *item, int endFrame);
+void StatBar_Hide(ArcStatBar *b);
+void TextItem_Hide_OVL2(ArcTextItem *item);
+void StatBar_Update(ArcStatBar *b);
+void TextItem_Update_OVL2(ArcTextItem *item);
+void SpecTable_Reset(ArcSpecTable *t);
+void SpecTable_Close(ArcSpecTable *t);
+void SpecTable_Update(ArcSpecTable *t);
+void CarSpecPanel_Update(void *panel);
+void IconItem_Update(ArcIconItem *it);
+void PowerGraphView_Update_OVL2(short *v);
+void CarRating_Fill(ArcCarRating *r, Car *car);
+int CarRating_WeightPowerScore(int power, int weight);
+void Dialog_Open_OVL2(ArcDialog *dlg);
+void Dialog_Close_OVL2(ArcDialog *dlg);
+void IconItem_Show(ArcIconItem *it);
+void IconItem_ShowNow(ArcIconItem *it);
+void IconItem_Hide(ArcIconItem *it);
+int ArcCarList_GetColor(int cls, int car);
+char *ArcCarList_GetCode(int cls, int car);
+int ArcCarList_GetLogo(int cls, int car);
+int ArcCarList_IsClassSUnlocked(void);
+void ArcadeRoot_Draw(void *menu, DrawLayer *layer);
+void ArcCarView_InitLarge(ResultCarView *view);
+void ResultCarView_Spin_OVL2(ResultCarView *view, PadState *pad, int frame);
+void CarSelect_Draw(void *menu, DrawLayer *layer);
+void Dialog_Draw_OVL2(ArcDialog *dlg, void *ot, TextCtx *ctx);
+void ArcCarView_Draw(ArcCarView *view, DrawLayer *layer, DrawLayer *mirror, unsigned char *cam);
+void GridPicker_Draw(void *carousel, void *ot);
+void GarageSelect_Draw(void *menu, DrawLayer *layer);
+void ArcCarView_InitSmall(ResultCarView *view);
+void CourseSelect_QueueMovie(short movie);
+void RaceLaunch_Enter(void *menu, int back);
+void RaceLaunch_Draw(void *menu, DrawLayer *layer);
+void LoadGuest_Draw(void *menu, DrawLayer *layer);
+void GuestLoad_Draw(unsigned int *ot);
+int ArcLevel_HasFourthLevel(void);
+void BonusLaunch_Enter(void *menu, int back);
+void BonusLaunch_Draw(void *menu, DrawLayer *layer);
+void GuestLoad_CacheMessages(void);
+void GuestLoad_CacheKanji(char *sjis);
+void GuestLoad_CacheKanjiCommon(void);
+void GuestLoad_CacheErrorText(void);
+int GuestLoad_StateIdle(int event, void *ot);
+void GuestLoad_Start(void);
+void GuestLoad_InitWidgets(void);
+void GuestLoad_SetState(int state);
+void ArcadeBgm_Load(void);
+void MenuBgmBank_Init_OVL2(MenuBgmBank *bank, void *work, int size);
+void MenuBgmBank_LoadSeq_OVL2(MenuBgmBank *bank, VolBootId id);
+void MenuBgmBank_Load_OVL2(MenuBgmBank *bank, int volId);
+void ArcadeBgm_Play(void);
+void MenuBgmBank_Play_OVL2(MenuBgmBank *bank, int seq);
+void ArcadeBgm_Stop(void);
+void MenuBgmBank_Stop_OVL2(MenuBgmBank *bank);
+void StrPlayer_Close(ArcStrPlayer *p);
+void Movie_Stop_OVL2(ArcStrPlayer *p);
+void Movie_Shutdown_OVL2(ArcStrPlayer *p);
 RaceCar *RaceSetup_SetCarFromEntry(RaceSetup *setup, int index, int gridSlot, int driverType, int unk8f, unsigned int carId, unsigned int color, void *carEntry);
 
 // OVL3, with the copies OVL1, OVL2 and OVL4 build from its files.
