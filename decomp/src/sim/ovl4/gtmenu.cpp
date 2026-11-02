@@ -303,7 +303,7 @@ void GTMenu_QueueCarPreview(GTMenu *menu, int delay, int baseCarId, int carId, i
     menu->pendingCarId = carId;
     menu->pendingCarColor = colorIdx;
     menu->pendingCarSlot = garageSlot;
-    menu->pendingCarHasWheel = (unsigned char)hasWheel;
+    menu->pendingCarHasWheel = (signed char)hasWheel;
     menu->pendingCarWheel = wheel;
     menu->pendingCarDirt = dirt;
 }

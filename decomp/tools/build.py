@@ -66,6 +66,7 @@ GAS_CXX = {"src/sim/exe/screenviewloop.cpp", "src/sim/exe/format.cpp", "src/sim/
            "src/sim/exe/powergraph.cpp", "src/sim/exe/records.cpp", "src/sim/exe/replaydir.cpp",
            "src/sim/exe/savefile.cpp", "src/sim/exe/seq.cpp", "src/sim/exe/sfx.cpp",
            "src/sim/ovl4/battletable.cpp", "src/sim/ovl4/carwork2.cpp", "src/sim/ovl4/formatprice.cpp", "src/sim/ovl4/gtmode.cpp",
+           "src/sim/ovl4/menudraw.cpp",
            "src/sim/ovl4/menudata.cpp"}
 # C++ sources compiled with -mhard-float: the sound driver (seq.cpp) was built on its
 # own. GCC then counts the FPU registers as free, which raises its threshold for moving
@@ -164,8 +165,8 @@ CXX_NAMES = {"exe": {
     "ApplyVideoMode__11psxViewLoop": "psxViewLoop__ApplyVideoMode",
     "UpdateDisplay__11psxViewLoop": "psxViewLoop__UpdateDisplay",
     "Run__14ScreenViewLoop": "ScreenViewLoop__Run", "Execute__14ScreenViewLoop": "ScreenViewLoop__Execute",
-    # ...GTMenu's methods that are still assembly (BeginFrame in menudraw)...
-    "BeginFrame__6GTMenu": "GTMenu__BeginFrame", "Draw__6GTMenu": "GTMenu__Draw",
+    # ...GTMenu's method that is still assembly...
+    "Draw__6GTMenu": "GTMenu__Draw",
     # ...and the names the assembly calls them by, and their typeinfo.
     "GTMenu__GTMenu": "__6GTMenu", "GTMenu__GTMenu_dtor": "_._6GTMenu",
     "GTMenu__Enter": "Enter__6GTMenu", "GTMenu__Update": "Update__6GTMenu",

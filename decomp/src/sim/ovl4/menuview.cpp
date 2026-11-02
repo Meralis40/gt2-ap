@@ -173,7 +173,7 @@ void MenuPage_Enter(GTMenuView *view, int page, int keepList)
 }
 
 // The page's garage list element (kind 9), or 0.
-MenuElement *MenuView_FindGarageList(void)
+MenuElement *MenuView_FindGarageList(GTMenuView *view)
 {
     int i;
     MenuElement *e;
@@ -190,7 +190,7 @@ MenuElement *MenuView_FindGarageList(void)
 }
 
 // The page's used car list element (kind 0x50), or 0.
-MenuElement *MenuView_FindUsedCarList(void)
+MenuElement *MenuView_FindUsedCarList(GTMenuView *view)
 {
     int i;
     MenuElement *e;

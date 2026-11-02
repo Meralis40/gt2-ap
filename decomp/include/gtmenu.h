@@ -29,7 +29,7 @@ public:
     int pendingCarColor;        // colour index in the car colour list
     int pendingCarSlot;         // garage slot, -1 = not owned (dealer default setup)
     signed char pendingCarDelay;    // frames until the call; 0 = none
-    unsigned char pendingCarHasWheel;
+    signed char pendingCarHasWheel;
     unsigned char pad1b2[2];
     int pendingCarWheel;
     int pendingCarDirt;
@@ -54,7 +54,7 @@ public:
     virtual ~GTMenu();
     virtual void Enter();
     virtual void Leave();
-    virtual void BeginFrame();  // menudraw (still assembly)
+    virtual void BeginFrame();  // menudraw.cpp
     virtual int Update();
     virtual void Draw();
 };

@@ -1,12 +1,94 @@
 // OVL4 8001b3ac-8001d090 (menudraw): The menu page's elements.
-// GTMenu::BeginFrame and MenuPage_DrawElements are still the original assembly.
+// MenuPage_DrawElements is still the original assembly. Assembled by GNU as
+// (GAS_CXX): a branch in GTMenu::BeginFrame lands after the load delay nop.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
 #include "common.h"
 
 extern "C" {
+extern MenuCarList g_GarageList;
+extern MenuCarList g_UsedCarList;
+}
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/menudraw", GTMenu__BeginFrame);
+// Runs the hook, then what Update queued for this frame: the wheel on the
+// preview car, the page (with the cursor on its garage or used car list when
+// pendingPageArg asks and the list isn't empty, then the queued car at once)
+// and the car. Anything shown blanks the next 4 frames.
+void GTMenu::BeginFrame()
+{
+    int shown;
+
+    beginFrameTime = Timer_SinceFrameStart();
+    psxViewLoop::BeginFrame();
+    shown = 0;
+    if (hookActive) {
+        hookActive = hook(hookArg, 1, shown);
+    }
+    MenuView_BeginFrame(&view, (void **)layers[1].ot);
+    if (previewDelay == 1) {
+        CarPreview_SetWheel(&view.preview, previewWheel, previewWheelColor);
+        shown = 1;
+    }
+    if (pendingPageDelay == 1) {
+        MenuElement *garage;
+        MenuElement *used;
+        int nonEmpty;
+        int onList;
+
+        MenuPage_Enter(&view, pendingPage, pendingPageArg);
+        garage = MenuView_FindGarageList(&view);
+        used = MenuView_FindUsedCarList(&view);
+        // The game computes each list's count test apart and ands it with
+        // pendingPageArg; in one expression GCC branches on the count.
+        nonEmpty = g_GarageList.count > 0;
+        onList = garage ? pendingPageArg & nonEmpty : 0;
+        if (onList) {
+            listMode = 1;
+            MapCursor_MoveTo(&cursor, garage);
+        } else {
+            nonEmpty = g_UsedCarList.count > 0;
+            onList = used ? pendingPageArg & nonEmpty : 0;
+            if (onList) {
+                listMode = 2;
+                MapCursor_MoveTo(&cursor, used);
+            } else {
+                MapCursor_ResetToDefault(&cursor);
+            }
+        }
+        pendingPageDelay = 0;
+        shown = 1;
+        if (pendingCarDelay > 0) {
+            MenuView_ShowCar(&view, pendingCarBaseId, pendingCarId, pendingCarColor, pendingCarSlot,
+                             pendingCarHasWheel != 0, pendingCarWheel, pendingCarDirt);
+        }
+        pendingCarDelay = 0;
+    }
+    if (pendingPageDelay == 0) {
+        // A switch, for the game's registers (as ifs, they swap).
+        switch (pendingCarDelay) {
+        case 0:
+            break;
+        case 1:
+            MenuView_ShowCar(&view, pendingCarBaseId, pendingCarId, pendingCarColor, pendingCarSlot,
+                             pendingCarHasWheel != 0, pendingCarWheel, pendingCarDirt);
+            shown = 1;
+            pendingCarDelay = 0;
+            break;
+        default:
+            pendingCarDelay--;
+            break;
+        }
+    }
+    if (shown) {
+        blankFrames = 4;
+    }
+    if (blankFrames > 0) {
+        draw.otHead = 0;
+    }
+    updateStartTime = Timer_SinceFrameStart();
+}
+
+extern "C" {
 
 // Sets the menu's hook, run with arg until it returns 0; returns 0 (and sets
 // nothing) while one is running.
