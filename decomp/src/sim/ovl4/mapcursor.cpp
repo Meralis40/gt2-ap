@@ -5,7 +5,7 @@
 
 extern "C" {
 // g_MapCursor_Sprite, then g_MapCursor_SpriteActive (over a hotspot).
-extern MenuSprite g_MapCursor_Sprite[2];
+extern SpriteDesc g_MapCursor_Sprite[2];
 
 MenuElement *MenuView_FindDefaultElement(GTMenuView *view);
 MenuElement *MenuView_HotspotAt(GTMenuView *view, int x, int y);
@@ -270,7 +270,7 @@ void MapCursor_MoveTo(MapCursor *cursor, MenuElement *element)
 // Draws the cursor, with the other sprite over a hotspot.
 void MapCursor_Draw(MapCursor *cursor, void *ot)
 {
-    MenuSprite *sprite = g_MapCursor_Sprite;
+    SpriteDesc *sprite = g_MapCursor_Sprite;
     unsigned int *prim;
 
     if (cursor->hotspot != 0)

@@ -5,9 +5,9 @@
 
 extern "C" {
 extern GTFontGlyph g_GTFont_Glyphs[0x10b];
-extern MenuSprite g_GTFont_Sprites[0x10b];
+extern SpriteDesc g_GTFont_Sprites[0x10b];
 extern GTFontGlyph g_GTFontB_Glyphs[0x18];
-extern MenuSprite g_GTNumFont_Glyphs[0x18];
+extern SpriteDesc g_GTNumFont_Glyphs[0x18];
 extern short g_GTFont_Index[0x100];
 extern short g_GTFontB_Index[0x100];
 

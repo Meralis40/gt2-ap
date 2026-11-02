@@ -229,8 +229,6 @@ typedef unsigned int PartId;
 enum { LICENSE_S=0, LICENSE_IA=1, LICENSE_IB=2, LICENSE_IC=3, LICENSE_A=4, LICENSE_B=5, LICENSE_NONE=6 };
 typedef unsigned int LicenseId;
 
-typedef struct GTMenu GTMenu, *PGTMenu;
-
 typedef struct MapCursor MapCursor, *PMapCursor;
 
 typedef struct GTMenuView GTMenuView, *PGTMenuView;
@@ -407,7 +405,7 @@ struct GTFontGlyph {
 
 // A sprite of the GT mode menus (a font glyph, the map cursor): the SPRT's
 // texture words and its texture page.
-struct MenuSprite {
+struct SpriteDesc {
     unsigned int uvClut;    // 0x0
     unsigned int wh;        // 0x4
     unsigned short tpage;   // 0x8
