@@ -660,7 +660,7 @@ void *GameData_LoadGtMode(void *buffer, int size)
     return buffer;
 }
 
-void *GameData_LoadArcade(void *buffer)
+void *GameData_LoadArcade(void *buffer, int size)
 {
     g_GameDataMode = 1;
     g_DataLanguage = (unsigned int)g_GameState.language;

@@ -21,7 +21,7 @@ void CoursePreviewMovie_Init(ArcCoursePreviewMovie *m, void *buffer)
 }
 
 // Requests movie index movie (state 1).
-void CoursePreviewMovie_Play(ArcCoursePreviewMovie *m, void *menu, short movie)
+void CoursePreviewMovie_Play(ArcCoursePreviewMovie *m, void *menu, int movie)
 {
     m->movie = movie;
     m->state = '\x01';

@@ -13,7 +13,7 @@ INCLUDE_ASM("asm/sim/ovl2/nonmatchings/arclogo", ArcLogo_Upload);
 INCLUDE_ASM("asm/sim/ovl2/nonmatchings/arclogo", ArcLogo_UploadPending);
 
 // Sets the page and buffers and resets.
-void ArcLogo_Init(ArcLogo *logo, short vramPage, unsigned char *archive, void *timBuf)
+void ArcLogo_Init(ArcLogo *logo, int vramPage, unsigned char *archive, void *timBuf)
 {
     logo->vramPage = vramPage;
     logo->archive = archive;

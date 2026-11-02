@@ -7,10 +7,13 @@
 #include "resident.h"
 #include "movie.h"
 
+class ArcadeMenu;
+
+// A page of the arcade menu, its callbacks called with the menu.
 struct MenuPage {
-    void (*enter)(int); // 1 when returning from a child page
-    int (*update)(int); // returns 1 push, 2 back, 3/4 leave the menu
-    void (*draw)(DrawLayer *);
+    void (*enter)(ArcadeMenu *menu, int back); // back: 1 when returning from a child page
+    int (*update)(ArcadeMenu *menu, int active); // active: 0 for the leaving page; returns 1 push, 2 back, 3 to 6 leave the menu
+    void (*draw)(ArcadeMenu *menu, DrawLayer *layer);
     unsigned int titleColor; // RGB of the title bar
     char *title; // NULL = no title bar
 };
@@ -158,7 +161,7 @@ struct ArcCarView {
     unsigned char modelRead;
     unsigned char texRead;
     unsigned char wheelRead;
-    unsigned char colorDirty; // re-apply the colour on the next BeginFrame
+    signed char colorDirty; // re-apply the colour on the next BeginFrame
     unsigned char pad22[2];
     unsigned int modelBytes; // bytes read so far
     unsigned int modelSize;
@@ -236,10 +239,11 @@ struct ResultCarView {
 };
 
 // Arcade mode menu loop (0x298 bytes), derived from the resident psxViewLoopDoubleBuffer
-// (viewloop.h). Like BaseMenu but with a different layout from 0x1c4.
+// (viewloop.h), like OVL4's GTMenu; arcademenu.cpp emits its vtable. Constructed on
+// ArcadeMode_Run's stack.
 class ArcadeMenu : public psxViewLoopDoubleBuffer {
 public:
-    unsigned char hookActive; // hook runs each frame (BeginFrame step 0, Update step 1) while it returns non-zero
+    signed char hookActive; // hook runs each frame (BeginFrame step 0, Update step 1) while it returns non-zero
     unsigned char pad71[3];
     unsigned char (*hook)(void *, int, int);
     void *hookArg;
@@ -250,10 +254,10 @@ public:
     MenuPage *activePage; // page being updated or drawn
     MenuPage *leavingPage; // drawn fading out during a transition
     MenuPage *pageStack[16];
-    char pageDepth;
+    signed char pageDepth;
     unsigned char pad211;
     short transitionTimer; // 16 down to 0
-    unsigned char transitionBack;
+    signed char transitionBack;
     unsigned char pad215[3];
     unsigned int drawStamp; // g_GfxIrq.gpuDmaDoneTime
     int frameCount;
@@ -266,6 +270,14 @@ public:
     int logoArcReady; // CarLogoArc_Update result; forces the logo uploads
     ArcLogo logos[2];
     int unk294; // object set up by OVL2::CourseMap_Init (size unknown)
+
+    ArcadeMenu();
+    virtual ~ArcadeMenu();
+    virtual void Enter();
+    virtual void Leave();
+    virtual void BeginFrame();  // menupages.cpp
+    virtual int Update();
+    virtual void Draw();
 };
 
 

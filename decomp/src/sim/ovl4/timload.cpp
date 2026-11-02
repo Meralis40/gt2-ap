@@ -2,10 +2,10 @@
 #include "common.h"
 
 extern "C" {
-// Reads a TIM file from the volume into dst.
-void Tim_LoadFile(void *dst, VolBootId id)
+// Reads a TIM file from the volume into dst; returns its size.
+int Tim_LoadFile(void *dst, VolBootId id)
 {
     VolId_ReadFile(id, dst);
-    VolId_GetSize(id);
+    return VolId_GetSize(id);
 }
 }

@@ -148,6 +148,30 @@ CXX_NAMES = {"exe": {
     "ApplyVideoMode__11psxViewLoop": "psxViewLoop__ApplyVideoMode", "__tf11psxViewLoop": "psxViewLoop____tf",
     "__ti11psxViewLoop": "psxViewLoop__typeinfo",
     "Run__14ScreenViewLoop": "ScreenViewLoop__Run", "Execute__14ScreenViewLoop": "ScreenViewLoop__Execute",
+}, "ovl2": {
+    # ArcadeMenu (arcademenu.cpp, menupages.cpp): its resident bases...
+    "__23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer",
+    "_._23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer_dtor",
+    "Leave__23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__Leave",
+    "BeginDraw__23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__BeginDraw",
+    "SwapDisplay__23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__SwapDisplay",
+    "__tf23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer____tf",
+    "__ti23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__typeinfo",
+    "Enter__11psxViewLoop": "psxViewLoop__Enter", "Step__11psxViewLoop": "psxViewLoop__Step",
+    "Flip__11psxViewLoop": "psxViewLoop__Flip", "BeginFrame__11psxViewLoop": "psxViewLoop__BeginFrame",
+    "Update__11psxViewLoop": "psxViewLoop__Update", "Draw__11psxViewLoop": "psxViewLoop__Draw",
+    "EndDraw__11psxViewLoop": "psxViewLoop__EndDraw", "DrawFrame__11psxViewLoop": "psxViewLoop__DrawFrame",
+    "ApplyVideoMode__11psxViewLoop": "psxViewLoop__ApplyVideoMode",
+    "UpdateDisplay__11psxViewLoop": "psxViewLoop__UpdateDisplay",
+    "Run__14ScreenViewLoop": "ScreenViewLoop__Run", "Execute__14ScreenViewLoop": "ScreenViewLoop__Execute",
+    # ...its method that is still assembly...
+    "Enter__10ArcadeMenu": "ArcadeMenu__Enter",
+    # ...and the names the assembly calls them by, and its typeinfo.
+    "ArcadeMenu__ArcadeMenu": "__10ArcadeMenu", "ArcadeMenu__ArcadeMenu_dtor": "_._10ArcadeMenu",
+    "ArcadeMenu__Update": "Update__10ArcadeMenu", "ArcadeMenu__Draw": "Draw__10ArcadeMenu",
+    "ArcadeMenu__Leave": "Leave__10ArcadeMenu", "ArcadeMenu__BeginFrame": "BeginFrame__10ArcadeMenu",
+    "ArcadeMenu____tf": "__tf10ArcadeMenu", "ArcadeMenu__vtable": "__vt_10ArcadeMenu",
+    "__ti10ArcadeMenu": "0x80123800",
 }, "ovl4": {
     # GTMenu and GTLoadingMenu (gtmenu.cpp): their resident bases...
     "__23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer",
