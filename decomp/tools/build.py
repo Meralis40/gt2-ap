@@ -172,6 +172,18 @@ CXX_NAMES = {"exe": {
     "ArcadeMenu__Leave": "Leave__10ArcadeMenu", "ArcadeMenu__BeginFrame": "BeginFrame__10ArcadeMenu",
     "ArcadeMenu____tf": "__tf10ArcadeMenu", "ArcadeMenu__vtable": "__vt_10ArcadeMenu",
     "__ti10ArcadeMenu": "0x80123800",
+    # ArcadeRacingMenu (arcaderacingmenu.cpp): its resident base's SetVideoMode, its
+    # Draw that is still assembly, the names the assembly calls the others by, and
+    # its typeinfo.
+    "SetVideoMode__23psxViewLoopDoubleBufferUi": "psxViewLoopDoubleBuffer__SetVideoMode",
+    "Draw__16ArcadeRacingMenu": "ArcadeRacingMenu__Draw",
+    "ArcadeRacingMenu__ArcadeRacingMenu": "__16ArcadeRacingMenu",
+    "ArcadeRacingMenu__ArcadeRacingMenu_dtor": "_._16ArcadeRacingMenu",
+    "ArcadeRacingMenu__Enter": "Enter__16ArcadeRacingMenu",
+    "ArcadeRacingMenu__Leave": "Leave__16ArcadeRacingMenu",
+    "ArcadeRacingMenu__Update": "Update__16ArcadeRacingMenu",
+    "ArcadeRacingMenu____tf": "__tf16ArcadeRacingMenu", "ArcadeRacingMenu__vtable": "__vt_16ArcadeRacingMenu",
+    "__ti16ArcadeRacingMenu": "0x801C31E0",
 }, "ovl4": {
     # GTMenu and GTLoadingMenu (gtmenu.cpp): their resident bases...
     "__23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer",

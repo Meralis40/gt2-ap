@@ -280,5 +280,42 @@ public:
     virtual void Draw();
 };
 
+// What ArcadeRace_Setup leaves for the loading screen (g_ArcadeLoadInfo, 0x154 bytes).
+struct ArcadeLoadInfo {
+    unsigned int seeds[2];      // per car view: bits 0-1 the camera preset, 0-11 the yaw, 4-12 the roll
+    short unk08;                // picks the race type 6 title
+    short raceType;             // 0, 4 (the car list) and 6 (a TIM) change the screen
+    unsigned short carCount;
+    char name[0x42];
+    struct {
+        unsigned int carId;
+        unsigned short rgb;     // CarInfoA_GetColorRgb
+        unsigned short pad;
+    } cars[32];
+    void *tim;                  // race type 6: uploaded to 0x1c0, 0x100
+};
+
+// The arcade race loading screen (0x1ac bytes), derived from the resident
+// psxViewLoopDoubleBuffer (viewloop.h); arcaderacingmenu.cpp emits its vtable.
+// Constructed on ArcadeMode_Run's stack, after ArcadeRace_Setup. Shows the one or
+// two cars of ArcadeLoadInfo for 16 frames.
+class ArcadeRacingMenu : public psxViewLoopDoubleBuffer {
+public:
+    unsigned char pad70[0xe8];
+    DrawLayer layers[4];        // the two car views, the text and the background
+    short frames;               // 16 down to 0; leaves below 0
+    short textDelay;            // Update sets it to 3, Draw counts it down
+    int presets[2];             // the car views' camera presets (ArcadeRacingMenu_SetCamera)
+    short yaws[2];
+    short rolls[2];
+
+    ArcadeRacingMenu();
+    virtual ~ArcadeRacingMenu();
+    virtual void Enter();
+    virtual void Leave();
+    virtual int Update();
+    virtual void Draw();
+};
+
 
 #endif

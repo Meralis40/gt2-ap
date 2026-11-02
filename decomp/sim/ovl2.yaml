@@ -52,7 +52,7 @@ segments:
       - [0x3674, cpp, timupload] # 0x80013674
       - [0x36f0, cpp, carlogoarc] # 0x800136f0
       - [0x3844, cpp, arcademenu] # 0x80013844
-      - [0x4708, asm, arcaderacingmenu] # 0x80014708
+      - [0x4708, cpp, arcaderacingmenu] # 0x80014708
       - [0x5670, cpp, menupages] # 0x80015670
       - [0x5834, cpp, asyncread] # 0x80015834
       - [0x5ab4, cpp, arccarview] # 0x80015ab4
@@ -95,5 +95,7 @@ segments:
       - [0x165d4, cpp, strplayer] # 0x800265d4
       - [0x1678c, rodata] # 0x8002678c
       - [0x16f98, .rodata, arcademenu] # 0x80026f98: Update's jump table, vtable and type name of ArcadeMenu
-      - [0x1700c, rodata] # 0x8002700c, from the padding after arcademenu.cpp's .rodata
+      - [0x1700c, rodata] # 0x8002700c, the padding before arcaderacingmenu.cpp's .rodata
+      - [0x17010, .rodata, arcaderacingmenu] # 0x80027010: vtable and type name of ArcadeRacingMenu
+      - [0x17068, rodata] # 0x80027068
   - [0x43544]
