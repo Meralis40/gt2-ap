@@ -5,6 +5,7 @@
 #define OVL2_H
 
 #include "resident.h"
+#include "movie.h"
 
 struct MenuPage {
     void (*enter)(int); // 1 when returning from a child page
@@ -202,45 +203,10 @@ struct ArcLogo {
     void *timBuf; // buffer for a logo read from the CD
 };
 
-// Ring of frame buffers filled sector by sector from the CD stream.
-struct ArcStrRing {
-    unsigned int flags; // bit1 frame in progress, bit2 end of stream, bit3 sector pending
-    short readSlot;
-    short writeSlot;
-    short ready; // frames waiting to be decoded
-    short slots;
-    void **buffers; // frame buffer table
-    void *writePtr;
-    unsigned int frameNo;
-    unsigned int sectorNo;
-};
-
-// MDEC output side: DecDCTout into two slice buffers, LoadImage each slice.
-struct ArcStrDecoder {
-    short x; // RECT of the slice being uploaded
-    short y;
-    short sliceW; // 16 (15-bit) or 24 (24-bit)
-    short h;
-    char state; // 0 decoding, 1 frame done, 2 idle, 3 stopped
-    unsigned char rgb24;
-    short sliceWords;
-    short sliceCount;
-    short slicesLeft;
-    void *sliceBuf[2];
-};
-
-// Course preview movie player (STR-like stream, MDEC decode) used by the course selection page.
-struct ArcStrPlayer {
-    void *prevDmaHook; // g_GfxIrq.gpuDmaHook saved by Movie_Init_OVL2
-    void *onFrame; // called when a frame is uploaded
-    ArcStrRing ring;
-    ArcStrDecoder dec;
-    short destX;
-    short destY;
-    short frameW;
-    short frameH;
-    void *bitBuf[2]; // run-level buffers (swapped each frame)
-    void *pending; // decoded run-level data waiting for DecDCTin
+// The course preview movie player (0x5c bytes): OVL5's MoviePlayer, which OVL2's copy
+// of the movie code plays (Movie_*_OVL2, src/sim/ovl2/copies.h), then the state of
+// the course selection page's player (StrPlayer_Poll).
+struct ArcStrPlayer : MoviePlayer {
     void *work;
     short movie; // index in the stream table
     unsigned char started;

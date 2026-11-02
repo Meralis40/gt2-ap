@@ -1,4 +1,4 @@
-// OVL2 80019064-80019e60 (carspecpanel): Car spec panel.
+// OVL2 80019518-80019e60 (carspecpanel2): Car spec panel.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
@@ -8,17 +8,7 @@
 extern "C" {
 
 
-INCLUDE_ASM("asm/sim/ovl2/nonmatchings/carspecpanel", CarSpecPanel_Init);
-
-INCLUDE_ASM("asm/sim/ovl2/nonmatchings/carspecpanel", CarSpecPanel_Close);
-
-INCLUDE_ASM("asm/sim/ovl2/nonmatchings/carspecpanel", CarSpecPanel_SelectColor);
-
-INCLUDE_ASM("asm/sim/ovl2/nonmatchings/carspecpanel", CarSpecPanel_Next);
-
-INCLUDE_ASM("asm/sim/ovl2/nonmatchings/carspecpanel", Lerp_Clamped_OVL2);
-
-INCLUDE_ASM("asm/sim/ovl2/nonmatchings/carspecpanel", CarSpecPanel_Show);
+INCLUDE_ASM("asm/sim/ovl2/nonmatchings/carspecpanel2", CarSpecPanel_Show);
 
 // Advances every widget of both slots.
 void CarSpecPanel_Update(void *panel)
@@ -59,5 +49,5 @@ void CarSpecPanel_Update(void *panel)
     } while (iVar6 < 2);
 }
 
-INCLUDE_ASM("asm/sim/ovl2/nonmatchings/carspecpanel", CarSpecPanel_Draw);
+INCLUDE_ASM("asm/sim/ovl2/nonmatchings/carspecpanel2", CarSpecPanel_Draw);
 }

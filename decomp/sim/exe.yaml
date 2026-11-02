@@ -70,8 +70,11 @@ segments:
       - [0x5a7f8, cpp, savefile]  # 0x80069ff8
       - [0x5abfc, cpp, replaydraw]  # 0x8006a3fc
       - [0x5b468, cpp, text]  # 0x8006ac68
-      - [0x5bd48, cpp, menudraw]  # 0x8006b548
+      - [0x5bd48, cpp, rgblerp]  # 0x8006b548
+      - [0x5be1c, cpp, menuquad]  # 0x8006b61c, built by OVL2 too
+      - [0x5bf7c, cpp, menudraw]  # 0x8006b77c
       - [0x5c4b8, cpp, widgets]  # 0x8006bcb8
+      - [0x5ca74, cpp, grounddisc]  # 0x8006c274, built by OVL2 too
       - [0x5cc60, cpp, textitem]  # 0x8006c460
       - [0x5d5cc, asm, menulist]  # 0x8006cdcc
       - [0x5e1c8, cpp, numberpicker]  # 0x8006d9c8
@@ -80,7 +83,8 @@ segments:
       - [0x5f3f0, cpp, cardmenu]  # 0x8006ebf0
       - [0x6386c, asm, textentry]  # 0x8007306c
       - [0x644e4, cpp, powergraph]  # 0x80073ce4
-      - [0x65044, cpp, enginecurve]  # 0x80074844
+      - [0x65044, cpp, lerp]  # 0x80074844, built by OVL2 too
+      - [0x6509c, cpp, enginecurve]  # 0x8007489c
       - [0x667ac, cpp, carparams]  # 0x80075fac
       - [0x6855c, cpp, gamedata]  # 0x80077d5c
       - [0x68b70, cpp, sfx]  # 0x80078370

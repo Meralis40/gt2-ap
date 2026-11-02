@@ -3,6 +3,7 @@
 // assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
+#include "copies.h"
 #include "common.h"
 
 extern "C" {
@@ -17,21 +18,21 @@ void ArcadeBgm_Load(void)
     int spuAddr;
 
     spuAddr = g_SpuAllocPtr;
-    MenuBgmBank_Init_OVL2(&g_ArcadeBgmBank, &g_ArcadeBgmWork, 0x4800);
-    MenuBgmBank_Load_OVL2(&g_ArcadeBgmBank, 0xeb);
-    MenuBgmBank_LoadSeq_OVL2(&g_ArcadeBgmBank, VOLID_SOUND_ARCADE_SEQ);
+    MenuBgmBank_Init(&g_ArcadeBgmBank, &g_ArcadeBgmWork, 0x4800);
+    MenuBgmBank_Load(&g_ArcadeBgmBank, 0xeb);
+    MenuBgmBank_LoadSeq(&g_ArcadeBgmBank, VOLID_SOUND_ARCADE_SEQ);
     SpuAlloc_SetPtr(spuAddr);
 }
 
 // Plays sequence 0 of g_ArcadeBgmBank.
 void ArcadeBgm_Play(void)
 {
-    MenuBgmBank_Play_OVL2(&g_ArcadeBgmBank, 0);
+    MenuBgmBank_Play(&g_ArcadeBgmBank, 0);
 }
 
 // Stops g_ArcadeBgmBank.
 void ArcadeBgm_Stop(void)
 {
-    MenuBgmBank_Stop_OVL2(&g_ArcadeBgmBank);
+    MenuBgmBank_Stop(&g_ArcadeBgmBank);
 }
 }

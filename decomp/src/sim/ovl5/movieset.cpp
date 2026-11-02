@@ -3,8 +3,10 @@
 
 extern "C" {
 // The player being played, for the callbacks. The first variable of the
-// overlay's .bss.
+// overlay's .bss. OVL2's copy (src/sim/ovl2/copies.h) has its own.
+#ifndef MOVIE_PLAYER_EXTERN
 MoviePlayer *g_Movie OVL5_BSS;
+#endif
 
 void Movie_Init(MoviePlayer *mp, int rgb24)
 {

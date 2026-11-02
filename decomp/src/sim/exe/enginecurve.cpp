@@ -1,4 +1,4 @@
-// Resident code 80074844-80075fac (enginecurve). Ghidra's decompilation; the functions
+// Resident code 8007489c-80075fac (enginecurve). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
@@ -8,22 +8,6 @@ extern "C" {
 
 extern char D_8008FB3C[];
 extern unsigned char D_800923E2[][6]; // gear spacing per gear count: 3 pairs of 0xc8000 / value at 150 and 400 km/h
-
-// y0 + (y1 - y0) * (x - x0) / (x1 - x0), clamped to y0 and y1 outside [x0, x1];
-// -1 when x0 is negative (no point).
-int Lerp_Clamped(int x, int x0, int x1, int y0, int y1)
-{
-    if (x0 < 0) {
-        return -1;
-    }
-    if (x <= x0) {
-        return y0;
-    }
-    if (x >= x1) {
-        return y1;
-    }
-    return y0 + (y1 - y0) * (x - x0) / (x1 - x0);
-}
 
 // Resamples an engine curve to 80 points every 250 rpm (-1 past its end).
 #ifdef NON_MATCHING
