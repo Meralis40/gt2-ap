@@ -5,55 +5,6 @@
 #include "include_asm.h"
 #include "ovl4.h"
 
-// An event of the GT mode race data (the fields the entry rules read).
-struct RaceEvent {
-    char unk0[0x47];
-    unsigned char license;          // 0x47, see EventFlags::License
-    char unk48[0x75 - 0x48];
-    unsigned char dirt;             // 0x75
-    unsigned char allowedCarsList;  // 0x76, 1-based list of game data table 2, 0 = any car
-    unsigned char drivetrain;       // 0x77
-    unsigned short prizes[6];       // 0x78, in hundreds of credits
-    char unk84[0x96 - 0x84];
-    short maxPower;                 // 0x96, 0 = no limit
-    unsigned short championshipPrize; // 0x98, in hundreds of credits
-    unsigned char turbo;            // 0x9a
-    unsigned char racingMod;        // 0x9b
-};
-
-// The entry rules of an event, read through copies.
-struct EventFlags {
-    unsigned short bits;
-
-    int Dirt() { return bits & 1; }
-    // 1-6 = license B, A, IC, IB, IA, S needed
-    int License() { return (bits & 0xe) >> 1; }
-    // 1 FF, 2 FR, 3 MR, 4 RR, 5 4WD needed (Car.stat94 >> 13)
-    int Drivetrain() { return (bits & 0x70) >> 4; }
-    // 1 = no turbo, 2 = turbo
-    int Turbo() { return (bits & 0x180) >> 7; }
-    // 1 = no racing modification, 2 = racing modification, 3 = stock
-    int RacingMod() { return (bits & 0x600) >> 9; }
-};
-
-// An event's prizes and entry rules, built from the race data by EventRules_BuildAll.
-struct EventRules {
-    int championshipPrize;
-    int prizes[6];                  // 0x4, by place
-    EventFlags flags;               // 0x1c
-    short maxPower;                 // 0x1e
-    unsigned short allowedCarsStart; // 0x20, in g_EventAllowedCars
-    unsigned char allowedCarsCount; // 0x22, 0 = any car
-
-    EventFlags Flags() { return flags; }
-};
-
-// A replay file of an event's ghost.
-struct GhostEventFile {
-    char *eventCode;
-    VolBootId fileId;
-};
-
 extern "C" {
 int License_IsEarned(LicenseId license);
 LicenseId License_IdFromRaceCode2(char *raceCode);

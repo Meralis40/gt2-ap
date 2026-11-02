@@ -1,25 +1,6 @@
 // OVL4 8001d090-8001da24 (menuview): Menu view: car camera, pages and hotspots.
 #include "ovl4.h"
 
-// The three menu buffers (GTMenuView.assets0..2), copied as one.
-struct ViewAssets {
-    void *buf[3];
-};
-
-// The flow state at 0x801ef5f0: the menu page and music track to come back to.
-struct FlowMenuState {
-    int introShown;
-    int field04;
-    int page;
-    short bgmTrack;
-};
-
-// A cursor direction's unit vector (4.12), g_MapCursor_DirVectors.
-struct DirVector {
-    short x;
-    short y;
-};
-
 extern "C" {
 void CarPreview_Load(CarPreview *preview, unsigned int carId, int colorIdx, int garageSlot, int hasWheel, unsigned int wheel, int dirt);
 void CarPreview_Init(CarPreview *preview, void *config);

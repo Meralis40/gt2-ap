@@ -1,7 +1,7 @@
 // Picks the colour of a race car: a fixed colour from the table when colorIdx
 // is set, otherwise a random one among the car's colours.
 #include "common.h"
-#include "race.h"
+#include "gamestate.h"
 
 extern "C" {
 extern unsigned char D_80091620[];

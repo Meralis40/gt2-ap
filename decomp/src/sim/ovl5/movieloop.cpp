@@ -72,7 +72,7 @@ int psxMovieLoop::Update()
     busy = 1;
     for (;;) {
         now = Irq_WaitVSyncs(0);
-        PadButtons_Read(pad.buttons, &padState);
+        PadButtons_Read(&pad.buttons, &padState);
         if (noSkip == 0 && (padState.pressed & PAD_START)) {
             while (Movie_GetStatus(&player) == busy) {
             }

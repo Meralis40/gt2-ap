@@ -48,24 +48,6 @@ void SimMap_Update(GTMenu *menu, MenuElement *element, int arg);
 
 }
 
-// Car preview setup that Enter passes to MenuView_Init.
-struct GTMenuPreviewConfig {
-    void *buf;
-    unsigned char *work;
-    void *buf2;
-    short unk0c;
-    short unk0e;
-    short unk10;
-};
-
-// Where Enter takes the preview's unk0e and unk10 from: the high half of the
-// first word, and the halfword at +8.
-struct GTMenuPreviewParams {
-    unsigned int unk0;
-    unsigned int unk4;
-    unsigned short unk8;
-};
-
 extern "C" {
 // Pointers into g_OVL4_SharedBuffer.
 extern void *g_OVL4_WorkBuffer;     // TIM loads and the screen loops' packets (0x10000 bytes)

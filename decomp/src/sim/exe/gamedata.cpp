@@ -4,22 +4,8 @@
 #include "include_asm.h"
 #include "resident.h"
 
-// A game data file: a header, then tableCount tables, the second half being the
-// string pools of the first half's tables.
-struct GameData {
-    int unk0;
-    ushort unk4;
-    ushort tableCount;
-    GameDataTable tables[1];
-};
-
 // The table of race events, in the base data and the GT mode race data.
 #define GAMEDATA_EVENTS 30
-
-struct IdList {
-    int count;
-    unsigned int ids[16];
-};
 
 extern "C" {
 void CarSetup_FromCarEntry(void *carEntry, CarSetup *setup);

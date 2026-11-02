@@ -27,19 +27,19 @@ void CarWork_ResetSetting(CarWork *work, int setting)
 
     switch (setting) {
     case 0: {
-        unsigned char *e = work->suspEntries[work->partSlots[0]];
+        unsigned char *e = work->susp[work->partSlots[0]].bytes;
         work->setup.t12_60[0] = e[0x1f];
         work->setup.t12_60[1] = e[0x22];
         break;
     }
     case 1: {
-        unsigned char *e = work->suspEntries[work->partSlots[0]];
+        unsigned char *e = work->susp[work->partSlots[0]].bytes;
         work->setup.t12_5a[2] = e[0x15];
         work->setup.t12_5a[3] = e[0x18];
         break;
     }
     case 2: {
-        unsigned char *e = work->suspEntries[work->partSlots[0]];
+        unsigned char *e = work->susp[work->partSlots[0]].bytes;
         work->setup.t12_60[4] = e[0x2a];
         work->setup.t12_60[5] = e[0x2d];
         work->setup.t12_60[8] = e[0x38];
@@ -55,7 +55,7 @@ void CarWork_ResetSetting(CarWork *work, int setting)
         break;
     }
     case 3: {
-        unsigned char *e = work->suspEntries[work->partSlots[0]];
+        unsigned char *e = work->susp[work->partSlots[0]].bytes;
         work->setup.t12_60[6] = e[0x31];
         work->setup.t12_60[7] = e[0x34];
         work->setup.t12_60[10] = e[0x3f];
@@ -63,7 +63,7 @@ void CarWork_ResetSetting(CarWork *work, int setting)
         break;
     }
     case 4: {
-        unsigned char *e = work->suspEntries[work->partSlots[0]];
+        unsigned char *e = work->susp[work->partSlots[0]].bytes;
         work->setup.t12_5a[0] = e[0xb];
         work->setup.t12_5a[1] = e[0xe];
         break;
@@ -73,19 +73,19 @@ void CarWork_ResetSetting(CarWork *work, int setting)
         work->setup.setting_5e[1] = 0x80;
         break;
     case 6: {
-        unsigned char *e = work->suspEntries[work->partSlots[0]];
+        unsigned char *e = work->susp[work->partSlots[0]].bytes;
         work->setup.t12_60[12] = e[0x46];
         work->setup.t12_60[13] = e[0x4a];
         break;
     }
     case 7: {
-        unsigned char *e = work->brakeBalEntries[work->partSlots[2]];
+        unsigned char *e = work->brakeBal[work->partSlots[2]].bytes;
         work->setup.t01_50[0] = e[0xc];
         work->setup.t01_50[1] = e[0xc];
         break;
     }
     case 8: {
-        unsigned char *e = work->transEntries[work->partSlots[6]];
+        unsigned char *e = work->trans[work->partSlots[6]].bytes;
         work->setup.t11_4c = *(unsigned short *)&e[0x1a];
         i = 0;
     loop:
@@ -104,36 +104,36 @@ void CarWork_ResetSetting(CarWork *work, int setting)
         break;
     }
     case 9: {
-        work->setup.t11_4e = (work->transEntries + work->partSlots[6])[0][0x21];
+        work->setup.t11_4e = (work->trans + work->partSlots[6])[0].bytes[0x21];
         break;
     }
     case 0x10: {
-        unsigned char *e = *(work->racingModEntries + work->partSlots[0x13]);
+        unsigned char *e = (*(work->racingMod + work->partSlots[0x13])).bytes;
         work->setup.t05_52 = e[0x12];
         work->setup.t05_53 = e[0x15];
         break;
     }
     case 0xe:
-        work->setup.t1b_74 = (work->ascEntries + work->partSlots[0x14])[0][0xb];
+        work->setup.t1b_74 = (work->asc + work->partSlots[0x14])[0].bytes[0xb];
         break;
     case 0xf:
-        work->setup.t1c_75 = (work->tcsEntries + work->partSlots[0x15])[0][0xc];
+        work->setup.t1c_75 = (work->tcs + work->partSlots[0x15])[0].bytes[0xc];
         break;
     case 10:
     case 13: {
-        unsigned char *e = work->lsdEntries[work->partSlots[0x16]];
+        unsigned char *e = work->lsd[work->partSlots[0x16]].bytes;
         work->setup.t15_6e[0] = e[0xd];
         work->setup.t15_6e[1] = e[0x17];
         break;
     }
     case 11: {
-        unsigned char *e = work->lsdEntries[work->partSlots[0x16]];
+        unsigned char *e = work->lsd[work->partSlots[0x16]].bytes;
         work->setup.t15_6e[2] = e[0x10];
         work->setup.t15_6e[3] = e[0x1a];
         break;
     }
     case 12: {
-        unsigned char *e = work->lsdEntries[work->partSlots[0x16]];
+        unsigned char *e = work->lsd[work->partSlots[0x16]].bytes;
         work->setup.t15_6e[4] = e[0x13];
         work->setup.t15_6e[5] = e[0x1d];
         break;

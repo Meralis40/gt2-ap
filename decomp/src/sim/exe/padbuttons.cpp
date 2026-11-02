@@ -5,19 +5,6 @@
 #include "resident.h"
 #include "pad.h"
 
-// An analog axis mapped to a button (Pad_AnalogToButtons).
-struct PadAnalogMap {
-    unsigned short threshold; // the button is down from this value up
-    unsigned char axis;
-    unsigned char button;     // its bit
-};
-
-// The repeat timing of PadButtonState (g_PadRepeatStart and g_PadRepeatEnd).
-struct PadRepeat {
-    signed char start;
-    signed char end;
-};
-
 extern "C" {
 void PadButtons_ClearEvents(PadButtonState *state);
 void PadButtons_Update(PadButtonState *state, PadButton buttons);

@@ -26,25 +26,11 @@ extern char *g_PacketPtr;
 extern unsigned char D_80093148;
 extern TextCtx *D_8009314C;
 
-// Upload of the race font (VOL entry 0xc2) to VRAM, eight lines per sector.
-struct RaceFontUpload {
-    void *buf;      // sector buffer
-    RECT rect;      // VRAM rectangle of the next sector
-    ushort tpageId; // texture page the font goes to
-    short unkE;
-    short step;     // lines per sector
-    ushort remaining; // sectors left
-};
 extern RaceFontUpload g_RaceFont_Buf;
 
 // The pen position, in TextCtx.unk18.
 #define TEXT_PEN_X(ctx) (((short *)&(ctx)->unk18)[0])
 #define TEXT_PEN_Y(ctx) (((short *)&(ctx)->unk18)[1])
-
-struct OtTag {
-    unsigned addr : 24;
-    unsigned len : 8;
-};
 
 // Links a draw-mode packet (E1 command mode) from g_PacketPtr in after ot.
 // The 24-bit links are copied with lwl and swl, one asm statement each.

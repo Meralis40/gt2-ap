@@ -1,6 +1,6 @@
 // Fills g_RaceSetup for the race (copies of the OVL2 and OVL4 functions).
 #include "common.h"
-#include "race.h"
+#include "gamestate.h"
 
 extern "C" {
 char *strcpy(char *dst, const char *src);

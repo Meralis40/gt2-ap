@@ -3,25 +3,6 @@
 // Assembled by GNU as (GAS_CXX), for FUN_OVL4__8001719c's loop label.
 #include "ovl4.h"
 
-// CarSpec_FromCarWork's output and the two CarParams buffers, which ovl4.h doesn't
-// have.
-struct CarSpec {
-    unsigned char data[0xc8];
-};
-
-struct CarParams {
-    unsigned char data[0x1c0];
-};
-
-// A row of the installed parts summary: the tune slot (-1 ends the list), the part
-// of its stage 1, and the text offset.
-struct TuneSummaryRow {
-    short slot;
-    short nameBase;
-    short dx;
-    short dy;
-};
-
 extern "C" {
 void CarWork_LoadFromGarage(int slot, int garage);
 extern CarWork g_CarWork;
@@ -289,7 +270,7 @@ int RacingMod_FirstVariant(void)
 {
     CarWork_CountRacingModStages(&g_CarWork);
     g_RacingMod_Variant = 1;
-    return *(int *)(g_CarWork.racingModEntries[1] + 8);
+    return *(int *)(g_CarWork.racingMod[1].bytes + 8);
 }
 
 // Selects the next racing modification variant (back to the first after the
@@ -302,7 +283,7 @@ int RacingMod_NextVariant(void)
     if (count < ++g_RacingMod_Variant) {
         g_RacingMod_Variant = 1;
     }
-    return *(int *)(work->racingModEntries[g_RacingMod_Variant] + 8);
+    return *(int *)(work->racingMod[g_RacingMod_Variant].bytes + 8);
 }
 
 /* g_CarWork.turbo == 0 */

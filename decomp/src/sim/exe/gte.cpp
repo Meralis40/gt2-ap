@@ -5,56 +5,6 @@
 #include "resident.h"
 #include "gte.h"
 
-// The scratchpad's first 0x9c bytes as the drawing code lays them out (carmodel.cpp's
-// CarScratch): a copy of a Camera from its view matrix on, then the drawing state.
-struct ViewScratch {
-    MATRIX view;
-    int negPos[3];
-    short clipX[9];             // 0x2c: loaded as the light matrix; rows 0 and 1 are the
-    short pad3e;                // left and right planes' normals
-    short clipY[9];             // 0x40: loaded as the light colour matrix; the top and
-    short pad52;                // bottom planes' normals
-    int ofx;
-    int ofy;
-    short projH;
-    short screenW;
-    short screenH;
-    short nearZ;                // 0x62
-    unsigned int *ot;
-    char *packetPtr;            // 0x68
-    char *packetLimit;
-    char *verts;
-    char *normals;
-    int savedTrans[3];          // 0x78: the view, scaled down by Gte_LoadScaled
-    short savedRot[10];
-    short otShift;              // 0x98: the translation's shift
-    short rotShift;             // 0x9a: the rotation's shift
-};
-
-// A point for Clip_TestPoints.
-struct ClipPoint {
-    short x;
-    short y;
-    short z;
-    short pad;
-};
-
-// As carmodel.cpp: a model's LOD count and entries.
-struct LodEntry {
-    int dist;
-    void *mesh;
-};
-
-struct LodTable {
-    int count;
-    LodEntry lods[1];
-};
-
-// A MATRIX's rotation alone, for the temporary matrices that Matrix_Mul takes.
-struct MatrixRot {
-    short m[3][3];
-};
-
 extern "C" {
 extern short g_SinTable[];
 extern GfxIrqState g_GfxIrq;
@@ -590,12 +540,6 @@ void Gte_LoadTransform(ViewScratch *sp, int scale, int bits, int rotBits)
     Gte_LoadScaled(sp, Gte_TransMsb(&sp->view, scale << (bits - rotBits)), bits, rotBits);
 }
 
-// The scratchpad with Clip_TestBox's corners after the drawing state.
-struct BoxScratch {
-    ViewScratch view;
-    ClipPoint box[8];
-};
-
 // Clip_TestPoints on the eight corners of the box from min to max.
 unsigned int Clip_TestBox(ViewScratch *sp, short *min, short *max)
 {
@@ -787,62 +731,6 @@ void Tim_LoadClutAndImage(void *tim, RECT *clutRect, RECT *imageRect)
 // true one, which projects and tests against the side planes (through the eye) the same,
 // but the near plane test compares the scaled depth with nearZ.
 #ifdef NON_MATCHING
-// Poly_Clip's input.
-struct PolyClipIn {
-    unsigned int *ot;           // 0x9c
-    unsigned int code;          // the POLY_G3 or POLY_G4 code, in the top byte
-    int pad;
-    struct {
-        int xy;                 // view-space position
-        short z;
-        short extent;           // |x| | |y| | |z|
-        int sxy;
-        unsigned int rgbc;      // the colour (the top byte isn't used)
-    } v[4];
-};
-
-struct ClipVert {
-    short x;                    // the position, scaled
-    short y;
-    short z;
-    short pad;
-    int sxy;
-    unsigned int rgbc;          // a cut point keeps the record's old top byte
-    ClipVert *prev;
-    ClipVert *next;
-    unsigned short code;        // 0x18: bit 0 nearer than nearZ, bits 1-4 outside a side
-    short dist[5];              // the distance to each plane, negative outside
-};
-
-// The working state after the input, through 0x2e8.
-struct PolyClip {
-    ClipVert pool[14];          // 0xe8
-    ClipVert *head;             // 0x2e0
-    ClipVert *free;             // 0x2e4
-};
-
-struct ClipG3 {
-    unsigned int tag;
-    unsigned int rgbc0;
-    int xy0;
-    unsigned int rgb1;
-    int xy1;
-    unsigned int rgb2;
-    int xy2;
-};
-
-struct ClipG4 {
-    unsigned int tag;
-    unsigned int rgbc0;
-    int xy0;
-    unsigned int rgb1;
-    int xy1;
-    unsigned int rgb2;
-    int xy2;
-    unsigned int rgb3;
-    int xy3;
-};
-
 // The shift that brings the top bit of extent to bit 12 (negative to shift left).
 static inline int Clip_Shift(int extent)
 {
@@ -1077,7 +965,7 @@ void Poly_Clip(ViewScratch *sp, int count)
         while (b != z) {
             last = (unsigned int *)pkt;
             if (b == y) {
-                ClipG3 *g = (ClipG3 *)pkt;
+                PolyG3 *g = (PolyG3 *)pkt;
 
                 g->tag = 0x06000000;
                 g->xy0 = a->sxy;
@@ -1087,12 +975,12 @@ void Poly_Clip(ViewScratch *sp, int count)
                 g->rgb1 = z->rgbc;
                 ((unsigned char *)&g->rgbc0)[3] = tri;
                 g->rgb2 = b->rgbc;
-                pkt += sizeof(ClipG3);
+                pkt += sizeof(PolyG3);
                 break;
             } else {
-                ClipG4 *g = (ClipG4 *)pkt;
+                PolyG4 *g = (PolyG4 *)pkt;
 
-                g->tag = 0x08000000 | ((unsigned int)(pkt + sizeof(ClipG4)) & 0xffffff);
+                g->tag = 0x08000000 | ((unsigned int)(pkt + sizeof(PolyG4)) & 0xffffff);
                 g->xy0 = a->sxy;
                 g->xy1 = z->sxy;
                 g->xy2 = b->sxy;
@@ -1102,7 +990,7 @@ void Poly_Clip(ViewScratch *sp, int count)
                 g->rgb2 = b->rgbc;
                 ((unsigned char *)&g->rgbc0)[3] = quad;
                 g->rgb3 = y->rgbc;
-                pkt += sizeof(ClipG4);
+                pkt += sizeof(PolyG4);
                 a = b;
                 z = y;
                 b = b->next;

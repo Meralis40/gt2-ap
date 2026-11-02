@@ -1,36 +1,6 @@
 // Fills g_RaceSetup for an event race (a copy of the OVL4 function).
 #include "common.h"
-#include "race.h"
-
-struct IdList;
-
-// An event of the event data.
-struct RaceEvent {
-    unsigned short codeString;
-    unsigned short courseString;   // 0x2
-    char unk4[0x44 - 0x4];
-    unsigned char noIntro;         // 0x44
-    unsigned char lapCount;
-    char unk46[0x94 - 0x46];
-    unsigned short nameString;     // 0x94
-};
-
-// The race parameters of an event (g_RaceEventParams), copied from the event.
-struct RaceEventParams {
-    char data[0x40];
-};
-
-struct RaceOptions {
-    char data[8];
-};
-
-// An entry of game data table 5.
-struct Table5Entry {
-    char unk0[8];
-    unsigned int carId;            // 0x8
-    char unkc[2];
-    unsigned char fixedCar;        // 0xe
-};
+#include "gamestate.h"
 
 extern "C" {
 extern void *g_EventDataBuf;

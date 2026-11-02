@@ -5,53 +5,7 @@
 // here.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "viewloop.h"
-
-// A splash screen of g_SplashScreens, which ends with a null timGz.
-struct SplashScreen {
-    void *timGz;                // gzip-compressed TIM
-    unsigned short frames;
-    unsigned char fadeOut;
-    unsigned char hiRes;        // 640 pixels wide
-};
-
-// The part of the textured quad Prim_AddTexQuad returns that is set here.
-struct TexQuad {
-    short x;
-    short unk02[3];
-    short texX;
-    short y;
-    unsigned char u;
-    unsigned char v;
-    unsigned short clut;
-    short w;
-    short h;
-};
-
-// One draw layer of a view (ViewDrawContext_AddLayer).
-struct DrawLayer {
-    unsigned short priority;
-    unsigned short otSize;
-    DrawLayer *next;
-    void *ot;
-    void *header;
-};
-
-class VendorBootLogo : public psxViewLoopDoubleBuffer {
-public:
-    DrawLayer layer;
-    int frame;
-    int duration;               // frames to show
-    int fadeOut;                // fade out over the last 16 frames
-    int yOffset;
-    int hiRes;
-
-    VendorBootLogo();
-    virtual ~VendorBootLogo();
-    virtual int Update();
-    virtual void Draw();
-    void InitLayer();
-};
+#include "resident.h"
 
 extern "C" {
 extern SplashScreen g_SplashScreens[];

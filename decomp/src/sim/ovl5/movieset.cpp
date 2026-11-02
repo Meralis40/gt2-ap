@@ -61,12 +61,12 @@ void Movie_SetCdRange(MoviePlayer *mp, unsigned int lba, int sectors)
     CdAudio_ResetRead();
     end = lba + sectors;
     end--;
-    g_CdAudio.req.mode = 0xc0;
+    g_CdAudio.reqMode = 0xc0;
     g_CdAudio.masterVol = 0x8000;
-    g_CdAudio.req.flag = 0;
-    g_CdAudio.req.start = lba;
-    g_CdAudio.req.end = end;
-    CdReq_SetFilter(1, 7, &g_CdAudio.req);
-    g_CdAudio.onSector = Movie_CdSectorCb;
+    g_CdAudio.reqFlag = 0;
+    g_CdAudio.reqStart = lba;
+    g_CdAudio.reqEnd = end;
+    CdReq_SetFilter(1, 7, (CdReq *)&g_CdAudio.reqFlag);
+    g_CdAudio.onSector = (void *)Movie_CdSectorCb;
 }
 }

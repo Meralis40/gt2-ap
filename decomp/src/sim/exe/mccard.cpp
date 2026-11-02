@@ -4,15 +4,6 @@
 #include "include_asm.h"
 #include "mccard.h"
 
-// The 128-byte header frame of a save file.
-struct McHeader {
-    unsigned short magic; // "SC"
-    unsigned char iconFlag;
-    unsigned char blocks;
-    unsigned char title[0x40]; // Shift-JIS
-    unsigned char unk44[0x3c];
-};
-
 extern "C" {
 void *memset(void *s, int c, unsigned int n);
 int memcmp(const void *a, const void *b, unsigned int n);

@@ -5,37 +5,14 @@
 #include "include_asm.h"
 #include "ovl4.h"
 
-// The parts of the resident CarParams (0x1c0 bytes) and EnginePerf (0x6c bytes)
-// used here.
-struct BattleCarParams {
-    unsigned char pad00[0x5a];
-    short weight;
-    unsigned char pad5c[0x2e];
-    unsigned char drivetrain;
-    unsigned char pad8b[0x135];
-};
-
-struct BattleEnginePerf {
-    unsigned short maxPower;
-    unsigned char pad02[0x6a];
-};
-
-// The player's car (gtbattlemenu.cpp's g_Battle_Player).
-struct BattlePlayer {
-    short power;
-    short weight;
-    signed char racingMod;
-    unsigned char pad05[3];
-};
-
 extern "C" {
 extern void *g_GtModeRaceData;
 
 void *GameData_GetCarEntry(int index);
 void *GameData_GetEntry(int table, int index);
 void CarSetup_InitFromCarEntry(void *entry, CarSetup *setup);
-void CarParams_BuildFromSetup(CarSetup *setup, BattleCarParams *params);
-void CarParams_GetPerformance(BattleCarParams *params, BattleEnginePerf *perf);
+void CarParams_BuildFromSetup(CarSetup *setup, CarParams *params);
+void CarParams_GetPerformance(CarParams *params, EnginePerf *perf);
 
 // weight * 300000 / power^2 (0x88b9 when power is 0). Lower is faster.
 int Battle_WeightPowerScore(int power, int weight)
@@ -86,8 +63,8 @@ int BattleTable_LoadNext(BattleCarTable *t)
     if (i < t->count) {
         BattleCarStat *s = &t->cars[i];
         CarSetup setup;
-        BattleCarParams params;
-        BattleEnginePerf perf;
+        CarParams params;
+        EnginePerf perf;
         int racingMod;
 
         CarSetup_InitFromCarEntry(GameData_GetCarEntry(i + 1), &setup);

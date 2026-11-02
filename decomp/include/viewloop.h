@@ -27,23 +27,32 @@ struct ViewDrawContext {
     void *otEnd;
     unsigned short otSize;
     unsigned short otHalf;
-    int unk18;
-    void *tailPackets;
+    unsigned int drawMode;      // texture page bits of the E1 draw-mode packet ViewDrawContext_End appends
+    void *tailPackets;          // terminator packets EndDraw appends (draw mode, cache flush)
 };
 
-// Double-buffered primitive pool (PacketBuffer_Swap).
+// Double-buffered primitive pool (PacketBuffer_Swap); g_PacketPtr allocates
+// from the current half.
 struct PacketBuffer {
     void *base;
-    unsigned int size;
-    unsigned int half;
+    unsigned int size;          // words, both halves
+    unsigned int half;          // 0 or size/2
 };
 
-// Game-side interrupt and display state (Irq_Install).
-struct GfxIrq {
-    unsigned int vblankTotal;
+// Game-side interrupt and display state, cleared by Irq_Install.
+struct GfxIrqState {
+    unsigned int vblankTotal;   // every vblank; Irq_WaitVSyncs returns it
     int vblanksSinceFlip;       // reset by Irq_WaitVSyncs and Gpu_WaitField
-    VSyncCallback *vsyncCallbacks;
-    void (*gpuDmaHook)();
+    VSyncCallback *vsyncCallbacks;  // priority-sorted list run by Irq_VSyncHandler
+    void (*gpuDmaHook)();       // called after each GPU DMA completion; overlays chain their own
+    unsigned int displayMode;   // last GP1(08) mode written by Gpu_SetDisplayMode
+    int gpuDmaCount;
+    int gpuDmaDoneTime;         // Timer_SinceFrameStart at the last GPU DMA completion
+    int gpuDmaDoneHblanks;
+    unsigned int gpustatAtWait; // GPUSTAT when Irq_WaitVSyncs started; Gpu_WaitField waits for its bit 31 to flip
+    unsigned char imageTransferBusy;    // 1 during Gpu_TransferImage
+    unsigned char imageDmaPending;      // 1 from Gpu_TransferImage's DMA start until Irq_GpuDmaHandler
+    unsigned char pad26[2];
 };
 
 // The resident screen loops. ScreenViewLoop (screenviewloop.cpp) holds only the
@@ -120,7 +129,7 @@ public:
 };
 
 extern "C" {
-extern GfxIrq g_GfxIrq;
+extern GfxIrqState g_GfxIrq;
 extern unsigned char g_LastBufferIndex;
 extern psxViewLoop *g_CurrentViewLoop;
 }

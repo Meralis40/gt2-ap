@@ -14,7 +14,7 @@ int Movie_GetStatus(MoviePlayer *mp)
     if ((unsigned short)mp->stream.queued == 0) {
         if (mp->stream.flags & 4) {
             status = 2;
-        } else if (g_CdAudio.state == 0) {
+        } else if (((volatile CdAudio *)&g_CdAudio)->state == 0) {  // changed by the CD interrupt
             status = 3;
         }
     } else if (mp->mdec.state == 2) {

@@ -1,7 +1,7 @@
 // ScreenViewLoop, the base of the resident screen loops (psxViewLoop, the boot
 // logo, OVL5's psxMovieLoop). Its vtable and type name (.rodata), __tf function
 // and typeinfo (.bss) are emitted here.
-#include "viewloop.h"
+#include "resident.h"
 
 ScreenViewLoop::ScreenViewLoop()
 {

@@ -266,7 +266,7 @@ int Tune_InstallPart(int carSlot, int partId, int garageIdx, unsigned int color)
         unsigned int model;
 
         CarWork_SetPartSlot(work, 0x13, g_RacingMod_Variant);
-        model = *(int *)(work->racingModEntries[g_RacingMod_Variant] + 8);
+        model = *(int *)(work->racingMod[g_RacingMod_Variant].bytes + 8);
         car->color = color;
         car->baseCarId = model;
         Car_StoreSetup(car, work);

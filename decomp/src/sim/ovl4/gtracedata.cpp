@@ -3,14 +3,6 @@
 #include "include_asm.h"
 #include "ovl4.h"
 
-// An entry of game-data table 0x1d (the wheels).
-struct WheelEntry {
-    unsigned int code;              // 0x0, 0 for the car's own wheels
-    unsigned short unk4;
-    unsigned char altVariant;       // 0x6, for a racing modified car's own wheels
-    unsigned char variant;          // 0x7
-};
-
 extern "C" {
 void *GameData_GetEntryIn(void *data, int table, int index);
 char *GameData_GetTableString(void *data, int table, unsigned int index);

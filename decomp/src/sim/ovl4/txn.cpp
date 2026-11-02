@@ -3,31 +3,16 @@
 #include "include_asm.h"
 #include "ovl4.h"
 
-// The resident CarParams (0x1c0 bytes), EnginePerf (0x6c bytes) and CarSpec
-// (0xc4 bytes), of which only the power is read here.
-struct TxnCarParams {
-    unsigned char data[0x1c0];
-};
-
-struct TxnEnginePerf {
-    unsigned short maxPower;
-    unsigned char pad02[0x6a];
-};
-
-struct TxnCarSpec {
-    unsigned char data[0xc4];
-};
-
 extern "C" {
 int Car_GetNewPrice(unsigned int carCode);
 int Car_GetSellPrice(unsigned int carId);
 int Part_GetPrice(unsigned int carCode, PartId partId);
 int Car_HasPart(Car *car, int part);
 CarSetup *CarWork_Get(void);
-int CarParams_BuildFromSetup(CarSetup *setup, TxnCarParams *params);
-int CarParams_GetPerformance(TxnCarParams *params, TxnEnginePerf *out);
-void CarWork_BuildSpecWithPart(int slot, int part, int garage, TxnCarSpec *out);
-int CarParams_Build(TxnCarSpec *spec, TxnCarParams *params);
+int CarParams_BuildFromSetup(CarSetup *setup, CarParams *params);
+int CarParams_GetPerformance(CarParams *params, EnginePerf *out);
+void CarWork_BuildSpecWithPart(int slot, int part, int garage, CarSpec *out);
+int CarParams_Build(CarSpec *spec, CarParams *params);
 void CarWork_RebuildParams(void);
 void Garage_SellCar(int carSlot, int garageIdx);
 void Garage_LoadCar(int slot, int garage);
@@ -140,10 +125,10 @@ void Txn_PreviewPart(ShopTxn *txn, int part)
     Garage *garage = &gs->garages[0];
     int slot = garage->currentCar;
     Car *car = &garage->cars[slot];
-    TxnCarParams params;
-    TxnEnginePerf perf;
+    CarParams params;
+    EnginePerf perf;
     CarSetup setup;
-    TxnCarSpec spec;
+    CarSpec spec;
 
     txn->price = Part_GetPrice(car->carId, part);
     txn->partOwned = Car_HasPart(car, part);

@@ -5,14 +5,6 @@
 #include "include_asm.h"
 #include "ovl4.h"
 
-// A box with a top and a bottom colour (Menu_DrawCursorBox), or a colour swatch
-// (Menu_DrawColorSwatch, top colour only).
-struct GouraudQuad {
-    RECT rect;
-    unsigned int top;
-    unsigned int bottom;
-};
-
 extern "C" {
 extern GameState g_GameState;
 extern MenuList g_GarageList_Menu;

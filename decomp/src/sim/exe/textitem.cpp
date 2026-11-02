@@ -5,29 +5,6 @@
 #include "include_asm.h"
 #include "resident.h"
 
-// The style template TextItem_Init copies (the first 0x1c bytes of a TextItem).
-struct TextStyle {
-    uchar charsPerStep;
-    uchar unk01;
-    short revealSteps;
-    short zoomWidth;
-    short closeSteps;
-    short fadeSteps;
-    signed char spacing;
-    signed char height;
-    ushort flags;
-    ushort pad0e;
-    Font *font;
-    uint rgbFrom;
-    uint rgbTo;
-};
-
-struct GouraudQuad {
-    RECT rect;
-    uint top;
-    uint bottom;
-};
-
 // TextItem.flags
 #define TEXTITEM_ABR 0x3        // blend mode of the letters
 #define TEXTITEM_TILE 0x4       // a tile of the letter's colour behind each letter

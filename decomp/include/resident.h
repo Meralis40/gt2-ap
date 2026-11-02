@@ -1,11 +1,12 @@
-// Types of the resident code, exported from the Ghidra project (DataTypeWriter)
-// and adapted for cc1plus: enums as sized integers, C++ keywords renamed, bool
-// as a byte (Ghidra's size; GCC 2.8's bool is a word).
-// Only the types that the decompiled resident files use. See docs/decomp.md.
+// The types of the game, shared by all the decompiled sources: those of the
+// resident code exported from the Ghidra project (DataTypeWriter) and adapted
+// for cc1plus (enums as sized integers, C++ keywords renamed), the screen loops
+// (viewloop.h), the GPU primitives (prim.h), and at the end the types declared
+// with the decompiled files, and the subsystem headers. Overlay types are in
+// ovl4.h and movie.h. See docs/decomp.md.
 #ifndef RESIDENT_H
 #define RESIDENT_H
 
-#define bool unsigned char
 typedef int code(...);
 typedef unsigned char   undefined;
 typedef unsigned char    byte;
@@ -18,6 +19,14 @@ typedef unsigned short    undefined2;
 typedef unsigned int    undefined4;
 typedef unsigned short    ushort;
 typedef unsigned short    word;
+typedef void *pointer;
+typedef unsigned int    dword;
+typedef long long    longlong;
+typedef signed char    schar;
+
+#include "viewloop.h"
+#include "prim.h"
+
 typedef struct Camera Camera, *PCamera;
 typedef struct MATRIX MATRIX, *PMATRIX;
 
@@ -531,59 +540,59 @@ typedef struct CarSetup CarSetup, *PCarSetup;
 struct CarSetup {
     uint wheel; /* Wheel code from table 0x1d entry (see Wheel_ParseCode) | variant << 8. Rebuilt by CarSetup_SetWheels */
 
-    short idx_t00; /* Part index into game-data table 0x00; tune slot 1, part 1 */
+    ushort idx_t00; /* Part index into game-data table 0x00; tune slot 1, part 1 */
 
-    short idx_t01; /* Part index into game-data table 0x01; tune slot 2, part 2 */
+    ushort idx_t01; /* Part index into game-data table 0x01; tune slot 2, part 2 */
 
-    short idx_08; /* From car entry +0x08; no tune part writes it */
+    ushort idx_08; /* From car entry +0x08; no tune part writes it */
 
-    short idx_0a; /* From car entry +0x0a; no tune part writes it */
+    ushort idx_0a; /* From car entry +0x0a; no tune part writes it */
 
-    short idx_0c; /* From car entry +0x10; no tune part writes it */
+    ushort idx_0c; /* From car entry +0x10; no tune part writes it */
 
-    short idx_t0d; /* Part index into game-data table 0x0d; no tune part writes it */
+    ushort idx_t0d; /* Part index into game-data table 0x0d; no tune part writes it */
 
-    short idx_t11; /* Part index into game-data table 0x11 (transmission); tune slot 6, parts 13-15 */
+    ushort idx_t11; /* Part index into game-data table 0x11 (transmission); tune slot 6, parts 13-15 */
 
-    short idx_t12; /* Part index into game-data table 0x12 (suspension); tune slot 0, parts 35-37 */
+    ushort idx_t12; /* Part index into game-data table 0x12 (suspension); tune slot 0, parts 35-37 */
 
-    short idx_t15; /* Part index into game-data table 0x15; tune slot 0x16, parts 21-25 (5 stages) */
+    ushort idx_t15; /* Part index into game-data table 0x15; tune slot 0x16, parts 21-25 (5 stages) */
 
-    short idx_t16_front; /* Part index into game-data table 0x16; tune slot 3, parts 39-45 (7 stages): front tyres */
+    ushort idx_t16_front; /* Part index into game-data table 0x16; tune slot 3, parts 39-45 (7 stages): front tyres */
 
-    short idx_t16_rear; /* Part index into game-data table 0x16; tune slot 4, parts 39-45: rear tyres */
+    ushort idx_t16_rear; /* Part index into game-data table 0x16; tune slot 4, parts 39-45: rear tyres */
 
-    short idx_t04; /* Part index into game-data table 0x04; tune slot 0x12, parts 18-20: weight reduction stages 1-3 (each requires the previous) */
+    ushort idx_t04; /* Part index into game-data table 0x04; tune slot 0x12, parts 18-20: weight reduction stages 1-3 (each requires the previous) */
 
-    short idx_t05; /* Part index into game-data table 0x05; tune slot 0x13, part 34: racing modification (requires part 20; also changes baseCarId) */
+    ushort idx_t05; /* Part index into game-data table 0x05; tune slot 0x13, part 34: racing modification (requires part 20; also changes baseCarId) */
 
-    short idx_t07; /* Part index into game-data table 0x07; tune slot 0xb, part 32 */
+    ushort idx_t07; /* Part index into game-data table 0x07; tune slot 0xb, part 32 */
 
-    short idx_t08; /* Part index into game-data table 0x08; tune slot 0xc, part 9 */
+    ushort idx_t08; /* Part index into game-data table 0x08; tune slot 0xc, part 9 */
 
-    short idx_t09; /* Part index into game-data table 0x09; tune slot 0xe, parts 7-8 */
+    ushort idx_t09; /* Part index into game-data table 0x09; tune slot 0xe, parts 7-8 */
 
-    short idx_t0a; /* Part index into game-data table 0x0a; tune slot 10, part 6 */
+    ushort idx_t0a; /* Part index into game-data table 0x0a; tune slot 10, part 6 */
 
-    short idx_t0b; /* Part index into game-data table 0x0b; tune slot 0xd, parts 29-31 (3 stages) */
+    ushort idx_t0b; /* Part index into game-data table 0x0b; tune slot 0xd, parts 29-31 (3 stages) */
 
-    short idx_t0c; /* Part index into game-data table 0x0c; tune slot 0xf, parts 46-49 (4 stages; likely turbo) */
+    ushort idx_t0c; /* Part index into game-data table 0x0c; tune slot 0xf, parts 46-49 (4 stages; likely turbo) */
 
-    short idx_t0e; /* Part index into game-data table 0x0e; tune slot 8, parts 10-12 (3 stages) */
+    ushort idx_t0e; /* Part index into game-data table 0x0e; tune slot 8, parts 10-12 (3 stages) */
 
-    short idx_t0f; /* Part index into game-data table 0x0f; tune slot 7, parts 3-5 (3 stages) */
+    ushort idx_t0f; /* Part index into game-data table 0x0f; tune slot 7, parts 3-5 (3 stages) */
 
-    short idx_t10; /* Part index into game-data table 0x10; tune slot 9, part 33 */
+    ushort idx_t10; /* Part index into game-data table 0x10; tune slot 9, part 33 */
 
-    short idx_t14; /* Part index into game-data table 0x14; tune slot 0x11, parts 26-28 (3 stages) */
+    ushort idx_t14; /* Part index into game-data table 0x14; tune slot 0x11, parts 26-28 (3 stages) */
 
-    short idx_t13; /* Part index into game-data table 0x13; tune slot 0x10, parts 16-17 (2 stages) */
+    ushort idx_t13; /* Part index into game-data table 0x13; tune slot 0x10, parts 16-17 (2 stages) */
 
-    short idx_t1b; /* Part index into game-data table 0x1b; tune slot 0x14, part 0 */
+    ushort idx_t1b; /* Part index into game-data table 0x1b; tune slot 0x14, part 0 */
 
-    short idx_t1c; /* Part index into game-data table 0x1c; tune slot 0x15, part 38 */
+    ushort idx_t1c; /* Part index into game-data table 0x1c; tune slot 0x15, part 38 */
 
-    short idx_t1d; /* Part index into game-data table 0x1d: wheels (tune slot 5, set by the wheel shop) */
+    ushort idx_t1d; /* Part index into game-data table 0x1d: wheels (tune slot 5, set by the wheel shop) */
 
     ushort pad_3a;
     short t11_values[8]; /* Gear ratios x1000 from the transmission entry: [1..n] forward gears, [0] = (3*[1]+[2])/4. Recomputed by Gearbox_ComputeRatios for a full-custom transmission */
@@ -693,117 +702,124 @@ struct CarSpec { /* Setup resolved to game-data entry pointers (CarSpec_Resolve,
 
 typedef struct CarWork CarWork, *PCarWork;
 
-struct CarWork { /* Tuning workspace for one car (0x17e8 bytes). setup is the car's CarSetup; each tuning category keeps the game-data entry of every stage the car can use (stage 0 = stock, copied from the default setup) and its entry index (-1 = not available). partSlots[slot] = installed stage per tune slot (CarWork_SetPartSlot). Built by CarWork_Clear (memset -1), CarWork_LoadParts, CarWork_SetStagesFromSetup. Instances: g_CarWork (OVL4 tune shops), g_RaceCarWork / g_RaceCarWorkAlt (resident, read by OVL0). */
+// Tuning workspace for one car (0x17e8 bytes). setup is the car's CarSetup;
+// each tuning category keeps the game data entry of every stage the car can use
+// (stage 0 = stock, copied from the default setup) and its entry index (-1 =
+// not available). Built by CarWork_Clear (memset -1), CarWork_LoadParts and
+// CarWork_SetStagesFromSetup. Instances: g_CarWork (OVL4 tune shops),
+// g_RaceCarWork and g_RaceCarWorkAlt (resident, read by OVL0).
+// Game data entries, by size, copied as words. Most hold their stage at byte 8.
+union PartEntry12 { unsigned int words[3]; unsigned char bytes[12]; };
+union PartEntry16 { unsigned int words[4]; unsigned char bytes[16]; };
+union PartEntry20 { unsigned int words[5]; unsigned char bytes[20]; };
+union PartEntry24 { unsigned int words[6]; unsigned char bytes[24]; };
+union PartEntry28 { unsigned int words[7]; unsigned char bytes[28]; };
+union PartEntry32 { unsigned int words[8]; unsigned char bytes[32]; };
+union PartEntry36 { unsigned int words[9]; unsigned char bytes[36]; };
+union PartEntry76 { unsigned int words[19]; unsigned char bytes[76]; };
 
+// A front tyre (table 0x16), with its entries of tables 0x18 to 0x1a.
+struct FrontTyreEntry {
+    unsigned int unk0[2];
+    unsigned char stage;          // 0x8
+    unsigned char unk9;
+    unsigned short idx_t18;       // 0xa
+    unsigned short idx_t19;       // 0xc
+    unsigned short idx_t1a;       // 0xe
+};
+
+// A rear tyre (table 0x17), with its entries of tables 0x18 and 0x19.
+struct RearTyreEntry {
+    unsigned int unk0;
+    unsigned char stage;          // 0x4
+    unsigned char unk5;
+    unsigned short idx_t18;       // 0x6
+    unsigned short idx_t19;       // 0x8
+    unsigned short unka;
+};
+
+struct TyreEntry18 { unsigned char data[4]; };
+struct TyreEntry19 { unsigned char data[64]; };
+struct TyreEntry1a { unsigned char data[8]; };
+
+// Tuning workspace for one car (0x17e8 bytes). setup is the car's CarSetup;
+// each tuning category keeps the game data entry of every stage the car can use
+// (stage 0 = stock, copied from the default setup) and its entry index (-1 =
+// not available). Built by CarWork_Clear (memset -1), CarWork_LoadParts and
+// CarWork_SetStagesFromSetup. Instances: g_CarWork (OVL4 tune shops),
+// g_RaceCarWork and g_RaceCarWorkAlt (resident, read by OVL0).
+struct CarWork {
     struct CarSetup setup;
-    uchar unk0084[1540]; /* not written by CarWork_LoadParts (stays 0xff) */
-
-    int wheelIdx[192]; /* table 0x1d entry index per wheel choice (CarWork_SetPartSlot slot 5); filled outside CarWork_LoadParts, count unknown */
-
-    uchar suspEntries[4][76]; /* table 0x12 (suspension): stock, sports, semi-racing, full */
-
+    uchar unk0084[0x604];              // not written by CarWork_LoadParts (stays 0xff)
+    int wheelIdx[192];                 // 0x688: table 0x1d entry per wheel choice (CarWork_SetPartSlot slot 5)
+    PartEntry76 susp[4];               // 0x988: table 0x12: stock, sports, semi-racing, full
     int suspIdx[4];
-    uchar brakeEntries[2][12]; /* table 0x00 (brakes) */
-
-    int brakeIdx[2];
-    uchar brakeBalEntries[2][16]; /* table 0x01 (brake balance) */
-
+    PartEntry12 brakes[2];             // 0xac8: table 0x00
+    int brakesIdx[2];
+    PartEntry16 brakeBal[2];           // 0xae8: table 0x01
     int brakeBalIdx[2];
-    uchar frontTyreEntries[10][16]; /* table 0x16 front tyres: [0] stock, [1..7] parts 39-45, [8],[9] also stock */
-
-    int frontTyreIdx[10];
-    uchar frontTyre18[10][4]; /* table 0x18 entry of each front tyre stage */
-
-    uchar frontTyre19[10][64]; /* table 0x19 entry of each front tyre stage */
-
-    uchar frontTyre1a[10][8]; /* table 0x1a entry of each front tyre stage */
-
-    uchar rearTyreEntries[10][12]; /* table 0x17 rear tyres (same stages as front) */
-
-    int rearTyreIdx[10];
-    uchar rearTyre18[10][4]; /* table 0x18 */
-
-    uchar rearTyre19[10][64]; /* table 0x19 */
-
-    uchar transEntries[4][36]; /* table 0x11 (transmission): stock, sports, semi, full. Entry +0x20 != 0 = ratios computed (CarWork_TransIsCustom) */
-
+    FrontTyreEntry frontTyres[10];     // 0xb10: table 0x16: [0] stock, [1..7] parts 39-45, [8], [9] also stock
+    int frontTyresIdx[10];
+    TyreEntry18 frontTyres18[10];      // 0xbd8
+    TyreEntry19 frontTyres19[10];      // 0xc00
+    TyreEntry1a frontTyres1a[10];      // 0xe80
+    RearTyreEntry rearTyres[10];       // 0xed0: table 0x17 (same stages as the front)
+    int rearTyresIdx[10];
+    TyreEntry18 rearTyres18[10];       // 0xf70
+    TyreEntry19 rearTyres19[10];       // 0xf98
+    PartEntry36 trans[4];              // 0x1218: table 0x11: stock, sports, semi, full. +0x20 != 0: ratios computed (CarWork_TransIsCustom)
     int transIdx[4];
-    uchar clutchEntries[4][16]; /* table 0x0f */
-
+    PartEntry16 clutch[4];             // 0x12b8: table 0x0f
     int clutchIdx[4];
-    uchar flywheelEntries[4][12]; /* table 0x0e */
-
+    PartEntry12 flywheel[4];           // 0x1308: table 0x0e
     int flywheelIdx[4];
-    uchar driveshaftEntries[2][12]; /* table 0x10 */
-
+    PartEntry12 driveshaft[2];         // 0x1348: table 0x10
     int driveshaftIdx[2];
-    uchar chipEntries[2][12]; /* table 0x0a */
-
+    PartEntry12 chip[2];               // 0x1368: table 0x0a
     int chipIdx[2];
-    uchar portPolishEntries[2][12]; /* table 0x07 */
-
+    PartEntry12 portPolish[2];         // 0x1388: table 0x07
     int portPolishIdx[2];
-    uchar balanceEntries[2][12]; /* table 0x08 */
-
+    PartEntry12 balance[2];            // 0x13a8: table 0x08
     int balanceIdx[2];
-    uchar naTuneEntries[4][12]; /* table 0x0b */
-
+    PartEntry12 naTune[4];             // 0x13c8: table 0x0b
     int naTuneIdx[4];
-    uchar displEntries[2][12]; /* table 0x09 */
-
+    PartEntry12 displ[2];              // 0x1408: table 0x09
     int displIdx[2];
-    uchar turboEntries[5][20]; /* table 0x0c */
-
+    PartEntry20 turbo[5];              // 0x1428: table 0x0c
     int turboIdx[5];
-    uchar intercoolerEntries[3][12]; /* table 0x13 */
-
+    PartEntry12 intercooler[3];        // 0x14a0: table 0x13
     int intercoolerIdx[3];
-    uchar mufflerEntries[4][12]; /* table 0x14 */
-
+    PartEntry12 muffler[4];            // 0x14d0: table 0x14
     int mufflerIdx[4];
-    uchar weightEntries[4][12]; /* table 0x04 */
-
+    PartEntry12 weight[4];             // 0x1510: table 0x04, stage at 0xb
     int weightIdx[4];
-    uchar racingModEntries[5][28]; /* table 0x05; [1..4] = racing modification stages (Part_LookupRacingModStage) */
-
+    PartEntry28 racingMod[5];          // 0x1550: table 0x05, stage at 0xe; [1..4] racing modification stages (Part_LookupRacingModStage)
     int racingModIdx[5];
-    uchar ascEntries[2][16]; /* table 0x1b */
-
+    PartEntry16 asc[2];                // 0x15f0: table 0x1b
     int ascIdx[2];
-    uchar tcsEntries[2][16]; /* table 0x1c */
-
+    PartEntry16 tcs[2];                // 0x1618: table 0x1c
     int tcsIdx[2];
-    uchar lsdEntries[6][32]; /* table 0x15 (LSD / yaw control) */
-
+    PartEntry32 lsd[6];                // 0x1640: table 0x15 (LSD / yaw control)
     int lsdIdx[6];
-    uchar t02Entry[24]; /* table 0x02, from setup idx_08 (no tune part) */
-
+    PartEntry24 t02;                   // 0x1718: table 0x02, from setup idx_08 (no tune part)
     int t02Idx;
-    uchar t03Entry[20]; /* table 0x03, from setup idx_0a */
-
+    PartEntry20 t03;                   // 0x1734: table 0x03, from setup idx_0a
     int t03Idx;
-    uchar t06Entry[76]; /* table 0x06, from setup idx_0c */
-
+    PartEntry76 t06;                   // 0x174c: table 0x06, from setup idx_0c
     int t06Idx;
-    uchar t0dEntry[16]; /* table 0x0d, from setup idx_t0d */
-
+    PartEntry16 t0d;                   // 0x179c: table 0x0d, from setup idx_t0d
     int t0dIdx;
-    short partSlots[27]; /* installed stage per tune slot = g_CarWork_PartSlots. 0 susp, 1 brakes, 2 brake balance, 3 front tyres, 4 rear tyres, 5 wheels (not set here), 6 transmission, 7 clutch, 8 flywheel, 9 driveshaft, 10 chip, 0xb port polish, 0xc balancing, 0xd NA tune, 0xe displacement, 0xf turbo, 0x10 intercooler, 0x11 muffler, 0x12 weight, 0x13 racing mod, 0x14 ASC, 0x15 TCS, 0x16 LSD, 0x17 table 2, 0x18/0x19 always 0, 0x1a table 0xd */
-
+    // 0x17b0: installed stage per tune slot (CarWork_SetPartSlot, g_CarWork_PartSlots):
+    // 0 susp, 1 brakes, 2 brake balance, 3 front tyres, 4 rear tyres, 5 wheels (not set
+    // here), 6 transmission, 7 clutch, 8 flywheel, 9 driveshaft, 10 chip, 0xb port polish,
+    // 0xc balancing, 0xd NA tune, 0xe displacement, 0xf turbo, 0x10 intercooler, 0x11
+    // muffler, 0x12 weight, 0x13 racing mod, 0x14 ASC, 0x15 TCS, 0x16 LSD, 0x17 table 2,
+    // 0x18 and 0x19 always 0, 0x1a table 0xd
+    short partSlots[27];
     short pad17e6;
 };
 
 typedef struct CdAudio CdAudio, *PCdAudio;
-typedef struct VSyncCallback VSyncCallback, *PVSyncCallback;
-
-struct VSyncCallback {
-    struct VSyncCallback *prev;
-    struct VSyncCallback *next;
-    void (*func)(void);
-    uint priority; /* list is sorted by ascending priority */
-
-};
-
 struct CdAudio {
     struct VSyncCallback vsync;
     ushort pollTimer; /* counts down from 8 (7 after a poll) */
@@ -957,7 +973,7 @@ typedef struct EnginePerf EnginePerf, *PEnginePerf;
 
 struct EnginePerf { /* Power/torque summary (EngineCurve_GetPerf), 0x6c bytes. maxPower -> Car.flags98, maxTorque -> Car.stat96. */
 
-    short maxPower;
+    ushort maxPower; /* unsigned: OVL4 reads it with lhu */
     short maxPowerRpm;
     short maxTorque;
     short maxTorqueRpm;
@@ -1344,34 +1360,6 @@ struct GameState { /* Persistent game state. The memory-card save is the first 0
 
 };
 
-typedef struct GfxIrqState GfxIrqState, *PGfxIrqState;
-
-struct GfxIrqState { /* Game-side IRQ and display state, cleared by Irq_Install */
-
-    uint vblankTotal; /* every vblank; Irq_WaitVSyncs returns it */
-
-    int vblanksSinceFlip; /* every vblank; reset to 0 by Irq_WaitVSyncs and Gpu_WaitField. psxViewLoop::UpdateDisplay swaps once it reaches swapPending */
-
-    struct VSyncCallback *vsyncCallbacks; /* priority-sorted list run by Irq_VSyncHandler (VSyncList_Add / VSyncList_Remove) */
-
-    void (*gpuDmaHook)(void); /* called after each GPU DMA completion; overlays chain their own (old value saved by the installer) */
-
-    uint displayMode; /* last GP1(08) mode written by Gpu_SetDisplayMode: bits 0-1 hres, 2 vres/interlace, 3 PAL, 6 hres 368 */
-
-    int gpuDmaCount;
-    int gpuDmaDoneTime; /* Timer_SinceFrameStart at the last GPU DMA completion; menus copy it as their draw time */
-
-    int gpuDmaDoneHblanks;
-    uint gpustatAtWait; /* GPUSTAT when Irq_WaitVSyncs started; Gpu_WaitField waits for its bit 31 (odd/even field) to flip */
-
-    uchar imageTransferBusy; /* 1 during Gpu_TransferImage */
-
-    uchar imageDmaPending; /* 1 from Gpu_TransferImage's DMA start until Irq_GpuDmaHandler */
-
-    undefined field11_0x26;
-    undefined field12_0x27;
-};
-
 typedef struct GzipStream GzipStream, *PGzipStream;
 typedef struct InflateState InflateState, *PInflateState;
 typedef struct Huft Huft, *PHuft;
@@ -1485,17 +1473,6 @@ struct NumberPicker {
     short pad1e;
 };
 
-typedef struct PacketBuffer PacketBuffer, *PPacketBuffer;
-
-struct PacketBuffer { /* Double-buffered primitive packet pool; g_PacketPtr allocates from the current half */
-
-    void *base;
-    uint size; /* words, both halves */
-
-    uint half; /* 0 or size/2 */
-
-};
-
 typedef struct PadButtonState PadButtonState, *PPadButtonState;
 
 struct PadButtonState {
@@ -1557,72 +1534,8 @@ struct PadHandler { /* Entry of a PadDevice.handlers table, searched by type. */
 
 };
 
-typedef struct psxViewLoop psxViewLoop, *PpsxViewLoop;
-typedef struct psxViewLoop_vtbl psxViewLoop_vtbl, *PpsxViewLoop_vtbl;
-typedef struct ViewDrawContext ViewDrawContext, *PViewDrawContext;
 typedef struct DrawLayer DrawLayer, *PDrawLayer;
 typedef struct LayerHeader LayerHeader, *PLayerHeader;
-
-struct ViewDrawContext {
-    struct DrawLayer *layers; /* sorted DrawLayer list */
-
-    void *otBase; /* both OT halves */
-
-    void *otHead; /* head of the frame being built (last entry of the reverse-cleared half). BeginDraw sends the previous one with Gpu_DrawOTag before swapping halves; 0 skips the send */
-
-    void *otStart; /* first entry of the current half */
-
-    void *otEnd; /* last entry of the current half */
-
-    ushort otSize; /* entries in both halves */
-
-    ushort otHalf; /* 0 or otSize/2 */
-
-    uint drawMode; /* texture page bits of the E1 draw-mode packet ViewDrawContext_End appends */
-    void *tailPackets; /* terminator packets EndDraw appends (draw mode, cache flush), allocated from g_PacketPtr */
-
-};
-
-struct psxViewLoop {
-    struct psxViewLoop_vtbl *vptr;
-    struct psxViewLoop *prevLoop; /* loop below this one on the loop stack (g_CurrentViewLoop) */
-
-    struct VSyncCallback vsync; /* registered in g_VSyncCallbacks; calls UpdateDisplay */
-
-    int vsyncInterval; /* vsyncs per frame (1) */
-
-    uchar videoModeDelay; /* frames until ApplyVideoMode (3) */
-
-    uchar bufferIndex;
-    uchar bufferCount; /* 1, or 2 for double buffering */
-
-    uchar videoModePending;
-    uchar swapPending; /* vsync count at which to SwapDisplay; 0 = none */
-
-    uchar noDrawSync;
-    uchar interlaced; /* videoMode bit 2 (480 lines): halves the vertical range, Flip waits for the field */
-
-    uchar videoMode; /* GP1(08) mode: bits 0-1 hres (256/320/512/640), 2 480 lines, 3 PAL, 4 24-bit, 5 interlace, 6 hres 368 */
-
-    uchar videoArg;
-    undefined field13_0x25;
-    short drawX;
-    short drawY;
-    short drawW;
-    short drawH;
-    short dispX; /* display rect x; Gpu_SetHRange start */
-
-    short dispY;
-    short dispW; /* display width; SetVideoMode copies the draw rect here */
-
-    short dispH;
-    undefined field22_0x36;
-    undefined field23_0x37;
-    struct ViewDrawContext draw;
-    struct PacketBuffer packets;
-    int frameStartTime;
-    int frameEndTime;
-};
 
 struct DrawLayer {
     ushort priority; /* ViewDrawContext.head list is sorted by it */
@@ -1636,28 +1549,6 @@ struct DrawLayer {
 
 };
 
-struct psxViewLoop_vtbl {
-    int offset; /* always 0 */
-
-    void * (*tf)(void *); /* __tf type_info function */
-
-    void (*dtor)(void *, int);
-    void (*Run)(void *);
-    void (*Enter)(void *);
-    int (*Step)(void *);
-    void (*Flip)(void *);
-    void (*Leave)(void *);
-    void (*BeginFrame)(void *);
-    int (*Update)(void *);
-    void (*BeginDraw)(void *);
-    void (*Draw)(void *);
-    void (*EndDraw)(void *);
-    void (*DrawFrame)(void *);
-    void (*SwapDisplay)(void *);
-    void (*ApplyVideoMode)(void *);
-    void (*UpdateDisplay)(void *);
-};
-
 struct LayerHeader { /* 16-byte packet at the head of each layer, allocated by ViewDrawContext_Begin; DrawLayer_SetArea fills it */
 
     uint tag; /* packet link and length */
@@ -1667,14 +1558,6 @@ struct LayerHeader { /* 16-byte packet at the head of each layer, allocated by V
     uint drawAreaBottomRight; /* GP0(E4) */
 
     uint drawOffset; /* GP0(E5) */
-
-};
-
-typedef struct psxViewLoopDoubleBuffer psxViewLoopDoubleBuffer, *PpsxViewLoopDoubleBuffer;
-
-struct psxViewLoopDoubleBuffer {
-    struct psxViewLoop base;
-    short bufferY[2]; /* VRAM Y of each buffer */
 
 };
 
@@ -1728,45 +1611,6 @@ struct RaceSetup {
 
     uint flags; /* bit0 tarmac event (not dirt), bits1-2 turbo rule (1 no turbo, 2 turbo required) */
 
-};
-
-typedef struct RECT RECT, *PRECT;
-
-struct RECT {
-    short x;
-    short y;
-    short w;
-    short h;
-};
-
-typedef struct Rect16 Rect16, *PRect16;
-
-struct Rect16 { /* PsyQ RECT: x, y, w, h */
-
-    short x;
-    short y;
-    short w;
-    short h;
-};
-
-typedef struct ScreenViewLoop ScreenViewLoop, *PScreenViewLoop;
-typedef struct ScreenViewLoop_vtbl ScreenViewLoop_vtbl, *PScreenViewLoop_vtbl;
-
-struct ScreenViewLoop {
-    struct ScreenViewLoop_vtbl *vptr;
-};
-
-struct ScreenViewLoop_vtbl {
-    int offset; /* always 0 */
-
-    void * (*tf)(void *); /* __tf type_info function */
-
-    void (*dtor)(void *, int);
-    void (*Run)(void *);
-    void (*Enter)(void *);
-    int (*Step)(void *);
-    void (*Flip)(void *);
-    void (*Leave)(void *);
 };
 
 typedef struct SeqChannel SeqChannel, *PSeqChannel;
@@ -2046,8 +1890,8 @@ typedef struct CarAsset CarAsset;
 
 struct CarAsset { /* g_CarAssets, sorted by carCode: a car's files start at file, up to the next entry's */
     uint carCode; /* CarCode_Encode */
-    ushort file;
-    ushort pad;
+    ushort file; /* the car's first file: model, then texture */
+    ushort logoFile; /* its maker logo (a TIM) */
 };
 
 typedef struct VolHeader VolHeader, *PVolHeader;
@@ -2074,5 +1918,840 @@ struct WheelDims {
     short scale;
     short offset;
 };
+
+// Types declared with the decompiled resident code, by the file that
+// first needed them.
+
+// exe/bootlogo.cpp
+
+// A splash screen of g_SplashScreens, which ends with a null timGz.
+struct SplashScreen {
+    void *timGz;                // gzip-compressed TIM
+    unsigned short frames;
+    unsigned char fadeOut;
+    unsigned char hiRes;        // 640 pixels wide
+};
+
+class VendorBootLogo : public psxViewLoopDoubleBuffer {
+public:
+    DrawLayer layer;
+    int frame;
+    int duration;               // frames to show
+    int fadeOut;                // fade out over the last 16 frames
+    int yOffset;
+    int hiRes;
+
+    VendorBootLogo();
+    virtual ~VendorBootLogo();
+    virtual int Update();
+    virtual void Draw();
+    void InitLayer();
+};
+
+// exe/cdstream.cpp
+
+// The frame timers' samples of root counter 1 (hblanks) and 2 (system clock / 8).
+struct TimerSample {
+    unsigned short hblank;
+    unsigned short clock;
+    unsigned short hblankDelta;
+};
+
+// A read request as CdAudio holds it at 0x20 (reqFlag..reqWrite, the next one)
+// and 0x40 (flag..ringWrite, the current one).
+struct CdReq {
+    unsigned char flag;
+    unsigned char mode;         // CdlSetmode bits
+    unsigned char file;         // XA filter file and channel
+    unsigned char channel;
+    unsigned int start;         // first sector
+    unsigned int end;           // end sector (exclusive)
+    void *onSector;
+    void *dst;                  // destination or ring buffer
+    unsigned int size;          // bytes, or ring sectors
+    unsigned short skip;        // bytes to skip in the first sector
+    unsigned short fill;        // the ring's indices
+    unsigned short read;
+    unsigned short write;
+};
+
+// exe/carmodel.cpp
+
+// A car instance's wheel: position, and the spin direction (+-0x400) and angles.
+struct WheelInst {
+    short x;
+    short y;
+    short z;
+    short pad6;
+    short spin;
+    short angleA;
+    short angleB;
+    short padE;
+};
+
+struct CarModelInst {
+    unsigned char lod;          // 0: by distance, else LOD + 1
+    unsigned char detail;
+    unsigned char unk02;
+    unsigned char drawShadow;
+    unsigned char brightness;
+    unsigned char pad05;
+    short unk06;
+    unsigned short tpage;
+    short pad0a;
+    CarModelHeader *model;
+    MATRIX world;
+    WheelInst wheels[4];
+    MATRIX shadow;
+};
+
+// The colour codes of a car texture: count, then the letters.
+struct CarTex {
+    unsigned short count;
+    char codes[1];
+};
+
+// The wheels of a car model (CarModelHeader from wheelTexture): the hub half widths, the hub
+// sprite corners and the front and rear wheel meshes of the 3 LODs.
+struct WheelGeom {
+    unsigned int texture;
+    short frontHalfWidth;
+    short rearHalfWidth;
+    unsigned int frontQuad[4];
+    int pad18;
+    unsigned int rearQuad[4];
+    int pad2c;
+    int frontLod0[0x82];
+    int rearLod0[0x82];
+    int frontLod1[0x46];
+    int rearLod1[0x46];
+    int frontLod2[0x37];
+    int rearLod2[0x37];
+};
+
+// A car body mesh (one LOD): the counts, then pointers set by CarModel_Init to the vertices,
+// normals and each primitive type's list, which follow the 0x50-byte header.
+struct CarMesh {
+    unsigned short vertCount;
+    unsigned short normalCount;
+    unsigned short primCount[8];
+    char *verts;
+    char *normals;
+    char *prims[8];
+    short bboxMin[4];
+    short bboxMax[4];
+    unsigned short unk4c;
+    unsigned short unk4e;
+};
+
+struct LodEntry {
+    int dist;
+    CarMesh *mesh;
+};
+
+// CarModelHeader.lodCount and the LOD entries after it; the meshes follow.
+struct LodTable {
+    int count;
+    LodEntry lods[1];
+};
+
+// The camera fields CarModel_Draw and CarModel_DrawShadow copy to the scratchpad.
+struct CameraView {
+    int data[0x1a];
+};
+
+// What CarModel_Draw sets up in the scratchpad (0x1f800000) for the body and wheel drawing.
+struct CarScratch {
+    // A copy of the Camera from view to ot (CameraView), the view composed with the
+    // car's world matrix.
+    MATRIX view;
+    int negPos[3];
+    short clipX[9];
+    short pad3e;
+    short clipY[9];
+    short pad52;
+    int ofx;
+    int ofy;
+    short projH;
+    short screenW;
+    short screenH;
+    short nearZ;                // 0x62
+    unsigned int *ot;           // 0x64
+    char *packetPtr;            // 0x68
+    char *packetLimit;
+    char *verts;                // 0x70: the mesh's vertices (ShadowMesh_Draw: transformed ones)
+    char *normals;              // the environment map coordinates of the normals
+    int savedTrans[3];          // 0x78: the body transform, which CarBody_Draw* reload
+    int savedRot[5];
+    short otShift;              // 0x98: depth << otShift >> 13 is the OT index
+    short pad9a;
+    MATRIX wheelMat;            // 0x9c: CarModel_DrawWheel's wheel rotation and position
+    char unkbc[0x2dc];
+    signed char mirror;         // 0x398
+    signed char lit;
+    char pad39a[2];
+    unsigned int detail;        // 0x39c: added to the textured faces' CLUT word
+    unsigned int clutSelect;    // 0x3a0: masks a face's flags >> 14 into its CLUT word
+    unsigned int envFT3;        // 0x3a4: the brightness, with semi-transparent POLY_FT3's code
+    unsigned int envFT4;        // 0x3a8: the same with POLY_FT4's
+    short envClut;              // 0x3ac: the environment map's CLUT and texture page
+    unsigned short envTpage;
+    unsigned int wheelColor;    // 0x3b0
+};
+
+// A body vertex as the GTE loads it (VXY, VZ).
+struct BodyVert {
+    int xy;
+    int z;
+};
+
+// A vertex of a face being subdivided: its model position, texture coordinates, screen
+// position and colour.
+struct SubVert {
+    short x;
+    short y;
+    short z;
+    unsigned char u;
+    unsigned char v;
+    int sxy;
+    unsigned int rgb;
+};
+
+// What the subdivision of one face shares: where its packets go, its code and texture
+// words, the area above which a part is subdivided again, and the chain of packets.
+struct SubFace {
+    unsigned int *ot;
+    unsigned int code;          // the face's colour and command word
+    unsigned int texWord;       // the texture page (top half) and CLUT (bottom half)
+    int threshold;
+    int gouraud;
+    char *first;
+    char *last;
+};
+
+// A transformed vertex (CarBody_DrawClipped, ShadowMesh_Draw): view-space x, y, z, the
+// clip code (bit 0 nearer than half the near plane, bits 1-4 outside the planes in the
+// light and light colour matrices, bit 5 a GTE error), the screen position and the or of
+// |x|, |y| and |z|.
+struct ShadowVert {
+    short x;
+    short y;
+    short clip;
+    short z;
+    int sxy;
+    unsigned int extent;
+};
+
+// One vertex pair of a wheel strip: the first vertex's x and y, both z, the second's x and y.
+struct WheelPair {
+    int xyA;
+    unsigned short zA;
+    unsigned short zB;
+    int xyB;
+};
+
+// A shadow mesh: the counts, then the vertices (x and z, a word each), the triangles and
+// the quads (6-bit vertex indices packed in a word, bit 31 darkening the first two).
+struct ShadowMesh {
+    unsigned short vertCount;
+    unsigned short triCount;
+    unsigned short quadCount;
+    char unk6[0x12];
+    unsigned short unk18;
+    unsigned short unk1a;
+    unsigned int data[1];
+};
+
+// Poly_Clip's input, in the scratchpad at 0x1f80009c.
+struct ShadowClipVert {
+    int xy;
+    short z;
+    short extent;
+    int sxy;
+    unsigned int rgbc;          // the colour, with the clip code in the top byte
+};
+
+struct ShadowClip {
+    unsigned int *ot;
+    unsigned int code;
+    int pad;
+    ShadowClipVert v[4];
+    ShadowVert *src[4];
+};
+
+// exe/buttonprompt.cpp
+
+struct ButtonPromptDesc {
+    short x;                    // centre
+    short y;
+    char *text;
+    uint textRgb;
+    uint color;                 // box colour
+    uint color2;                // bottom of the box gradient
+    uchar style;                // bits 1-2: size; bit 2: text 4 pixels higher
+    signed char spacing;
+    char textHeight;
+    uchar pad17;
+    Font *font;
+};
+
+struct ButtonPrompt {
+    short x;
+    short y;
+    TextItem text;
+    ushort flags;               // style; bit 7: highlighted while opening
+    ushort width;
+    ushort height;
+    short anim;                 // frames since Open; < 0 closing, -1 closed
+    uint color;
+    uint color2;
+};
+
+// exe/carddialog.cpp
+
+// What CardDialog_Init builds a dialog from (0x30 bytes).
+struct CardDialogDesc {
+    short x;                    // centre
+    short y;
+    char *message;
+    char *option0;
+    char *option1;
+    uint messageRgb;            // bit 25: the text's alternative style
+    uint optionRgb;
+    uint color;                 // box colour
+    uint color2;                // bottom of the box gradient
+    ushort flags;               // bits 1-2: size; bit 2: text 4 pixels higher;
+                                // bit 0: boxes slide in from the left; bit 3: close on a choice
+    signed char spacing;        // of the options
+    uchar pad23;
+    short textHeight;
+    short pad26;
+    Font *font;
+    signed char sfx;
+    uchar pad2d[3];
+};
+
+// A rectangle of a texture page (FUN_8006ea38).
+struct Sprite {
+    uchar u;
+    uchar v;
+    ushort clut;
+    short w;
+    short h;
+    ushort tpage;
+};
+
+// exe/cardmenu.cpp
+
+// What an overlay hands CardMenu_Setup.
+struct CardMenuConfig {
+    CardMenu *work; // becomes g_CardMenu
+    void *kanjiFont;
+    short *slotStatus;
+    Font *fontSmall;
+    Font *fontMedium;
+    Font *fontLarge;
+    short textPri;
+};
+
+// exe/carinfo.cpp
+
+struct CourseEntry {
+    char *name;
+    unsigned int hash;
+    unsigned short flags;
+    char unkA[0xe];
+};
+
+struct CourseInfo {
+    char magic[6];
+    unsigned short count;
+    CourseEntry entries[1];
+};
+
+// exe/carparams.cpp
+
+// A CarSpec pointer and the CarSetup index it comes from, with the game-data table.
+struct CarSpecPartLink {
+    short specOffset;
+    short setupOffset;
+    short table;
+};
+
+// One part category of CarParams_Build: the game-data table, the CarSpec field holding the
+// part's entry and the descriptors that copy it into the CarParams.
+struct CarParamsPartDesc {
+    unsigned short table;
+    unsigned short specOffset;
+    unsigned int *desc;
+};
+
+// exe/enginecurve.cpp
+
+// The car name file: a count, then 0x48-byte entries starting with the car id.
+struct CarNameEntry {
+    int id;
+    char name[0x44];
+};
+
+struct CarNameTable {
+    short count;
+    CarNameEntry entries[1];
+};
+
+// exe/font.cpp
+
+// Upload of the race font (VOL entry 0xc2) to VRAM, eight lines per sector.
+struct RaceFontUpload {
+    void *buf;      // sector buffer
+    RECT rect;      // VRAM rectangle of the next sector
+    ushort tpageId; // texture page the font goes to
+    short unkE;
+    short step;     // lines per sector
+    ushort remaining; // sectors left
+};
+
+// exe/gamedata.cpp
+
+// A game data file: a header, then tableCount tables, the second half being the
+// string pools of the first half's tables.
+struct GameData {
+    int unk0;
+    ushort unk4;
+    ushort tableCount;
+    GameDataTable tables[1];
+};
+
+struct IdList {
+    int count;
+    unsigned int ids[1];        // count of them
+};
+
+// exe/garage.cpp
+
+// One car setting: its value and range (CarWork_GetSettingRange); id is set for the
+// LSD settings only.
+struct SettingRange {
+    short value;
+    short min;
+    short max;
+    short id;
+};
+
+// exe/gte.cpp
+
+// The scratchpad's first 0x9c bytes as the drawing code lays them out (carmodel.cpp's
+// CarScratch): a copy of a Camera from its view matrix on, then the drawing state.
+struct ViewScratch {
+    MATRIX view;
+    int negPos[3];
+    short clipX[9];             // 0x2c: loaded as the light matrix; rows 0 and 1 are the
+    short pad3e;                // left and right planes' normals
+    short clipY[9];             // 0x40: loaded as the light colour matrix; the top and
+    short pad52;                // bottom planes' normals
+    int ofx;
+    int ofy;
+    short projH;
+    short screenW;
+    short screenH;
+    short nearZ;                // 0x62
+    unsigned int *ot;
+    char *packetPtr;            // 0x68
+    char *packetLimit;
+    char *verts;
+    char *normals;
+    int savedTrans[3];          // 0x78: the view, scaled down by Gte_LoadScaled
+    short savedRot[10];
+    short otShift;              // 0x98: the translation's shift
+    short rotShift;             // 0x9a: the rotation's shift
+};
+
+// A point for Clip_TestPoints.
+struct ClipPoint {
+    short x;
+    short y;
+    short z;
+    short pad;
+};
+
+// A MATRIX's rotation alone, for the temporary matrices that Matrix_Mul takes.
+struct MatrixRot {
+    short m[3][3];
+};
+
+// The scratchpad with Clip_TestBox's corners after the drawing state.
+struct BoxScratch {
+    ViewScratch view;
+    ClipPoint box[8];
+};
+
+// Poly_Clip's input.
+struct PolyClipIn {
+    unsigned int *ot;           // 0x9c
+    unsigned int code;          // the POLY_G3 or POLY_G4 code, in the top byte
+    int pad;
+    struct {
+        int xy;                 // view-space position
+        short z;
+        short extent;           // |x| | |y| | |z|
+        int sxy;
+        unsigned int rgbc;      // the colour (the top byte isn't used)
+    } v[4];
+};
+
+struct ClipVert {
+    short x;                    // the position, scaled
+    short y;
+    short z;
+    short pad;
+    int sxy;
+    unsigned int rgbc;          // a cut point keeps the record's old top byte
+    ClipVert *prev;
+    ClipVert *next;
+    unsigned short code;        // 0x18: bit 0 nearer than nearZ, bits 1-4 outside a side
+    short dist[5];              // the distance to each plane, negative outside
+};
+
+// The working state after the input, through 0x2e8.
+struct PolyClip {
+    ClipVert pool[14];          // 0xe8
+    ClipVert *head;             // 0x2e0
+    ClipVert *free;             // 0x2e4
+};
+
+// exe/kanjifont.cpp
+
+// A cached glyph: a node of the binary trie KanjiFont_FindGlyph walks with the code's
+// bits, and the texture coordinates of its cell.
+struct KanjiGlyph {
+    KanjiGlyph *left;  // code bit clear
+    KanjiGlyph *right; // code bit set
+    short x, y;        // cell position in the pixel buffer
+    unsigned short code;
+    unsigned char rendered;
+    unsigned char wide; // 24 rows tall instead of 16
+    unsigned short clut;
+    unsigned short tpage;
+    unsigned short uv;
+};
+
+// A glyph cache: a 4-bit texture of 16-pixel-wide cells and the glyph nodes that own them.
+struct KanjiFont {
+    unsigned char *pixels;
+    RECT texRect; // in VRAM (w in 16-bit units)
+    unsigned short tpage;
+    unsigned short clut;
+    KanjiGlyph *nodes;
+    KanjiGlyph *root;
+    KanjiGlyph *next; // the next free node
+    short col, row;   // the next free cell
+    short cols;       // cells a row
+    unsigned char pad22;
+    unsigned char wideMode;
+};
+
+// exe/overlay.cpp
+
+// The overlay pack: compressed overlays, by offset from the pack's start.
+struct OverlayEntry {
+    int offset;
+    int size;
+};
+
+struct OverlayPack {
+    int unk0;
+    int unk4;
+    char *data; // the pack in memory, or 0 to read it from the CD
+    OverlayEntry entries[1];
+};
+
+// exe/powergraph.cpp
+
+// The power and torque graph of a car (g_ChangeParts_PowerGraph): two vertical scales,
+// the rpm scale and the curves, which fade in tick by tick.
+struct PowerGraphView {
+    short stagger;          // frames from the first tick's fade-in to the last one's
+    short x, y, w, h;
+    signed char tpage;      // given to Text_Init
+    signed char labelGap;   // between a scale's labels
+    signed char textMode;
+    signed char charH;
+    unsigned char unk0e[2];
+    Font *font;
+    unsigned int powerRgb;
+    unsigned int torqueRgb;
+    unsigned int rpmRgb;
+    short maxRpm;
+    short maxPower;         // hp
+    short maxTorque;        // lb-ft
+    short frame;            // the fade-in frame; -1 hidden, below -1 closing
+    short powerTop;         // the power scale: its top, ticks and step
+    short powerTicks;
+    short powerStep;
+    short torqueTop;
+    short torqueTicks;
+    short torqueStep;
+    short rpmTicks;         // one per 1000 rpm
+    short samples;          // the curves' samples, one per 250 rpm
+    short endFrame;
+};
+
+// exe/records.cpp
+
+// A race's lap record: the last 10 laps, the best one and the lap being driven.
+struct RaceRecord {
+    short unk00;
+    short lapCount;         // laps done, up to 999
+    short lapsKept;         // laps in laps, up to 10
+    short bestLap;          // the lap number of best, -1 for none
+    TimeRecord laps[10];    // the last lapsKept laps, oldest first
+    TimeRecord best;        // 0xd0
+    TimeRecord current;     // 0xe4
+    int unkf8;
+};
+
+// The 9 laps RaceRecord_AddLap moves down, copied as one block.
+struct TimeRecords9 {
+    TimeRecord r[9];
+};
+
+// The game's state from g_GameState on: g_RaceSetup is part of it.
+struct GameStateRace {
+    char unk0[0x218];
+    CourseRecord courseRecords[128];
+    char unk1418[0xbf7c - 0x1418];
+    RaceSetup race; // g_RaceSetup
+};
+
+// exe/replaydata.cpp
+
+// A car's replay record in g_GameState, 0x4518 bytes, copied as one block.
+struct ReplayRecord {
+    char data[0x4518];
+};
+
+// exe/replaydir.cpp
+
+struct Str3 {
+    char c[3];
+};
+
+// exe/replaydraw.cpp
+
+// How the card menu's replay list draws its rows (D_800921BC).
+struct ReplayEntryStyle {
+    Font *titleFont;
+    short unk4;
+    short titleArg; // Text_DrawString's last argument
+    Font *fieldFont;
+    short unkc;
+    short spacing; // the fields' letter spacing
+    uint rgb;      // the row's background
+};
+
+// What ReplayEntry_DrawField draws with.
+struct ReplayField {
+    uint *ot;
+    TextCtx *text;
+    short spacing;
+    short fade; // 0-128, towards black
+    uint rgb;   // the text's colour
+    uint tickRgb;
+};
+
+// TextCtx's tpage as the GPU's bits.
+struct TextTpage {
+    uint clut : 16;
+    uint page : 5;
+    uint abr : 2; // semi-transparency mode
+    uint rest : 9;
+};
+
+// exe/seq.cpp
+
+struct SeqSong {
+    ushort vol;
+    ushort pad02;
+    int tempo;
+    uchar *tracks[16];
+};
+
+// A sequence file ("SEQG"): its songs, with the track pointers as offsets from base.
+struct SeqFile {
+    int magic;
+    int base;
+    unsigned int count;
+    SeqSong songs[1];
+};
+
+// exe/sfx.cpp
+
+// A sound bank in SPU RAM: its instrument file in main RAM and where its samples went.
+struct SpuBank {
+    SeqBank *ram;
+    int size;
+    int spu;
+};
+
+// An engine sound file ("ENGN"): its two sets of RPM ranges.
+struct EngnFile {
+    int magic;
+    int base;
+    uchar unk08[4];
+    int spu;
+    int spuSize;
+    void *unk14;
+    struct {
+        uint count;
+        EngnRange *ranges;
+    } sets[2];
+};
+
+// An SPU voice's registers (0x1f801c00 + voice * 0x10).
+struct SpuVoiceRegs {
+    ushort volL;
+    ushort volR;
+    ushort pitch;
+    ushort addr;
+    ushort adsr1;
+    ushort adsr2;
+    ushort envx; // the envelope's current level
+    ushort repeat;
+};
+
+// exe/textitem.cpp
+
+// The style template TextItem_Init copies (the first 0x1c bytes of a TextItem).
+struct TextStyle {
+    uchar charsPerStep;
+    uchar unk01;
+    short revealSteps;
+    short zoomWidth;
+    short closeSteps;
+    short fadeSteps;
+    signed char spacing;
+    signed char height;
+    ushort flags;
+    ushort pad0e;
+    Font *font;
+    uint rgbFrom;
+    uint rgbTo;
+};
+
+// exe/widgets.cpp
+
+// A bar that grows from its centre over duration frames, its color going from
+// rgbFrom to rgbTo; a negative t counts back down.
+struct GrowBar {
+    uint rgbFrom;
+    uint rgbTo;
+    short x;
+    short y;
+    short width;
+    short height;
+    short duration;
+    short t;
+};
+
+// A disc of 24 triangles around its centre point, flat on the ground.
+struct DiscPoint {
+    int x, y, z;
+};
+
+struct GroundDisc {
+    DiscPoint rim[25];
+    DiscPoint centre;
+};
+
+// A projected point in the scratchpad (Points_Project).
+struct ScreenPoint {
+    short x, y;
+    short z;
+    short pad;
+};
+
+// Types of the subsystems with headers of their own.
+#include "mccard.h"
+#include "pad.h"
+
+// ovl3/initevent.cpp
+
+// An event of the race data (the event data, or g_GtModeRaceData in GT mode).
+struct RaceEvent {
+    unsigned short codeString;      // strings of the race data
+    unsigned short courseString;    // 0x2
+    char unk4[0x44 - 0x4];
+    unsigned char noIntro;          // 0x44: RaceEventParams start here
+    unsigned char lapCount;         // 0x45, copied to ChampRaceList.param45
+    char unk46;
+    unsigned char license;          // 0x47, see EventFlags::License
+    char unk48[0x75 - 0x48];
+    unsigned char dirt;             // 0x75
+    unsigned char allowedCarsList;  // 0x76, 1-based list of game data table 2, 0 = any car
+    unsigned char drivetrain;       // 0x77
+    unsigned short prizes[6];       // 0x78, in hundreds of credits
+    unsigned int prizeCars[4];      // 0x84, 0 ends the list
+    unsigned short nameString;      // 0x94
+    short maxPower;                 // 0x96, 0 = no limit
+    unsigned short championshipPrize; // 0x98, in hundreds of credits
+    unsigned char turbo;            // 0x9a
+    unsigned char racingMod;        // 0x9b
+};
+
+// The race parameters of an event (g_RaceEventParams), copied from the event.
+struct RaceEventParams {
+    char data[0x40];
+};
+
+struct RaceOptions {
+    char data[8];
+};
+
+// An entry of game data table 5.
+struct Table5Entry {
+    char unk0[8];
+    unsigned int carId;            // 0x8
+    char unkc[2];
+    unsigned char fixedCar;        // 0xe
+};
+
+// ovl3/racesetup.cpp
+
+// A car picked for a race: car, colour and the entry it came from.
+struct RaceCarPick {
+    unsigned int carId;
+    signed char flags;            // 0x4
+    signed char colorCode;        // 0x5
+    unsigned short colorRgb;      // 0x6
+    short entryIndex;             // 0x8
+    short pad0a;
+};
+
+// ovl3/garagerace.cpp
+
+// The arcade race selection that OVL2 leaves at 0x801d5fa0 (g_RaceCarWorkAlt).
+struct ArcadeRaceSel {
+    char unk0[2];
+    signed char raceType;     // 0: 2-player battle, 4: single race, 6: time trial
+    char unk3[3];
+    short garage;             // 0x6
+    short slot;               // 0x8
+    char unkA[0x18 - 0xa];
+    signed char unk18;        // RaceCar.unk8f of the player's car
+    char unk19[0xa0 - 0x19];
+    short garages[2];         // 0xa0: 2-player battle, per player
+    short slots[2];           // 0xa4
+    char unkA8[0xb6 - 0xa8];
+    signed char unkB6[2];     // 0xb6: RaceCar.unk8f per player
+    char unkB8[0x2c8 - 0xb8];
+    int useGarageCars;        // 0x2c8
+    int dirt;                 // 0x2cc: dirt course (dirt tyres)
+    char unk2D0[0x2d4 - 0x2d0];
+};
+
+// ovl3/storesetup.cpp
+
+// The top 3 bits of a halfword (Car.stat94's drivetrain).
+struct Hi3 { unsigned short lo:13; unsigned short hi:3; };
 
 #endif

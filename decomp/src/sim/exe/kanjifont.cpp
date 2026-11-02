@@ -4,54 +4,6 @@
 #include "include_asm.h"
 #include "resident.h"
 
-// A cached glyph: a node of the binary trie KanjiFont_FindGlyph walks with the code's
-// bits, and the texture coordinates of its cell.
-struct KanjiGlyph {
-    KanjiGlyph *left;  // code bit clear
-    KanjiGlyph *right; // code bit set
-    short x, y;        // cell position in the pixel buffer
-    unsigned short code;
-    unsigned char rendered;
-    unsigned char wide; // 24 rows tall instead of 16
-    unsigned short clut;
-    unsigned short tpage;
-    unsigned short uv;
-};
-
-// A glyph cache: a 4-bit texture of 16-pixel-wide cells and the glyph nodes that own them.
-struct KanjiFont {
-    unsigned char *pixels;
-    RECT texRect; // in VRAM (w in 16-bit units)
-    unsigned short tpage;
-    unsigned short clut;
-    KanjiGlyph *nodes;
-    KanjiGlyph *root;
-    KanjiGlyph *next; // the next free node
-    short col, row;   // the next free cell
-    short cols;       // cells a row
-    unsigned char pad22;
-    unsigned char wideMode;
-};
-
-// The textured quad of a glyph (PsyQ POLY_FT4 after its tag).
-struct KanjiQuad {
-    unsigned int rgb;
-    short x0, y0;
-    unsigned short uv0, clut;
-    short x1, y1;
-    unsigned short uv1, tpage;
-    short x2, y2;
-    unsigned short uv2, pad1;
-    short x3, y3;
-    unsigned short uv3, pad2;
-};
-
-struct KanjiPrim {
-    unsigned char addr[3]; // the OT link
-    unsigned char len;
-    KanjiQuad quad;
-};
-
 extern "C" {
 int Gpu_TransferImage(RECT *rect, unsigned int *data, int store);
 unsigned short *KanjiFont_Krom2RawAdd(unsigned int code);

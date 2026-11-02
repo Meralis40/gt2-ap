@@ -9,17 +9,6 @@ int EngineCurve_BoostFactor(EngineCurve *curve, short rpm1, short rpm2);
 void EngineCurve_Build(CarParams *params, EngineCurve *curve, int unused);
 void EngineCurve_GetPerf(EngineCurve *curve, EnginePerf *out);
 
-// The car name file: a count, then 0x48-byte entries starting with the car id.
-struct CarNameEntry {
-    int id;
-    char name[0x44];
-};
-
-struct CarNameTable {
-    short count;
-    CarNameEntry entries[1];
-};
-
 extern char D_8008FB3C[];
 extern unsigned char D_800923E2[][6]; // gear spacing per gear count: 3 pairs of 0xc8000 / value at 150 and 400 km/h
 

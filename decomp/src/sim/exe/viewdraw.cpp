@@ -5,11 +5,6 @@
 #include "include_asm.h"
 #include "resident.h"
 
-struct OtTag {
-    unsigned addr : 24;
-    unsigned len : 8;
-};
-
 extern "C" {
 extern uint *g_PacketPtr;
 extern uint *g_PacketEnd;

@@ -50,6 +50,8 @@ extern CardSystem g_Card;
 extern unsigned char g_McFrame[];
 }
 
+// The card driver state, through an accessor: with &g_Card written directly
+// the compiler folds the port offset into the loop pointer (CardSlots_Update).
 static inline CardSystem *Card_Get()
 {
     return &g_Card;
@@ -59,5 +61,28 @@ static inline McOpState *McOp_Get()
 {
     return &g_McOp_Port;
 }
+
+// exe/mccard.cpp
+
+// The 128-byte header frame of a save file.
+struct McHeader {
+    unsigned short magic; // "SC"
+    unsigned char iconFlag;
+    unsigned char blocks;
+    unsigned char title[0x40]; // Shift-JIS
+    unsigned char unk44[0x3c];
+};
+
+// exe/mcport.cpp
+
+// A directory frame of the card, as it is written (128 bytes).
+struct McDirFrame {
+    unsigned int state;
+    int size;
+    short next;
+    char name[0x74];
+    unsigned char unk7e;
+    unsigned char checksum;
+};
 
 #endif

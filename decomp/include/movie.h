@@ -3,7 +3,7 @@
 #ifndef MOVIE_H
 #define MOVIE_H
 
-#include "viewloop.h"
+#include "resident.h"
 
 // Ring of frames read from the CD (0x1c bytes).
 struct MovieStream {
@@ -41,19 +41,6 @@ struct MoviePlayer {
     void *vlcNext;
     void *vlcOther;
     void *vlcReady;
-};
-
-struct PadState {
-    unsigned int held;
-    unsigned int pressed;
-    unsigned int released;
-    unsigned int repeat;
-};
-
-struct PadDevice {
-    unsigned char pad00[0xc];
-    unsigned char buttons[0x3c];
-    unsigned char pad48[0x1c];
 };
 
 // The movie screen loop of OVL5 (movieloop.cpp, which emits its vtable).
@@ -101,32 +88,9 @@ struct MovieSectorHeader {
     unsigned int pad14[3];
 };
 
-// A CD read request: sectors start..end, mode, XA file and channel.
-struct CdReq {
-    unsigned char flag;
-    unsigned char mode;
-    unsigned char file;
-    unsigned char channel;
-    unsigned int start;
-    unsigned int end;
-};
-
-struct CdAudio {
-    unsigned char pad00[0x18];
-    unsigned short masterVol;
-    unsigned char pad1a[6];
-    CdReq req;
-    int (*onSector)(void *, void *);
-    unsigned char pad30[0x136];
-    volatile unsigned char state;  // changed by the CD interrupt
-};
-
-#define PAD_START 0x10000
-
 // OVL5's .bss (at 0x800A8D5C, tools/build.py): g++ puts zero-initialized
 // globals in .data, so the section is given explicitly.
 #define OVL5_BSS __attribute__((section(".bss")))
-
 
 // Functions are extern "C" while their callers are assembly (common.h).
 extern "C" {

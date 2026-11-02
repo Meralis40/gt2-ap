@@ -151,7 +151,7 @@ void *SaveFile_GetMachineTest2(GameSaveFile *self, GameSaveFile *file)
     return file->state + 0x3bd0;
 }
 
-bool SaveFile_CheckCrc(GameSaveFile *file, GameSaveFile *data)
+unsigned char SaveFile_CheckCrc(GameSaveFile *file, GameSaveFile *data)
 {
     unsigned int uVar1;
     unsigned int uVar2;

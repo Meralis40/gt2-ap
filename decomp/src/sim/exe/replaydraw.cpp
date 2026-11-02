@@ -4,39 +4,6 @@
 #include "include_asm.h"
 #include "resident.h"
 
-// A rectangle filled with a vertical gradient (Menu_AddGouraudQuad).
-struct GouraudQuad {
-    RECT rect;
-    uint top;
-    uint bottom;
-};
-
-// How the card menu's replay list draws its rows (D_800921BC).
-struct ReplayEntryStyle {
-    Font *titleFont;
-    short unk4;
-    short titleArg; // Text_DrawString's last argument
-    Font *fieldFont;
-    short unkc;
-    short spacing; // the fields' letter spacing
-    uint rgb;      // the row's background
-};
-
-// What ReplayEntry_DrawField draws with.
-struct ReplayField {
-    uint *ot;
-    TextCtx *text;
-    short spacing;
-    short fade; // 0-128, towards black
-    uint rgb;   // the text's colour
-    uint tickRgb;
-};
-
-// The Course_Get entry's first field.
-struct CourseEntry {
-    char *name;
-};
-
 extern "C" {
 void *Prim_AddDrawMode(uint *ot, uint tpage);
 RECT *Prim_AddTile(uint *ot, uint rgb);
@@ -99,14 +66,6 @@ void ReplayEntry_DrawField(ReplayField *f, char *str, int maxWidth, int x, int y
     r->y = y - 12;
     Prim_AddDrawMode(f->ot, 0x220);
 }
-
-// TextCtx's tpage as the GPU's bits.
-struct TextTpage {
-    uint clut : 16;
-    uint page : 5;
-    uint abr : 2; // semi-transparency mode
-    uint rest : 9;
-};
 
 #ifndef NON_MATCHING
 INCLUDE_ASM("asm/sim/exe/nonmatchings/replaydraw", ReplayEntry_Draw);

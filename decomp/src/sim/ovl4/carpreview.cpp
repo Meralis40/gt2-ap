@@ -5,117 +5,6 @@
 #include "include_asm.h"
 #include "ovl4.h"
 
-// Resident types (resident.h, which can't be included with ovl4.h), with the
-// fields used here.
-struct MATRIX {
-    short m[3][3];
-    short pad;
-    int t[3];
-};
-
-struct VECTOR {
-    int vx;
-    int vy;
-    int vz;
-    int pad;
-};
-
-struct WheelDims {
-    short radius;
-    short width;
-    short scale;
-    short offset;
-};
-
-struct CarAsset {
-    unsigned int carCode;
-    unsigned short file;     // the car's first file: model, then texture
-    unsigned short logoFile; // its maker logo (a TIM)
-};
-
-struct WheelInst {
-    short pad[8];
-};
-
-// A model to draw (CarModel_Draw).
-struct CarModelInst {
-    unsigned char lod;
-    unsigned char detail;
-    unsigned char unk02;
-    unsigned char drawShadow;
-    unsigned char brightness;
-    unsigned char pad05;
-    short unk06;
-    unsigned short tpage;
-    short pad0a;
-    void *model;
-    MATRIX world;
-    WheelInst wheels[4];
-    MATRIX shadow;
-};
-
-// A box with a top and a bottom colour (Menu_AddGouraudQuad).
-struct GouraudQuad {
-    RECT rect;
-    unsigned int top;
-    unsigned int bottom;
-};
-
-// The SPRT that Prim_AddSprite returns (from its xy).
-struct PreviewSprite {
-    short x;
-    short y;
-    unsigned char u;
-    unsigned char v;
-    unsigned short clut;
-    short w;
-    short h;
-};
-
-// The LINE_F5 that Prim_AddLineF4 returns: a closed outline of 4 points.
-struct PreviewLine {
-    unsigned int rgbc;
-    short x0;
-    short y0;
-    short x1;
-    short y1;
-    short x2;
-    short y2;
-    short x3;
-    short y3;
-    short x4;
-    short y4;
-};
-
-// The buffers and position of the preview (CarPreview_Init).
-struct PreviewBuffers {
-    void *modelBuf;
-    void *texBuf;
-    void *wheelBuf;
-};
-
-struct CarPreviewConfig {
-    PreviewBuffers bufs;
-    unsigned char vramPage;
-    unsigned char pad0d;
-    short x;
-    short y;
-};
-
-// A TIM's CLUT block (the logo, at CarModelHeader + 8) and the image block after it.
-struct TimBlock {
-    unsigned int len;
-    short x;
-    short y;
-    short w;
-    short h;
-};
-
-struct PreviewCarParams {
-    unsigned char pad00[0x5a];
-    short weight;
-};
-
 extern "C" {
 extern GameState g_GameState;
 extern CarSpecStrings g_CarSpecStrings;
@@ -149,8 +38,8 @@ int Wheel_LoadTim(unsigned int code, void *dst);
 void CarParams_BuildFromSetup(CarSetup *setup, void *params);
 void CarParams_GetPerformance(void *params, void *perf);
 unsigned short *UniStr_Get(int index);
-PreviewSprite *Prim_AddSprite(void *ot, unsigned int rgb);
-PreviewLine *Prim_AddLineF4(void *ot, unsigned int rgb);
+PrimSprite *Prim_AddSprite(void *ot, unsigned int rgb);
+PrimLineF4 *Prim_AddLineF4(void *ot, unsigned int rgb);
 RECT *Prim_AddTile(void *ot, unsigned int rgb);
 void *Prim_AddDrawMode(void *ot, unsigned int tpage);
 void Menu_AddGouraudQuad(void *ot, GouraudQuad *q);
@@ -261,7 +150,7 @@ void CarPreview_DrawLogo(CarPreview *car, void *ot, short cx, short cy)
 {
     int w = car->logoW;
     int h = car->logoH;
-    PreviewSprite *s = Prim_AddSprite(ot, 0x808080);
+    PrimSprite *s = Prim_AddSprite(ot, 0x808080);
 
     s->x = cx - (w >> 1);
     s->y = cy - (h >> 1);
@@ -295,7 +184,7 @@ void CarPreview_DrawColorChips(CarPreview *car, void *ot, int right, int y)
             unsigned int c;
             int k;
             RECT *r;
-            PreviewLine *l;
+            PrimLineF4 *l;
 
             right -= 12;
             if (i >= count) {
@@ -374,7 +263,7 @@ void CarPreview_DrawModel(CarPreview *car, DrawLayer *layer, CarCamera *cam)
         inst.detail = 0;
         inst.unk02 = 0;
         inst.drawShadow = 1;
-        inst.model = car->modelBuf;
+        inst.model = (CarModelHeader *)car->modelBuf;
         inst.unk06 = car->x;
         inst.tpage = car->y;
         inst.brightness = 0x40;
@@ -616,7 +505,7 @@ void CarPreview_SpecFromCar(CarSpecSheet *spec, int carId, CarSetup *setup, void
     spec->engineStrA = *(unsigned short *)(engine + 4);
     spec->engineStrB = *(unsigned short *)(engine + 8);
     spec->engineStrC = *(unsigned short *)(engine + 6);
-    spec->weight = ((PreviewCarParams *)carParams)->weight;
+    spec->weight = ((CarParams *)carParams)->weight;
     spec->power = perf[0];
     spec->powerRpm = perf[1];
     spec->torque = perf[2];

@@ -3,27 +3,11 @@
 #include "include_asm.h"
 #include "ovl4.h"
 
-// A glyph of the GT mode fonts: its character code and where it sits.
-struct GTFontGlyph {
-    unsigned short code;    // 0x0, sorted, so that codes from 0x100 are searched
-    short xoff;             // 0x2
-    short yoff;             // 0x4
-    short advance;          // 0x6
-};
-
-// The sprite of a glyph.
-struct GTFontSprite {
-    unsigned int uvClut;    // 0x0
-    unsigned int wh;        // 0x4
-    unsigned short tpage;   // 0x8
-    short unkA;
-};
-
 extern "C" {
 extern GTFontGlyph g_GTFont_Glyphs[0x10b];
-extern GTFontSprite g_GTFont_Sprites[0x10b];
+extern MenuSprite g_GTFont_Sprites[0x10b];
 extern GTFontGlyph g_GTFontB_Glyphs[0x18];
-extern GTFontSprite g_GTNumFont_Glyphs[0x18];
+extern MenuSprite g_GTNumFont_Glyphs[0x18];
 extern short g_GTFont_Index[0x100];
 extern short g_GTFontB_Index[0x100];
 

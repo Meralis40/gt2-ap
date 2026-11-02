@@ -2,12 +2,10 @@
 // the dark screen shown after it (gtmenu.cpp), and GTBattleMenu, which picks the
 // battle opponents (gtbattlemenu.cpp). They derive from the resident
 // psxViewLoopDoubleBuffer (viewloop.h); the virtual functions are declared in
-// their vtable order. Include viewloop.h before ovl4.h, so that ovl4.h leaves
-// out its C versions of the screen loop types.
+// their vtable order.
 #ifndef GTMENU_H
 #define GTMENU_H
 
-#include "viewloop.h"
 #include "ovl4.h"
 
 // GT mode main menu loop (0x864 bytes). Constructed on GTMode_Run's stack.

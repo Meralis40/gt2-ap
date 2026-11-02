@@ -3,17 +3,9 @@
 #include "include_asm.h"
 #include "gtmenu.h"
 
-// The cursor's sprite.
-struct MapCursorSprite {
-    unsigned int uvClut;
-    unsigned int wh;
-    unsigned short tpage;
-    short unkA;
-};
-
 extern "C" {
 // g_MapCursor_Sprite, then g_MapCursor_SpriteActive (over a hotspot).
-extern MapCursorSprite g_MapCursor_Sprite[2];
+extern MenuSprite g_MapCursor_Sprite[2];
 
 MenuElement *MenuView_FindDefaultElement(GTMenuView *view);
 MenuElement *MenuView_HotspotAt(GTMenuView *view, int x, int y);
@@ -278,7 +270,7 @@ void MapCursor_MoveTo(MapCursor *cursor, MenuElement *element)
 // Draws the cursor, with the other sprite over a hotspot.
 void MapCursor_Draw(MapCursor *cursor, void *ot)
 {
-    MapCursorSprite *sprite = g_MapCursor_Sprite;
+    MenuSprite *sprite = g_MapCursor_Sprite;
     unsigned int *prim;
 
     if (cursor->hotspot != 0)

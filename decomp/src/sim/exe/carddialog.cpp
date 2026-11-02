@@ -7,92 +7,6 @@
 #include "include_asm.h"
 #include "resident.h"
 
-// The style template TextItem_Init copies (the first 0x1c bytes of a TextItem).
-struct TextStyle {
-    uchar charsPerStep;
-    uchar unk01;
-    short revealSteps;
-    short zoomWidth;
-    short closeSteps;
-    short fadeSteps;
-    signed char spacing;
-    char height;
-    ushort flags;
-    ushort pad0e;
-    Font *font;
-    uint rgbFrom;
-    uint rgbTo;
-};
-
-// What CardDialog_Init builds a dialog from (0x30 bytes).
-struct CardDialogDesc {
-    short x;                    // centre
-    short y;
-    char *message;
-    char *option0;
-    char *option1;
-    uint messageRgb;            // bit 25: the text's alternative style
-    uint optionRgb;
-    uint color;                 // box colour
-    uint color2;                // bottom of the box gradient
-    ushort flags;               // bits 1-2: size; bit 2: text 4 pixels higher;
-                                // bit 0: boxes slide in from the left; bit 3: close on a choice
-    signed char spacing;        // of the options
-    uchar pad23;
-    short textHeight;
-    short pad26;
-    Font *font;
-    signed char sfx;
-    uchar pad2d[3];
-};
-
-// A rectangle filled with a vertical gradient (Menu_AddGouraudQuad).
-struct GouraudQuad {
-    RECT rect;
-    uint top;
-    uint bottom;
-};
-
-// A rectangle of a texture page (FUN_8006ea38).
-struct Sprite {
-    uchar u;
-    uchar v;
-    ushort clut;
-    short w;
-    short h;
-    ushort tpage;
-};
-
-// The textured quad Prim_AddPolyFT4 returns (PsyQ POLY_FT4 after its tag).
-struct PolyFT4 {
-    uint rgb;
-    short x0, y0;
-    uchar u0, v0;
-    ushort clut;
-    short x1, y1;
-    uchar u1, v1;
-    ushort tpage;
-    short x2, y2;
-    uchar u2, v2;
-    ushort pad1;
-    short x3, y3;
-    uchar u3, v3;
-    ushort pad2;
-};
-
-// A memory card port of the card driver (g_McPorts, 0x264 bytes).
-struct McPort {
-    uchar unk000[0x25d];
-    uchar state;                // 0 ready, 2, 3, 4, 5: see CardSlots_Update
-    uchar unk25e[6];
-};
-
-// The card driver state; the ports are g_McPorts.
-struct CardSystem {
-    uchar unk00[0x44];
-    McPort ports[2];
-};
-
 // Pad bits of PadState.pressed.
 #define PAD_LEFT 0x4
 #define PAD_RIGHT 0x8
@@ -114,7 +28,7 @@ void Menu_AddGouraudQuad(uint *ot, GouraudQuad *quad);
 void Prim_AddRectOutline(uint *ot, uint rgb, RECT *rect);
 void *Prim_AddDrawMode(uint *ot, uint tpage);
 RECT *Prim_AddTile(uint *ot, uint rgb);
-PolyFT4 *Prim_AddPolyFT4(uint *ot, uint rgb);
+PrimFT4 *Prim_AddPolyFT4(uint *ot, uint rgb);
 void Sfx_PlayMenu(int sfx);
 void CardDialog_Close(CardDialog *dlg);
 
@@ -403,7 +317,7 @@ void FUN_8006ea38(uint *ot, Sprite *sprite, int x, int y, uint rgb, int scale)
 {
     int w = sprite->w * scale;
     int h = sprite->h * scale;
-    PolyFT4 *p = Prim_AddPolyFT4(ot, rgb);
+    PrimFT4 *p = Prim_AddPolyFT4(ot, rgb);
     int left = x - (w >> 8);
     int right = x + (w >> 8);
     int top = y - (h >> 8);
@@ -425,13 +339,6 @@ void CardSlots_Init(short *status)
 {
     *status = 2;
     status[1] = 2;
-}
-
-// The card driver state, through an accessor: with &g_Card written directly
-// the compiler folds the port offset into the loop pointer.
-static inline CardSystem *Card_Get()
-{
-    return &g_Card;
 }
 
 // Each frame: the menu status of each card slot from its driver state. Other

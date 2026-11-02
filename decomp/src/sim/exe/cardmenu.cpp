@@ -54,8 +54,8 @@ int ReplayFile_StartReadEntry(ReplayDir *dir, int port, int entry, void *data, s
 int ReplayDir_CheckEntryCrc(ReplayDir *dir, int entry, void *data);
 void Replay_Unpack(void *data, int arg);
 void GhostReplay_Unpack(void *data);
-struct PolyFT4;
-PolyFT4 *KanjiFont_AddGlyphQuad(void *glyph, uint *ot, uint rgb);
+struct PrimFT4;
+PrimFT4 *KanjiFont_AddGlyphQuad(void *glyph, uint *ot, uint rgb);
 void *Prim_AddDrawMode(uint *ot, uint tpage);
 int ReplayFile_StartReadDir(ReplayDir *dir, int port);
 int ReplayDir_IsValid(ReplayDir *dir);
@@ -245,50 +245,7 @@ extern Font g_CardMenu_FontSmall;
 extern Font g_CardMenu_FontMedium;
 extern Font g_CardMenu_FontLarge;
 
-// A memory card port of the card driver (0x264 bytes).
-struct McPort {
-    uchar unk000[0x25a];
-    uchar freeBlocks;
-    uchar unk25b[2];
-    uchar state;
-    uchar unk25e[6];
-};
-
-// The card driver state.
-struct CardSystem {
-    uchar unk00[0x44];
-    McPort ports[2];
-};
-
 extern CardSystem g_Card;
-
-// The textured quad of a glyph (PsyQ POLY_FT4 after its tag).
-struct PolyFT4 {
-    uint rgb;
-    short x0, y0;
-    uchar u0, v0;
-    ushort clut;
-    short x1, y1;
-    uchar u1, v1;
-    ushort tpage;
-    short x2, y2;
-    uchar u2, v2;
-    ushort pad1;
-    short x3, y3;
-    uchar u3, v3;
-    ushort pad2;
-};
-
-// What an overlay hands CardMenu_Setup.
-struct CardMenuConfig {
-    CardMenu *work; // becomes g_CardMenu
-    void *kanjiFont;
-    short *slotStatus;
-    Font *fontSmall;
-    Font *fontMedium;
-    Font *fontLarge;
-    short textPri;
-};
 
 // Sets up a kanji glyph cache: the pixel buffer at +0x1824, 256 glyph nodes at +0x24,
 // its texture and CLUT in VRAM, and the glyph loader at +0x9824.
@@ -363,7 +320,7 @@ void CardMenu_DrawKanji(uint *ot, char *sjis, int x, int y, int center, uint rgb
         void *glyph = KanjiFont_FindGlyph(font, p[0] << 8 | p[1]);
 
         if (glyph != 0) {
-            PolyFT4 *q = KanjiFont_AddGlyphQuad(glyph, ot, rgb | semi);
+            PrimFT4 *q = KanjiFont_AddGlyphQuad(glyph, ot, rgb | semi);
 
             q->x0 = x;
             q->y0 = y;

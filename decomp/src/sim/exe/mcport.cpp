@@ -4,16 +4,6 @@
 #include "include_asm.h"
 #include "mccard.h"
 
-// A directory frame of the card, as it is written (128 bytes).
-struct McDirFrame {
-    unsigned int state;
-    int size;
-    short next;
-    char name[0x74];
-    unsigned char unk7e;
-    unsigned char checksum;
-};
-
 extern "C" {
 void Text_SetFont(TextCtx *ctx, Font *font);
 void Text_SetTexturePage(TextCtx *ctx, int tpageId);

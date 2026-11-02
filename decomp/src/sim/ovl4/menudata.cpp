@@ -4,47 +4,6 @@
 #include "include_asm.h"
 #include "ovl4.h"
 
-// One language's car spec strings, as a block for the struct copy.
-struct CarSpecRecord {
-    char text[0x88];
-};
-
-// One CD sector, as a block for the struct copy.
-struct SectorData {
-    char data[0x800];
-};
-
-// gtmenu/solodata's car page table: carCount, then the pairs sorted by car id.
-struct CarPage {
-    unsigned int carId;
-    int pageId;
-};
-
-struct VolHeader {
-    char magic[4];
-    unsigned int unk4[3];
-    unsigned int toc[12284];
-};
-
-// The resident CD reader's state (only the fields used here).
-struct CdAudio {
-    char unk0[0x2c];
-    int (*onSector)(unsigned int sector, void *arg);
-    char unk30[8];
-    unsigned short reqSkip;
-    char unk3A[0xa];
-    unsigned int nextSector;
-    char unk48[0x18];
-    unsigned int curSector;
-    char unk64[0x103];
-    unsigned char unk167;
-};
-
-struct OtTag {
-    unsigned addr : 24;
-    unsigned len : 8;
-};
-
 extern "C" {
 extern int *g_SoloData_CarPages;
 int Gpu_TransferImage(RECT *rect, unsigned int *data, int store);
@@ -528,7 +487,7 @@ int BgPic_StreamRead(void *header, unsigned int offset, int size)
         CdAudio *cd = &g_CdAudio;
 
         cd->reqSkip = skip;
-        cd->onSector = BgPicStream_OnSector;
+        cd->onSector = (void *)BgPicStream_OnSector;
         s->startOffset = skip;
     }
     CdAudio_WaitRead(BgPicStream_Restart);

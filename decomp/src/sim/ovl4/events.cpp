@@ -5,30 +5,6 @@
 #include "include_asm.h"
 #include "ovl4.h"
 
-// An event of the GT mode race data (the fields read here).
-struct RaceEvent {
-    char unk0[2];
-    unsigned short courseString;    // 0x2, a string of the race data
-    char unk4[0x45 - 0x4];
-    unsigned char unk45;            // 0x45, copied to ChampRaceList.param45
-    char unk46[0x78 - 0x46];
-    unsigned short prizes[6];       // 0x78, in hundreds of credits
-    unsigned int prizeCars[4];      // 0x84, 0 ends the list
-    char unk94[0x98 - 0x94];
-    unsigned short championshipPrize; // 0x98, in hundreds of credits
-};
-
-// The races of the current championship (resident.h has it for OVL0).
-struct ChampRaceList {
-    short unk00;
-    short raceCount;
-    unsigned int courseHash[6];
-    unsigned short param45[6];
-    char raceCode[6][16];
-    signed char points[6];
-    signed char racePoints[6];
-};
-
 extern "C" {
 extern GameState g_GameState;
 extern char *g_EventCodes[];
@@ -318,7 +294,7 @@ void ChampRaceList_Build(ChampRaceList *list, char *eventCode)
             course = GameData_GetString(data, event->courseString);
             if (strcmp(course, D_80022F74) == 0)
                 course = Course_PickRandom(&seed);
-            list->param45[i] = event->unk45;
+            list->param45[i] = event->lapCount;
             list->courseHash[i] = Str_Hash(course);
             strcpy(list->raceCode[i], code);
             i++;

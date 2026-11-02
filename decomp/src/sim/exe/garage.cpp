@@ -22,15 +22,6 @@ extern int D_800915A0[];     // CarSetup offset of each LSD setting
 extern int D_800915B8[][3];  // LSD entry offsets of each LSD setting's minimum ([1]) and maximum ([2])
 extern short D_80091600[];   // id of each LSD setting
 
-// One car setting: its value and range (CarWork_GetSettingRange); id is set for the
-// LSD settings only.
-struct SettingRange {
-    short value;
-    short min;
-    short max;
-    short id;
-};
-
 // Recomputes a full-custom transmission's ratios and keeps what they were computed
 // with.
 static inline void CarWork_SetCustomRatios(CarWork *work)
@@ -116,11 +107,11 @@ void CarWork_GetGearRange(CarWork *work, short *ratios, short *minRatios, short 
     int rear = (ushort)work->setup.work_17b8;
 
     CarSpec_FromCarWork(work, &spec);
-    spec.frontTyre18 = work->frontTyre18[front];
-    spec.frontTyre19 = work->frontTyre19[front];
-    spec.frontTyre1a = work->frontTyre1a[front];
-    spec.rearTyre18 = work->rearTyre18[rear];
-    spec.rearTyre19 = work->rearTyre19[rear];
+    spec.frontTyre18 = work->frontTyres18[front].data;
+    spec.frontTyre19 = work->frontTyres19[front].data;
+    spec.frontTyre1a = work->frontTyres1a[front].data;
+    spec.rearTyre18 = work->rearTyres18[rear].data;
+    spec.rearTyre19 = work->rearTyres19[rear].data;
     spec.t11_4c = work->setup.t11_4c_copy;
     spec.t11_4e = work->setup.t11_4e_copy;
     CarParams_Build(&spec, &params);
@@ -131,7 +122,7 @@ void CarWork_GetGearRange(CarWork *work, short *ratios, short *minRatios, short 
 
 int CarWork_TransIsCustom(CarWork *work, int stage)
 {
-    return (unsigned int)(work->transEntries[stage][0x20] != '\0');
+    return (unsigned int)(work->trans[stage].bytes[0x20] != '\0');
 }
 
 // Fits stage of slot: sets the setup's part index and applies the part's entry.
@@ -141,27 +132,27 @@ void CarWork_SetPartSlot(CarWork *work, int slot, int stage)
     switch (slot) {
     case 0:
         work->setup.idx_t12 = work->suspIdx[stage];
-        CarSetup_ApplyPartEntry(0x12, work->suspEntries[stage], &work->setup);
+        CarSetup_ApplyPartEntry(0x12, work->susp[stage].bytes, &work->setup);
         break;
     case 1:
-        work->setup.idx_t00 = work->brakeIdx[stage];
+        work->setup.idx_t00 = work->brakesIdx[stage];
         break;
     case 2:
         work->setup.idx_t01 = work->brakeBalIdx[stage];
-        CarSetup_ApplyPartEntry(1, work->brakeBalEntries[stage], &work->setup);
+        CarSetup_ApplyPartEntry(1, work->brakeBal[stage].bytes, &work->setup);
         break;
     case 3:
-        work->setup.idx_t16_front = work->frontTyreIdx[stage];
+        work->setup.idx_t16_front = work->frontTyresIdx[stage];
         break;
     case 4:
-        work->setup.idx_t16_rear = work->rearTyreIdx[stage];
+        work->setup.idx_t16_rear = work->rearTyresIdx[stage];
         break;
     case 5:
         work->setup.idx_t1d = work->wheelIdx[stage];
         break;
     case 6:
         work->setup.idx_t11 = work->transIdx[stage];
-        CarSetup_ApplyPartEntry(0x11, work->transEntries[stage], &work->setup);
+        CarSetup_ApplyPartEntry(0x11, work->trans[stage].bytes, &work->setup);
         if (CarWork_TransIsCustom(work, stage)) {
             CarWork_SetCustomRatios(work);
         }
@@ -187,7 +178,7 @@ void CarWork_SetPartSlot(CarWork *work, int slot, int stage)
     case 0xd:
         // An NA tune takes the turbo and intercooler off.
         work->setup.idx_t0c = work->turboIdx[0];
-        CarSetup_ApplyPartEntry(0xc, work->turboEntries[0], &work->setup);
+        CarSetup_ApplyPartEntry(0xc, work->turbo[0].bytes, &work->setup);
         work->partSlots[0xf] = 0;
         work->partSlots[0x10] = 0;
         work->setup.idx_t13 = work->intercoolerIdx[0];
@@ -201,7 +192,7 @@ void CarWork_SetPartSlot(CarWork *work, int slot, int stage)
         work->partSlots[0xd] = 0;
         work->setup.idx_t0b = work->naTuneIdx[0];
         work->setup.idx_t0c = work->turboIdx[stage];
-        CarSetup_ApplyPartEntry(0xc, work->turboEntries[stage], &work->setup);
+        CarSetup_ApplyPartEntry(0xc, work->turbo[stage].bytes, &work->setup);
         break;
     case 0x10:
         work->setup.idx_t13 = work->intercoolerIdx[stage];
@@ -214,19 +205,19 @@ void CarWork_SetPartSlot(CarWork *work, int slot, int stage)
         break;
     case 0x13:
         work->setup.idx_t05 = work->racingModIdx[stage];
-        CarSetup_ApplyPartEntry(5, work->racingModEntries[stage], &work->setup);
+        CarSetup_ApplyPartEntry(5, work->racingMod[stage].bytes, &work->setup);
         break;
     case 0x14:
         work->setup.idx_t1b = work->ascIdx[stage];
-        CarSetup_ApplyPartEntry(0x1b, work->ascEntries[stage], &work->setup);
+        CarSetup_ApplyPartEntry(0x1b, work->asc[stage].bytes, &work->setup);
         break;
     case 0x15:
         work->setup.idx_t1c = work->tcsIdx[stage];
-        CarSetup_ApplyPartEntry(0x1c, work->tcsEntries[stage], &work->setup);
+        CarSetup_ApplyPartEntry(0x1c, work->tcs[stage].bytes, &work->setup);
         break;
     case 0x16:
         work->setup.idx_t15 = work->lsdIdx[stage];
-        CarSetup_ApplyPartEntry(0x15, work->lsdEntries[stage], &work->setup);
+        CarSetup_ApplyPartEntry(0x15, work->lsd[stage].bytes, &work->setup);
         break;
     }
 }
@@ -238,10 +229,10 @@ int CarWork_GetPartIdx(CarWork *work, int slot, int stage)
 
     switch (slot) {
     case 0: idx = work->suspIdx[stage]; break;
-    case 1: idx = work->brakeIdx[stage]; break;
+    case 1: idx = work->brakesIdx[stage]; break;
     case 2: idx = work->brakeBalIdx[stage]; break;
-    case 3: idx = work->frontTyreIdx[stage]; break;
-    case 4: idx = work->rearTyreIdx[stage]; break;
+    case 3: idx = work->frontTyresIdx[stage]; break;
+    case 4: idx = work->rearTyresIdx[stage]; break;
     case 5: idx = work->wheelIdx[stage]; break;
     case 6: idx = work->transIdx[stage]; break;
     case 7: idx = work->clutchIdx[stage]; break;
@@ -275,30 +266,30 @@ void CarSpec_FromCarWorkWithPart(CarWork *work, CarSpec *spec, int slot, int sta
     case -1:
         break;
     case 0:
-        spec->suspension = work->suspEntries[stage];
+        spec->suspension = work->susp[stage].bytes;
         CarSpec_ApplyPartEntry(0x12, spec->suspension, spec);
         break;
     case 1:
-        spec->brakes = work->brakeEntries[stage];
+        spec->brakes = work->brakes[stage].bytes;
         CarSpec_ApplyPartEntry(0, spec->brakes, spec);
         break;
     case 2:
-        spec->brakeBalance = work->brakeBalEntries[stage];
+        spec->brakeBalance = work->brakeBal[stage].bytes;
         CarSpec_ApplyPartEntry(1, spec->brakeBalance, spec);
         break;
     case 3:
-        spec->frontTyre18 = work->frontTyre18[stage];
-        spec->frontTyre19 = work->frontTyre19[stage];
-        spec->frontTyre1a = work->frontTyre1a[stage];
+        spec->frontTyre18 = work->frontTyres18[stage].data;
+        spec->frontTyre19 = work->frontTyres19[stage].data;
+        spec->frontTyre1a = work->frontTyres1a[stage].data;
         break;
     case 4:
-        spec->rearTyre18 = work->rearTyre18[stage];
-        spec->rearTyre19 = work->rearTyre19[stage];
+        spec->rearTyre18 = work->rearTyres18[stage].data;
+        spec->rearTyre19 = work->rearTyres19[stage].data;
         break;
     case 5:
         break;
     case 6:
-        spec->transmission = work->transEntries[stage];
+        spec->transmission = work->trans[stage].bytes;
         CarSpec_ApplyPartEntry(0x11, spec->transmission, spec);
         if (CarWork_TransIsCustom(work, stage)) {
             CarWork_ComputeGearRatios(work, ratios);
@@ -308,74 +299,74 @@ void CarSpec_FromCarWorkWithPart(CarWork *work, CarSpec *spec, int slot, int sta
         }
         break;
     case 7:
-        spec->clutch = work->clutchEntries[stage];
+        spec->clutch = work->clutch[stage].bytes;
         CarSpec_ApplyPartEntry(0xf, spec->clutch, spec);
         break;
     case 8:
-        spec->flywheel = work->flywheelEntries[stage];
+        spec->flywheel = work->flywheel[stage].bytes;
         CarSpec_ApplyPartEntry(0xe, spec->flywheel, spec);
         break;
     case 9:
-        spec->driveshaft = work->driveshaftEntries[stage];
+        spec->driveshaft = work->driveshaft[stage].bytes;
         CarSpec_ApplyPartEntry(0x10, spec->driveshaft, spec);
         break;
     case 10:
-        spec->chip = work->chipEntries[stage];
+        spec->chip = work->chip[stage].bytes;
         CarSpec_ApplyPartEntry(0xa, spec->chip, spec);
         break;
     case 0xb:
-        spec->portPolish = work->portPolishEntries[stage];
+        spec->portPolish = work->portPolish[stage].bytes;
         CarSpec_ApplyPartEntry(7, spec->portPolish, spec);
         break;
     case 0xc:
-        spec->balancing = work->balanceEntries[stage];
+        spec->balancing = work->balance[stage].bytes;
         CarSpec_ApplyPartEntry(8, spec->balancing, spec);
         break;
     case 0xd:
-        spec->naTune = work->naTuneEntries[stage];
+        spec->naTune = work->naTune[stage].bytes;
         CarSpec_ApplyPartEntry(0xb, spec->naTune, spec);
-        spec->turbo = work->turboEntries[0];
+        spec->turbo = work->turbo[0].bytes;
         CarSpec_ApplyPartEntry(0xc, spec->turbo, spec);
-        spec->intercooler = work->intercoolerEntries[0];
+        spec->intercooler = work->intercooler[0].bytes;
         CarSpec_ApplyPartEntry(0x13, spec->intercooler, spec);
         break;
     case 0xe:
-        spec->displacement = work->displEntries[stage];
+        spec->displacement = work->displ[stage].bytes;
         CarSpec_ApplyPartEntry(9, spec->displacement, spec);
         break;
     case 0xf:
-        spec->turbo = work->turboEntries[stage];
+        spec->turbo = work->turbo[stage].bytes;
         CarSpec_ApplyPartEntry(0xc, spec->turbo, spec);
-        spec->naTune = work->naTuneEntries[0];
+        spec->naTune = work->naTune[0].bytes;
         // The game applies the first LSD entry here, not the stock NA tune.
-        CarSpec_ApplyPartEntry(0x15, work->lsdEntries[0], spec);
+        CarSpec_ApplyPartEntry(0x15, work->lsd[0].bytes, spec);
         break;
     case 0x10:
-        spec->intercooler = work->intercoolerEntries[stage];
+        spec->intercooler = work->intercooler[stage].bytes;
         CarSpec_ApplyPartEntry(0x13, spec->intercooler, spec);
         break;
     case 0x11:
-        spec->muffler = work->mufflerEntries[stage];
+        spec->muffler = work->muffler[stage].bytes;
         CarSpec_ApplyPartEntry(0x14, spec->muffler, spec);
         break;
     case 0x12:
-        spec->weightReduction = work->weightEntries[stage];
+        spec->weightReduction = work->weight[stage].bytes;
         CarSpec_ApplyPartEntry(4, spec->weightReduction, spec);
         break;
     case 0x13:
-        spec->racingMod = work->racingModEntries[stage];
+        spec->racingMod = work->racingMod[stage].bytes;
         CarSpec_ApplyPartEntry(5, spec->racingMod, spec);
         break;
     case 0x14:
-        spec->asc = work->ascEntries[stage];
+        spec->asc = work->asc[stage].bytes;
         CarSpec_ApplyPartEntry(0x1b, spec->asc, spec);
         break;
     case 0x15:
-        spec->tcs = work->tcsEntries[stage];
+        spec->tcs = work->tcs[stage].bytes;
         CarSpec_ApplyPartEntry(0x1c, spec->tcs, spec);
         break;
     case 0x16:
-        spec->lsd = work->lsdEntries[stage];
+        spec->lsd = work->lsd[stage].bytes;
         CarSpec_ApplyPartEntry(0x15, spec->lsd, spec);
         break;
     }
@@ -387,37 +378,37 @@ void CarSpec_FromCarWork(CarWork *work, CarSpec *spec)
     int stage;
 
     CarSpec_CopySetupFields(spec, work);
-    spec->suspension = work->suspEntries[work->partSlots[0]];
-    spec->brakes = work->brakeEntries[work->partSlots[1]];
-    spec->brakeBalance = work->brakeBalEntries[work->partSlots[2]];
-    spec->transmission = work->transEntries[work->partSlots[6]];
-    spec->clutch = work->clutchEntries[work->partSlots[7]];
-    spec->flywheel = work->flywheelEntries[work->partSlots[8]];
-    spec->driveshaft = work->driveshaftEntries[work->partSlots[9]];
-    spec->chip = work->chipEntries[work->partSlots[10]];
-    spec->portPolish = work->portPolishEntries[work->partSlots[0xb]];
-    spec->balancing = work->balanceEntries[work->partSlots[0xc]];
-    spec->naTune = work->naTuneEntries[work->partSlots[0xd]];
-    spec->displacement = work->displEntries[work->partSlots[0xe]];
-    spec->turbo = work->turboEntries[work->partSlots[0xf]];
-    spec->intercooler = work->intercoolerEntries[work->partSlots[0x10]];
-    spec->muffler = work->mufflerEntries[work->partSlots[0x11]];
-    spec->weightReduction = work->weightEntries[work->partSlots[0x12]];
-    spec->racingMod = work->racingModEntries[work->partSlots[0x13]];
-    spec->asc = work->ascEntries[work->partSlots[0x14]];
-    spec->tcs = work->tcsEntries[work->partSlots[0x15]];
-    spec->lsd = work->lsdEntries[work->partSlots[0x16]];
-    spec->t02 = &work->t02Entry[work->partSlots[0x17] * 24];
-    spec->t03 = &work->t03Entry[work->partSlots[0x18] * 20];
-    spec->t06 = &work->t06Entry[work->partSlots[0x19] * 76];
-    spec->t0d = &work->t0dEntry[work->partSlots[0x1a] * 16];
+    spec->suspension = work->susp[work->partSlots[0]].bytes;
+    spec->brakes = work->brakes[work->partSlots[1]].bytes;
+    spec->brakeBalance = work->brakeBal[work->partSlots[2]].bytes;
+    spec->transmission = work->trans[work->partSlots[6]].bytes;
+    spec->clutch = work->clutch[work->partSlots[7]].bytes;
+    spec->flywheel = work->flywheel[work->partSlots[8]].bytes;
+    spec->driveshaft = work->driveshaft[work->partSlots[9]].bytes;
+    spec->chip = work->chip[work->partSlots[10]].bytes;
+    spec->portPolish = work->portPolish[work->partSlots[0xb]].bytes;
+    spec->balancing = work->balance[work->partSlots[0xc]].bytes;
+    spec->naTune = work->naTune[work->partSlots[0xd]].bytes;
+    spec->displacement = work->displ[work->partSlots[0xe]].bytes;
+    spec->turbo = work->turbo[work->partSlots[0xf]].bytes;
+    spec->intercooler = work->intercooler[work->partSlots[0x10]].bytes;
+    spec->muffler = work->muffler[work->partSlots[0x11]].bytes;
+    spec->weightReduction = work->weight[work->partSlots[0x12]].bytes;
+    spec->racingMod = work->racingMod[work->partSlots[0x13]].bytes;
+    spec->asc = work->asc[work->partSlots[0x14]].bytes;
+    spec->tcs = work->tcs[work->partSlots[0x15]].bytes;
+    spec->lsd = work->lsd[work->partSlots[0x16]].bytes;
+    spec->t02 = &work->t02.bytes[work->partSlots[0x17] * 24];
+    spec->t03 = &work->t03.bytes[work->partSlots[0x18] * 20];
+    spec->t06 = &work->t06.bytes[work->partSlots[0x19] * 76];
+    spec->t0d = &work->t0d.bytes[work->partSlots[0x1a] * 16];
     stage = work->partSlots[3];
-    spec->frontTyre18 = work->frontTyre18[stage];
-    spec->frontTyre19 = work->frontTyre19[stage];
-    spec->frontTyre1a = work->frontTyre1a[stage];
+    spec->frontTyre18 = work->frontTyres18[stage].data;
+    spec->frontTyre19 = work->frontTyres19[stage].data;
+    spec->frontTyre1a = work->frontTyres1a[stage].data;
     stage = work->partSlots[4];
-    spec->rearTyre18 = work->rearTyre18[stage];
-    spec->rearTyre19 = work->rearTyre19[stage];
+    spec->rearTyre18 = work->rearTyres18[stage].data;
+    spec->rearTyre19 = work->rearTyres19[stage].data;
 }
 
 void FUN_8005f788(void)
@@ -465,7 +456,7 @@ int CarWork_HasFullTransmission(CarWork *work)
 
 int CarWork_GetGearCount(CarWork *work)
 {
-    return (unsigned int)work->transEntries[work->partSlots[6]][9];
+    return (unsigned int)work->trans[work->partSlots[6]].bytes[9];
 }
 
 int CarWork_CountRacingModStages(CarWork *work)
@@ -507,7 +498,7 @@ int CarWork_HasTcs(CarWork *work)
 
 int CarWork_SuspHasSetting0(CarWork *work)
 {
-    return (unsigned int)(work->suspEntries[work->partSlots[0]][0x4b] == '\0');
+    return (unsigned int)(work->susp[work->partSlots[0]].bytes[0x4b] == '\0');
 }
 
 // The garage stats of the car: weight, power, torque and drivetrain, as
@@ -641,7 +632,7 @@ int CarWork_GetSettingRange(CarWork *work, int setting, SettingRange *out)
     switch (setting) {
     case 0:
         if (work->partSlots[0] < 3) return count;
-        e = work->suspEntries[work->partSlots[0]];
+        e = work->susp[work->partSlots[0]].bytes;
         out[0].value = work->setup.t12_60[0];
         out[0].max = e[0x1e];
         out[0].min = e[0x1d];
@@ -652,7 +643,7 @@ int CarWork_GetSettingRange(CarWork *work, int setting, SettingRange *out)
         break;
     case 1:
         if (work->partSlots[0] < 2) return count;
-        e = work->suspEntries[work->partSlots[0]];
+        e = work->susp[work->partSlots[0]].bytes;
         out[0].value = work->setup.t12_5a[2];
         out[0].max = e[0x14];
         out[0].min = e[0x13];
@@ -663,7 +654,7 @@ int CarWork_GetSettingRange(CarWork *work, int setting, SettingRange *out)
         break;
     case 2:
         if (work->partSlots[0] <= 0) break;
-        e = work->suspEntries[work->partSlots[0]];
+        e = work->susp[work->partSlots[0]].bytes;
         out[0].value = work->setup.t12_60[4];
         out[0].min = 1;
         out[0].max = e[0x27];
@@ -675,7 +666,7 @@ int CarWork_GetSettingRange(CarWork *work, int setting, SettingRange *out)
     case 3:
         if (!CarWork_HasFullSuspension(work)) break;
         out[0].value = work->setup.t12_60[6];
-        e = work->suspEntries[work->partSlots[0]];
+        e = work->susp[work->partSlots[0]].bytes;
         out[0].min = 1;
         out[0].max = e[0x2e];
         out[1].value = work->setup.t12_60[10];
@@ -685,7 +676,7 @@ int CarWork_GetSettingRange(CarWork *work, int setting, SettingRange *out)
         break;
     case 4:
         if (work->partSlots[0] <= 0) return count;
-        e = work->suspEntries[work->partSlots[0]];
+        e = work->susp[work->partSlots[0]].bytes;
         out[0].value = work->setup.t12_5a[0];
         out[0].max = e[0xa];
         out[0].min = e[9];
@@ -696,7 +687,7 @@ int CarWork_GetSettingRange(CarWork *work, int setting, SettingRange *out)
         break;
     case 5:
         if (work->partSlots[0] < 3) return count;
-        e = work->suspEntries[work->partSlots[0]];
+        e = work->susp[work->partSlots[0]].bytes;
         out[0].value = work->setup.setting_5e[0] - 0x80;
         out[0].max = e[0x10] - 0x80;
         out[0].min = e[0xf] - 0x80;
@@ -707,7 +698,7 @@ int CarWork_GetSettingRange(CarWork *work, int setting, SettingRange *out)
         break;
     case 6:
         if (work->partSlots[0] < 3) return count;
-        e = work->suspEntries[work->partSlots[0]];
+        e = work->susp[work->partSlots[0]].bytes;
         out[0].value = work->setup.t12_60[12];
         out[0].min = 1;
         out[0].max = e[0x43];
@@ -718,7 +709,7 @@ int CarWork_GetSettingRange(CarWork *work, int setting, SettingRange *out)
         break;
     case 7:
         if (work->partSlots[2] <= 0) break;
-        e = work->brakeBalEntries[work->partSlots[2]];
+        e = work->brakeBal[work->partSlots[2]].bytes;
         out[0].value = work->setup.t01_50[0];
         out[0].min = 1;
         out[0].max = e[9];
@@ -729,7 +720,7 @@ int CarWork_GetSettingRange(CarWork *work, int setting, SettingRange *out)
         break;
     case 8:
         if (work->partSlots[6] < 3) return count;
-        e = work->transEntries[work->partSlots[6]];
+        e = work->trans[work->partSlots[6]].bytes;
         CarWork_GetGearRange(work, ratios, minRatios, maxRatios);
         for (i = 0; i < CarWork_GetGearCount(work); out++) {
             i++;
@@ -746,7 +737,7 @@ int CarWork_GetSettingRange(CarWork *work, int setting, SettingRange *out)
         break;
     case 9:
         if (work->partSlots[6] < 3) return count;
-        e = work->transEntries[work->partSlots[6]];
+        e = work->trans[work->partSlots[6]].bytes;
         out[0].value = work->setup.t11_4e;
         out[0].max = e[0x23];
         out[0].min = e[0x22];
@@ -754,7 +745,7 @@ int CarWork_GetSettingRange(CarWork *work, int setting, SettingRange *out)
         break;
     case 0x10:
         if (work->partSlots[0x13] <= 0) return count;
-        e = work->racingModEntries[work->partSlots[0x13]];
+        e = work->racingMod[work->partSlots[0x13]].bytes;
         out[0].value = work->setup.t05_52;
         out[0].max = e[0x11];
         out[0].min = e[0x10];
@@ -765,7 +756,7 @@ int CarWork_GetSettingRange(CarWork *work, int setting, SettingRange *out)
         break;
     case 0xe:
         if (work->partSlots[0x14] <= 0) return count;
-        e = work->ascEntries[work->partSlots[0x14]];
+        e = work->asc[work->partSlots[0x14]].bytes;
         out[0].value = work->setup.t1b_74;
         out[0].max = e[0xd];
         out[0].min = e[0xc];
@@ -773,7 +764,7 @@ int CarWork_GetSettingRange(CarWork *work, int setting, SettingRange *out)
         break;
     case 0xf:
         if (work->partSlots[0x15] <= 0) return count;
-        e = work->tcsEntries[work->partSlots[0x15]];
+        e = work->tcs[work->partSlots[0x15]].bytes;
         out[0].value = work->setup.t1c_75;
         out[0].max = e[0xe];
         out[0].min = e[0xd];
@@ -785,7 +776,7 @@ int CarWork_GetSettingRange(CarWork *work, int setting, SettingRange *out)
         // Two settings each, kept only when they have a range.
         n = (setting - 10) * 2;
         count = 0;
-        e = work->lsdEntries[work->partSlots[0x16]];
+        e = work->lsd[work->partSlots[0x16]].bytes;
         for (i = 0; i < 2; i++) {
             out->value = ((unsigned char *)work)[D_800915A0[i + n]];
             out->max = e[D_800915B8[i + n][2]];
@@ -801,7 +792,7 @@ int CarWork_GetSettingRange(CarWork *work, int setting, SettingRange *out)
         break;
     case 13:
         if (work->partSlots[0x16] < 5) return count;
-        e = work->lsdEntries[work->partSlots[0x16]];
+        e = work->lsd[work->partSlots[0x16]].bytes;
         out[0].value = work->setup.t15_6e[1];
         count = 1;
         out[0].max = e[0x19];

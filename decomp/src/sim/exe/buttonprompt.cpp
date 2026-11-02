@@ -5,56 +5,6 @@
 #include "include_asm.h"
 #include "resident.h"
 
-// The style template TextItem_Init copies (the first 0x1c bytes of a TextItem).
-struct TextStyle {
-    uchar charsPerStep;
-    uchar unk01;
-    short revealSteps;
-    short zoomWidth;
-    short closeSteps;
-    short fadeSteps;
-    signed char spacing;
-    char height;
-    ushort flags;
-    ushort pad0e;
-    Font *font;
-    uint rgbFrom;
-    uint rgbTo;
-};
-
-struct ButtonPromptDesc {
-    short x;                    // centre
-    short y;
-    char *text;
-    uint textRgb;
-    uint color;                 // box colour
-    uint color2;                // bottom of the box gradient
-    uchar style;                // bits 1-2: size; bit 2: text 4 pixels higher
-    signed char spacing;
-    char textHeight;
-    uchar pad17;
-    Font *font;
-};
-
-struct ButtonPrompt {
-    short x;
-    short y;
-    TextItem text;
-    ushort flags;               // style; bit 7: highlighted while opening
-    ushort width;
-    ushort height;
-    short anim;                 // frames since Open; < 0 closing, -1 closed
-    uint color;
-    uint color2;
-};
-
-// A rectangle filled with a vertical gradient (Menu_AddGouraudQuad).
-struct GouraudQuad {
-    RECT rect;
-    uint top;
-    uint bottom;
-};
-
 // Pad bits of PadState.pressed.
 #define PAD_CONFIRM 0xa00
 #define PAD_CANCEL 0x500

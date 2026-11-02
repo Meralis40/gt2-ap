@@ -4,11 +4,6 @@
 #include "include_asm.h"
 #include "resident.h"
 
-// A car's replay record in g_GameState, 0x4518 bytes, copied as one block.
-struct ReplayRecord {
-    char data[0x4518];
-};
-
 extern "C" {
 void *memcpy(void *__dest, void *__src, size_t __n);
 extern unsigned char D_80091C8C;

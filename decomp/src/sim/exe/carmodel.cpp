@@ -22,87 +22,9 @@ void Matrix_Comp(MATRIX *m, MATRIX *n);
 void Gte_LoadTransform(void *scratch, int a, int b, int c);
 void ShadowMesh_Draw(void *mesh);
 
-// A car instance's wheel: position, and the spin direction (+-0x400) and angles.
-struct WheelInst {
-    short x;
-    short y;
-    short z;
-    short pad6;
-    short spin;
-    short angleA;
-    short angleB;
-    short padE;
-};
-
-struct CarModelInst {
-    unsigned char lod;          // 0: by distance, else LOD + 1
-    unsigned char detail;
-    unsigned char unk02;
-    unsigned char drawShadow;
-    unsigned char brightness;
-    unsigned char pad05;
-    short unk06;
-    unsigned short tpage;
-    short pad0a;
-    CarModelHeader *model;
-    MATRIX world;
-    WheelInst wheels[4];
-    MATRIX shadow;
-};
-
-// The colour codes of a car texture: count, then the letters.
-struct CarTex {
-    unsigned short count;
-    char codes[1];
-};
-
-// The wheels of a car model (CarModelHeader from wheelTexture): the hub half widths, the hub
-// sprite corners and the front and rear wheel meshes of the 3 LODs.
-struct WheelGeom {
-    unsigned int texture;
-    short frontHalfWidth;
-    short rearHalfWidth;
-    unsigned int frontQuad[4];
-    int pad18;
-    unsigned int rearQuad[4];
-    int pad2c;
-    int frontLod0[0x82];
-    int rearLod0[0x82];
-    int frontLod1[0x46];
-    int rearLod1[0x46];
-    int frontLod2[0x37];
-    int rearLod2[0x37];
-};
-
 extern int g_WheelMeshLod0[];
 extern int g_WheelMeshLod1[];
 extern int g_WheelMeshLod2[];
-
-// A car body mesh (one LOD): the counts, then pointers set by CarModel_Init to the vertices,
-// normals and each primitive type's list, which follow the 0x50-byte header.
-struct CarMesh {
-    unsigned short vertCount;
-    unsigned short normalCount;
-    unsigned short primCount[8];
-    char *verts;
-    char *normals;
-    char *prims[8];
-    short bboxMin[4];
-    short bboxMax[4];
-    unsigned short unk4c;
-    unsigned short unk4e;
-};
-
-struct LodEntry {
-    int dist;
-    CarMesh *mesh;
-};
-
-// CarModelHeader.lodCount and the LOD entries after it; the meshes follow.
-struct LodTable {
-    int count;
-    LodEntry lods[1];
-};
 
 static inline LodEntry *LodAt(LodTable *table, int i)
 {
@@ -112,162 +34,6 @@ static inline LodEntry *LodAt(LodTable *table, int i)
 extern unsigned char g_ModelPrimSizes[];
 extern unsigned char g_ModelPrimUvOffset[];
 void LodTable_SquareDistances(LodTable *table);
-
-// The camera fields CarModel_Draw and CarModel_DrawShadow copy to the scratchpad.
-struct CameraView {
-    int data[0x1a];
-};
-
-// What CarModel_Draw sets up in the scratchpad (0x1f800000) for the body and wheel drawing.
-struct CarScratch {
-    // A copy of the Camera from view to ot (CameraView), the view composed with the
-    // car's world matrix.
-    MATRIX view;
-    int negPos[3];
-    short clipX[9];
-    short pad3e;
-    short clipY[9];
-    short pad52;
-    int ofx;
-    int ofy;
-    short projH;
-    short screenW;
-    short screenH;
-    short nearZ;                // 0x62
-    unsigned int *ot;           // 0x64
-    char *packetPtr;            // 0x68
-    char *packetLimit;
-    char *verts;                // 0x70: the mesh's vertices (ShadowMesh_Draw: transformed ones)
-    char *normals;              // the environment map coordinates of the normals
-    int savedTrans[3];          // 0x78: the body transform, which CarBody_Draw* reload
-    int savedRot[5];
-    short otShift;              // 0x98: depth << otShift >> 13 is the OT index
-    short pad9a;
-    MATRIX wheelMat;            // 0x9c: CarModel_DrawWheel's wheel rotation and position
-    char unkbc[0x2dc];
-    signed char mirror;         // 0x398
-    signed char lit;
-    char pad39a[2];
-    unsigned int detail;        // 0x39c: added to the textured faces' CLUT word
-    unsigned int clutSelect;    // 0x3a0: masks a face's flags >> 14 into its CLUT word
-    unsigned int envFT3;        // 0x3a4: the brightness, with semi-transparent POLY_FT3's code
-    unsigned int envFT4;        // 0x3a8: the same with POLY_FT4's
-    short envClut;              // 0x3ac: the environment map's CLUT and texture page
-    unsigned short envTpage;
-    unsigned int wheelColor;    // 0x3b0
-};
-
-// GPU primitives the handwritten code builds.
-struct PolyF4 {
-    unsigned int tag;
-    unsigned int rgbc;
-    int xy0;
-    int xy1;
-    int xy2;
-    int xy3;
-};
-
-struct PolyFT4 {
-    unsigned int tag;
-    unsigned int rgbc;
-    int xy0;
-    unsigned short uv0;
-    unsigned short clut;
-    int xy1;
-    unsigned short uv1;
-    unsigned short tpage;
-    int xy2;
-    unsigned short uv2;
-    unsigned short pad1e;
-    int xy3;
-    unsigned short uv3;
-    unsigned short pad26;
-};
-
-struct PolyG3 {
-    unsigned int tag;
-    unsigned int rgbc0;
-    int xy0;
-    unsigned int rgb1;
-    int xy1;
-    unsigned int rgb2;
-    int xy2;
-};
-
-struct PolyG4 {
-    unsigned int tag;
-    unsigned int rgbc0;
-    int xy0;
-    unsigned int rgb1;
-    int xy1;
-    unsigned int rgb2;
-    int xy2;
-    unsigned int rgb3;
-    int xy3;
-};
-
-struct PolyF3 {
-    unsigned int tag;
-    unsigned int rgbc;
-    int xy0;
-    int xy1;
-    int xy2;
-};
-
-struct PolyFT3 {
-    unsigned int tag;
-    unsigned int rgbc;
-    int xy0;
-    unsigned short uv0;
-    unsigned short clut;
-    int xy1;
-    unsigned short uv1;
-    unsigned short tpage;
-    int xy2;
-    unsigned short uv2;
-    unsigned short pad1e;
-};
-
-struct PolyGT3 {
-    unsigned int tag;
-    unsigned int rgbc0;
-    int xy0;
-    unsigned short uv0;
-    unsigned short clut;
-    unsigned int rgb1;
-    int xy1;
-    unsigned short uv1;
-    unsigned short tpage;
-    unsigned int rgb2;
-    int xy2;
-    unsigned short uv2;
-    unsigned short pad26;
-};
-
-struct PolyGT4 {
-    unsigned int tag;
-    unsigned int rgbc0;
-    int xy0;
-    unsigned short uv0;
-    unsigned short clut;
-    unsigned int rgb1;
-    int xy1;
-    unsigned short uv1;
-    unsigned short tpage;
-    unsigned int rgb2;
-    int xy2;
-    unsigned short uv2;
-    unsigned short pad26;
-    unsigned int rgb3;
-    int xy3;
-    unsigned short uv3;
-    unsigned short pad32;
-};
-
-struct DrawMode {
-    unsigned int tag;
-    unsigned int code;
-};
 
 // Links a primitive into an OT entry (the handwritten code's lwl/swl pairs, which keep
 // both top bytes).
@@ -597,36 +363,6 @@ enum {
     BODY_FLAGS,
     BODY_NORMALS,
     BODY_DATA
-};
-
-// A body vertex as the GTE loads it (VXY, VZ).
-struct BodyVert {
-    int xy;
-    int z;
-};
-
-// A vertex of a face being subdivided: its model position, texture coordinates, screen
-// position and colour.
-struct SubVert {
-    short x;
-    short y;
-    short z;
-    unsigned char u;
-    unsigned char v;
-    int sxy;
-    unsigned int rgb;
-};
-
-// What the subdivision of one face shares: where its packets go, its code and texture
-// words, the area above which a part is subdivided again, and the chain of packets.
-struct SubFace {
-    unsigned int *ot;
-    unsigned int code;          // the face's colour and command word
-    unsigned int texWord;       // the texture page (top half) and CLUT (bottom half)
-    int threshold;
-    int gouraud;
-    char *first;
-    char *last;
 };
 
 // The original keeps up to 7 subdivision frames in the scratchpad (0x1f8000e8-0x1f800387);
@@ -1446,19 +1182,6 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", CarBody_DrawUnclipped);
 // by subdividing it in view space until each part projects (Body_ClipSubdivTri,
 // Body_ClipSubdivQuad), and gets no environment map layer.
 #ifdef NON_MATCHING
-// A transformed vertex (CarBody_DrawClipped, ShadowMesh_Draw): view-space x, y, z, the
-// clip code (bit 0 nearer than half the near plane, bits 1-4 outside the planes in the
-// light and light colour matrices, bit 5 a GTE error), the screen position and the or of
-// |x|, |y| and |z|.
-struct ShadowVert {
-    short x;
-    short y;
-    short clip;
-    short z;
-    int sxy;
-    unsigned int extent;
-};
-
 // The clip code word (clip, then z in the top half) of a vertex.
 static inline int ShadowVert_ClipZ(ShadowVert *v)
 {
@@ -2200,14 +1923,6 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", CarBody_DrawClipped);
 // of vertex pairs, each pair of pairs a flat quad in the wheel colour when it faces the
 // camera (black otherwise), sorted on its nearest or farthest corner.
 #ifdef NON_MATCHING
-// One vertex pair of a wheel strip: the first vertex's x and y, both z, the second's x and y.
-struct WheelPair {
-    int xyA;
-    unsigned short zA;
-    unsigned short zB;
-    int xyB;
-};
-
 // Handwritten: the original projects one pair ahead (its first pass builds a quad from
 // stale registers, which its flags test throws away). mesh is a list of strips, each a
 // pair count and the pairs, ended by a zero count.
@@ -2628,35 +2343,6 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", Clut_Blend);
 // stack table with their clip codes, then draws each face that isn't wholly outside one
 // plane, through Poly_Clip when it crosses one.
 #ifdef NON_MATCHING
-// A shadow mesh: the counts, then the vertices (x and z, a word each), the triangles and
-// the quads (6-bit vertex indices packed in a word, bit 31 darkening the first two).
-struct ShadowMesh {
-    unsigned short vertCount;
-    unsigned short triCount;
-    unsigned short quadCount;
-    char unk6[0x12];
-    unsigned short unk18;
-    unsigned short unk1a;
-    unsigned int data[1];
-};
-
-// Poly_Clip's input, in the scratchpad at 0x1f80009c.
-struct ShadowClipVert {
-    int xy;
-    short z;
-    short extent;
-    int sxy;
-    unsigned int rgbc;          // the colour, with the clip code in the top byte
-};
-
-struct ShadowClip {
-    unsigned int *ot;
-    unsigned int code;
-    int pad;
-    ShadowClipVert v[4];
-    ShadowVert *src[4];
-};
-
 void Poly_Clip(void *scratch, int count);
 
 static inline void ShadowClip_SetVert(ShadowClipVert *c, ShadowVert *v, unsigned int rgb)

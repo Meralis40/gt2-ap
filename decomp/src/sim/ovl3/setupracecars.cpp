@@ -2,8 +2,7 @@
 // (docs/arcade.md): both players' cars for a two-player race (raceType 0),
 // the player's car for a time trial (6) or a single race (4).
 #include "common.h"
-#include "race.h"
-#include "arcade.h"
+#include "gamestate.h"
 
 extern "C" {
 void ArcadeSel_LoadGarageCar(int garage, int slot, int dirt);

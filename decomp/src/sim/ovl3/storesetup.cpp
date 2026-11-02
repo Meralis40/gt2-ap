@@ -3,8 +3,6 @@
 #include "common.h"
 #include "carwork.h"
 
-struct Hi3 { unsigned short lo:13; unsigned short hi:3; };
-
 extern "C" void Car_StoreSetup(Car *car, CarWork *work)
 {
     unsigned short stats[4];

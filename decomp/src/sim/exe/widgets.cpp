@@ -4,63 +4,11 @@
 #include "include_asm.h"
 #include "resident.h"
 
-// A bar that grows from its centre over duration frames, its color going from
-// rgbFrom to rgbTo; a negative t counts back down.
-struct GrowBar {
-    uint rgbFrom;
-    uint rgbTo;
-    short x;
-    short y;
-    short width;
-    short height;
-    short duration;
-    short t;
-};
-
-// A PolyG4 after its tag (Prim_AddPolyG4).
-struct PolyG4 {
-    uint c0;
-    short x0, y0;
-    uint c1;
-    short x1, y1;
-    uint c2;
-    short x2, y2;
-    uint c3;
-    short x3, y3;
-};
-
-// A POLY_G3 after its tag (Prim_AddPolyG3).
-struct PolyG3 {
-    uint c0;
-    short x0, y0;
-    uint c1;
-    short x1, y1;
-    uint c2;
-    short x2, y2;
-};
-
-// A disc of 24 triangles around its centre point, flat on the ground.
-struct DiscPoint {
-    int x, y, z;
-};
-
-struct GroundDisc {
-    DiscPoint rim[25];
-    DiscPoint centre;
-};
-
-// A projected point in the scratchpad (Points_Project).
-struct ScreenPoint {
-    short x, y;
-    short z;
-    short pad;
-};
-
 extern "C" {
 uint Rgb_Lerp(uchar *from, uchar *to, int t, int range);
 RECT *Prim_AddTile(uint *ot, uint rgb);
-PolyG4 *Prim_AddPolyG4(uint *ot);
-PolyG3 *Prim_AddPolyG3(uint *ot);
+PrimG4 *Prim_AddPolyG4(uint *ot);
+PrimG3 *Prim_AddPolyG3(uint *ot);
 void *Prim_AddDrawMode(uint *ot, uint mode);
 void Points_Project(void *camera, ScreenPoint *dst, void *src, int count);
 extern short g_SinTable[];
@@ -202,7 +150,7 @@ void WipeBar_Draw(WipeBar *bar, uint *ot, int x, int y)
     int left;
     int right;
     int d;
-    PolyG4 *p;
+    PrimG4 *p;
 
     if (t == -1) {
         return;
@@ -363,7 +311,7 @@ void GroundDisc_Draw(GroundDisc *disc, uint *ot, uchar *camera, int blend, uint 
     int i;
     int z;
     uint *entry;
-    PolyG3 *p;
+    PrimG3 *p;
 
     if (blend) {
         code = 0x32;

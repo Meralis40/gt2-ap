@@ -6,30 +6,6 @@
 #include "include_asm.h"
 #include "gtmenu.h"
 
-// The memory card progress bar of the resident code (widgets.cpp), drawn here
-// as the battle's progress.
-struct CardProgressBar {
-    short x;
-    short y;
-    short segWidth;
-    short segHeight;
-    short segStep;
-    short pad0a;
-    unsigned int color;
-    unsigned int total;
-    signed char segFade[32];
-    short visible;
-    short pad36;
-};
-
-// The player's car, as the opponents are picked against it.
-struct BattlePlayer {
-    short power;
-    short weight;
-    unsigned char racingMod;
-    unsigned char pad05[3];
-};
-
 extern "C" {
 void PacketBuffer_Init(PacketBuffer *buf, void *base, unsigned int bytes);
 void ViewDrawContext_Init(ViewDrawContext *ctx, void *ot, unsigned int bytes);

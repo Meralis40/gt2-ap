@@ -1,15 +1,6 @@
 // Picks a random race car from a list of entries (car and colour).
 #include "common.h"
-#include "race.h"
-
-struct GameDataTable;
-
-// A list of car entries: the count, then one word per entry (the car table
-// index in the low 16 bits, a colour index in the top 6 bits).
-struct IdList {
-    int count;
-    unsigned int ids[1];
-};
+#include "gamestate.h"
 
 extern "C" {
 extern int g_GameDataMode;

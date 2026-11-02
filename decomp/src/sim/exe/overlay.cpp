@@ -25,19 +25,6 @@ extern int g_OverlayArgs[4];
 extern int g_OvlLba;
 extern int g_OvlSize;
 
-// The overlay pack: compressed overlays, by offset from the pack's start.
-struct OverlayEntry {
-    int offset;
-    int size;
-};
-
-struct OverlayPack {
-    int unk0;
-    int unk4;
-    char *data; // the pack in memory, or 0 to read it from the CD
-    OverlayEntry entries[1];
-};
-
 extern OverlayPack g_OverlayFile;
 
 void Overlay_ClearBss(void)

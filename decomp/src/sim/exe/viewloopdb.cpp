@@ -1,7 +1,7 @@
 // psxViewLoopDoubleBuffer, a psxViewLoop with two display buffers in VRAM. Its
 // vtable and type name (.rodata), __tf function and typeinfo (.bss) are emitted
 // here.
-#include "viewloop.h"
+#include "resident.h"
 
 extern "C" {
 extern RECT g_DrawArea;

@@ -3,39 +3,6 @@
 #include "resident.h"
 
 extern "C" {
-// A sound bank in SPU RAM: its instrument file in main RAM and where its samples went.
-struct SpuBank {
-    SeqBank *ram;
-    int size;
-    int spu;
-};
-
-// An engine sound file ("ENGN"): its two sets of RPM ranges.
-struct EngnFile {
-    int magic;
-    int base;
-    uchar unk08[4];
-    int spu;
-    int spuSize;
-    void *unk14;
-    struct {
-        uint count;
-        EngnRange *ranges;
-    } sets[2];
-};
-
-// An SPU voice's registers (0x1f801c00 + voice * 0x10).
-struct SpuVoiceRegs {
-    ushort volL;
-    ushort volR;
-    ushort pitch;
-    ushort addr;
-    ushort adsr1;
-    ushort adsr2;
-    ushort envx; // the envelope's current level
-    ushort repeat;
-};
-
 #define SPU_VOICES ((SpuVoiceRegs *)0x1f801c00)
 
 void SfxVoices_Update(void);

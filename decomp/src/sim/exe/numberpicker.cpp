@@ -11,15 +11,7 @@ void Text_DrawCenteredMonoDigits(TextCtx *ctx, char *s, int x, int y, int spacin
 void Sfx_PlayMenu(int sfx);
 extern char D_8008FAAC[]; // "%d"
 
-// The flat triangle Prim_AddPolyF3 returns (PsyQ POLY_F3 after its tag).
-struct PolyF3 {
-    uint rgb;
-    short x0, y0;
-    short x1, y1;
-    short x2, y2;
-};
-
-PolyF3 *Prim_AddPolyF3(uint *ot, uint rgb);
+PrimF3 *Prim_AddPolyF3(uint *ot, uint rgb);
 
 void NumberPicker_Init(NumberPicker *p)
 {
@@ -83,7 +75,7 @@ void NumberPicker_Draw(NumberPicker *p, uint *ot, TextCtx *ctx)
     int t;
     int c;
     short ax;
-    PolyF3 *tri;
+    PrimF3 *tri;
 
     if (p->anim < 0) {
         return;

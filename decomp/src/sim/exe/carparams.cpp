@@ -4,21 +4,6 @@
 #include "include_asm.h"
 #include "resident.h"
 
-// A CarSpec pointer and the CarSetup index it comes from, with the game-data table.
-struct CarSpecPartLink {
-    short specOffset;
-    short setupOffset;
-    short table;
-};
-
-// One part category of CarParams_Build: the game-data table, the CarSpec field holding the
-// part's entry and the descriptors that copy it into the CarParams.
-struct CarParamsPartDesc {
-    unsigned short table;
-    unsigned short specOffset;
-    unsigned int *desc;
-};
-
 extern "C" {
 void CarSpec_Clear(CarSpec *spec);
 extern CarParamsPartDesc g_CarParamsPartDescs[];

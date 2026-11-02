@@ -4,41 +4,6 @@
 #include "include_asm.h"
 #include "resident.h"
 
-// The power and torque graph of a car (g_ChangeParts_PowerGraph): two vertical scales,
-// the rpm scale and the curves, which fade in tick by tick.
-struct PowerGraphView {
-    short stagger;          // frames from the first tick's fade-in to the last one's
-    short x, y, w, h;
-    signed char tpage;      // given to Text_Init
-    signed char labelGap;   // between a scale's labels
-    signed char textMode;
-    signed char charH;
-    unsigned char unk0e[2];
-    Font *font;
-    unsigned int powerRgb;
-    unsigned int torqueRgb;
-    unsigned int rpmRgb;
-    short maxRpm;
-    short maxPower;         // hp
-    short maxTorque;        // lb-ft
-    short frame;            // the fade-in frame; -1 hidden, below -1 closing
-    short powerTop;         // the power scale: its top, ticks and step
-    short powerTicks;
-    short powerStep;
-    short torqueTop;
-    short torqueTicks;
-    short torqueStep;
-    short rpmTicks;         // one per 1000 rpm
-    short samples;          // the curves' samples, one per 250 rpm
-    short endFrame;
-};
-
-// A flat line primitive's vertices (Prim_AddLineF2).
-struct LineF2 {
-    short x0, y0;
-    short x1, y1;
-};
-
 extern "C" {
 void PowerGraphView_ComputeScale(PowerGraphView *v);
 void PowerGraphView_DrawAxis(PowerGraphView *v, uint *ot, int torque);

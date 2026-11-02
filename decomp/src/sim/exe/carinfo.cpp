@@ -17,19 +17,6 @@ int strcmp(const char *a, const char *b);
 extern CarInfoA *g_CurrentCarInfoA;
 extern GameState g_GameState;
 
-struct CourseEntry {
-    char *name;
-    unsigned int hash;
-    unsigned short flags;
-    char unkA[0xe];
-};
-
-struct CourseInfo {
-    char magic[6];
-    unsigned short count;
-    CourseEntry entries[1];
-};
-
 extern unsigned char D_801EF630[];     // car code letter -> 6-bit value
 extern CarAsset g_CarAssets[];
 extern CourseInfo g_CourseInfo;

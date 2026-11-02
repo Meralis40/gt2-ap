@@ -4,7 +4,7 @@
 // and typeinfo (.bss) are emitted here.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "viewloop.h"
+#include "resident.h"
 #include "pad.h"
 
 // L2 + R2 + L1 + R1 + START + SELECT held on port 2: Step skips Update and

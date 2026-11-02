@@ -250,11 +250,6 @@ void CdAudio_SetMode(CdAudio *cd, unsigned int mode)
     cd->cddaBits = mode & 0x41;
 }
 
-// A 0x20-byte copy of the read request (+0x20) into the current read (+0x40).
-struct CdAudioReq {
-    unsigned int words[8];
-};
-
 // Runs a script: a list of command words ending with 0. A word >= 0 is a CdControlF
 // command (its low 5 bits); the script goes on in CdAudio_OnSync when it completes.
 // A negative word is an op: bits 27-30 select the group and the low 16 bits are its
@@ -335,7 +330,7 @@ void CdAudio_ExecScript(CdAudio *cd, unsigned int *script)
                 }
                 break;
             case 4:
-                *(struct CdAudioReq *)&cd->flag = *(struct CdAudioReq *)&cd->reqFlag;
+                *(CdReq *)&cd->flag = *(CdReq *)&cd->reqFlag;
                 fn = cd->sectorFn;
                 cd->sectorFn = 0;
                 cd->unk167 = 1;

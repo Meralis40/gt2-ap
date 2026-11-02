@@ -5,29 +5,6 @@
 #include "include_asm.h"
 #include "ovl4.h"
 
-// The GPU primitives written into the chunks. Their tag is the chunk's, one word
-// before the rgbc word that DisplayList_Reserve returns.
-struct BgTile {
-    unsigned int tag;
-    unsigned int rgbc;
-    short x;
-    short y;
-    short w;
-    short h;
-};
-
-struct BgSprite {
-    unsigned int tag;
-    unsigned int rgbc;
-    short x;
-    short y;
-    unsigned char u;
-    unsigned char v;
-    unsigned short clut;
-    short w;
-    short h;
-};
-
 extern "C" {
 extern unsigned int *g_DisplayList_Chunk;
 extern unsigned char g_DisplayList_ChunkLen;

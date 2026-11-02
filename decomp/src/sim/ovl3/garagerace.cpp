@@ -2,7 +2,6 @@
 // menus (docs/arcade.md).
 #include "common.h"
 #include "gamestate.h"
-#include "arcade.h"
 
 extern "C" {
 extern ArcadeRaceSel g_Ovl3_RaceSel;

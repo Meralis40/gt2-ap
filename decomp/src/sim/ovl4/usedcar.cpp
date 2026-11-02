@@ -23,12 +23,6 @@ UsedCarPeriod *UsedCar_GetPeriod(void)
     return &g_OVL4_StorageUsedCar;
 }
 
-// The used car file: a header, then the offsets of the 60 periods and the end.
-struct UsedCarFile {
-    int header[2];
-    int offsets[61];
-};
-
 // Reads the used car file into buf and copies the period for day (one of 60)
 // to g_OVL4_StorageUsedCar, then drops the cars that aren't available.
 void UsedCar_LoadPeriod(unsigned int day, char *buf)

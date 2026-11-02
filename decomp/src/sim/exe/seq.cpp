@@ -6,21 +6,6 @@
 #include "common.h"
 
 extern "C" {
-struct SeqSong {
-    ushort vol;
-    ushort pad02;
-    int tempo;
-    uchar *tracks[16];
-};
-
-// A sequence file ("SEQG"): its songs, with the track pointers as offsets from base.
-struct SeqFile {
-    int magic;
-    int base;
-    unsigned int count;
-    SeqSong songs[1];
-};
-
 void FUN_8007a7cc(SeqFade *f, int from, int to, int ms);
 void SeqPlayer_ApplyVolume(SeqPlayer *p);
 void SeqPlayer_Link(SeqPlayer *p);

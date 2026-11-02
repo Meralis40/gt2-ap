@@ -4,31 +4,6 @@
 #include "include_asm.h"
 #include "resident.h"
 
-// A race's lap record: the last 10 laps, the best one and the lap being driven.
-struct RaceRecord {
-    short unk00;
-    short lapCount;         // laps done, up to 999
-    short lapsKept;         // laps in laps, up to 10
-    short bestLap;          // the lap number of best, -1 for none
-    TimeRecord laps[10];    // the last lapsKept laps, oldest first
-    TimeRecord best;        // 0xd0
-    TimeRecord current;     // 0xe4
-    int unkf8;
-};
-
-// The 9 laps RaceRecord_AddLap moves down, copied as one block.
-struct TimeRecords9 {
-    TimeRecord r[9];
-};
-
-// The game's state from g_GameState on: g_RaceSetup is part of it.
-struct GameData {
-    char unk0[0x218];
-    CourseRecord courseRecords[128];
-    char unk1418[0xbf7c - 0x1418];
-    RaceSetup race; // g_RaceSetup
-};
-
 extern "C" {
 unsigned int Course_FindByHash(unsigned int hash);
 void *Course_Get(int index);
@@ -39,7 +14,7 @@ char *strcpy(char *__dest, char *__src);
 int PlayerStats_GetEventResult(PlayerStats *stats, int eventIdx);
 void TimeRecord_Init(TimeRecord *rec);
 int LicenseTest_FindRank(LicenseTest *test, TimeRecord *time);
-extern GameData g_GameState;
+extern GameStateRace g_GameState;
 
 // The best finish of an event: a nibble of eventResults, the low one for even events.
 int PlayerStats_GetEventResult(PlayerStats *stats, int eventIdx)
@@ -454,7 +429,7 @@ void FUN_8005e73c(void *param_1)
 // The record of the race's course.
 CourseRecord *CourseRecord_GetCurrent()
 {
-    GameData *gs = &g_GameState;
+    GameStateRace *gs = &g_GameState;
     RaceSetup *race = &gs->race; // 0xbf7c, then the field: 0xbfbc is no valid offset
 
     return &gs->courseRecords[Course_FindByHash(race->courseHash)];

@@ -32,27 +32,11 @@ int Timer_Sample(void);
 void CdStream_AddFillCount(CdAudio *cd, short delta);
 unsigned char *CdStream_GetReadPtr(CdAudio *cd);
 
-// The frame timers' samples of root counter 1 (hblanks) and 2 (system clock / 8).
-struct TimerSample {
-    unsigned short hblank;
-    unsigned short clock;
-    unsigned short hblankDelta;
-};
-
 extern TimerSample D_801C951C;
 extern unsigned short D_801C9520;
 extern int D_801C9524;
 extern int D_801C9528;
 extern int D_801C952C;
-
-// A read request as CdAudio holds it at 0x20 (the next one) and 0x40 (the current
-// one), up to its ring indices.
-struct CdReq {
-    unsigned char pad[0x1a];
-    unsigned short fill;
-    unsigned short read;
-    unsigned short write;
-};
 
 static inline void CdRing_Reset(void *req)
 {
@@ -88,11 +72,6 @@ int CdAudio_GetReadStatus(void)
     }
     return 0;
 }
-
-struct OtTag {
-    unsigned addr : 24;
-    unsigned len : 8;
-};
 
 // Links a 13-word packet from g_PacketPtr in after ot and returns its body.
 // The 24-bit links are copied with lwl and swl, one asm statement each.

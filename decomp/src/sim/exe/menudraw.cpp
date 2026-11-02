@@ -4,36 +4,9 @@
 #include "include_asm.h"
 #include "resident.h"
 
-// A rectangle filled with a gradient from left to right (Menu_AddGouraudQuad).
-struct GouraudQuad {
-    RECT rect;
-    uint top;
-    uint bottom;
-};
-
-// A POLY_G4 after its tag (Prim_AddPolyG4).
-struct PolyG4 {
-    uint c0;
-    short x0, y0;
-    uint c1;
-    short x1, y1;
-    uint c2;
-    short x2, y2;
-    uint c3;
-    short x3, y3;
-};
-
-// A POLY_F3 after its tag (Prim_AddPolyF3).
-struct PolyF3 {
-    uint rgb;
-    short x0, y0;
-    short x1, y1;
-    short x2, y2;
-};
-
 extern "C" {
-PolyG4 *Prim_AddPolyG4(uint *ot);
-PolyF3 *Prim_AddPolyF3(uint *ot, uint rgb);
+PrimG4 *Prim_AddPolyG4(uint *ot);
+PrimF3 *Prim_AddPolyF3(uint *ot, uint rgb);
 RECT *Prim_AddTile(uint *ot, uint rgb);
 void *Prim_AddDrawMode(uint *ot, uint mode);
 
@@ -56,7 +29,7 @@ void Menu_AddGreyBand(uint *ot, GouraudQuad *q)
 {
     uint top = q->top;
     uint bottom = q->bottom;
-    PolyG4 *p = Prim_AddPolyG4(ot);
+    PrimG4 *p = Prim_AddPolyG4(ot);
     uint c;
 
     c = top | top << 8 | top << 16 | 0x3a000000;
@@ -74,7 +47,7 @@ void Menu_AddGreyBand(uint *ot, GouraudQuad *q)
 // Adds a semi-transparent (additive) gradient quad.
 void Menu_AddGouraudQuad(uint *ot, GouraudQuad *q)
 {
-    PolyG4 *p = Prim_AddPolyG4(ot);
+    PrimG4 *p = Prim_AddPolyG4(ot);
 
     p->c0 = p->c2 = q->top | 0x3a000000;
     p->c1 = p->c3 = q->bottom;
@@ -86,7 +59,7 @@ void Menu_AddGouraudQuad(uint *ot, GouraudQuad *q)
 
 void Menu_AddGouraudQuadOpaque(uint *ot, GouraudQuad *q)
 {
-    PolyG4 *p = Prim_AddPolyG4(ot);
+    PrimG4 *p = Prim_AddPolyG4(ot);
 
     p->c0 = p->c2 = q->top | 0x38000000;
     p->c1 = p->c3 = q->bottom;
@@ -162,7 +135,7 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/menudraw", Menu_DrawCursorBox);
 void Menu_DrawScrollArrow(void *self, uint *ot, int x, int y, int halfWidth, int height, int anim)
 {
     int t = 40 - anim;
-    PolyF3 *tri;
+    PrimF3 *tri;
 
     if (t > 10) {
         t = 10;
@@ -184,7 +157,7 @@ void Menu_DrawScrollArrow(void *self, uint *ot, int x, int y, int halfWidth, int
 void Menu_DrawSideArrow(void *self, uint *ot, int x, int y, int width, int halfHeight, int anim)
 {
     int t = 40 - anim;
-    PolyF3 *tri;
+    PrimF3 *tri;
 
     if (t > 10) {
         t = 10;
@@ -211,7 +184,7 @@ void Menu_DrawColorSwatch(uint *ot, GouraudQuad *q, int scale)
     int g = (c & 0x3e0) * scale >> 9;
     int b = (c & 0x7c00) * scale >> 14;
     int grey = scale * 244 >> 7;
-    PolyG4 *p;
+    PrimG4 *p;
     RECT *tile;
 
     if (grey > 255) {

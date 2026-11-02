@@ -154,10 +154,6 @@ void ReplayEntry_SetTitle(char *dst, char *title)
     strcpy(dst, title);
 }
 
-struct Str3 {
-    char c[3];
-};
-
 // Copies the entry's info to dst, ending a truncated one in D_8008FA70.
 void ReplayEntry_GetInfo(ReplayDirEntry *entry, char *dst)
 {
