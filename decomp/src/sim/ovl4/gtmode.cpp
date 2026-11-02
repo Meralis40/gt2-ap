@@ -1,5 +1,5 @@
 // OVL4 80012c6c-80013a28 (gtmode): Machine tests, event races and the GT mode loop.
-// GTMode_SetupEventRace and GTMode_Run are still the original assembly.
+// GTMode_Run is still the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
 #include "common.h"
@@ -11,6 +11,7 @@ extern int g_GameDataMode;
 extern char *g_GtModeRaceData;
 extern char *g_GtModeRaceDataBuf;
 extern RaceEventParams g_RaceEventParams;
+extern char g_OVL4_storageCarColor[];
 
 // Fills g_RaceSetup for the machine test raceCode (raceType 7 to 9, from
 // Event_GetMachineTestType): one lap with the current car of garage 0, against
@@ -137,7 +138,108 @@ void RaceCar_InitFromPool(RaceCar *car, int gridSlot, unsigned int *seed, Oppone
     }
 }
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/gtmode", GTMode_SetupEventRace);
+// RaceSetup::flags, set through bitfields for the game's order.
+struct RaceSetupFlags {
+    unsigned int tarmac : 1;
+    unsigned int turbo : 2;
+};
+
+// Copies the event's race parameters and builds the CarParams of setup's cars.
+static inline void GTMode_LoadEventParams(RaceSetup *setup, RaceEvent *event)
+{
+    char *base;
+    int offset;
+    int i;
+
+    g_RaceEventParams = *(RaceEventParams *)((char *)event + 0x44);
+    i = 0; // before base and offset, for the game's registers
+    base = (char *)&g_GameState;
+    offset = 0x14fda;
+    for (; i < setup->carCount; i++) {
+        CarSetup *cs = &setup->cars[i].setup;
+
+        CarParams_BuildFromSetup(cs, (void *)(offset + (int)base)); // offset first, as the game adds them;
+        offset += 0x1c0;
+    }
+}
+
+// Fills g_RaceSetup for the GT mode event raceCode (RaceSetup_InitEvent), on a
+// random course for course "none". A free race (pool and battleFlags bit 0)
+// has six AI cars drawn from pool and a power limit of the player car's + 5; a
+// dirt event races one car against the event's ghost. Unless noPlayerCar, the
+// current car of garage 0 is car 0, its CarWork in g_RaceCarWork (the
+// alternate one for dirt events).
+void GTMode_SetupEventRace(char *raceCode, int noPlayerCar, unsigned int battleFlags, OpponentPool *pool)
+{
+    void *data = g_EventDataBuf;
+    int dirtRace = Event_IsDirt(raceCode);
+    Garage *garage = &g_GameState.garages[0];
+    int slot = garage->currentCar;
+    unsigned int seed = Irq_WaitVSyncs(0);
+    RaceEvent *event = (RaceEvent *)GtRaceData_FindEvent(raceCode);
+    RaceSetup *setup = RaceSetup_InitEvent(0, 1, event, 0, 0, 0, 0);
+    int i;
+
+    {
+        // The game takes the seed's address before the strcmp call.
+        unsigned int *seedp = &seed;
+
+        if (strcmp(GameData_GetString((GameData *)data, event->courseString), "none") == 0) {
+            RaceSetup_SetCourseByName(setup, Course_PickRandom(seedp));
+        }
+    }
+    if (pool && (battleFlags & 1)) {
+        setup->carCount = 6;
+        for (i = 0; i < 6; i++) {
+            int gridSlot = 5 - i; // a local keeps the test at the top
+
+            RaceCar_InitFromPool(&setup->cars[i], gridSlot, &seed, pool);
+        }
+        GTMode_LoadEventParams(setup, event);
+    }
+    if (dirtRace) {
+        setup->carCount = 1;
+        VolId_ReadFileAsync(Event_GetGhostFileId(raceCode), g_OVL4_storageCarColor);
+        GhostEvent_ApplyFile(g_OVL4_storageCarColor);
+        GTMode_LoadEventParams(setup, event);
+    }
+    if (!noPlayerCar) {
+        GTMode_PreparePlayerCar(slot, 0, dirtRace);
+        RaceSetup_SetCarFromGarage(setup, 0, -1, 3, 0, &garage->cars[slot], 0, slot);
+    }
+    setup->game = 1;
+    setup->raceType = 1;
+    if (dirtRace) {
+        setup->raceType = 10;
+    }
+    if (noPlayerCar) {
+        setup->raceType = 12;
+    }
+    setup->eventIndex = Event_IndexFromCode(raceCode);
+    setup->maxPower = Event_GetMaxPower(raceCode);
+    ((RaceSetupFlags *)&setup->flags)->tarmac = Event_IsTarmac(raceCode) != 0;
+    ((RaceSetupFlags *)&setup->flags)->turbo = Event_GetTurboRule(raceCode);
+    setup->worldLeague = Event_IsWorldLeague(raceCode);
+    if (pool && (battleFlags & 1)) {
+        // Through a byte offset, as the game adds the slot's offset before garage.
+        setup->maxPower = (((Car *)((char *)garage->cars + slot * sizeof(Car)))->flags98 & 0x3fff) + 5;
+    }
+    {
+        char *base = (char *)&g_GameState;
+        CarWork *work = (CarWork *)((int)(base + 0x10bd8) & ~3);
+
+        if (dirtRace) {
+            work = (CarWork *)((int)(base + 0xc6c0) & ~3);
+        }
+        RaceStart_CarWorkClear(work);
+        if (!noPlayerCar) {
+            Car *car = &garage->cars[slot];
+
+            RaceStart_CarWorkLoadParts(work, car->carId);
+            RaceStart_CarWorkSetStages(work, &car->setup);
+        }
+    }
+}
 
 INCLUDE_ASM("asm/sim/ovl4/nonmatchings/gtmode", GTMode_Run);
 }

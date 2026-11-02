@@ -76,6 +76,7 @@ segments:
       - [0x124b0, cpp, usedcar]  # 0x800224b0
       - [0x126a0, cpp, menubgmbank]  # 0x800226a0
       - [0x12964, rodata] # 0x80022964
+      - [0x129ac, .rodata, gtmode]  # GTMode_SetupEventRace's "none"
       - [0x129b4, .rodata, gtmenu]  # SimMap_Update's jump table, vtables and type names of GTLoadingMenu and GTMenu
       - [0x12d00, rodata] # 0x80022d00, from the padding after gtmenu.cpp's .rodata
       - [0x12d04, .rodata, gtbattlemenu]  # vtable and type name of GTBattleMenu
