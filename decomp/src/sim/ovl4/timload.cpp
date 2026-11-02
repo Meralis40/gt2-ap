@@ -1,10 +1,7 @@
 // OVL4 80013a28-80013bd4 (timload): Wheel codes and TIM files.
-#include "ovl4.h"
+#include "common.h"
 
 extern "C" {
-void VolId_ReadFile(VolBootId id, void *dst);
-int VolId_GetSize(VolBootId id);
-void *Gpu_LoadImageBlock(int *block, RECT *rect);
 
 // The wheel brands' two-letter codes ("bb", "br", "du"...), 0-terminated.
 extern unsigned short D_80050904[];

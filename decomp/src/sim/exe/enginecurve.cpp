@@ -2,24 +2,12 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-int EngineCurve_BoostFactor(EngineCurve *curve, short rpm1, short rpm2);
-void EngineCurve_Build(CarParams *params, EngineCurve *curve, int unused);
-void EngineCurve_GetPerf(EngineCurve *curve, EnginePerf *out);
 
 extern char D_8008FB3C[];
 extern unsigned char D_800923E2[][6]; // gear spacing per gear count: 3 pairs of 0xc8000 / value at 150 and 400 km/h
-
-unsigned char CarParams_GetDriveLayout(CarParams *params, unsigned char *layout, unsigned char *flag, short *front, short *rear);
-short CarParams_GetTyreRadius(CarParams *params, int rear, short *radius, short *width, short *sidewall);
-int Fixed_Div(int a, int b, int shift);
-int Fixed_Mul(int a, int b);
-int Lerp_Clamped(int x, int x0, int x1, int y0, int y1);
-int EngineCurve_BoostFactorClamped(EngineCurve *curve, short rpm1, short rpm2);
-void EngineCurve_SetupTurbo(CarParams *params, EngineCurve *curve);
-int EngineCurve_TorqueAt(EngineCurve *curve, int rpm);
 
 // y0 + (y1 - y0) * (x - x0) / (x1 - x0), clamped to y0 and y1 outside [x0, x1];
 // -1 when x0 is negative (no point).

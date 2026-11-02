@@ -35,6 +35,19 @@ int Printf_EmitNumber(PutcFunc putc, unsigned int flags, int width, int prec, ch
 int Printf_PutcToBuffer(int c);
 void InitHeap(unsigned long *base, unsigned long size);
 
+void Sys_Init(void);
+void *memset(void *dst, int c, size_t n);
+int strcmp(const char *s1, const char *s2);
+int sprintf(char *buf, const char *fmt, ...);
+char *strncpy(char *dst, const char *src, size_t n);
+void *memcpy(void *dst, const void *src, size_t n);
+char *strcat(char *dst, const char *src);
+int strncasecmp(const char *a, const char *b, int n);
+void *malloc(size_t size);
+int abs(int x);
+int memcmp(const void *a, const void *b, int n);
+void free(void *ptr);
+
 extern HeapBlock *g_HeapBase;
 extern unsigned long g_HeapSize;
 extern unsigned int g_StackSize;

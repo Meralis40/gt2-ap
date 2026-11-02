@@ -1,7 +1,6 @@
 // Saves a car being worked on back to its garage slot, with the stats
 // computed from its parts.
 #include "common.h"
-#include "carwork.h"
 
 extern "C" void Car_StoreSetup(Car *car, CarWork *work)
 {

@@ -5,7 +5,7 @@
 // this file's .rodata (0x8008fab0).
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 // Pad bits of PadState.pressed.
 #define PAD_LEFT 0x4
@@ -17,20 +17,6 @@ extern "C" {
 extern TextStyle D_80091EC8;    // the dialog's text style
 extern uint D_80091EE4;         // the colour boxes fade from and to
 extern CardSystem g_Card;
-
-void TextItem_Init(TextItem *item, TextStyle *style, char *text);
-void TextItem_Hide(TextItem *item);
-void TextItem_Show(TextItem *item, int endFrame);
-void TextItem_Update(TextItem *item);
-void TextItem_Draw(TextItem *item, uint *ot, int x, int y, TextCtx *ctx);
-uint Rgb_Lerp(uchar *from, uchar *to, int t, int range);
-void Menu_AddGouraudQuad(uint *ot, GouraudQuad *quad);
-void Prim_AddRectOutline(uint *ot, uint rgb, RECT *rect);
-void *Prim_AddDrawMode(uint *ot, uint tpage);
-RECT *Prim_AddTile(uint *ot, uint rgb);
-PrimFT4 *Prim_AddPolyFT4(uint *ot, uint rgb);
-void Sfx_PlayMenu(int sfx);
-void CardDialog_Close(CardDialog *dlg);
 
 void CardDialog_Init(CardDialog *dlg, CardDialogDesc *desc, int choice)
 {

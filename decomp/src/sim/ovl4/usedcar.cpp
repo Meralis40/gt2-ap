@@ -1,12 +1,8 @@
 // OVL4 800224b0-800226a0 (usedcar): Used car tables.
-#include "ovl4.h"
+#include "common.h"
 
 extern "C" {
 extern UsedCarPeriod g_OVL4_StorageUsedCar;
-
-void VolId_ReadFileAsync(VolBootId id, void *dst);
-void bcopy(const void *src, void *dst, int n);
-int CarInfoA_IsAvailable(unsigned int carId);
 
 UsedCarEntry *UsedCar_GetMakerCars(UsedCarPeriod *period, int makerId)
 {

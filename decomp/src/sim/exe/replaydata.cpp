@@ -2,14 +2,12 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-void *memcpy(void *__dest, void *__src, size_t __n);
 extern unsigned char D_80091C8C;
 extern unsigned short g_VolBootIds[248];
 extern char g_GameState[];
-void RaceRecord_Init(void *rec);
 
 void *Buf_Append(void *dst, void *src, int size)
 {
@@ -154,7 +152,7 @@ void Replay_Unpack(char *src, int second)
                 src = (char *)Buf_Read(src, Replay_GetCarParams(i + second), 0x1c0);
             }
             rec = Replay_GetRecord(Replay_CarIndex(i, second));
-            RaceRecord_Init(rec);
+            RaceRecord_Init((RaceRecord *)rec);
             src = (char *)Buf_Read(src, rec, 0xfc);
             src = Buf_ReadBlock(src, Replay_GetRecord(Replay_CarIndex(i, second)) + 0xfc);
         }
@@ -163,7 +161,7 @@ void Replay_Unpack(char *src, int second)
         int count;
         int j;
 
-        RaceRecord_Init(rec);
+        RaceRecord_Init((RaceRecord *)rec);
         src = (char *)Buf_Read(src, rec, 0xfc);
         src = (char *)Buf_ReadCharAsShort((signed char *)src, (short *)(rec + 0xfc));
         count = *(short *)(rec + 0xfc);

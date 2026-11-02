@@ -113,72 +113,8 @@ extern unsigned int D_800114CC[];
 extern CdAudio g_CdAudio;
 extern int g_MovieSectors[];
 extern int g_StreamLba;
-extern void *g_PadHandlers[];
+extern PadHandler g_PadHandlers[];
 
-// Resident code.
-int Sys_CriticalSection(int enter);
-void CdAudio_ResetRead();
-unsigned char *Lz_Decompress(unsigned char *dst, unsigned char *src, int size);
-void CdGetSector_Thunk(void *dst, int words);  // jumps to CdGetSector
-int CdAudio_RunScript(int script);
-void DecDCTReset(int mode);
-void DecDCTin(unsigned long *buf, int mode);
-void DecDCTout(unsigned long *buf, int size);
-void DecDCToutCallback(void (*cb)());
-void Gpu_TransferImage(RECT *rect, void *src, int arg);
-void Gpu_DrawSync();
-void Gpu_SetDisplayMode(int mode);
-void Gpu_SetDisplayStart(int x, int y);
-void EnableDisplay(int on);
-int Irq_WaitVSyncs(int n);
-void Music_Stop();
-void PadDevice_Open(PadDevice *pad, int port, void **handlers);
-void PadDevice_Close(PadDevice *pad);
-void PadButtons_Read(void *buttons, PadState *state);
-void Overlay_Start(int ovl);
-
-// OVL5.
-void Movie_Init(MoviePlayer *mp, int rgb24);
-void Movie_Shutdown(MoviePlayer *mp);
-void Movie_SetRing(MoviePlayer *mp, short count, unsigned char **ring);
-void Movie_SetVlcBuffers(MoviePlayer *mp, void *a, void *b);
-void Movie_SetSliceBuffers(MoviePlayer *mp, unsigned long *a, unsigned long *b);
-void Movie_Open(MoviePlayer *mp, int movie);
-void Movie_SetCdRange(MoviePlayer *mp, unsigned int lba, int sectors);
-void Movie_Start(MoviePlayer *mp);
-int Movie_GetStatus(MoviePlayer *mp);
-void Movie_Stop(MoviePlayer *mp);
-void Movie_RestartRead(MoviePlayer *mp);
-int Movie_StartMdec(MoviePlayer *mp);
-void *Movie_DecodeNext(MoviePlayer *mp, int x, int y);
-void Movie_Step(MoviePlayer *mp, int x, int y);
-void Movie_DecodeThenStart(MoviePlayer *mp, int x, int y);
-int Movie_CdSectorCb(void *a, void *b);
-int Movie_OnSector(MoviePlayer *mp, void *a, void *b);
-void Movie_MdecOutCb();
-void Movie_OnMdecSlice(MoviePlayer *mp);
-void Movie_GpuDmaIrq();
-void Movie_OnGpuDma(MoviePlayer *mp);
-void MovieStream_Clear(MovieStream *s);
-int MovieStream_Start(MovieStream *s);
-void MovieStream_Stop(MovieStream *s);
-int MovieStream_ReadSector(MovieStream *s);
-unsigned char *MovieStream_PopFrame(MovieStream *s);
-void MovieStream_ReleaseFrame(MovieStream *s);
-void MdecOut_Init(MdecOut *m, int rgb24);
-void MdecOut_SetSize(MdecOut *m, int w, int h);
-void MdecOut_Start(MdecOut *m, int x, short y, unsigned long *vlc);
-void MdecOut_Stop(MdecOut *m);
-void Movie_DecodeVlc(unsigned short *frame, unsigned short *out);
-void Movie_InitRing();
-void Movie_DisplayOn();
-void Movie_ClearVram();
-void Movie_OnFrameDone();
-void Movie_Play18();
-void Movie_Play1A();
-void Movie_Play19();
-void Movie_DefaultEntry();
-void Movie_ArcadeEntry(int which);
 }
 
 // Installs the GPU DMA end hook and returns the previous one.

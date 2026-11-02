@@ -3,7 +3,7 @@
 // assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "ovl4.h"
+#include "common.h"
 
 extern "C" {
 extern GameState g_GameState;
@@ -28,37 +28,6 @@ extern char D_80022F50[];   // "FREERACE01"
 extern char D_80022F5C[];   // "FREERACE02"
 extern char D_80022F68[];   // "FREERACE03"
 extern char D_80022F74[];   // "none"
-
-int strcmp(const char *a, const char *b);
-char *strcpy(char *dst, const char *src);
-int strlen(const char *s);
-int sprintf(char *buf, const char *fmt, ...);
-int Irq_WaitVSyncs(int n);
-unsigned int Rand_Next(unsigned int *seed);
-int PlayerStats_GetEventResult(PlayerStats *stats, int event);
-void ChampRaceList_Clear(ChampRaceList *list);
-RaceEvent *GameData_FindEvent(void *data, char *code);
-char *GameData_GetString(void *data, unsigned short id);
-RaceEvent *GtRaceData_FindEvent(char *code);
-unsigned int Str_Hash(char *s);
-char *Course_PickRandom(unsigned int *seed);
-void *GameData_GetGtMode(void);
-unsigned int *GameData_FindEntryById(void *data, int table, unsigned int id);
-int CarInfoA_GetColors(unsigned int carId, unsigned short **outRgb, signed char **outCodes);
-int Car_GetDefaultSetup(int carId, CarSetup *out);
-int CarSetup_Finalize(unsigned int carId, CarSetup *setup);
-int Car_GetTransFlag14(unsigned int carId);
-unsigned char *Car_GetIncludedTires(unsigned int carId, unsigned char *out);
-void Car_Init(Car *car, unsigned int carId, unsigned int baseCarId, int color, CarSetup *setup,
-              unsigned int value, int racingMod, int flag14, unsigned char *tires);
-int Event_IsLicense(char *raceCode);
-int Event_IndexFromCode(char *raceCode);
-int Char_DigitValue(int c);
-void EventCode_GetBase(char *out, char *code);
-void EventCode_Format(char *out, char *base, int race);
-int EventCode_GetRaceCount(char *base);
-void EventPrize_Clear(EventPrizeInfo *info);
-int License_IndexFromCode(char *code);
 
 // Seeds *seed from the vblank count. Taking the address here gives seed the
 // first stack slot in Event_LoadPrizeInfo, before the colour pointers.
@@ -360,7 +329,7 @@ void Event_LoadPrizeInfo(EventPrizeInfo *info, char *eventCode)
         else
             strcpy(code, eventCode);
     }
-    event = GtRaceData_FindEvent(code);
+    event = (RaceEvent *)GtRaceData_FindEvent(code);
     info->championshipPrize = event->championshipPrize * 100;
     info->prizes[0] = event->prizes[0] * 100;
     info->prizes[1] = event->prizes[1] * 100;
@@ -384,10 +353,10 @@ void Event_LoadPrizeInfo(EventPrizeInfo *info, char *eventCode)
 
         if (carId == 0)
             break;
-        n = CarInfoA_GetColors(carId, &rgb, &colors);
+        n = CarInfoA_GetColors(carId, &rgb, (char **)&colors);
         color = colors[Rand_Next(&seed) % n];
         Car_GetDefaultSetup(carId, &setup);
-        value = GameData_FindEntryById(gtMode, 0x1e, carId)[0x11];
+        value = ((unsigned int *)GameData_FindEntryById(gtMode, 0x1e, carId))[0x11];
         racingMod = CarSetup_Finalize(carId, &setup);
         flag14 = Car_GetTransFlag14(carId);
         carTires = Car_GetIncludedTires(carId, tires);

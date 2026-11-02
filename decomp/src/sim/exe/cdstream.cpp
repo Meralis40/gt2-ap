@@ -2,35 +2,20 @@
 // fill, the critical section and frame timers, and a few GPU and matrix helpers.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 #include "gte.h"
 
 extern "C" {
 extern CdAudio g_CdAudio;
 extern int g_CriticalDepth;
 extern void *g_PacketPtr;
-extern void *g_HeapBase;
 extern unsigned long g_HeapSize;
 extern char D_80090894[];
 extern char D_800908B0[];
 extern char D_800908C4[];
 extern char D_800908D8[];
 
-int CdAudio_RunScript(int script);
-int CdAudio_RunScript_8007C4F8(CdAudio *cd, int index);
-void CdAudio_ClearPending(void *cd);
-int CdGetSector_Thunk(void *dst, int words);
-int CheckCallback(void);
-int EnterCriticalSection(void);
-int ExitCriticalSection(void);
-int printf(const char *fmt, ...);
-void Gpu_Reset(void);
-void FUN_80082f74(void *p, unsigned int area0, unsigned int area1, unsigned int offset);
 void func_80082EE4(void);
-int Sys_CriticalSection(int leave);
-int Timer_Sample(void);
-void CdStream_AddFillCount(CdAudio *cd, short delta);
-unsigned char *CdStream_GetReadPtr(CdAudio *cd);
 
 extern TimerSample D_801C951C;
 extern unsigned short D_801C9520;

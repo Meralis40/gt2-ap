@@ -3,7 +3,7 @@
 // (garage) or the price (used cars).
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "ovl4.h"
+#include "common.h"
 
 extern "C" {
 extern GameState g_GameState;
@@ -21,29 +21,6 @@ extern unsigned char g_UsedCarList_TextRgb[];
 extern unsigned char g_UsedCarList_PriceRgb[];
 extern unsigned char g_UsedCarList_OutlineRgb[];
 extern UsedCarEntry *g_UsedCarListCars;
-
-int GTText_Draw(void *ot, char *str, int x, int y, unsigned int rgb);
-int GTText_WidthW(unsigned short *str);
-int GTFont_DrawString(void *ot, unsigned short *text, int x, int y, unsigned int rgb);
-void MenuList_Init(MenuList *list, MenuListFn *callback, void *userData);
-void MenuList_Open(MenuList *list);
-int MenuList_Update(MenuList *list, PadState *pad);
-void MenuList_Draw(MenuList *list, void *ot);
-void Menu_DrawCursorBox(void *ot, GouraudQuad *box, int t);
-void Menu_DrawColorSwatch(void *ot, GouraudQuad *q, int t);
-void *Prim_AddDrawMode(void *ot, unsigned int tpage);
-RECT *Prim_AddTile(void *ot, unsigned int rgb);
-void Prim_AddRectOutline(void *ot, unsigned int rgb, RECT *rect);
-unsigned int Rgb_Lerp(unsigned char *from, unsigned char *to, int t, int range);
-unsigned short *GarageCar_GetMark(int flag);
-unsigned short *Car_GetMakerName(unsigned int carId);
-unsigned short *Car_GetModelName(unsigned int carId);
-unsigned int CarInfoA_GetColorRgb(unsigned int carId, int colorCode);
-void FormatPrice(unsigned short *buf, unsigned int price);
-void Garage_MoveCar(Garage *garage, int slot, int to);
-void UsedCarList_GetCars(int makerId, int *count, UsedCarEntry **cars);
-void Sfx_PlayMenu(int id);
-int GarageList_DrawItem(MenuListEventId event, MenuListEvent *ev, int index);
 
 // MenuList callback. MLE_DRAW draws garage car index: the blinking highlight box
 // when selected, the mark, maker and name, the colour swatch, the current car
@@ -130,7 +107,7 @@ INCLUDE_ASM("asm/sim/ovl4/nonmatchings/carlist", GarageList_DrawItem);
 #endif
 
 // Inits the garage list widget, empty.
-void GarageList_Init(MenuCarList *list)
+void GarageList_Init(MenuCarList *list, int arg)
 {
     MenuList_Init(&g_GarageList_Menu, GarageList_DrawItem, 0);
     list->count = 0;
@@ -294,7 +271,7 @@ int UsedCarList_DrawItem(MenuListEventId event, MenuListEvent *ev, int index)
 }
 
 // Inits the used car list widget, empty.
-void UsedCarList_Init(MenuCarList *list)
+void UsedCarList_Init(MenuCarList *list, int arg)
 {
     MenuList_Init(&g_UsedCarList_Menu, UsedCarList_DrawItem, 0);
     list->count = 0;

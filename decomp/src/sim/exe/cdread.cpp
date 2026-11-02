@@ -3,26 +3,10 @@
 // that is a single shift falling through into it.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
 extern CdAudio g_CdAudio;
-
-void CdAudio_ResetRead(void);
-void CdAudio_StartRead(void);
-void CdAudio_WaitIdle(void);
-int CdAudio_GetReadStatus(void);
-void CdAudio_SetupRead(void *dst, unsigned int start, unsigned int size, int reportErrors);
-void CdAudio_SetupStream(void *buf, int bufSectors, int start, unsigned int end);
-void CdAudio_ResetStream(void);
-void CdStream_ReleaseSector(void);
-unsigned char *CdStream_WaitSector(void);
-void Stack_Check(void);
-void Inflate_Run(InflateState *state);
-void Music_Stop(void);
-int Cd_ReadBytes(void *dst, int byteOffset, int size);
-int Cd_ReadInflate(void *dst, int fileOffset, int size, void *sectorBuf, int bufSectors, void *heap, int heapSize);
-void Cd_ReadAtAsync(void *dst, unsigned int byteOffset, int size);
 
 // Restarts the read until the drive reports no error, calling onRetry (if any)
 // between attempts.

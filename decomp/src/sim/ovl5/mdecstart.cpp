@@ -1,6 +1,5 @@
 // Starts and stops the MDEC output of a frame.
 #include "common.h"
-#include "movie.h"
 
 extern "C" {
 // Feeds the run-length codes to the MDEC and starts the output of the first

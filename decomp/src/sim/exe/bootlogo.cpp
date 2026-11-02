@@ -5,7 +5,7 @@
 // here.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
 extern SplashScreen g_SplashScreens[];
@@ -15,36 +15,6 @@ extern RECT D_80033DC8;         // image position
 extern unsigned char g_VolDir[];
 extern unsigned char g_MenuContext[];
 
-void *memset(void *dst, int c, unsigned int n);
-TexQuad *Prim_AddTexQuad(void *ot, unsigned int rgb);
-RECT *Prim_AddTile(void *ot, unsigned int rgb);
-void ViewDrawContext_Init(ViewDrawContext *ctx, void *ot, int size);
-void ViewDrawContext_Reset(ViewDrawContext *ctx);
-void ViewDrawContext_AddLayer(ViewDrawContext *ctx, DrawLayer *layer);
-void PacketBuffer_Init(PacketBuffer *buf, void *base, unsigned int size);
-void Gpu_TransferImage(RECT *rect, void *src, int arg);
-void Gpu_DrawSync();
-void Gzip_Inflate(void *src, void *dst);
-void Tim_LoadClutAndImage(void *tim, RECT *clut, RECT *image);
-void Irq_Install();
-void Sound_Init();
-void Sound_SetTickRate(int rate);
-void Seq_Init();
-void Seq_SetTickRate(int rate);
-void Spu_SetReverbType(int type);
-void Spu_EnableReverb(int on);
-void Spu_SetReverbDepth(int left, int right);
-void Sound_InstallVSync();
-void CdAudio_Init();
-void Pad_Install();
-void Card_Init();
-void Font_Init();
-void Disc_LocateDataFiles(char *dir);
-void Vol_Init();
-void Overlay_Init();
-void Game_InitData();
-void EnableDisplay(unsigned int arg);
-void Boot_ShowSplashScreens();
 }
 
 VendorBootLogo::VendorBootLogo()

@@ -64,15 +64,6 @@ static inline McOpState *McOp_Get()
 
 // exe/mccard.cpp
 
-// The 128-byte header frame of a save file.
-struct McHeader {
-    unsigned short magic; // "SC"
-    unsigned char iconFlag;
-    unsigned char blocks;
-    unsigned char title[0x40]; // Shift-JIS
-    unsigned char unk44[0x3c];
-};
-
 // exe/mcport.cpp
 
 // A directory frame of the card, as it is written (128 bytes).

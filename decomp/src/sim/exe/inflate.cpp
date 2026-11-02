@@ -2,27 +2,18 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-void Inflate_Run(InflateState *state);
-void Inflate_Codes(InflateState *state);
-int Inflate_BuildHuft(InflateState *state, uint *b, uint n, uint s, ushort *d, ushort *e, Huft **t,
-                      uint *m, uint lookupBits);
 extern ushort g_InflateLenBase[];
 extern ushort g_InflateLenExtra[];
 extern ushort g_InflateDistBase[];
 extern ushort g_InflateDistExtra[];
 extern byte g_InflateCodeLenOrder[];
-int longjmp(jmpbuf *env, int value);
-int setjmp(jmpbuf *__env);
 extern jmpbuf g_GzipCallerCtx;
 extern int g_GzipChunkSize;
 extern jmpbuf g_GzipInflateCtx;
 extern GzipStream *g_GzipStream;
-void GzipStream_Main(void);
-InflateState *GzipStream_Yield(InflateState *state);
-InflateState *GzipStream_Flush(InflateState *state);
 
 void GzipStream_Main(void)
 {

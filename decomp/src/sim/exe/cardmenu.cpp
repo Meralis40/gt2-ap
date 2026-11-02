@@ -2,85 +2,17 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-void CardMenu_CacheKanji(char *sjis);
-void CardMenu_CacheKanjiSlotNames(void);
-void CardMenu_InitWidgets(void);
-void CardMenu_PrepareGhostEntry(void);
-void CardMenu_PrepareReplayEntry(void);
-int CardMenu_SetState(int state);
-int CardState_Idle(int event, void *arg);
-void KanjiFont_Reset(void *font);
-void KanjiFont_CacheString(void *font, char *sjis);
-void GameState_WriteSave(void *dst, void *file, int size);
-void KanjiFont_SetBuffers(void *font, void *pixels, void *nodes, unsigned char wideMode);
-void KanjiFont_SetVram(void *font, int x, int y, int w, int h);
-void *KanjiFont_FindGlyph(void *font, unsigned int code);
-void KanjiFont_RenderGlyph(void *font, void *glyph);
-typedef void (*KanjiLoadFn)(void *font, void *glyph);
-int ReplayData_BuildRace(void *dst);
-int ReplayData_BuildGhost(void *dst);
-void ReplayEntry_SetTitle(char *dst, char *title);
-void ReplayEntry_SetCarName(void *entry, char *name);
-void Sfx_PlayMenu(int sfx);
-void CardDialog_Open(CardDialog *dlg);
-int McCard_GetResult(void);
-void McCard_StartFormat(int port);
-int ReplayFile_Create(ReplayDir *dir, int port);
-void CardMenu_CacheKanjiLines(void);
-void CardMenu_CacheKanjiError(void);
-void CardDialog_Close(CardDialog *dlg);
-int SaveFile_Create(GameSaveFile *file, int port);
-int ReplayFile_StartWriteDir(ReplayDir *dir, int port);
-void CardProgress_Update(CardProgressBar *bar, int remaining);
-void CardProgress_Draw(CardProgressBar *bar);
 extern int g_McOp_Remaining;
-int SaveFile_StartWrite(GameSaveFile *file, int port, void *data);
-int SaveFile_StartRead(GameSaveFile *file, int port, void *data);
-int SaveFile_GetFileSize(GameSaveFile *file);
-int SaveFile_CheckCrc(GameSaveFile *file, void *data);
-void GameState_ReadSave(void *file, void *data);
-void CardProgress_Reset(CardProgressBar *bar);
-void Text_Init(TextCtx *ctx, int tpageId);
-void Text_SetFont(TextCtx *ctx, Font *font);
-void Text_DrawCentered(TextCtx *ctx, char *s, int x, int y, int a4);
-void CardMenu_DrawKanji(uint *ot, char *sjis, int x, int y, int a4, uint rgb);
-void ReplayDir_Init(ReplayDir *dir, int blocks);
-int ReplayFile_StartWriteData(ReplayDir *dir, int port, void *data, int size, short *sectors);
-void ReplayDir_UpdateCrc(ReplayDir *dir);
-int ReplayFile_StartReadEntry(ReplayDir *dir, int port, int entry, void *data, short *sectors);
-int ReplayDir_CheckEntryCrc(ReplayDir *dir, int entry, void *data);
-void Replay_Unpack(void *data, int arg);
-void GhostReplay_Unpack(void *data);
 struct PrimFT4;
-PrimFT4 *KanjiFont_AddGlyphQuad(void *glyph, uint *ot, uint rgb);
-void *Prim_AddDrawMode(uint *ot, uint tpage);
-int ReplayFile_StartReadDir(ReplayDir *dir, int port);
-int ReplayDir_IsValid(ReplayDir *dir);
 // Through an inline function, as the game tests the result with xori and beqz.
 static inline int ReplayDir_IsOk(ReplayDir *dir)
 {
     return ReplayDir_IsValid(dir) == 1;
 }
-void MenuList_Open(MenuList *list);
-void MenuList_Close(MenuList *list);
-unsigned char ReplayDir_IsPlayable(ReplayDir *dir, int entry);
-int SaveFile_Find(GameSaveFile *file, int port);
-int SaveFile_GetBlockCount(GameSaveFile *file);
-int ReplayFile_Find(ReplayDir *dir, int port);
-void WipeBar_Update(WipeBar *bar);
-int CardDialog_Update(CardDialog *dlg, PadState *pad);
-int NumberPicker_Update(NumberPicker *p, PadState *pad);
-int MenuList_Update(MenuList *list, PadState *pad);
-int TextEntry_Update(TextEntry *entry, PadState *pad);
 struct CardDialogDesc;
-void CardDialog_Init(CardDialog *dlg, CardDialogDesc *desc, int choice);
-void NumberPicker_Init(NumberPicker *p);
-void MenuList_Init(MenuList *list, void *callback, int arg);
-void TextEntry_Init(TextEntry *entry, TextEntry *desc);
-int CardMenu_EntryListCallback(int event, MenuListEvent *ev, int row);
 extern WipeBar D_80091EE8;          // the slot bar
 extern CardDialogDesc D_80091F04;   // the dialogs, in CardMenu order
 extern CardDialogDesc D_80091F34;
@@ -95,30 +27,8 @@ extern CardDialogDesc D_80092108;
 extern CardDialogDesc D_80092138;
 extern CardProgressBar D_80092168;  // the progress bar
 extern TextEntry D_800921A0;        // the title entry
-void ReplayEntry_Draw(uint *style, uint *ot, TextCtx *ctx, ReplayDirEntry *entry, int x, int y, int alpha, int empty);
 extern uint D_800921BC[]; // the entry list's style; [4] is the row colour
-int WipeBar_GetLevel(WipeBar *bar);
-void WipeBar_Draw(WipeBar *bar, uint *ot, int x, int y);
-uint Rgb_Lerp(uchar *from, uchar *to, int t, int range);
-void Text_DrawString(TextCtx *ctx, char *s, int x, int y, int a4);
-void CardDialog_Draw(CardDialog *dlg, uint *ot, TextCtx *ctx);
-void NumberPicker_Draw(NumberPicker *p, uint *ot, TextCtx *ctx);
-void MenuList_Draw(MenuList *list, uint *ot);
-void TextEntry_Draw(TextEntry *entry, uint *ot);
 extern char *D_800921B4[2]; // the slot names
-char *strcpy(char *dst, const char *src);
-int strlen(const char *s);
-void TextEntry_Open(TextEntry *entry);
-void TextEntry_Close(TextEntry *entry);
-int ReplayDir_AddEntry(ReplayDir *dir, int at, ReplayDirEntry *entry, void *data, int size, short *sectors);
-int Text_MeasureString(TextCtx *ctx, char *s, int a2);
-int sprintf(char *buf, char *fmt, ...);
-int SectorMap_CountUsed(SectorMap *map);
-int SectorMap_CountFree(SectorMap *map);
-int ReplayDir_CheckFits(ReplayDir *dir, int at, int size);
-void ReplayDir_DeleteEntry(ReplayDir *dir, int entry);
-void ReplayDir_DrawUsageBar(short *usage, uint *ot, int x, int y, int alpha, int need, int needNew);
-typedef int (*CardStateFn)(int event, void *arg);
 extern CardStateFn g_CardMenu_States[];
 // The menu text, one block of strings (sB_LbFt is the first). The game addresses them
 // from one base, so the second of two strings is often an offset from the first.
@@ -233,9 +143,6 @@ extern const char D_8008FAC8[8];
 const char D_8008FAC8[8] = { 0 }; // braces: a string initializer is emitted again as a literal
 #define EMPTY ((char *)D_8008FAC8)
 enum { CARD_EXIT = 0x27, CARD_REPLAY_LOADED = 0x28 }; // what a state returns to leave
-void KanjiFont_UploadClut(void *font);
-void KanjiFont_UploadTexture(void *font);
-void SaveFile_InitHeader(GameSaveFile *file);
 extern CardMenu *g_CardMenu;
 extern signed char g_CardMenu_GhostLoaded;
 extern GameState g_GameState;
@@ -251,7 +158,7 @@ extern CardSystem g_Card;
 // its texture and CLUT in VRAM, and the glyph loader at +0x9824.
 void KanjiFont_Init(void *font, int vramX, int vramY, int texWidth, int texHeight, int clutX, int clutY)
 {
-    KanjiFont_SetBuffers(font, (char *)font + 0x1824, (char *)font + 0x24, 0);
+    KanjiFont_SetBuffers(font, (unsigned char *)font + 0x1824, (KanjiGlyph *)((char *)font + 0x24), 0);
     KanjiFont_SetVram(font, vramX, vramY, texWidth, texHeight);
     *(short *)((char *)font + 0xe) = (clutX >> 4) + clutY * 64;
     KanjiFont_Reset(font);
@@ -320,7 +227,7 @@ void CardMenu_DrawKanji(uint *ot, char *sjis, int x, int y, int center, uint rgb
         void *glyph = KanjiFont_FindGlyph(font, p[0] << 8 | p[1]);
 
         if (glyph != 0) {
-            PrimFT4 *q = KanjiFont_AddGlyphQuad(glyph, ot, rgb | semi);
+            PrimFT4 *q = (PrimFT4 *)KanjiFont_AddGlyphQuad(glyph, ot, rgb | semi);
 
             q->x0 = x;
             q->y0 = y;
@@ -429,7 +336,7 @@ int CardMenu_EntryListCallback(int event, MenuListEvent *ev, int row)
         if (empty == 0) {
             entry = DIR_ENTRY(m, (signed char)m->rows[row][0]);
         }
-        ReplayEntry_Draw(D_800921BC, ot, t, entry, x + slide, y, alpha, empty);
+        ReplayEntry_Draw((ReplayEntryStyle *)D_800921BC, ot, t, entry, x + slide, y, alpha, empty);
         break;
     }
     case 6:
@@ -586,7 +493,7 @@ int CardState_ReadReplayDir(int event, void *arg)
         }
         break;
     case 2:
-        CardProgress_Draw(&m->progress);
+        CardProgress_Draw(&m->progress, (uint *)arg);
         break;
     }
     return next;
@@ -972,7 +879,7 @@ int CardState_EditTitle(int event, void *arg)
 
                 ReplayEntry_SetTitle(e->title, m->titleBuf);
                 dir = &m->dir;
-                if (ReplayDir_AddEntry(dir, sel, e, m->replayData, m->replaySize, m->newSectors) == 0) {
+                if (ReplayDir_AddEntry(dir, sel, e, m->replayData, m->replaySize, (SectorChain *)m->newSectors) == 0) {
                     goto failed;
                 }
                 if (!ReplayDir_IsOk(dir)) {
@@ -1110,7 +1017,7 @@ int CardState_WriteReplayData(int event, void *arg)
         }
         break;
     case 2:
-        CardProgress_Draw(&m->progress);
+        CardProgress_Draw(&m->progress, (uint *)arg);
         break;
     }
     return next;
@@ -1151,7 +1058,7 @@ int CardState_WriteReplayDir(int event, void *arg)
         }
         break;
     case 2:
-        CardProgress_Draw(&m->progress);
+        CardProgress_Draw(&m->progress, (uint *)arg);
         break;
     }
     return next;
@@ -1361,7 +1268,7 @@ int CardState_LoadReplay(int event, void *arg)
     case 0: {
         ReplayDir *dir = &m->dir;
 
-        if (ReplayFile_StartReadEntry(dir, m->slot, sel, m->replayData, m->newSectors) != 0) {
+        if (ReplayFile_StartReadEntry(dir, m->slot, sel, m->replayData, (SectorChain *)m->newSectors) != 0) {
             m->errorMsg = TEXT(LoadingDataFailed);
             CardMenu_CacheKanjiError();
             next = 1;
@@ -1405,7 +1312,7 @@ int CardState_LoadReplay(int event, void *arg)
         }
         break;
     case 2:
-        CardProgress_Draw(&m->progress);
+        CardProgress_Draw(&m->progress, (uint *)arg);
         break;
     }
     return next;
@@ -1513,7 +1420,7 @@ int CardState_LoadGhost(int event, void *arg)
     case 0: {
         ReplayDir *dir = &m->dir;
 
-        if (ReplayFile_StartReadEntry(dir, m->slot, sel, m->replayData, m->newSectors) != 0) {
+        if (ReplayFile_StartReadEntry(dir, m->slot, sel, m->replayData, (SectorChain *)m->newSectors) != 0) {
             m->errorMsg = TEXT(LoadingDataFailed);
             CardMenu_CacheKanjiError();
             next = 15;
@@ -1558,7 +1465,7 @@ int CardState_LoadGhost(int event, void *arg)
         }
         break;
     case 2:
-        CardProgress_Draw(&m->progress);
+        CardProgress_Draw(&m->progress, (uint *)arg);
         break;
     }
     return next;
@@ -1736,7 +1643,7 @@ int CardState_WriteGameSave(int event, void *arg)
         }
         break;
     case 2:
-        CardProgress_Draw(&m->progress);
+        CardProgress_Draw(&m->progress, (uint *)arg);
         break;
     }
     return next;
@@ -1880,7 +1787,7 @@ int CardState_ReadGameSave(int event, void *arg)
         }
         break;
     case 2:
-        CardProgress_Draw(&m->progress);
+        CardProgress_Draw(&m->progress, (uint *)arg);
         break;
     }
     return next;

@@ -89,9 +89,6 @@ public:
 
 extern "C" {
 extern GTMenu *g_GTMenu;
-void GTMenu_GoBack(GTMenu *menu);
-void GTMenu_QueueCarPreview(GTMenu *menu, int delay, int baseCarId, int carId, int colorIdx, int garageSlot,
-                            int hasWheel, int wheel, int dirt);
 }
 
 #endif

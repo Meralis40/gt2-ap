@@ -2,12 +2,9 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-int Gpu_TransferImage(RECT *rect, unsigned int *data, int store);
-unsigned short *KanjiFont_Krom2RawAdd(unsigned int code);
-unsigned char *KanjiFont_GetPixelPtr(KanjiFont *font, int x, int y);
 extern unsigned char *g_PacketPtr;
 extern unsigned int D_800A0A68[];    // the glyphs' CLUT
 extern unsigned short D_80095950[]; // a ROM row nibble, spread into three 5-bit fields

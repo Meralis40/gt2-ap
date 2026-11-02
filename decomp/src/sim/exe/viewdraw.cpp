@@ -3,17 +3,12 @@
 // and the double-buffered pool the primitives are allocated from.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
 extern uint *g_PacketPtr;
 extern uint *g_PacketEnd;
 extern RECT g_DrawArea;
-
-void Gpu_DrawOTag(void *list);
-void Dma_ClearOTagR(void *ot, int n);
-void ViewDrawContext_Reset(ViewDrawContext *ctx);
-void DrawLayer_SetArea(DrawLayer *layer, RECT *area);
 
 void ViewDrawContext_Init(ViewDrawContext *ctx, void *ot, unsigned int bytes)
 {

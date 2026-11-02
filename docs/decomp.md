@@ -52,8 +52,8 @@ For each unit (`exe`, `ovl0` … `ovl5`) this runs splat if its output is missin
 | `decomp/sim/<unit>.yaml` | splat config of each unit: segments, options, expected SHA-1 |
 | `decomp/sim/symbols/<unit>.txt` | Names exported from Ghidra |
 | `decomp/src/sim/<unit>/*.cpp`, `*.c` | Decompiled functions (C for the EXE's `syslib`) |
-| `decomp/include/common.h` | Declarations shared by the sources |
-| `decomp/include/gamestate.h`, `carwork.h` | `g_GameState` and the `CarWork_*` functions, for OVL3 |
+| `decomp/include/common.h` | The declaration of every game function the sources define or call ([Declarations](#declarations)); every source includes it, and it includes the type headers |
+| `decomp/include/gamestate.h` | `g_GameState`, for OVL3 |
 | `decomp/include/syslib.h` | The EXE's C library (`HeapBlock`) and declarations |
 | `decomp/include/resident.h` | The game's types, shared by every source: those of the resident code, exported from Ghidra ([Resident code](#resident-code)), and the ones declared while decompiling ([Types](#types)) |
 | `decomp/include/prim.h` | GPU primitives: packets with their tag (`PolyG4`...), what the `Prim_Add*` functions return (`PrimG4`...) |
@@ -127,7 +127,7 @@ decomp.me's PsyQ packages (`psyq4.3` to `psyq4.6`) run Sony's executables under 
 1. In the unit's yaml, give the function's address range its own subsegment: `[0x0, cpp, carwork]` makes `src/sim/<unit>/carwork.cpp`, and the next `asm` subsegment starts after the function.
    A function that another unit has too uses that unit's file: OVL4's `[0x5404, cpp, ../ovl3/carwork]` builds `src/sim/ovl3/carwork.cpp`. `build.py` creates `src/sim/<unit>/` before splitting, so the `..` resolves and splat sees the existing file.
    When the copy has other names there (`Demo_PickRandomCar` in OVL1, the `_OVL2` suffixes, OVL4's second CarWork copy), the unit gets its own file that `#define`s them and `#include`s the shared source, as `src/sim/ovl1/randompick.cpp` does.
-2. Write the function in that file. Keep it `extern "C"` (see `include/common.h`) while its callers are assembly, so the symbol keeps the name the disassembly uses. Put the types it needs in the headers ([Types](#types)), not in the file.
+2. Write the function in that file. Keep it `extern "C"` (see `include/common.h`) while its callers are assembly, so the symbol keeps the name the disassembly uses. Put the types it needs in the headers ([Types](#types)), and the functions it calls in `common.h` ([Declarations](#declarations)), not in the file.
 3. Run `tools/build.py --split <unit>`, and compare `build/sim/src/.../<file>.cpp.s` with the original assembly until the unit prints `OK`.
 
 splat never overwrites an existing source file.
@@ -139,7 +139,15 @@ Every type is defined once, in `include/`, and every source sees all of them: `r
 - Unions keep two spellings of the same bytes where the game's code needs both: the `CarWork` part entries (`PartEntry36` and the like) are copied as words in OVL3, and indexed as bytes (`work->trans[i].bytes[0x20]`) in the resident code, which matches only with an array of bytes there.
 - A field's signedness is the one all the code agrees with: `CarSetup`'s part indices are `ushort`, as OVL3 had them (the resident and OVL4 code matches either way), `EnginePerf.maxPower` is `ushort` (OVL4 reads it with `lhu`).
 - Where the code reads a block of a struct through another type, the source casts: `CdAudio`'s request (`reqFlag` to `reqWrite`) and its current read (`flag` to `ringWrite`) are both `CdReq`s, so OVL5 sets the request through `(CdReq *)&g_CdAudio.reqFlag`, and reads `CdAudio.state` through a `volatile CdAudio *`, as it read its own volatile field.
-- `bool` is C++'s own (4 bytes in GCC 2.8.1): `SaveFile_CheckCrc` returns `unsigned char`.
+- `bool` is C++'s own (4 bytes in GCC 2.8.1). `CarInfoA_IsAvailable` returns one: OVL3's `RaceCarPick_Random` tests it with `xori`, as only a `bool` gives.
+
+## Declarations
+
+Every function that a source defines or calls is declared once, in `common.h`, inside its `extern "C"` block: the resident code by address, then each overlay's. The C library's functions are in `syslib.h`, which `common.h` includes, and the methods in their classes. A function's prototype is its definition's when the sources have one. The copies that a unit renames with `#define` (`Demo_PickRandomCar`, the `_OVL2` names) have no declarations of their own: the `#define` renames the OVL3 one.
+
+The game's callers don't always agree with the function they call, so one prototype needs help at some calls. The caller's conversion is written out where it changes the code: `GameData_GetCarEntry((unsigned short)pick->entryIndex)` loads with `lhu`, `CarInfoA_GetColorRgb(carId, (signed char)c)` sign-extends, `Seq_SetMasterVolume((unsigned short)...)` and `SfxVoice_SetPriority(..., (uchar)priority)` mask, `(int)strlen(text)` compares signed. Where the callers need it, the definition takes their type when its own code doesn't change: `SaveFile_CheckCrc` returns `int`, `CarInfoA_GetColorRgb` and `RaceCarPick_Random` return `unsigned int`, and the functions that ignore an argument their callers pass declare it (`UniStrDb_Load`, `GarageList_Init`, `MenuPage_LoadById`, `GroundDisc_Init`...). `MenuPage_BuildBackground` returns `DisplayList_End`'s result, the tail that `MenuView` keeps. Pointer arguments of other types are cast at the call.
+
+Two functions are declared with fewer arguments than Ghidra finds: `Prim_AddPolyG4` and `Prim_AddPolyG3` (a colour in `$a1`), which their matched callers (`menudraw.cpp`, `widgets.cpp`) don't pass.
 
 ## Resident code
 

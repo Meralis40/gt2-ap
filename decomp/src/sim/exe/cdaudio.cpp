@@ -2,17 +2,9 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-void CdAudio_ExecScript(CdAudio *cd, unsigned int *script);
-int Sys_CriticalSection(int leave);
-void *memset(void *dst, int c, unsigned int n);
-int CdControlF(unsigned char com, unsigned char *param);
-int CdGetSector(void *dst, int words);
-void *CdSyncCallback(void (*func)(unsigned char status, unsigned char *result));
-void *CdReadyCallback(void (*func)(unsigned char status, unsigned char *result));
-void VSyncList_Add(VSyncCallback **list, VSyncCallback *node);
 extern GfxIrqState g_GfxIrq;
 extern CdAudio g_CdAudio;
 extern unsigned char g_BcdToInt[];
@@ -22,20 +14,6 @@ extern unsigned int *g_CdAudioScripts[];
 extern unsigned int D_800903B4[];
 extern unsigned int D_800903B8[];
 extern unsigned int D_800903D4[];
-unsigned int CdAudio_DefaultSectorFn(void);
-void CdAudio_DefaultFn(void);
-void CdAudio_VSync(void);
-void CdAudio_OnSync(unsigned char status, unsigned char *result);
-void CdAudio_OnReady(unsigned char status, unsigned char *result);
-void CdAudio_ApplyVolume(CdAudio *cd);
-void CdAudio_ClearPending(void *cd);
-int CdAudio_QueueScript(CdAudio *cd, int index);
-int CdAudio_RunScript_8007C4F8(CdAudio *cd, int index);
-void CdAudio_SetMode(CdAudio *cd, unsigned int mode);
-void CdAudio_SetScript(CdAudio *cd, unsigned int *script);
-int CdAudio_RunQueued(CdAudio *cd);
-void CdAudio_Reset(CdAudio *cd);
-int CdAudio_OnReadSector(unsigned int sector, void *header);
 
 // The bytes are read through an inline function (found with permuter); indexed
 // directly, the compiler loads the table's entries in another order.

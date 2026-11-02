@@ -1,31 +1,7 @@
 // OVL4 8001d090-8001da24 (menuview): Menu view: car camera, pages and hotspots.
-#include "ovl4.h"
+#include "common.h"
 
 extern "C" {
-void CarPreview_Load(CarPreview *preview, unsigned int carId, int colorIdx, int garageSlot, int hasWheel, unsigned int wheel, int dirt);
-void CarPreview_Init(CarPreview *preview, void *config);
-void CarPreview_ApplyColor(CarPreview *preview);
-void CarPreview_ShowCurrentCar(CarPreview *preview);
-void FUN_OVL4__8001ab64(CarPreview *preview);
-int MenuData_Load(void *buf, int size);
-void MenuData_LoadIcons(void *buf);
-void MenuData_SetBuffers(void *pageBuf, void *scratch);
-void MenuPage_LoadById(int page, void *buf);
-void *MenuPage_BuildBackground(void *unused, void *buf);
-MenuElement *MenuPage_GetElement(int index);
-int MenuPage_FindCarPage(unsigned int carId);
-void OT_InsertChain(void *ot, void *head, void *tail);
-void MenuBgm_Request(int track);
-int MenuElement_IsActive(MenuElement *e);
-int MenuElement_IsLicenseOk(MenuElement *e);
-void Txn_InitWheelShop(ShopTxn *txn);
-void Txn_PreviewPart(ShopTxn *txn, int part);
-void Txn_SetBuyPart(ShopTxn *txn, int part);
-void GarageList_Open(MenuCarList *list, MenuElement *element);
-void UsedCarList_Init(MenuCarList *list, int unused);
-void UsedCarList_Build(MenuCarList *list, MenuElement *element, int makerId);
-int Math_ISqrt(int lo, int hi); // of a 64-bit value; callers pass 0 as the high word
-void MenuPage_Enter(GTMenuView *view, int page, int keepList);
 extern FlowMenuState g_Flow_IntroShown;
 extern int g_MenuElementCount;
 extern int g_MenuPageBackPage;
@@ -105,7 +81,7 @@ void MenuView_BeginFrame(GTMenuView *view, void **ot)
 {
     CarPreview *preview;
 
-    OT_InsertChain(ot + 1, view->assets2, view->bgListTail);
+    OT_InsertChain((OtTag *)(ot + 1), (OtTag *)view->assets2, (OtTag *)view->bgListTail);
     preview = &view->preview;
     if (preview->colorDirty)
         CarPreview_ApplyColor(preview);

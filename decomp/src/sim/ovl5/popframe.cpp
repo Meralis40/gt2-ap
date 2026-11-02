@@ -1,7 +1,6 @@
 // Reads a CD sector into the stream ring, takes the next queued frame and
 // releases it.
 #include "common.h"
-#include "movie.h"
 
 extern "C" {
 // Reads the sector the CD just delivered into the frame being filled.

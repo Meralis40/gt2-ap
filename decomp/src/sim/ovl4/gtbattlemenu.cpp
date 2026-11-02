@@ -4,22 +4,9 @@
 // are emitted here.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "gtmenu.h"
+#include "common.h"
 
 extern "C" {
-void PacketBuffer_Init(PacketBuffer *buf, void *base, unsigned int bytes);
-void ViewDrawContext_Init(ViewDrawContext *ctx, void *ot, unsigned int bytes);
-void ViewDrawContext_Reset(ViewDrawContext *ctx);
-void ViewDrawContext_AddLayer(ViewDrawContext *ctx, DrawLayer *layer);
-void BattleTable_Init(BattleCarTable *table);
-int BattleTable_LoadNext(BattleCarTable *table);
-void BattleTable_Sort(BattleCarTable *table);
-void BattleTable_PickOpponents(BattleCarTable *table, BattlePlayer *player, OpponentPool *pool, int size,
-                               int below);
-void CardProgress_Reset(CardProgressBar *bar);
-void CardProgress_Update(CardProgressBar *bar, int done);
-void CardProgress_Draw(CardProgressBar *bar, void *ot);
-RECT *Prim_AddTile(void *ot, unsigned int rgb);
 
 extern GameState g_GameState;
 extern unsigned char g_OVL4_OrderingTable[];

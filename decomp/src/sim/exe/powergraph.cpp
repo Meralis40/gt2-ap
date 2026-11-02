@@ -2,23 +2,9 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-void PowerGraphView_ComputeScale(PowerGraphView *v);
-void PowerGraphView_DrawAxis(PowerGraphView *v, uint *ot, int torque);
-void PowerGraphView_DrawRpmAxis(PowerGraphView *v, uint *ot);
-void Text_Init(TextCtx *ctx, int tpageId);
-void Text_SetFont(TextCtx *ctx, Font *font);
-int Text_MeasureString(TextCtx *ctx, char *s, int a2);
-void Text_DrawString(TextCtx *ctx, char *s, int x, int y, int a4);
-int Text_MeasureStringMonoDigits(TextCtx *ctx, char *s, int a2, int a3);
-int Text_DrawStringMonoDigits(TextCtx *ctx, char *str, int x, int y, int spacing, int digitShift, int digitExtra);
-uint Rgb_Lerp(uchar *from, uchar *to, int t, int range);
-RECT *Prim_AddTile(uint *ot, uint rgb);
-LineF2 *Prim_AddLineF2(uint *ot, uint rgb);
-void *Prim_AddDrawMode(uint *ot, uint mode);
-int sprintf(char *buf, char *fmt, ...);
 extern char sB_Hp[];
 extern char sB_LbFt[];
 extern char sB_1000rpm[];

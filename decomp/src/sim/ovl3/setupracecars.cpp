@@ -4,12 +4,6 @@
 #include "common.h"
 #include "gamestate.h"
 
-extern "C" {
-void ArcadeSel_LoadGarageCar(int garage, int slot, int dirt);
-RaceCar *RaceSetup_SetCarFromGarage(RaceSetup *setup, int index, int gridSlot, int driverType,
-                                    int unk8f, Car *car, int unk582, int garageSlot);
-}
-
 // The offset is added to the base as one value, as the game never folds the
 // garages offset (0x3c74) into g_GameState's address.
 inline Garage *GarageAt(int n)

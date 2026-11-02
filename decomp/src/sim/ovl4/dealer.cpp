@@ -3,52 +3,21 @@
 // assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "ovl4.h"
+#include "common.h"
 
 // CarSpec_FromCarWorkWithPart's output, a resident type that ovl4.h doesn't have.
 struct CarSpec;
 
 extern "C" {
-void *GameData_GetEntry(int table, int index);
-int Car_GetDefaultSetup(int carId, CarSetup *out);
-int Part_Lookup(PartId partId, unsigned int carCode, int *outPrice);
 extern GameState g_GameState;
 extern unsigned short g_GarageCar_NoMark[2];
 extern unsigned short g_GarageCar_Mark[2];
-short *UniStr_Get(int index);
 extern short g_PartNameStrIds;
 extern CarWork g_CarWork;
 extern short g_RacingMod_Variant;
 extern short g_IncludedTireParts[];
 extern signed char *g_Car_ExcludedCodes[];
 extern unsigned short u_NoName[];
-void *GameData_GetGtMode(void);
-void *GameData_FindEntryById(void *data, int table, unsigned int id);
-void CarWork_Clear(CarWork *work);
-void CarWork_LoadParts(CarWork *work, unsigned int carId);
-void CarWork_SetStagesFromSetup(CarWork *work, CarSetup *setup);
-void CarWork_ExportSetup(CarWork *work, CarSetup *out);
-void CarWork_SetPartSlot(CarWork *work, int slot, int stage);
-void CarWork_LoadFromGarage(int slot, int garage);
-void CarSpec_FromCarWorkWithPart(CarWork *work, CarSpec *spec, int slot, int stage);
-void PartsOwned_Set(int part, unsigned char *bits);
-int Car_HasPart(Car *car, int part);
-void Car_InstallPart(Car *car, int part, int cost);
-void Car_StoreSetup(Car *car, CarWork *work);
-int Garage_AddNewCar(Garage *garage, int carId, int color, CarSetup *setup, int price, int flag15,
-                     int flag14, unsigned char *parts);
-void Garage_RemoveCar(Garage *garage, int carSlot);
-void Garage_AddCredits(Garage *garage, int amount);
-unsigned int CarCode_Encode(signed char *code);
-int CarInfoA_GetColors(unsigned int carId, unsigned short **outRgb, signed char **outCodes);
-int Wheel_FindIndex(int wheelCode);
-void CarSetup_SetWheels(CarSetup *setup, int wheelIndex);
-void Part_GetSlot(PartId partId, short *out);
-int Car_GetTransFlag14(unsigned int carId);
-int Part_GetPrice(unsigned int carCode, PartId partId);
-int Tune_CanBuyPart(int carSlot, int partId, int garageIdx);
-int Tune_InstallPart(int carSlot, int partId, int garageIdx, unsigned int color);
-int Garage_CanAfford(int price, int garageIdx);
 
 // Car_HasPart(...) == 1, kept as a value: the game tests it with xori.
 inline int Car_PartFitted(Car *car, int part)
@@ -418,7 +387,7 @@ int CarColor_FindIndex(unsigned int carId, int colorCode)
 {
     unsigned short *rgb;
     signed char *codes;
-    int count = CarInfoA_GetColors(carId, &rgb, &codes);
+    int count = CarInfoA_GetColors(carId, &rgb, (char **)&codes);
     int i;
 
     for (i = 0; i < count; i++) {

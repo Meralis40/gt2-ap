@@ -1,9 +1,6 @@
 // Sets the part slots of a car being built from its setup (copy of the OVL4
 // function).
 #include "common.h"
-#include "carwork.h"
-
-extern "C" void *GameData_GetEntry(int table, int index);
 
 // The stage byte at offset off of a game data entry.
 #define STAGE(entry, off) (((unsigned char *)(entry))[off])

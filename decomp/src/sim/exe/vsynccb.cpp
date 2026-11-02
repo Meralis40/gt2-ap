@@ -2,13 +2,10 @@
 // the vsync list.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-void *memset(void *dst, int c, unsigned int n);
 void func_8008107C(void);
-void VSyncList_Add(VSyncCallback **list, VSyncCallback *node);
-void VSyncList_Remove(VSyncCallback **list, VSyncCallback *node);
 extern GfxIrqState g_GfxIrq;
 
 // Clears cb and adds it to the vsync list with an empty function, first (priority 0).

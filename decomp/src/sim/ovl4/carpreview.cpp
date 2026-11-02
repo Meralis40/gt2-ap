@@ -3,7 +3,7 @@
 // texture CLUT) and the spec sheet of a dealer or garage car.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "ovl4.h"
+#include "common.h"
 
 extern "C" {
 extern GameState g_GameState;
@@ -11,52 +11,6 @@ extern CarSpecStrings g_CarSpecStrings;
 extern short g_WheelOffsetTable[];
 extern unsigned short g_CarPreview_NoText[];
 
-unsigned int *GameData_FindEntryById(void *data, int table, unsigned int id);
-void *GameData_GetEntry(int table, int index);
-void *GameData_GetGtMode(void);
-int Car_GetDefaultSetup(int carId, CarSetup *out);
-int CarInfoA_GetColors(unsigned int carId, unsigned short **outRgb, signed char **outCodes);
-void CarColor_GetNameW(unsigned short *out, unsigned int carId, int colorCode);
-int CarColor_FindIndex(unsigned int carId, unsigned int color);
-void Clut_Blend(unsigned short *dst, unsigned short *src, unsigned int rgb, int t);
-void Clut_UploadToSlot(void *clut, int slot, int row);
-void Tim_LoadToSlot(void *tim, int slot, int withClut);
-void *Tim_LoadClut(void *tim, RECT *rect);
-void Tim_LoadImage(void *tim, RECT *rect);
-int Gpu_TransferImage(RECT *rect, void *data, int store);
-void Vol_ReadFile(int file, void *dst);
-void Vol_ReadFileAsync(int file, void *dst);
-CarAsset *CarAsset_Find(unsigned int carCode);
-void CarModel_Init(void *model, int slot);
-void CarModel_GetWheelDims(void *model, WheelDims *front, WheelDims *rear);
-void CarModel_BuildWheels(void *geom, WheelDims *front, WheelDims *rear);
-void CarModel_SetColor(void *model, int index, unsigned int rgb);
-int CarModel_GetRideHeight(void *model);
-void CarInst_InitWheels(CarModelInst *inst);
-int CarModel_Draw(void *cam, CarModelInst *inst, int mirror);
-int Wheel_LoadTim(unsigned int code, void *dst);
-void CarParams_BuildFromSetup(CarSetup *setup, void *params);
-void CarParams_GetPerformance(void *params, void *perf);
-unsigned short *UniStr_Get(int index);
-PrimSprite *Prim_AddSprite(void *ot, unsigned int rgb);
-PrimLineF4 *Prim_AddLineF4(void *ot, unsigned int rgb);
-RECT *Prim_AddTile(void *ot, unsigned int rgb);
-void *Prim_AddDrawMode(void *ot, unsigned int tpage);
-void Menu_AddGouraudQuad(void *ot, GouraudQuad *q);
-MATRIX *Matrix_Identity(MATRIX *m);
-MATRIX *Matrix_RotX(MATRIX *m, int angle);
-MATRIX *Matrix_RotY(MATRIX *m, int angle);
-MATRIX *Matrix_Translate(MATRIX *m, VECTOR *v);
-void Camera_SetFrustum(void *cam, int left, int right, int top, int bottom, int h, int unused);
-void Camera_Update(void *cam, MATRIX *view, void *ot, int margin);
-void GroundDisc_Init(void *disc, int radius);
-void GroundDisc_Draw(void *disc, void *ot, void *camera, int blend, unsigned int rgb);
-int sprintf(char *buf, const char *fmt, ...);
-int strlen(const char *s);
-void CarPreview_Load(CarPreview *preview, unsigned int carId, int colorIdx, int garageSlot, int hasWheel,
-                     unsigned int wheel, int dirt);
-void CarPreview_SpecFromDefault(CarSpecSheet *spec, int carId);
-void CarPreview_SpecFromCar(CarSpecSheet *spec, int carId, CarSetup *setup, void *carParams, unsigned short *perf);
 }
 
 inline void Preview_SetVector(VECTOR *v, int x, int y, int z)
@@ -85,7 +39,7 @@ int CarPreview_GetColorCode(CarPreview *preview)
         unsigned short *rgb;
         signed char *codes;
 
-        CarInfoA_GetColors(preview->carId, &rgb, &codes);
+        CarInfoA_GetColors(preview->carId, &rgb, (char **)&codes);
         code = codes[preview->colorIdx];
     }
     return code;
@@ -178,7 +132,7 @@ void CarPreview_DrawColorChips(CarPreview *car, void *ot, int right, int y)
         int top = y - 1;
         int bottom = y + 8;
 
-        count = CarInfoA_GetColors(car->carId, &rgb, &codes);
+        count = CarInfoA_GetColors(car->carId, &rgb, (char **)&codes);
         while (1) {
             GouraudQuad q;
             unsigned int c;
@@ -256,9 +210,9 @@ void CarPreview_DrawModel(CarPreview *car, DrawLayer *layer, CarCamera *cam)
             ((short *)cam->pad00)[1] = s1;
             ((short *)cam->pad00)[2] = s2;
             ((short *)cam->pad00)[3] = s3;
-            Camera_SetFrustum(cam, l, r, t, b, cam->fieldCC, cam->fieldCE);
+            Camera_SetFrustum((Camera *)cam, l, r, t, b, cam->fieldCC, cam->fieldCE);
         }
-        Camera_Update(cam, &view, layer->ot, 0x10);
+        Camera_Update((Camera *)cam, &view, layer->ot, 0x10);
         inst.lod = 1;
         inst.detail = 0;
         inst.unk02 = 0;
@@ -281,14 +235,14 @@ void CarPreview_DrawModel(CarPreview *car, DrawLayer *layer, CarCamera *cam)
         Matrix_Translate(&inst.world, &v);
         CarInst_InitWheels(&inst);
         Matrix_Identity(&inst.shadow);
-        CarModel_Draw(cam, &inst, 0);
+        CarModel_Draw((Camera *)cam, &inst, 0);
         if (cam->fieldD0) {
             Matrix_Identity(&view);
             Matrix_RotX(&view, -cam->distance);
             Preview_SetVector(&v, cam->field9C, cam->fieldA0, cam->fieldA4);
             Matrix_Translate(&view, &v);
-            Camera_Update(cam, &view, layer->ot, 0x10);
-            GroundDisc_Draw(car->model2c, (char *)layer->ot + 0xa0, cam, cam->fieldD1 != 0, cam->ambient);
+            Camera_Update((Camera *)cam, &view, layer->ot, 0x10);
+            GroundDisc_Draw((GroundDisc *)car->model2c, (uint *)((char *)layer->ot + 0xa0), (uchar *)cam, cam->fieldD1 != 0, cam->ambient);
         }
     }
 }
@@ -307,7 +261,7 @@ void CarPreview_Init(CarPreview *preview, CarPreviewConfig *config)
     preview->loaded = 0;
     preview->colorIdx = 0;
     preview->colorDirty = 0;
-    GroundDisc_Init(preview->model2c, 0x60000);
+    GroundDisc_Init((GroundDisc *)preview->model2c, 0x60000);
 }
 
 void FUN_OVL4__8001ab64(int param_1)
@@ -392,12 +346,12 @@ void CarPreview_Load(CarPreview *preview, unsigned int carId, int colorIdx, int 
     Vol_ReadFileAsync(preview->firstFile + 1, tex);
     CarModel_Init(model, slot);
     CarModel_GetWheelDims(model, &front, &rear);
-    CarModel_BuildWheels((char *)model + 0x40, &front, &rear);
+    CarModel_BuildWheels((WheelGeom *)((char *)model + 0x40), &front, &rear);
     r.x = (slot & 0xf) << 6;
     r.y = (page >> 20) & 0x100;
     r.w = 0x40;
     r.h = 0xe0;
-    Gpu_TransferImage(&r, (char *)tex + 0x43a0, 0);
+    Gpu_TransferImage(&r, (unsigned int *)((char *)tex + 0x43a0), 0);
     preview->loaded = 1;
     CarPreview_SetColor(preview, preview->colorIdx);
     if (hasWheel && (wheel & ~0x1f00)) {
@@ -410,7 +364,7 @@ void CarPreview_Load(CarPreview *preview, unsigned int carId, int colorIdx, int 
 
         Car_GetDefaultSetup(carId, &setup);
         CarParams_BuildFromSetup(&setup, preview->carParams);
-        CarParams_GetPerformance(preview->carParams, preview->perf);
+        CarParams_GetPerformance((CarParams *)preview->carParams, (EnginePerf *)preview->perf);
         CarPreview_SpecFromDefault(&preview->spec, carId);
     } else {
         GameState *state = &g_GameState;
@@ -419,7 +373,7 @@ void CarPreview_Load(CarPreview *preview, unsigned int carId, int colorIdx, int 
         CarSetup *setup = &car->setup;
 
         CarParams_BuildFromSetup(setup, preview->carParams);
-        CarParams_GetPerformance(preview->carParams, preview->perf);
+        CarParams_GetPerformance((CarParams *)preview->carParams, (EnginePerf *)preview->perf);
         CarPreview_SpecFromCar(&preview->spec, car->carId, setup, preview->carParams, preview->perf);
         if (garageSlot == garage->currentCar) {
             preview->isCurrentCar = 1;
@@ -446,7 +400,7 @@ void CarPreview_SetWheel(CarPreview *preview, unsigned int wheel, int wheelColor
     CarModel_GetWheelDims(model, &front, &rear);
     rear.offset = offset;
     front.offset = offset;
-    CarModel_BuildWheels((char *)model + 0x40, &front, &rear);
+    CarModel_BuildWheels((WheelGeom *)((char *)model + 0x40), &front, &rear);
 }
 
 // Fills the spec sheet from the car's default setup (GameData tables 3, 5, 6, 0xd and
@@ -511,7 +465,7 @@ void CarPreview_SpecFromCar(CarSpecSheet *spec, int carId, CarSetup *setup, void
     spec->torque = perf[2];
     spec->torqueRpmStr = -1;
     sprintf(text, g_CarSpecStrings.rpm, perf[3]);
-    for (i = 0; i < strlen(text); i++) {
+    for (i = 0; i < (int)strlen(text); i++) {
         spec->rpmText[i] = (signed char)text[i];
     }
     spec->rpmText[i] = 0;

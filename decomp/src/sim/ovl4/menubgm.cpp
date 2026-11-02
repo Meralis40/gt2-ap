@@ -1,15 +1,12 @@
 // OVL4 80018f6c-8001907c (menubgm): Menu background music requests.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "ovl4.h"
+#include "common.h"
 
 extern "C" {
-void MenuBgm_LoadBank(void);
 extern int g_MenuBgm_Track;
 extern short g_MenuBgm_Delay;
 extern short g_MenuBgm_Playing;
-void MenuBgm_Stop(void);
-void MenuBgm_Play(int track);
 
 /* No track, no delay; loads the music sample bank. */
 

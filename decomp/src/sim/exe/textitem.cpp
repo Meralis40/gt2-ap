@@ -3,7 +3,7 @@
 // into a fading bar.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 // TextItem.flags
 #define TEXTITEM_ABR 0x3        // blend mode of the letters
@@ -16,15 +16,6 @@
 #define TEXTITEM_RIGHT 0x100
 
 extern "C" {
-void TextItem_Show(TextItem *item, int endFrame);
-int TextItem_MeasureWidth(TextItem *item, TextCtx *ctx);
-size_t strlen(char *__s);
-void Text_SetFont(TextCtx *ctx, Font *font);
-void Text_DrawGlyph(TextCtx *ctx, int code, int x, int y);
-int Text_GetAdvance(TextCtx *ctx, int left, int right);
-void Menu_AddGouraudQuad(uint *ot, GouraudQuad *quad);
-void *Prim_AddDrawMode(uint *ot, uint tpage);
-RECT *Prim_AddTile(uint *ot, uint rgb);
 
 // Copies the style and shows nothing yet.
 void TextItem_Init(TextItem *item, TextStyle *style, char *text)

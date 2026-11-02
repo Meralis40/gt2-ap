@@ -1,12 +1,7 @@
 // Resident code 800686a0-80068734 (soundvsync): the sound driver's vsync callback.
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-void Seq_Tick(...);
-void Sound_Tick(...);
-void Sound_VSyncTick(void);
-void VSyncList_Add(VSyncCallback **list, VSyncCallback *node);
-void VSyncList_Remove(VSyncCallback **list, VSyncCallback *node);
 extern GfxIrqState g_GfxIrq;
 extern VSyncCallback g_SoundVSync;
 

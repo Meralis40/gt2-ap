@@ -2,18 +2,9 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
-#include "pad.h"
+#include "common.h"
 
 extern "C" {
-void PadButtons_ClearEvents(PadButtonState *state);
-void PadButtons_Update(PadButtonState *state, PadButton buttons);
-PadButton Pad_RemapButtons(PadButton buttons, unsigned char *map, int count);
-int Sys_CriticalSection(int leave);
-void *memset(void *__s, int __c, size_t __n);
-int PadGetState(int port);
-void PadSetAct(int port, unsigned char *data, int len);
-int PadSetActAlign(int port, unsigned char *data);
 extern unsigned char D_800A6F28;
 extern int D_800A6F20[2];
 extern short g_InitRange[2][2];

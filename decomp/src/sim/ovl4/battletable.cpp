@@ -3,16 +3,10 @@
 // picks the opponent pool around the player's car.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "ovl4.h"
+#include "common.h"
 
 extern "C" {
 extern void *g_GtModeRaceData;
-
-void *GameData_GetCarEntry(int index);
-void *GameData_GetEntry(int table, int index);
-void CarSetup_InitFromCarEntry(void *entry, CarSetup *setup);
-void CarParams_BuildFromSetup(CarSetup *setup, CarParams *params);
-void CarParams_GetPerformance(CarParams *params, EnginePerf *perf);
 
 // weight * 300000 / power^2 (0x88b9 when power is 0). Lower is faster.
 int Battle_WeightPowerScore(int power, int weight)

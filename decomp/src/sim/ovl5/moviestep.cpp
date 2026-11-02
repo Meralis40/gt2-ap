@@ -2,7 +2,6 @@
 // frame n while the CPU decodes frame n + 1), and the CD sector and MDEC
 // callbacks.
 #include "common.h"
-#include "movie.h"
 
 extern "C" {
 // 0: a frame is ready to decode, 1: waiting, 2: the stream ended, 3: the CD stopped.
@@ -116,7 +115,7 @@ void Movie_OnMdecSlice(MoviePlayer *mp)
     unsigned int left = (unsigned short)mp->mdec.slicesLeft;
     int rgb24 = mp->mdec.rgb24;
 
-    Gpu_TransferImage(r, mp->mdec.slice[left & 1], 0);
+    Gpu_TransferImage(r, (unsigned int *)mp->mdec.slice[left & 1], 0);
     left--;
     mp->mdec.rect.x += r->w;
     mp->mdec.slicesLeft = left;

@@ -2,18 +2,9 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "mccard.h"
+#include "common.h"
 
 extern "C" {
-void Text_SetFont(TextCtx *ctx, Font *font);
-void Text_SetTexturePage(TextCtx *ctx, int tpageId);
-void FUN_8007db30(TextCtx *ctx, char *fmt, void *args);
-int FUN_8007db9c(TextCtx *ctx, char *s);
-void *memset(void *__s, int __c, size_t __n);
-char *strcpy(char *dst, const char *src);
-int strcmp(const char *a, const char *b);
-void McDirEntry_Clear(McDirEntry *e);
-unsigned char McFrame_Checksum(unsigned int *frame);
 extern TextCtx D_801F0D00;
 extern unsigned int D_801F0D14;
 

@@ -7,13 +7,6 @@ extern int g_GameDataMode;
 extern char *g_GtModeRaceData;
 extern unsigned char D_80091620[];
 
-int IdList_Count(IdList *list);
-void *GameDataTable_At(GameDataTable *table, int index);
-bool CarInfoA_IsAvailable(unsigned int carId);
-int CarInfoA_GetColors(unsigned int carId, unsigned short **outRgb, unsigned char **outCodes);
-unsigned short CarInfoA_GetColorRgb(unsigned int carId, signed char colorCode);
-unsigned int Rand_Next(unsigned int *seed);
-void Rgb555_ToHsv(unsigned int rgb, short *hsv);
 }
 
 inline unsigned int CarIdAt(GameDataTable *table, int index)
@@ -26,7 +19,7 @@ inline unsigned int CarIdAt(GameDataTable *table, int index)
 // times. The colour is the entry's colour index if set, otherwise a random
 // colour of the car, re-rolled once if washed out (saturation below 6).
 // Returns the entry's colour index, or 0 if the list is empty.
-extern "C" unsigned short RaceCarPick_Random(RaceCarPick *out, void *data, IdList *idList, unsigned int *seed,
+extern "C" unsigned int RaceCarPick_Random(RaceCarPick *out, void *data, IdList *idList, unsigned int *seed,
                                              RaceCarPick *picked, int pickedCount)
 {
     GameDataTable *table;
@@ -81,12 +74,12 @@ pick:
     if (colorIdx != 0) {
         int c = D_80091620[colorIdx];
         code = c;
-        rgb = CarInfoA_GetColorRgb(carId, c);
+        rgb = CarInfoA_GetColorRgb(carId, (signed char)c);
     } else {
         unsigned short *rgbs;
         unsigned char *codes;
         short hsv[3];
-        unsigned int n = CarInfoA_GetColors(carId, &rgbs, &codes);
+        unsigned int n = CarInfoA_GetColors(carId, &rgbs, (char **)&codes);
         for (i = 0; i < 2; i++) {
             k = Rand_Next(seed) % n;
             Rgb555_ToHsv(rgbs[k], hsv);

@@ -1,6 +1,5 @@
 // MDEC output setup and frame size.
 #include "common.h"
-#include "movie.h"
 
 extern "C" {
 void MdecOut_Init(MdecOut *m, int rgb24)

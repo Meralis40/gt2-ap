@@ -2,18 +2,9 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "mccard.h"
+#include "common.h"
 
 extern "C" {
-unsigned char McFrame_Checksum(unsigned int *frame);
-void *memset(void *__s, int __c, size_t __n);
-int Sys_CriticalSection(int leave);
-void McPort_ResetDir(McPort *port);
-void McPort_RebuildBlockUse(McPort *port);
-void McFrame_FromDirEntry(McDirEntry *entry, unsigned char *frame);
-void McFrame_InitHeader(void *frame);
-void McFrame_InitBadSector(int *frame, int sector);
-int McOp_Format(int event, int *sector, void **buf);
 
 // Starts formatting the card. Returns 0, or why not: 5 the card isn't ready (or
 // unformatted, state 3), 1 busy.
@@ -83,7 +74,7 @@ int McOp_Format(int event, int *sector, void **buf)
         j = i - 1;
         *sector = i;
         if (j < 15) {
-            McFrame_FromDirEntry(&port->dir[j], g_McFrame);
+            McFrame_FromDirEntry(&port->dir[j], (McDirFrame *)g_McFrame);
             return 7;
         }
         j = i - 16;

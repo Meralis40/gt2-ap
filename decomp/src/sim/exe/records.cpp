@@ -2,18 +2,9 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-unsigned int Course_FindByHash(unsigned int hash);
-void *Course_Get(int index);
-void RaceSetup_SetCourse(RaceSetup *setup, unsigned int hash);
-unsigned int Str_Hash(char *s);
-void *memset(void *__s, int __c, size_t __n);
-char *strcpy(char *__dest, char *__src);
-int PlayerStats_GetEventResult(PlayerStats *stats, int eventIdx);
-void TimeRecord_Init(TimeRecord *rec);
-int LicenseTest_FindRank(LicenseTest *test, TimeRecord *time);
 extern GameStateRace g_GameState;
 
 // The best finish of an event: a nibble of eventResults, the low one for even events.
@@ -363,7 +354,7 @@ void RaceSetup_SetCourse(RaceSetup *setup, unsigned int hash)
 
     setup->courseHash = hash;
     index = Course_FindByHash(hash);
-    puVar1 = Course_Get(index);
+    puVar1 = (unsigned int *)Course_Get(index);
     memset(setup->courseName, 0, 0x20);
     strcpy(setup->courseName, (char *)*puVar1);
 }

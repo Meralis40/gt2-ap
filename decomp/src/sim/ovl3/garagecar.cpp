@@ -1,6 +1,6 @@
 // Loads a garage car into g_RaceCarWorkAlt for a time trial (docs/arcade.md).
 #include "common.h"
-#include "carwork.h"
+#include "gamestate.h"
 
 extern "C" void CarWork_LoadGarageCarAlt(int garage, int slot)
 {

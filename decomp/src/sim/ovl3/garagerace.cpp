@@ -9,10 +9,6 @@ extern char g_Ovl3_GtData[];
 extern void *g_EventDataBuf;
 extern char D_80011F64[];  // Race_Entry (OVL0)
 
-void *GameData_LoadGtMode(void *buffer, int size);
-void ArcadeSel_SetupRaceCars(ArcadeRaceSel *sel);
-void CarWork_LoadGarageCarAlt(int garage, int slot);
-void Overlay_StartAt(int index, void *entry, int arg0);
 }
 
 extern "C" void ArcadeGarageRace_Entry(void)

@@ -2,15 +2,9 @@
 // bar and a disc drawn flat on the ground.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-uint Rgb_Lerp(uchar *from, uchar *to, int t, int range);
-RECT *Prim_AddTile(uint *ot, uint rgb);
-PrimG4 *Prim_AddPolyG4(uint *ot);
-PrimG3 *Prim_AddPolyG3(uint *ot);
-void *Prim_AddDrawMode(uint *ot, uint mode);
-void Points_Project(void *camera, ScreenPoint *dst, void *src, int count);
 extern short g_SinTable[];
 
 void GrowBar_Update(unsigned char *bar)
@@ -279,7 +273,7 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/widgets", CardProgress_Draw);
 #endif
 
 // Puts the rim points on a circle of radius 0x40000 and the centre at 0.
-void GroundDisc_Init(GroundDisc *disc)
+void GroundDisc_Init(GroundDisc *disc, int unused)
 {
     int radius = 0x400;
     int x;

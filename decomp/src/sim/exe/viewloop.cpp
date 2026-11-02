@@ -4,8 +4,7 @@
 // and typeinfo (.bss) are emitted here.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
-#include "pad.h"
+#include "common.h"
 
 // L2 + R2 + L1 + R1 + START + SELECT held on port 2: Step skips Update and
 // returns 1.
@@ -15,26 +14,6 @@ extern "C" {
 extern unsigned char g_CurrentVideoMode;
 extern unsigned short g_VideoModeWidths[5];
 
-void VSyncList_Add(VSyncCallback **list, VSyncCallback *node);
-void VSyncList_Remove(VSyncCallback **list, VSyncCallback *node);
-int Irq_WaitVSyncs(int count);
-int Sys_CriticalSection(int leave);
-void Timer_StartFrame();
-int Timer_SinceFrameStart();
-void Gpu_DrawSync();
-void Gpu_WaitField();
-void Gpu_ResetCommandBuffer();
-void Gpu_SetDisplayMode(unsigned int mode);
-void Gpu_SetHRange(int x0, int x1);
-void Gpu_SetVRange(int y0, int y1);
-void EnableDisplay(unsigned int arg);
-void Dma_WaitOtc();
-void ViewDrawContext_Begin(ViewDrawContext *ctx, RECT *area);
-void ViewDrawContext_End(ViewDrawContext *ctx);
-void ViewDrawContext_Submit(ViewDrawContext *ctx);
-void ViewDrawContext_SwapOT(ViewDrawContext *ctx);
-void ViewDrawContext_ClearOT(ViewDrawContext *ctx);
-void PacketBuffer_Swap(PacketBuffer *buf);
 }
 
 void psxViewLoop::VSyncHandler()

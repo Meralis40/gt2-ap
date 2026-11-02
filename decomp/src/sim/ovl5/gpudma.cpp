@@ -1,6 +1,5 @@
 // GPU DMA hook (end of the last column upload) and the CD stream start and stop.
 #include "common.h"
-#include "movie.h"
 
 extern "C" {
 void Movie_GpuDmaIrq()

@@ -4,23 +4,11 @@
 // GTE assembly; the functions that don't match yet are the original assembly too.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 #include "gte.h"
 
 extern "C" {
-void CarModel_Init(CarModelHeader *model, unsigned int slot);
-unsigned char FUN_800608e8(...);
-void Vol_ReadFileAsync(int file, void *dst);
 extern unsigned char D_801C946C;
-int Wheel_GetFileId(unsigned int code);
-void Vol_ReadFile(int file, void *dst);
-int Gpu_TransferImage(RECT *rect, void *data, int store);
-void Gpu_DrawSync(void);
-void Tim_LoadImage(void *tim, RECT *rect);
-void Tim_LoadClut(void *tim, RECT *rect);
-void Matrix_Comp(MATRIX *m, MATRIX *n);
-void Gte_LoadTransform(void *scratch, int a, int b, int c);
-void ShadowMesh_Draw(void *mesh);
 
 extern int g_WheelMeshLod0[];
 extern int g_WheelMeshLod1[];
@@ -33,7 +21,6 @@ static inline LodEntry *LodAt(LodTable *table, int i)
 
 extern unsigned char g_ModelPrimSizes[];
 extern unsigned char g_ModelPrimUvOffset[];
-void LodTable_SquareDistances(LodTable *table);
 
 // Links a primitive into an OT entry (the handwritten code's lwl/swl pairs, which keep
 // both top bytes).
@@ -58,14 +45,6 @@ static inline int Ot_Index(int z, int shift)
 
 extern char *g_PacketPtr;
 extern char *g_PacketEnd;
-int Lod_DistanceSq(LodTable *table, long *pos, int depthScale);
-int Lod_Select(LodTable *table, unsigned int distSq);
-void Matrix_Mul(MATRIX *out, short *rot, MATRIX *m);
-unsigned int Clip_TestBox(void *scratch, short *min, short *max);
-void CarBody_DrawUnclipped(CarMesh *mesh, MATRIX *light);
-void CarBody_DrawClipped(CarMesh *mesh, MATRIX *light);
-void CarModel_DrawWheel(Camera *cam, MATRIX *world, WheelInst *wheel, CarModelHeader *model, int lod, int index);
-void CarModel_DrawShadow(Camera *cam, CarModelInst *inst, CarModelHeader *model);
 
 void CarModel_InitStub(CarModelHeader *model, int arg)
 {
@@ -2020,8 +1999,6 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", WheelMesh_Draw);
 // of LOD lod rotated by the wheel's angles (mirrored on the right) and, over it, the hub
 // as two textured quads around its centre.
 #ifdef NON_MATCHING
-void Matrix_SetEuler(MATRIX *m, int x, int y, int z);
-void WheelMesh_Draw(CarScratch *sp, int *mesh);
 
 // Handwritten: the original is close to compiler output, with the hub's packets written
 // in the GTE's latency slots.
@@ -2068,7 +2045,7 @@ void CarModel_DrawWheel(Camera *cam, MATRIX *world, WheelInst *wheel, CarModelHe
         sp->view.m[2][2] = -sp->view.m[2][2];
         sp->view.m[1][2] = -sp->view.m[1][2];
     }
-    Gte_LoadTransform(sp, 0x1000, 0x10, 0xc);
+    Gte_LoadTransform((ViewScratch *)sp, 0x1000, 0x10, 0xc);
     mirror = sp->mirror;
     if (right) {
         sp->mirror = mirror ? 0 : -1;
@@ -2187,7 +2164,7 @@ int CarModel_Draw(Camera *cam, CarModelInst *inst, int mirror)
         sp->lit = 0;
     }
     if (lod == 0) {
-        distSq = Lod_DistanceSq(table, sp->view.t, cam->depthScale);
+        distSq = Lod_DistanceSq(table, (int *)sp->view.t, cam->depthScale);
         lod = Lod_Select(table, distSq);
         if (lod == -1) {
             return -1;
@@ -2195,12 +2172,12 @@ int CarModel_Draw(Camera *cam, CarModelInst *inst, int mirror)
     } else {
         lod--;
     }
-    Matrix_Mul(&light, cam->invRot, world);
+    Matrix_Mul(&light, (MATRIX *)cam->invRot, world);
     mesh = LodAt(table, lod)->mesh;
-    Gte_LoadTransform(sp, mesh->unk4e, mesh->unk4c, 0xc);
+    Gte_LoadTransform((ViewScratch *)sp, mesh->unk4e, mesh->unk4c, 0xc);
     sp->verts = mesh->verts;
     sp->normals = mesh->normals;
-    clip = Clip_TestBox(sp, mesh->bboxMin, mesh->bboxMax);
+    clip = Clip_TestBox((ViewScratch *)sp, mesh->bboxMin, mesh->bboxMax);
     light.t[1] = (long)mesh;
     if ((clip & 0x1f) == 0) {
         sp->packetPtr = g_PacketPtr;
@@ -2343,7 +2320,6 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/carmodel", Clut_Blend);
 // stack table with their clip codes, then draws each face that isn't wholly outside one
 // plane, through Poly_Clip when it crosses one.
 #ifdef NON_MATCHING
-void Poly_Clip(void *scratch, int count);
 
 static inline void ShadowClip_SetVert(ShadowClipVert *c, ShadowVert *v, unsigned int rgb)
 {
@@ -2493,7 +2469,7 @@ void ShadowMesh_Draw(void *meshData)
             clip->src[0] = a;
             clip->src[1] = b;
             clip->src[2] = c;
-            Poly_Clip(sp, 3);
+            Poly_Clip((ViewScratch *)sp, 3);
             pkt = sp->packetPtr;
         } else {
             PolyG3 *g = (PolyG3 *)pkt;
@@ -2551,7 +2527,7 @@ void ShadowMesh_Draw(void *meshData)
             clip->src[1] = b;
             clip->src[2] = c;
             clip->src[3] = d;
-            Poly_Clip(sp, 4);
+            Poly_Clip((ViewScratch *)sp, 4);
             pkt = sp->packetPtr;
         } else {
             // The GPU's quad order: the third point is d, the fourth c.
@@ -2584,7 +2560,7 @@ void CarModel_DrawShadow(Camera *cam, CarModelInst *inst, CarModelHeader *model)
 
     *(CameraView *)s = *(CameraView *)&cam->view;
     Matrix_Comp(s, &inst->shadow);
-    Gte_LoadTransform(s, ((unsigned short *)mesh)[0xd], ((unsigned short *)mesh)[0xc], 0xc);
+    Gte_LoadTransform((ViewScratch *)s, ((unsigned short *)mesh)[0xd], ((unsigned short *)mesh)[0xc], 0xc);
     ShadowMesh_Draw(mesh);
 }
 }

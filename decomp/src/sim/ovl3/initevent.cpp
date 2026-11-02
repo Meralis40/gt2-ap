@@ -7,22 +7,6 @@ extern void *g_EventDataBuf;
 extern void *g_GtModeRaceDataBuf;
 extern RaceEventParams g_RaceEventParams;
 
-char *strcpy(char *dst, const char *src);
-unsigned int Irq_WaitVSyncs(int count);
-char *GameData_GetString(void *data, unsigned short id);
-RaceEvent *GameData_FindEvent(void *data, char *code);
-void *GameData_GetCarEntry(unsigned short index);
-void *GameData_GetEntry(int table, int index);
-void CarSetup_InitFromCarEntry(void *carEntry, CarSetup *setup);
-void CarSetup_FromCarEntry(void *carEntry, CarSetup *setup);
-void CarParams_BuildFromSetup(CarSetup *setup, CarParams *params);
-void RaceSetup_SetEventCode(RaceSetup *setup, char *code);
-void RaceSetup_SetCourseByName(RaceSetup *setup, char *name);
-char *CarInfoA_GetName(unsigned int carId);
-int IdList_Count(IdList *list);
-unsigned int RaceCarPick_Random(RaceCarPick *out, void *data, IdList *idList, unsigned int *seed,
-                                RaceCarPick *picked, int pickedCount);
-void RaceCarPick_SetColor(RaceCarPick *pick, unsigned int carId, unsigned int colorIdx, unsigned int *seed);
 }
 
 // Sets up the race of event (or, with keep set, the event of the current
@@ -141,7 +125,7 @@ extern "C" RaceSetup *RaceSetup_InitEvent(int keep, int gtMode, RaceEvent *event
                 // A random car: its setup from the car table, with the
                 // car (and a colour of it) replaced for some entries.
                 Table5Entry *e;
-                CarSetup_InitFromCarEntry(GameData_GetCarEntry(pick->entryIndex), &car->setup);
+                CarSetup_InitFromCarEntry(GameData_GetCarEntry((unsigned short)pick->entryIndex), &car->setup);
                 e = (Table5Entry *)GameData_GetEntry(5, car->setup.idx_t05);
                 if (e->fixedCar) {
                     car->carId = e->carId;

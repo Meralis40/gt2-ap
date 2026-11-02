@@ -1,14 +1,11 @@
 // psxViewLoopDoubleBuffer, a psxViewLoop with two display buffers in VRAM. Its
 // vtable and type name (.rodata), __tf function and typeinfo (.bss) are emitted
 // here.
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
 extern RECT g_DrawArea;
 
-void Gpu_DrawSync();
-void Gpu_SetDisplayStart(unsigned int x, int y);
-void ViewDrawContext_Submit(ViewDrawContext *ctx);
 }
 
 psxViewLoopDoubleBuffer::psxViewLoopDoubleBuffer()

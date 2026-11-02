@@ -1,21 +1,9 @@
 // Resident code 800680a0-800683fc (spufile): loading a sound file into RAM and SPU RAM.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-void bcopy(const void *src, void *dst, size_t n);
-int CdGetSector(void *dst, int words);
-void CdAudio_SetupRead(void *dst, unsigned int start, unsigned int size, int reportErrors);
-int CdAudio_WaitRead(void (*onRetry)(void));
-void Engn_Relocate(void *ram, int spu);
-void Inst_Relocate(void *ram, int spu);
-void Spu_DmaTransfer(void *src, int spuAddr, unsigned int size, int dir);
-void Spu_DmaWait(void);
-unsigned int Vol_GetSector(int file);
-int Vol_GetSize(int file);
-int SpuFile_OnSector(unsigned int sector, void *header);
-void SpuFile_OnRetry(void);
 extern CdAudio g_CdAudio;
 extern SpuFileLoad g_SpuFileLoad;
 extern unsigned short g_VolBootIds[248];
@@ -58,9 +46,9 @@ int SpuFile_ProcessSector(SpuFileLoad *l)
             return 0;
         }
         if (!l->isEngine) {
-            Inst_Relocate(l->ramBase, l->spuCur);
+            Inst_Relocate((SeqBank *)l->ramBase, l->spuCur);
         } else {
-            Engn_Relocate(l->ramBase, l->spuCur);
+            Engn_Relocate((EngnFile *)l->ramBase, l->spuCur);
         }
         buf += n;
         left -= n;

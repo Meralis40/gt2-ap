@@ -1,29 +1,10 @@
 // Resident code 80078370-80079140 (sfx): sound effects on the SPU voices (one-shot
 // samples, loops and the cars' engine sounds), and loading sound banks into SPU RAM.
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
 #define SPU_VOICES ((SpuVoiceRegs *)0x1f801c00)
 
-void SfxVoices_Update(void);
-void SfxVoice_Start(signed char *handle, SfxParams *params);
-void SfxVoice_SetPriority(signed char *handle, uchar priority);
-void SfxVoice_SetPitch(signed char *handle, ushort pitch);
-void SfxVoice_SetVolume(signed char *handle, short *vol);
-void SfxVoice_KeyOff(signed char *handle);
-void SfxVoice_Release(signed char *handle);
-int Spu_NoteToPitch(int note, int base);
-void Spu_PanVolume(short *out, int vol, int pan);
-int SpuFile_LoadNegId(int id, SeqBank *ram, int spu, int isEngine);
-int SpuFile_Load(int id, SeqBank *ram, int spu, int isEngine);
-void Sfx_StopAll(void);
-SeqRegion *SoundBank_GetSample(SpuBank *bank, int index);
-void SoundSample_Play(SeqRegion *sample, int pan, int volume, int voice);
-void SfxLoop_Stop(SfxLoop *loop);
-void SpuBank_Init(SpuBank *bank, SeqBank *ram, int size);
-int SpuAlloc_SetPtr(int spuAddr);
-void EngineSound_CalcPitch(EngineSound *es, int i, int rpm, int smooth);
-void EngineSound_CalcVolume(EngineSound *es, int i, int rpm, int smooth);
 extern unsigned int g_SoundDriverReady;
 extern unsigned int g_SpuAllocPtr;
 extern void *g_SpuBankPoolPtr;
@@ -141,7 +122,7 @@ void SfxLoop_Update(SfxLoop *loop, int left, int right, int priority, int pitch)
     p = (ushort)Spu_NoteToPitch(loop->sample->low << 8, loop->sample->root) * pitch >> 12;
     if (loop->voice >= 0) {
         if (priority >= 0) {
-            SfxVoice_SetPriority(&loop->voice, priority);
+            SfxVoice_SetPriority(&loop->voice, (uchar)priority);
         }
         SfxVoice_SetPitch(&loop->voice, p);
         SfxVoice_SetVolume(&loop->voice, params.vol);
@@ -190,7 +171,7 @@ int SpuBank_Load(SpuBank *bank, int id, int isEngine, int negId)
     if (negId != 0) {
         load = SpuFile_LoadNegId;
     } else {
-        load = SpuFile_Load;
+        load = (int (*)(int, SeqBank *, int, int))SpuFile_Load;
     }
     n = load(id, bank->ram, bank->spu, isEngine);
     g_SpuAllocPtr += (bank->ram->spuSize + 0x1f) & ~0xf;
@@ -448,7 +429,7 @@ void EngineSound_SetPriority(EngineSound *es, uchar priority)
     es->priority = priority;
     for (i = 0; i < 2; i++) {
         if (es->voices[i].voice >= 0) {
-            SfxVoice_SetPriority(&es->voices[i].voice, priority);
+            SfxVoice_SetPriority(&es->voices[i].voice, (uchar)priority);
         }
     }
 }

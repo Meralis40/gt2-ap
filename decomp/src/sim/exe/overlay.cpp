@@ -2,21 +2,9 @@
 // runs their entries from a setjmp point.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-void Overlay_StartAt(int index, void *entry, ...);
-void Overlay_Load(int index);
-void Overlay_ClearBss(void);
-void *memset(void *dst, int c, unsigned int n);
-int setjmp(jmpbuf *env);
-int longjmp(jmpbuf *env, int value);
-void Spu_WaitVoicesSilent(void);
-void Sfx_StopAllIfReady(void);
-void Cd_ReadSync(void *dst, int lba, int size);
-void Gzip_Inflate(void *src, void *dst);
-void FlushCache(void);
-void Overlay_OpenFile(void); // the first function of the overlays, where they are loaded
 extern void *g_OverlayDefaultEntries;
 extern char g_MenuContext[];    // start of the overlays' .bss, and the CD read buffer
 extern char g_MainInitialized[]; // end of the overlays' .bss

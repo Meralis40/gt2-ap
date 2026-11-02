@@ -2,26 +2,9 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-void *Prim_AddDrawMode(uint *ot, uint tpage);
-RECT *Prim_AddTile(uint *ot, uint rgb);
-uint Rgb_Lerp(uchar *from, uchar *to, int t, int range);
-void Menu_AddGouraudQuad(uint *ot, GouraudQuad *quad);
-void Menu_AddGouraudQuadOpaque(uint *ot, GouraudQuad *quad);
-void Text_SetFont(TextCtx *ctx, Font *font);
-void Text_DrawString(TextCtx *ctx, char *s, int x, int y, int a4);
-void Text_DrawCentered(TextCtx *ctx, char *s, int x, int y, int a4);
-int Text_MeasureStringMonoDigits(TextCtx *ctx, char *s, int spacing, int a3);
-int Text_DrawStringMonoDigits(TextCtx *ctx, char *str, int x, int y, int spacing, int digitShift, int digitExtra);
-int Text_TruncateToWidth(TextCtx *ctx, char *str, int spacing, int maxWidth);
-char *strcat(char *dst, char *src);
-char *strcpy(char *dst, const char *src);
-int sprintf(char *buf, char *fmt, ...);
-unsigned int Course_FindByHash(unsigned int hash);
-CourseEntry *Course_Get(int index);
-void ReplayEntry_GetInfo(ReplayDirEntry *entry, char *buf);
 extern unsigned char D_8008FA74;
 extern uint D_80091E64; // ReplayEntry_Draw's colours
 extern uint D_80091E68;

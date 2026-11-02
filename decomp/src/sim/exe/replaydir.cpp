@@ -2,19 +2,9 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-unsigned int Crc32(unsigned char *data, int size);
-void *McCard_FindFile(int port, char *name);
-int McCard_StartCreate(int port, char *name, int size);
-int McCard_StartTransfer(unsigned char cmd, int port, char *name, void *buf, int offset, int size, short *sectorMap);
-void McHeader_Init(McFileHeader *h);
-void McHeader_SetTitle(McFileHeader *h, char *title);
-void *memcpy(void *__dest, void *__src, size_t __n);
-char *strcpy(char *__dest, char *__src);
-size_t strlen(char *__s);
-char *strncpy(char *__dest, char *__src, size_t __n);
 extern char D_8008FA70[];
 extern char D_80091AB8[];
 extern char D_80091ACC[];
@@ -360,7 +350,7 @@ int ReplayFile_StartWriteDir(ReplayDir *dir, int port)
 {
     int iVar1;
 
-    iVar1 = McCard_StartTransfer('\a',port,D_80091AB8,dir,0,0x1580,0);
+    iVar1 = McCard_StartTransfer('\a',port,D_80091AB8,(unsigned char *)dir,0,0x1580,0);
     return iVar1;
 }
 
@@ -378,7 +368,7 @@ int ReplayFile_StartReadDir(ReplayDir *dir, int port)
 {
     int iVar1;
 
-    iVar1 = McCard_StartTransfer('\x06',port,D_80091AB8,dir,0,0x1580,0);
+    iVar1 = McCard_StartTransfer('\x06',port,D_80091AB8,(unsigned char *)dir,0,0x1580,0);
     return iVar1;
 }
 

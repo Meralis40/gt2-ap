@@ -2,46 +2,11 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-void CarSpec_Clear(CarSpec *spec);
 extern CarParamsPartDesc g_CarParamsPartDescs[];
-void CarParams_ApplySuspension(CarSpec *spec, void *params);
-void CarParams_ApplyDesc8e08(CarSpec *spec, void *params);
-void CarParams_CopyT05(CarSpec *spec, void *params);
-void CarParams_CopyT11(CarSpec *spec, void *params);
-void CarParams_ApplyBrakeBalance(CarSpec *spec, void *params);
-void CarParams_Nop(CarSpec *spec, void *params);
-void CarParams_ApplyDesc8e50(CarSpec *spec, void *params);
-void CarParams_ApplySettingB5(CarSpec *spec, void *params);
-void CarParams_ApplySettingB4(CarSpec *spec, void *params);
-void bcopy(const void *src, void *dst, int n);
-void Desc_ScaleFields(int divisor, int elemSize, int count, void *src, void *dst);
-void Desc_AddFieldRepeated(int elemSize, int count, void *src, void *dst);
-unsigned int CarCode_Encode(const char *code);
-void *Course_Get(int index);
-int Fixed_Div(int a, int b, int shift);
 extern unsigned char D_800AF230;
-void CarSetup_ApplyDescriptors(unsigned int *desc, void *entry, CarSetup *setup);
-void CarSpec_Resolve(CarSpec *spec, CarSetup *setup);
-int CarParams_Build(CarSpec *spec, void *params);
-void CarSetup_Clear(CarSetup *setup);
-void CarSetup_FromCarEntry(void *carEntry, CarSetup *setup);
-void Desc_AddField(int elemSize, void *src, void *dst);
-int GameData_FindPart(int table, char stage, int stageOffset, unsigned int carCode);
-void *GameData_GetEntry(int table, int index);
-void *GameData_GetEntryIn(void *data, int table, int index);
-int GameData_BinarySearch(void *data, int table, unsigned int carCode);
-void *GameDataTable_FindById(GameDataTable *table, unsigned int id);
-void *GameDataTable_GetEntry(GameDataTable *table, int index);
-void Car_SetupFromEntry(void *entry, CarSetup *out);
-int strcmp(const char *a, const char *b);
-int GameData_Relocate(void *data, unsigned int *entrySizes);
-int Setting_Interpolate(int min, int max, int steps, int value);
-short *UniStrDb_Get(void *db, int index);
-void VolId_ReadFileAsync(VolBootId id, void *dst);
-void *memset(void *__s, int __c, size_t __n);
 extern unsigned char D_80092888;
 extern unsigned char D_80092890;
 extern unsigned char D_80092898;
@@ -565,7 +530,7 @@ void CarSpec_Clear(CarSpec *spec)
     spec->manufacturerId = 0xff;
 }
 
-int UniStrDb_Load(void *buf)
+int UniStrDb_Load(void *buf, int size)
 {
     g_DataLanguage = (unsigned int)g_GameState.language;
     VolId_ReadFileAsync((unsigned int)g_LangCarParamFiles[g_DataLanguage].unistrdb, buf);
@@ -683,7 +648,7 @@ void *GameData_LoadGtModeRace(void *buffer)
     return buffer;
 }
 
-void *GameData_LoadGtMode(void *buffer)
+void *GameData_LoadGtMode(void *buffer, int size)
 {
     g_GameDataMode = 2;
     g_DataLanguage = (unsigned int)g_GameState.language;

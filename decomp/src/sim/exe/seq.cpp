@@ -2,30 +2,9 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
 #include "common.h"
 
 extern "C" {
-void FUN_8007a7cc(SeqFade *f, int from, int to, int ms);
-void SeqPlayer_ApplyVolume(SeqPlayer *p);
-void SeqPlayer_Link(SeqPlayer *p);
-void SeqPlayer_Unlink(SeqPlayer *p);
-void SeqPlayer_RunEvents(SeqPlayer *p);
-void SeqChannel_NoteOn(SeqPlayer *p, SeqTrack *t, int note, int velocity, int duration);
-void SeqChannel_UpdateAll(void);
-int SeqFade_Step(SeqFade *f);
-void SfxVoices_Update(void);
-int SfxVoice_Alloc(int priority);
-void SfxVoice_Setup(int voice, SfxParams *params);
-void SfxVoice_Start(signed char *handle, SfxParams *params);
-void SfxVoice_SetPitch(signed char *handle, ushort pitch);
-void SfxVoice_SetVolume(signed char *handle, short *vol);
-void SfxVoice_KeyOff(signed char *handle);
-void SfxVoice_Release(signed char *handle);
-int Spu_NoteToPitch(int note, int base);
-void Spu_PanVolume(short *out, int vol, int pan);
-void Sound_SetTickRate(int hz);
-void Seq_SetTickRate(unsigned short hz);
 extern ushort D_8008FDB8[]; // pitch of each 1/8 semitone in an octave
 extern ushort D_800901B8[128]; // pan volume curve
 extern ushort D_800900B8[128]; // velocity volume curve

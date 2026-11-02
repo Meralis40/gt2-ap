@@ -2,16 +2,10 @@
 // drawn between two arrows.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-int sprintf(char *buf, char *fmt, ...);
-void Text_SetFont(TextCtx *ctx, Font *font);
-void Text_DrawCenteredMonoDigits(TextCtx *ctx, char *s, int x, int y, int spacing, int a5, int a6);
-void Sfx_PlayMenu(int sfx);
 extern char D_8008FAAC[]; // "%d"
-
-PrimF3 *Prim_AddPolyF3(uint *ot, uint rgb);
 
 void NumberPicker_Init(NumberPicker *p)
 {

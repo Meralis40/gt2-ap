@@ -2,20 +2,12 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 // The table of race events, in the base data and the GT mode race data.
 #define GAMEDATA_EVENTS 30
 
 extern "C" {
-void CarSetup_FromCarEntry(void *carEntry, CarSetup *setup);
-void CarSetup_InitFromCarEntry(void *carEntry, CarSetup *setup);
-void *GameDataTable_GetEntry(GameDataTable *table, int index);
-void *GameDataTable_At(GameDataTable *table, int index);
-int GameDataTable_SearchId(GameDataTable *table, unsigned int id);
-int GameData_FindEventIndex(GameData *data, char *code);
-char *StrPool_Get(void *pool, int index);
-int StrPool_Find(void *pool, char *str);
 
 extern int g_GameDataMode;
 extern GameData *g_GtModeRaceData;

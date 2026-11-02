@@ -2,23 +2,9 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-int Printf_Format(void *putc, char *fmt, void *args);
-void Text_SetDefaultTexturePage(int tpage);
-unsigned int VolId_GetSector(VolBootId id);
-int VolId_GetSize(VolBootId id);
-void CdAudio_SetupRead(void *dst, unsigned int start, unsigned int size, int reportErrors);
-int CdAudio_WaitRead(void (*onRetry)(void));
-int CdGetSector(void *dst, int words);
-int Gpu_TransferImage(RECT *rect, void *src, int arg);
-void Text_DrawGlyph(TextCtx *ctx, int code, int x, int y);
-int Text_GetAdvance(TextCtx *ctx, int left, int right);
-int FUN_8007da9c(int c);
-int FUN_8007daac(TextCtx *ctx, int c);
-void RaceFont_InitUpload(void);
-int RaceFont_OnSector(unsigned int sector, void *header);
 
 extern CdAudio g_CdAudio;
 extern unsigned int g_VolLba;
@@ -34,7 +20,7 @@ extern RaceFontUpload g_RaceFont_Buf;
 
 // Links a draw-mode packet (E1 command mode) from g_PacketPtr in after ot.
 // The 24-bit links are copied with lwl and swl, one asm statement each.
-void *Prim_AddDrawMode(OtTag *ot, unsigned int mode)
+void *Prim_AddDrawMode(void *ot, unsigned int mode)
 {
     unsigned int *p;
     unsigned int link;

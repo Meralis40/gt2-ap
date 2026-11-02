@@ -4,17 +4,12 @@
 // decompilation; the functions that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-void SoundBank_Play(void *bank, int index, int volume, int pitch, int voice);
-extern char g_CommonSoundBank[];
+extern SpuBank g_CommonSoundBank;
 extern unsigned char D_8009160C[][2]; // the two samples of each menu sound
 extern char D_80091620[];
-int CarWork_TransIsCustom(CarWork *work, int stage);
-int CarWork_HasFullSuspension(CarWork *work);
-int CarWork_GetGearCount(CarWork *work);
-void CarWork_GetGearRange(CarWork *work, short *ratios, short *minRatios, short *maxRatios);
 
 // Sets setting back to the fitted parts' defaults.
 void CarWork_ResetSetting(CarWork *work, int setting)

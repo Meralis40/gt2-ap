@@ -1,6 +1,5 @@
 // Frame ring and display helpers of the movie screen.
 #include "common.h"
-#include "movie.h"
 
 extern "C" {
 void Movie_InitRing()

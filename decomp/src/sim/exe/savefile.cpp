@@ -1,17 +1,7 @@
 // Resident code 80069ff8-8006a3fc (savefile): the game save on the memory card.
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-unsigned int Crc32(unsigned char *data, int size);
-void *McCard_FindFile(int port, char *name);
-int McCard_StartCreate(int port, char *name, int size);
-int McCard_StartTransfer(unsigned char cmd, int port, char *name, void *buf, int offset, int size, short *sectorMap);
-void Options_ApplyNeGconCalib(GameState *state);
-int SaveFile_GetDataSize(void);
-void *memcpy(void *__dest, void *__src, size_t __n);
-void bcopy(const void *src, void *dst, size_t n);
-void McHeader_Init(McFileHeader *h);
-void McHeader_SetTitle(McFileHeader *h, char *title);
 extern char D_80091C94[];
 extern char D_80091CA8[];
 extern char D_80091CC4[];
@@ -67,7 +57,7 @@ int SaveFile_Create(GameSaveFile *file, int port)
     return iVar1;
 }
 
-int SaveFile_GetFileSize(void)
+int SaveFile_GetFileSize(GameSaveFile *file)
 {
     int iVar1;
 
@@ -81,7 +71,7 @@ int SaveFile_StartWrite(GameSaveFile *file, int port, GameSaveFile *src)
 
     iVar1 = SaveFile_GetDataSize();
     iVar1 = McCard_StartTransfer
-                                        ('\a',port,D_80091C94,src,0,iVar1 + 0x7fU & 0xffffff80,
+                                        ('\a',port,D_80091C94,(unsigned char *)src,0,iVar1 + 0x7fU & 0xffffff80,
                                           0);
     return iVar1;
 }
@@ -92,13 +82,13 @@ int SaveFile_StartRead(GameSaveFile *file, int port, GameSaveFile *dst)
 
     iVar1 = SaveFile_GetDataSize();
     iVar1 = McCard_StartTransfer
-                                        ('\x06',port,D_80091C94,dst,0,iVar1 + 0x7fU & 0xffffff80,
+                                        ('\x06',port,D_80091C94,(unsigned char *)dst,0,iVar1 + 0x7fU & 0xffffff80,
                                           0);
     return iVar1;
 }
 
 // The save image: the header, the game state, and a CRC of both.
-void GameState_WriteSave(GameSaveFile *header, GameSaveFile *file)
+void GameState_WriteSave(GameSaveFile *header, GameSaveFile *file, int size)
 {
     GameState *state = &g_GameState;
 
@@ -151,7 +141,7 @@ void *SaveFile_GetMachineTest2(GameSaveFile *self, GameSaveFile *file)
     return file->state + 0x3bd0;
 }
 
-unsigned char SaveFile_CheckCrc(GameSaveFile *file, GameSaveFile *data)
+int SaveFile_CheckCrc(GameSaveFile *file, GameSaveFile *data)
 {
     unsigned int uVar1;
     unsigned int uVar2;

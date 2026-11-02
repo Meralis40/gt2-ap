@@ -2,24 +2,17 @@
 // stream.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "ovl4.h"
+#include "common.h"
 
 extern "C" {
 extern int *g_SoloData_CarPages;
-int Gpu_TransferImage(RECT *rect, unsigned int *data, int store);
-void Gpu_DrawSync(void);
-void VolId_ReadFile(VolBootId id, void *dst);
-void VolId_ReadFileAsync(VolBootId id, void *dst);
 extern int g_MenuElementCount;
 extern int g_MenuLanguage;
 extern LangMenuFiles g_LangMenuFiles[7];
 extern unsigned int g_MenuPageAttr;
 extern int g_MenuPageBackPage;
-int PackFile_StreamEntry(int volBootIdx, int entry, int *index, void *header);
 extern int *g_CommonPicIdx;
 extern int *g_GtMenuDatIdx;
-void MenuPage_Load(void *pageData);
-int GtMenuDat_ReadPage(int pageId, void *dst);
 extern int *g_SoloData;
 extern void *g_MenuPageBuf;
 extern void *g_MenuScratch;
@@ -36,25 +29,6 @@ extern unsigned short g_VolBootIds[248];
 extern VolHeader g_VolHeader;
 extern unsigned int g_VolLba;
 extern CdAudio g_CdAudio;
-void Gzip_Inflate(void *src, void *dst);
-void *memcpy(void *dst, const void *src, unsigned int n);
-void bcopy(const void *src, void *dst, unsigned int n);
-void Vol_ReadAtAsync(void *dst, unsigned int offset, int size);
-void CdAudio_SetupRead(void *dst, unsigned int sector, int size, int mode);
-int CdAudio_RunScript(int script);
-void CdAudio_WaitRead(void (*onRetry)(void));
-void CdGetSector(void *dst, int words);
-int MenuData_LoadSoloData(int *buf, int size);
-int PackFile_ReadEntry(int volBootIdx, int entry, int *index, void *dst);
-void PackFile_SeekEntry(int volBootIdx, int entry, int *index);
-int BgPic_StreamRead(void *header, unsigned int offset, int size);
-void MenuPage_LoadBgPic(int picId, void *header);
-unsigned int *MenuPage_UploadTiles(int *data);
-unsigned int *MenuPage_UploadBgClut(void *header);
-void MenuPage_AddElements(MenuElement *src, int count);
-int BgPicStream_ProcessSector(BgPicStream *s);
-int BgPicStream_OnSector(unsigned int sector, void *arg);
-void BgPicStream_Restart(void);
 
 // Inflates the car spec strings of all the languages and keeps the game
 // language's.
@@ -225,7 +199,7 @@ int PackFile_StreamEntry(int volBootIdx, int entry, int *index, void *header)
 // solodata (g_SoloData + 4). Reads the page from gtmenudat into g_MenuPageBuf and
 // parses it (MenuPage_Load); if that changed the background picture, seeks the drive
 // back to the page.
-void MenuPage_LoadById(int pageId)
+void MenuPage_LoadById(int pageId, void *buf)
 {
     int iVar1;
 

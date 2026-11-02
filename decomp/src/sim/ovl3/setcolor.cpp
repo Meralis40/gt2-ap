@@ -5,9 +5,6 @@
 
 extern "C" {
 extern unsigned char D_80091620[];
-int CarInfoA_GetColors(unsigned int carId, unsigned short **outRgb, unsigned char **outCodes);
-unsigned short CarInfoA_GetColorRgb(unsigned int carId, signed char colorCode);
-unsigned int Rand_Next(unsigned int *seed);
 
 void RaceCarPick_SetColor(RaceCarPick *pick, unsigned int carId, unsigned int colorIdx,
                           unsigned int *seed)
@@ -18,11 +15,11 @@ void RaceCarPick_SetColor(RaceCarPick *pick, unsigned int carId, unsigned int co
     if (colorIdx != 0) {
         int c = D_80091620[colorIdx & 0x3f];
         code = c;
-        rgb = CarInfoA_GetColorRgb(carId, c);
+        rgb = CarInfoA_GetColorRgb(carId, (signed char)c);
     } else {
         unsigned short *rgbs;
         unsigned char *codes;
-        unsigned int count = CarInfoA_GetColors(carId, &rgbs, &codes);
+        unsigned int count = CarInfoA_GetColors(carId, &rgbs, (char **)&codes);
         unsigned int i = Rand_Next(seed) % count;
         code = codes[i];
         rgb = rgbs[i];

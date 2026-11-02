@@ -1,21 +1,11 @@
 // OVL4 8001e22c-8001ec0c (mapcursor): Map cursor.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "gtmenu.h"
+#include "common.h"
 
 extern "C" {
 // g_MapCursor_Sprite, then g_MapCursor_SpriteActive (over a hotspot).
 extern SpriteDesc g_MapCursor_Sprite[2];
-
-MenuElement *MenuView_FindDefaultElement(GTMenuView *view);
-MenuElement *MenuView_HotspotAt(GTMenuView *view, int x, int y);
-MenuElement *MenuView_FindHotspotInDir(GTMenuView *view, int x, int y, int dir, MenuElement *from, int arg);
-int SimMap_Update(GTMenu *menu, MenuElement *element, int arg);
-void Sfx_PlayMenu(int id);
-unsigned int *Prim_AddSprite(void *ot, unsigned int rgb);
-void *Prim_AddDrawMode(void *ot, unsigned int tpage);
-char *CarInfoA_GetName(unsigned int carId);
-int strcmp(const char *a, const char *b);
 
 // Centres the cursor at (0x100, 0xfc) with no hotspot.
 void MapCursor_Init(MapCursor *cursor)
@@ -275,7 +265,7 @@ void MapCursor_Draw(MapCursor *cursor, void *ot)
 
     if (cursor->hotspot != 0)
         sprite++;
-    prim = Prim_AddSprite(ot, 0x808080);
+    prim = (unsigned int *)Prim_AddSprite(ot, 0x808080);
     prim[0] = cursor->drawX + (cursor->drawY << 16);
     prim[1] = sprite->uvClut;
     prim[2] = sprite->wh;

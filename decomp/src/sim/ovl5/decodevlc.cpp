@@ -1,7 +1,6 @@
 // Huffman (VLC) decoding of a movie frame into MDEC run-level codes. The
 // leading-zero counter of the GTE (LZCS/LZCR) finds the code length.
 #include "common.h"
-#include "movie.h"
 
 // Starts a leading-zero count of v, and reads the result.
 #define gte_lzcs(v) __asm__ volatile("mtc2 %0, $30" : : "r"(v))

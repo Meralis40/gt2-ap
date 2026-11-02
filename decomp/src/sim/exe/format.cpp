@@ -2,11 +2,9 @@
 // credit amounts as text.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-int sprintf(char *buf, char *fmt, ...);
-char *strcpy(char *dst, const char *src);
 extern char D_80091AAC[]; // shown for a missing time
 extern char D_8008FA68[];
 

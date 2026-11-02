@@ -1,12 +1,9 @@
 // OVL4 80021a40-80021c38 (gtracedata): Race data events and wheels.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "ovl4.h"
+#include "common.h"
 
 extern "C" {
-void *GameData_GetEntryIn(void *data, int table, int index);
-char *GameData_GetTableString(void *data, int table, unsigned int index);
-int GameData_BinarySearch(void *data, int table, unsigned int carCode);
 extern void *g_GtModeRaceData;
 extern void *g_GtModeData;
 

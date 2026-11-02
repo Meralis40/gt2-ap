@@ -1,21 +1,10 @@
 // OVL4 80016fec-80017750 (carwork2): CarWork helpers: setup export, part slots,
 // loading garage cars, the installed parts summary, racing modification variants.
 // Assembled by GNU as (GAS_CXX), for FUN_OVL4__8001719c's loop label.
-#include "ovl4.h"
+#include "common.h"
 
 extern "C" {
-void CarWork_LoadFromGarage(int slot, int garage);
 extern CarWork g_CarWork;
-int CarWork_CountRacingModStages(CarWork *work);
-void CarWork_SetPartSlot(CarWork *work, int slot, int stage);
-void CarWork_Clear(CarWork *work);
-void CarWork_LoadParts(CarWork *work, unsigned int carId);
-void CarWork_SetStagesFromSetup(CarWork *work, CarSetup *setup);
-void CarSpec_FromCarWork(CarWork *work, CarSpec *spec);
-void CarParams_Build(CarSpec *spec, CarParams *params);
-int CarParams_BuildFromSetup(CarSetup *setup, CarParams *params);
-unsigned short *PartName_GetW(int index);
-void GTFont_DrawW(void *ot, unsigned short *str, int x, int y, int rgb, int flags);
 extern GameState g_GameState;
 extern char g_RaceRecords[];
 extern TuneSummaryRow g_TuneSummaryRows[];

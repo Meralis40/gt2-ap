@@ -1,10 +1,9 @@
 // Loads an arcade garage car with the right tyres (docs/arcade.md).
 #include "common.h"
-#include "carwork.h"
+#include "gamestate.h"
 
 extern "C" {
 extern CarWork g_Ovl3_CarWork;
-void Car_StoreSetup(Car *car, CarWork *work);
 }
 
 // Loads g_GameState.garages[garage].cars[slot] into g_Ovl3_CarWork, fits dirt

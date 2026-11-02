@@ -2,13 +2,9 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-PrimG4 *Prim_AddPolyG4(uint *ot);
-PrimF3 *Prim_AddPolyF3(uint *ot, uint rgb);
-RECT *Prim_AddTile(uint *ot, uint rgb);
-void *Prim_AddDrawMode(uint *ot, uint mode);
 
 unsigned int Rgb_Lerp(unsigned char *from, unsigned char *to, int t, int range)
 {

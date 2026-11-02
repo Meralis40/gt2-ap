@@ -223,8 +223,9 @@ struct ReplayDirEntry {
     uint crc;
 };
 
+// A save file's header: the first frame (McHeader_Init), then the icon's frames.
 struct McFileHeader {
-    char magic[2];
+    ushort magic; // "SC"
     uchar iconType;
     uchar blockCount;
     uchar title[64];
@@ -2669,6 +2670,16 @@ struct ScreenPoint {
     short z;
     short pad;
 };
+
+// exe/cardmenu.cpp
+
+typedef void (*KanjiLoadFn)(void *font, void *glyph);
+
+typedef int (*CardStateFn)(int event, void *arg);
+
+// exe/vol.cpp
+
+typedef void (*VolReader)(void *dst, int sector, int size);
 
 // Types of the subsystems with headers of their own.
 #include "mccard.h"

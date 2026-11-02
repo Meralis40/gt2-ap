@@ -1,13 +1,5 @@
 // Loads every part a car can use into a CarWork (copy of the OVL4 function).
 #include "common.h"
-#include "carwork.h"
-
-extern "C" {
-void *GameData_GetEntry(int table, int index);
-void Car_GetDefaultSetup(unsigned int carId, CarSetup *setup);
-int Part_Lookup(int part, unsigned int carId, int *out);
-int Part_LookupRacingModStage(unsigned int carId, unsigned char stage, int *out);
-}
 
 // The stage byte at offset off of a game data entry.
 #define STAGE(entry, off) (((unsigned char *)(entry))[off])
@@ -141,7 +133,6 @@ extern "C" void CarWork_LoadParts(CarWork *work, unsigned int carId)
             work->turboIdx[i + 1] = idx;
         }
     }
-
 
     LOAD_CATEGORY(PartEntry12, 0x13, idx_t13, 0x8, intercooler, 0x10, 2);
     LOAD_CATEGORY(PartEntry12, 0x14, idx_t14, 0x8, muffler, 0x1a, 3);

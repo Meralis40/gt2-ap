@@ -3,16 +3,9 @@
 // fixed-width digits.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-void Text_SetTexturePage(TextCtx *ctx, int tpageId);
-void Text_DrawGlyph(TextCtx *ctx, int code, int x, int y);
-int Text_GetAdvance(TextCtx *ctx, int left, int right);
-int Text_MeasureStringMonoDigits(TextCtx *ctx, signed char *s, int spacing, int digitExtra);
-int Text_MeasureDigits(TextCtx *ctx, signed char *s, int width, int narrowWidth, int signs);
-int Text_DrawDigits(TextCtx *ctx, signed char *s, int x, int y, int width, int narrowWidth, int signs,
-                    int dotX);
 
 void Text_Init(TextCtx *ctx, int tpageId)
 {

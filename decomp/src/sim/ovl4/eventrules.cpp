@@ -3,11 +3,9 @@
 // assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "ovl4.h"
+#include "common.h"
 
 extern "C" {
-int License_IsEarned(LicenseId license);
-LicenseId License_IdFromRaceCode2(char *raceCode);
 extern unsigned int g_License_EntryMsgPages[6];
 extern GameState g_GameState;
 extern char *g_RandomCourseNames[];
@@ -18,24 +16,6 @@ extern EventRules g_EventRules[];
 extern unsigned int g_EventAllowedCars[];
 extern void *g_GtModeRaceData;
 extern void *g_GtModeRaceDataBuf;
-
-unsigned int Rand_Next(unsigned int *seed);
-char *strcpy(char *dst, const char *src);
-int strcmp(const char *a, const char *b);
-void *GameData_GetEntryIn(void *data, int table, int index);
-RaceEvent *GameData_FindEvent(void *data, char *code);
-int Event_IndexFromCode(char *code);
-int Event_IsProLeague(char *code);
-int Event_IsWorldLeague(char *code);
-int Events_AllRegionalLeaguesWon(void);
-int Events_AllProLeaguesWon(void);
-LicenseId License_GetHighest(void);
-int CarWork_HasRacingMod(void);
-int CarWork_HasNoTurbo(void);
-int CarWork_IsStock(void);
-int Car_HasPart(Car *car, int part);
-unsigned int *GtRaceData_GetAllowedCars(int listId);
-int EventRules_Load(EventRules *rules, char *raceCode, unsigned int *allowedCars, int allowedStart);
 
 // One of the random course names, picked with seed.
 char *Course_PickRandom(unsigned int *seed)

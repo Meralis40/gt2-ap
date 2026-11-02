@@ -2,22 +2,9 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-int CarParams_Build(CarSpec *spec, void *params);
-int CarParams_GetPerformance(CarParams *params, EnginePerf *out);
-void CarSpec_CopySetupFields(CarSpec *spec, CarWork *work);
-void Gearbox_ComputeLimits(int gearCount, short *ratios, short *minRatios, short *maxRatios);
-void CarSpec_FromCarWork(CarWork *work, CarSpec *spec);
-void Gearbox_ComputeRatios(CarParams *params, int topSpeedKmh, short *ratios);
-void CarSetup_ApplyPartEntry(int table, void *entry, CarSetup *setup);
-void CarSpec_ApplyPartEntry(int table, void *entry, CarSpec *spec);
-void CarWork_ComputeGearRatios(CarWork *work, short *ratios);
-int CarWork_TransIsCustom(CarWork *work, int stage);
-int CarWork_HasFullSuspension(CarWork *work);
-int CarWork_GetGearCount(CarWork *work);
-void CarWork_GetGearRange(CarWork *work, short *ratios, short *minRatios, short *maxRatios);
 extern int D_800915A0[];     // CarSetup offset of each LSD setting
 extern int D_800915B8[][3];  // LSD entry offsets of each LSD setting's minimum ([1]) and maximum ([2])
 extern short D_80091600[];   // id of each LSD setting
@@ -38,7 +25,6 @@ static inline void CarWork_SetCustomRatios(CarWork *work)
     work->setup.work_17b6 = work->partSlots[3];
     work->setup.work_17b8 = work->partSlots[4];
 }
-int CarWork_GetSettingRange(CarWork *work, int setting, SettingRange *out);
 
 void Garage_AddCredits(Garage *garage, int amount)
 {
@@ -377,7 +363,7 @@ void CarSpec_FromCarWork(CarWork *work, CarSpec *spec)
 {
     int stage;
 
-    CarSpec_CopySetupFields(spec, work);
+    CarSpec_CopySetupFields(spec, &work->setup);
     spec->suspension = work->susp[work->partSlots[0]].bytes;
     spec->brakes = work->brakes[work->partSlots[1]].bytes;
     spec->brakeBalance = work->brakeBal[work->partSlots[2]].bytes;

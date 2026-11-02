@@ -3,7 +3,7 @@
 // tag (length, 24-bit link to the next chunk).
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "ovl4.h"
+#include "common.h"
 
 extern "C" {
 extern unsigned int *g_DisplayList_Chunk;
@@ -269,7 +269,7 @@ unsigned int *Background_AddSpriteGroups(void *groups, unsigned int *p)
 // Builds the page background into buf as a chain of 16-word packets: the 63x32 grid
 // of 16x8 tiles (g_MenuTileMap), the overlay tiles (g_MenuOverlayTiles) and the
 // sprite groups (g_MenuSpriteGroups). The tail goes to view.bgListTail.
-void MenuPage_BuildBackground(void *unused, void *buf)
+void *MenuPage_BuildBackground(void *unused, void *buf)
 {
     unsigned int *p;
 
@@ -279,6 +279,6 @@ void MenuPage_BuildBackground(void *unused, void *buf)
     if (*g_MenuSpriteGroups != 0) {
         Background_AddSpriteGroups(g_MenuSpriteGroups, p);
     }
-    DisplayList_End();
+    return DisplayList_End();
 }
 }

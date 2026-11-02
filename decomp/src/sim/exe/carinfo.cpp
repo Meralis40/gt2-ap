@@ -3,17 +3,9 @@
 // yet and is the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 extern "C" {
-int CarInfoA_FindIndex(unsigned int carId);
-int CarInfoA_GetData(unsigned int carId, char **outData);
-unsigned int CarInfoA_GetHiddenRegions(unsigned int carId);
-int CarInfoA_GetColors(unsigned int carId, unsigned short **outRgb, char **outCodes);
-int Str_FindCharNoCase(int ch, char *str, int len);
-void VolId_ReadFile(VolBootId id, void *dst);
-void Vol_ReadFile(int file, void *dst);
-int strcmp(const char *a, const char *b);
 extern CarInfoA *g_CurrentCarInfoA;
 extern GameState g_GameState;
 
@@ -120,7 +112,7 @@ unsigned int CarInfoA_GetHiddenRegions(unsigned int carId)
 }
 
 // Whether the car isn't hidden in the game's language.
-int CarInfoA_IsAvailable(unsigned int carId)
+bool CarInfoA_IsAvailable(unsigned int carId)
 {
     unsigned int hidden = CarInfoA_GetHiddenRegions(carId);
 
@@ -198,7 +190,7 @@ int CarInfoA_FindColorIndex(unsigned int carId, int colorCode)
     return iVar1;
 }
 
-unsigned short CarInfoA_GetColorRgb(unsigned int carId, int colorCode)
+unsigned int CarInfoA_GetColorRgb(unsigned int carId, int colorCode)
 {
     int iVar1;
     unsigned short *local_10;

@@ -2,30 +2,12 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 #include "gte.h"
 
 extern "C" {
 extern short g_SinTable[];
 extern GfxIrqState g_GfxIrq;
-
-unsigned int Clip_TestPoints(ViewScratch *sp, ClipPoint *pts, int count);
-void Dma_WaitGpu(...);
-void FUN_800824ac(void *ot, RECT *r);
-void Gte_LoadScaled(ViewScratch *sp, int msb, int bits, int rotBits);
-int Gte_TransMsb(MATRIX *m, int bias);
-VECTOR *Matrix_ApplyAdd(VECTOR *dst, MATRIX *m, VECTOR *v, VECTOR *add);
-VECTOR *Matrix_ApplyLV(VECTOR *dst, MATRIX *m, VECTOR *v);
-MATRIX *Matrix_FromEuler(MATRIX *m, int x, int y, int z);
-void Matrix_Transpose(MATRIX *dst, MATRIX *src);
-RECT *Prim_AddTile(void *ot, unsigned int rgb);
-void Gpu_DrawSync(void);
-void *Gpu_LoadImageBlock(int *block, RECT *rect);
-int Gpu_TransferImage(RECT *rect, unsigned int *data, int store);
-void Gpu_WaitReady(...);
-MATRIX *Matrix_Mul(MATRIX *dst, MATRIX *a, MATRIX *b);
-MATRIX *Matrix_Translate(MATRIX *m, VECTOR *v);
-void *Tim_LoadClut(void *tim, RECT *rect);
 
 // Squares each LOD distance (in 14-bit units), for comparing with Lod_DistanceSq.
 #ifdef NON_MATCHING
@@ -273,7 +255,7 @@ int Gte_TransMsb(MATRIX *m, int bias)
 INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Gte_TransMsb);
 #endif
 
-void Camera_SetFrustum(Camera *cam, int left, int right, int top, int bottom, int h)
+void Camera_SetFrustum(Camera *cam, int left, int right, int top, int bottom, int h, int unused)
 {
     cam->extentX = (short)right - (short)left;
     cam->extentY = (short)top - (short)bottom;
@@ -490,7 +472,6 @@ INCLUDE_ASM("asm/sim/exe/nonmatchings/gte", Clip_TestPoints);
 // translation's is the OT shift) and the scaled transform at 0x78. The clip planes go in
 // the light matrices, for Clip_TestPoints and Poly_Clip; the depth cue is off.
 #ifdef NON_MATCHING
-void *Matrix_ShiftRot(short *dst, MATRIX *src, int shift);
 
 void Gte_LoadScaled(ViewScratch *sp, int msb, int bits, int rotBits)
 {

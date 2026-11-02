@@ -2,40 +2,24 @@
 // that don't match yet are the original assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "mccard.h"
+#include "common.h"
 
 extern "C" {
-void *memset(void *s, int c, unsigned int n);
-int memcmp(const void *a, const void *b, unsigned int n);
-char *strcpy(char *dst, const char *src);
-int Sys_CriticalSection(int leave);
-int Ascii_ToSjis(int c);
-McDirEntry *McDir_FindFile(McPort *port, char *name);
-McDirEntry *McDir_GetBlockChain(McPort *port, char *name, signed char *chain);
-McDirEntry *McPort_AllocBlocks(McPort *port, int blocks);
-void McPort_RebuildBlockUse(McPort *port);
-int McPort_MapSector(McPort *port, unsigned int sector);
-int McPort_RemapBadSector(McPort *port, unsigned int sector);
-void McFrame_FromDirEntry(McDirEntry *entry, unsigned char *frame);
-void McFrame_InitBadSector(unsigned char *frame, unsigned int sector);
-int McOp_Create(int event, int *sector, void **buf);
-int McOp_Transfer(int event, int *sector, void **buf);
-unsigned int McOp_FileToCardSector(McOpState *op, unsigned int fileSector);
 extern char g_McCreateName[];
 
-void McHeader_Init(McHeader *h)
+void McHeader_Init(McFileHeader *h)
 {
-    memset(h, 0, sizeof(McHeader));
+    memset(h, 0, 0x80); // the first frame
     h->magic = 0x4353;
-    h->blocks = 1;
-    h->iconFlag = 0x11;
+    h->blockCount = 1;
+    h->iconType = 0x11;
 }
 
 // Sets the title from two-byte codes (ASCII in their low 7 bits), as Shift-JIS.
 #ifdef NON_MATCHING
 // The game loads the first byte twice, signed for the test and unsigned for the code,
 // and the second byte first; GCC tests the unsigned load.
-void McHeader_SetTitle(McHeader *h, char *title)
+void McHeader_SetTitle(McFileHeader *h, char *title)
 {
     unsigned char *p = h->title;
 
@@ -128,7 +112,7 @@ int McOp_Create(int event, int *sector, void **buf)
                 *sector = i;
                 op->index = i;
                 if (u == 0) {
-                    McFrame_FromDirEntry(e, g_McFrame);
+                    McFrame_FromDirEntry(e, (McDirFrame *)g_McFrame);
                     return 7;
                 }
                 used++;
@@ -253,7 +237,7 @@ int McOp_Transfer(int event, int *sector, void **buf)
             }
             *sector = s + 0x10;
             *buf = g_McFrame;
-            McFrame_InitBadSector(g_McFrame, op->cardSector);
+            McFrame_InitBadSector((int *)g_McFrame, op->cardSector);
             op->phase = 3;
             return 7;
         case 2:

@@ -1,7 +1,7 @@
 // OVL4 8001f210-8001fcdc (gtfont): GT mode font and number drawing.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "ovl4.h"
+#include "common.h"
 
 extern "C" {
 extern GTFontGlyph g_GTFont_Glyphs[0x10b];
@@ -10,22 +10,6 @@ extern GTFontGlyph g_GTFontB_Glyphs[0x18];
 extern SpriteDesc g_GTNumFont_Glyphs[0x18];
 extern short g_GTFont_Index[0x100];
 extern short g_GTFontB_Index[0x100];
-
-unsigned int *Prim_AddSprite(void *ot, unsigned int rgb);
-void *Prim_AddDrawMode(void *ot, unsigned int tpage);
-
-int GTText_WidthW(unsigned short *str);
-int GTFont_DrawString(void *ot, unsigned short *text, int x, int y, unsigned int rgb);
-int GTText_Draw(void *ot, char *str, int x, int y, unsigned int rgb);
-int GTText_Width(char *str);
-int GTNum_DrawW(void *ot, unsigned short *str, int x, int y, unsigned int rgb);
-int GTNum_WidthW(unsigned short *str);
-int GTNum_Draw(void *ot, char *str, int x, int y, unsigned int rgb);
-int GTNum_Width(char *str);
-int GTText_DrawWRight(void *ot, unsigned short *str, int x, int y, unsigned int rgb);
-int GTText_DrawRight(void *ot, char *str, int x, int y, unsigned int rgb);
-int GTNum_DrawWRight(void *ot, unsigned short *str, int x, int y, unsigned int rgb);
-int GTNum_DrawRight(void *ot, char *str, int x, int y, unsigned int rgb);
 
 // Fills the glyph index of the codes below 0x100, for both fonts.
 void GTFont_BuildIndex(void)
@@ -91,7 +75,7 @@ int GTFont_DrawString(void *ot, unsigned short *text, int x, int y, unsigned int
 
     while ((c = *text++) != 0) {
         g = GTFont_FindGlyph(c);
-        sprite = Prim_AddSprite(ot, rgb);
+        sprite = (unsigned int *)Prim_AddSprite(ot, rgb);
         sprite[0] = x + g_GTFont_Glyphs[g].xoff + (y + g_GTFont_Glyphs[g].yoff) * 0x10000;
         sprite[1] = g_GTFont_Sprites[g].uvClut;
         sprite[2] = g_GTFont_Sprites[g].wh;
@@ -118,7 +102,7 @@ int GTText_Draw(void *ot, char *str, int x, int y, unsigned int rgb)
 
     while ((c = *(signed char *)str++) != 0) {
         g = GTFont_FindGlyph(c);
-        sprite = Prim_AddSprite(ot, rgb);
+        sprite = (unsigned int *)Prim_AddSprite(ot, rgb);
         sprite[0] = x + g_GTFont_Glyphs[g].xoff + (y + g_GTFont_Glyphs[g].yoff) * 0x10000;
         sprite[1] = g_GTFont_Sprites[g].uvClut;
         sprite[2] = g_GTFont_Sprites[g].wh;
@@ -167,7 +151,7 @@ int GTNum_DrawW(void *ot, unsigned short *str, int x, int y, unsigned int rgb)
 
     while ((c = *str++) != 0) {
         g = g_GTFontB_Index[c & 0xff];
-        sprite = Prim_AddSprite(ot, rgb);
+        sprite = (unsigned int *)Prim_AddSprite(ot, rgb);
         sprite[0] = x + g_GTFontB_Glyphs[g].xoff + (y + g_GTFontB_Glyphs[g].yoff) * 0x10000;
         sprite[1] = g_GTNumFont_Glyphs[g].uvClut;
         sprite[2] = g_GTNumFont_Glyphs[g].wh;
@@ -194,7 +178,7 @@ int GTNum_Draw(void *ot, char *str, int x, int y, unsigned int rgb)
 
     while ((c = *(signed char *)str++) != 0) {
         g = g_GTFontB_Index[c & 0xff];
-        sprite = Prim_AddSprite(ot, rgb);
+        sprite = (unsigned int *)Prim_AddSprite(ot, rgb);
         sprite[0] = x + g_GTFontB_Glyphs[g].xoff + (y + g_GTFontB_Glyphs[g].yoff) * 0x10000;
         sprite[1] = g_GTNumFont_Glyphs[g].uvClut;
         sprite[2] = g_GTNumFont_Glyphs[g].wh;

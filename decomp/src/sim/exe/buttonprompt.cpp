@@ -3,7 +3,7 @@
 // saving is not offered). It opens as a fade and closes as a horizontal wipe.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
+#include "common.h"
 
 // Pad bits of PadState.pressed.
 #define PAD_CONFIRM 0xa00
@@ -12,17 +12,6 @@
 extern "C" {
 extern TextStyle D_80091EA8;    // the message's style
 extern uint D_80091EC4;         // the colour boxes fade from and to
-
-void TextItem_Init(TextItem *item, TextStyle *style, char *text);
-void TextItem_Hide(TextItem *item);
-void TextItem_Show(TextItem *item, int endFrame);
-void TextItem_Update(TextItem *item);
-void TextItem_Draw(TextItem *item, uint *ot, int x, int y, TextCtx *ctx);
-uint Rgb_Lerp(uchar *from, uchar *to, int t, int range);
-void Menu_AddGouraudQuad(uint *ot, GouraudQuad *quad);
-void Prim_AddRectOutline(uint *ot, uint rgb, RECT *rect);
-void *Prim_AddDrawMode(uint *ot, uint tpage);
-RECT *Prim_AddTile(uint *ot, uint rgb);
 
 void ButtonPrompt_Init(ButtonPrompt *p, ButtonPromptDesc *desc)
 {

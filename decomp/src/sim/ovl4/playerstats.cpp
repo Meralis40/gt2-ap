@@ -1,11 +1,9 @@
 // OVL4 80019c60-80019f5c (playerstats): Player statistics and garage totals.
-#include "ovl4.h"
+#include "common.h"
 
 extern "C" {
 extern GameState g_GameState;
 extern int g_EventCount;
-
-int PlayerStats_GetEventResult(PlayerStats *stats, int event);
 
 // g_GameState.stats.racesEntered.
 int PlayerStats_GetRacesEntered(void)

@@ -2,7 +2,6 @@
 // overlay entries. Its vtable (.rodata), __tf function and typeinfo (.bss) are
 // emitted here.
 #include "common.h"
-#include "movie.h"
 
 // The overlay's buffers, in its .bss after g_Movie, then the typeinfo of
 // psxMovieLoop.

@@ -1,6 +1,5 @@
 // Player setup: GPU DMA hook, frame ring, buffers and the movie's CD sectors.
 #include "common.h"
-#include "movie.h"
 
 extern "C" {
 // The player being played, for the callbacks. The first variable of the

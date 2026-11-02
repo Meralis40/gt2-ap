@@ -2,13 +2,6 @@
 #include "common.h"
 #include "gamestate.h"
 
-extern "C" {
-char *strcpy(char *dst, const char *src);
-char *CarInfoA_GetName(unsigned int carId);
-void CarSetup_FromCarEntry(void *carEntry, CarSetup *setup);
-void CarParams_BuildFromSetup(CarSetup *setup, CarParams *params);
-}
-
 // Sets car index of setup from a car table entry instead of a garage car, and
 // builds its g_RaceCarParams. gridSlot < 0 keeps the rest of the car.
 extern "C" RaceCar *RaceSetup_SetCarFromEntry(RaceSetup *setup, int index, int gridSlot, int driverType,

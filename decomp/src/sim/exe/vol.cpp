@@ -4,21 +4,9 @@
 // entry's sector.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "resident.h"
-
-typedef void (*VolReader)(void *dst, int sector, int size);
+#include "common.h"
 
 extern "C" {
-int Cd_ReadBytes(void *dst, int byteOffset, int size);
-void Cd_ReadAtAsync(void *dst, unsigned int byteOffset, int size);
-unsigned int Vol_GetSector(int file);
-int Vol_GetSize(int file);
-void Vol_ReadFile(int file, void *dst);
-void Vol_ReadFileAsync(int file, void *dst);
-void Vol_ReadFileWith(int file, void *dst, VolReader reader);
-void Vol_ReadSectors(void *dst, int sector, int size);
-void Vol_ReadSectorsAsync(void *dst, int sector, int size);
-void Vol_ReadAtAsync(void *dst, unsigned int offset, int size);
 extern unsigned short g_VolBootIds[248];
 extern VolHeader g_VolHeader;
 extern unsigned int g_VolLba;

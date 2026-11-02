@@ -4,49 +4,7 @@
 // typeinfo (.bss, which build.py's CXX_NAMES places) are emitted here.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "gtmenu.h"
-
-extern "C" {
-void PacketBuffer_Init(PacketBuffer *buf, void *base, unsigned int bytes);
-void ViewDrawContext_Init(ViewDrawContext *ctx, void *ot, unsigned int bytes);
-void ViewDrawContext_Reset(ViewDrawContext *ctx);
-void ViewDrawContext_AddLayer(ViewDrawContext *ctx, DrawLayer *layer);
-void ViewDrawContext_ClearOT(ViewDrawContext *ctx);
-void ViewDrawContext_AssignOT(ViewDrawContext *ctx);
-void Dma_WaitOtc(void);
-void Tim_LoadFile(void *dst, VolBootId id);
-void Tim_UploadToPage(void *tim, unsigned int page);
-void GTFont_BuildIndex(void);
-int UniStrDb_Load(void *buf, int size);
-void MapCursor_Init(MapCursor *cursor);
-void MapCursor_ResetToDefault(MapCursor *cursor);
-void MapCursor_Update(MapCursor *cursor, GTMenu *menu, int input);
-void MapCursor_Draw(MapCursor *cursor, void *ot);
-void Txn_Init(ShopTxn *txn);
-void GarageList_Init(MenuCarList *list, int selected);
-void UsedCarList_Init(MenuCarList *list, int selected);
-int GarageList_Update(MenuCarList *list, PadState *pad, int active);
-int UsedCarList_Update(MenuCarList *list, PadState *pad, int active);
-void Garage_LoadCar(int slot, int garage);
-void MenuBgm_Init(void);
-void MenuBgm_Update(void);
-void MenuBgm_StopIfPlaying(void);
-void MenuView_Init(GTMenuView *view, void **assets, void *previewConfig);
-void MenuView_Update(GTMenuView *view);
-int MenuView_GetBackPage(GTMenuView *view);
-void MenuPage_DrawElements(GTMenuView *view, void *ot, int frameParity, void *otBack, DrawLayer *modelLayer);
-void PadDevice_Open(PadDevice *dev, int port, PadHandler *handlers);
-void PadDevice_Close(PadDevice *dev);
-void PadDevice_FlushInput(PadDevice *dev);
-PadState *PadButtons_Read(PadButtonState *state, PadState *out);
-void Sfx_PlayMenu(int id);
-int Timer_SinceFrameStart(void);
-void DrawLayer_SetArea(DrawLayer *layer, RECT *rect);
-RECT *Prim_AddTile(void *ot, unsigned int rgb);
-void *Prim_AddDrawMode(void *ot, unsigned int tpage);
-void SimMap_Update(GTMenu *menu, MenuElement *element, int arg);
-
-}
+#include "common.h"
 
 extern "C" {
 // Pointers into g_OVL4_SharedBuffer.
@@ -59,7 +17,6 @@ extern unsigned char g_OVL4_OrderingTable[];
 extern unsigned char g_Battle_PacketBuf[];
 extern unsigned char D_800A9040[];
 extern GTMenuPreviewParams D_80050918;
-extern PadHandler g_PadHandlers[8];
 extern GameState g_GameState;
 extern ShopTxn g_ShopTxn;
 extern MenuCarList g_GarageList;

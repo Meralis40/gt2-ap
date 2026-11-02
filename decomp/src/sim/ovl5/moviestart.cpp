@@ -1,6 +1,5 @@
 // Starts the MDEC callback and the CD stream.
 #include "common.h"
-#include "movie.h"
 
 extern "C" {
 void Movie_Start(MoviePlayer *mp)

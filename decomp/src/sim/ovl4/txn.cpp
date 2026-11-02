@@ -1,28 +1,9 @@
 // OVL4 8001da24-8001e22c (txn): Shop transactions.
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
-#include "ovl4.h"
+#include "common.h"
 
 extern "C" {
-int Car_GetNewPrice(unsigned int carCode);
-int Car_GetSellPrice(unsigned int carId);
-int Part_GetPrice(unsigned int carCode, PartId partId);
-int Car_HasPart(Car *car, int part);
-CarSetup *CarWork_Get(void);
-int CarParams_BuildFromSetup(CarSetup *setup, CarParams *params);
-int CarParams_GetPerformance(CarParams *params, EnginePerf *out);
-void CarWork_BuildSpecWithPart(int slot, int part, int garage, CarSpec *out);
-int CarParams_Build(CarSpec *spec, CarParams *params);
-void CarWork_RebuildParams(void);
-void Garage_SellCar(int carSlot, int garageIdx);
-void Garage_LoadCar(int slot, int garage);
-int Garage_CanAfford(int price, int garageIdx);
-int Dealer_CanBuyNewCar(int carId, int price, int garageIdx);
-int Dealer_BuyNewCar(int carId, int color, int price, int garageIdx);
-int Tune_CanBuyPart(int carSlot, int partId, int garageIdx);
-int Tune_BuyPart(int carSlot, int partId, int garageIdx);
-int Tune_InstallPart(int carSlot, int partId, int garageIdx, unsigned int color);
-int WheelShop_BuyWheels(int carSlot, int wheelCode, int price, int garageIdx);
 extern GameState g_GameState;
 
 // Type 0, price 0.
