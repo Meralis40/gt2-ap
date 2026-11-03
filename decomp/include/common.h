@@ -1,11 +1,12 @@
 // Declarations shared by the decompiled sources: every game function that a
 // source file defines or calls, once, with the prototype of its definition when
 // there is one. The C library's are in syslib.h. Methods are declared in their
-// classes. The types are in resident.h, ovl2.h, ovl4.h, gtmenu.h and movie.h.
+// classes. The types are in resident.h, ovl1.h, ovl2.h, ovl4.h, gtmenu.h and movie.h.
 #ifndef COMMON_H
 #define COMMON_H
 
 #include "resident.h"
+#include "ovl1.h"
 #include "ovl2.h"
 #include "ovl4.h"
 #include "gtmenu.h"
@@ -640,6 +641,7 @@ void PacketBuffer_Init(PacketBuffer *buf, void *base, uint bytes);
 void PacketBuffer_Swap(PacketBuffer *buf);
 void Font_Init();
 unsigned short *KanjiFont_Krom2RawAdd(unsigned int code);
+int Music_PlayTrack(int track, int loop);
 void VSyncCallback_Install(VSyncCallback *cb);
 void VSyncCallback_Uninstall(VSyncCallback *cb);
 MATRIX *Matrix_FromEuler(MATRIX *m, int x, int y, int z);
@@ -740,6 +742,97 @@ int Max3(int a, int b, int c);
 int Min3(int a, int b, int c);
 void RaceCarPick_SetColor(RaceCarPick *pick, unsigned int carId, unsigned int colorIdx, unsigned int *seed);
 unsigned int Rand_Next(unsigned int *seed);
+void MainMenu_PlayMusic(int track);
+void MainMenu_StopMusic(void);
+void ReplayTheaterRoot_Enter(int back);
+void ReplayTheaterRoot_Draw(DrawLayer *layer);
+void StartReplayWait_Enter(int back);
+void StartReplayWait_Draw(DrawLayer *layer);
+void LoadReplay_Draw(DrawLayer *layer);
+void RenameDeleteReplay_Draw(DrawLayer *layer);
+void CopyReplay_Draw(DrawLayer *layer);
+void DemoStart_Enter(int back);
+void DemoStart_Draw(DrawLayer *layer);
+void SaveGameRoot_Enter(int back);
+void SaveGameRoot_Draw(DrawLayer *layer);
+void SaveGameCard_Draw(DrawLayer *layer);
+void LoadGameRoot_Enter(int back);
+void LoadGameRoot_Draw(DrawLayer *layer);
+void LoadGameCard_Draw(DrawLayer *layer);
+void ReplayCopy_CacheKanjiCommon(void);
+void ReplayCopy_CacheKanji(char *sjis);
+void ReplayCopy_CacheMessages(void);
+void ReplayCopy_CacheErrorText(void);
+int ReplayCopy_GetCapacity(void);
+void ReplayCopy_ClearSelection(void);
+int ReplayCopy_StateIdle(int event, void *ot);
+void ReplayCopy_SetState(int state);
+void ReplayCopy_InitWidgets(void);
+void ReplayCopy_Start(void);
+void ReplayCopy_Draw(unsigned int *ot);
+unsigned char MainMenu_LoadStringsA(void);
+void MainMenu_LoadStrings(void);
+void Kanji_CacheSlotNames(void);
+void Kanji_CacheString(char *sjis);
+void AutoLoad_CacheKanjiMessages(void);
+void AutoLoad_Enter(int back);
+void LangSelectFadeOut_Enter(int back);
+void Page_DrawNothing(DrawLayer *layer);
+int MainMenu_ItemCallback(MenuListEventId event, MenuListEvent *ev, int index);
+void MainMenu_Enter(int back);
+void OptionsRoot_Enter(int back);
+void OptionsRoot_Draw(DrawLayer *layer);
+void OptionsUnusedWait_Enter(int back);
+void OptionsUnusedWait_Draw(DrawLayer *layer);
+int KeyConfig_AnalogCodeToIcon(int code);
+void KeyConfig_Clear(KeyConfig *cfg);
+void KeyConfig_DrawTable(unsigned int *ot, int x, int y, int brightness, int row1, int row2, int blink);
+void KeyConfigPage_Open(KeyConfigPage *page);
+void KeyConfigPage_Close(KeyConfigPage *page);
+void KeyConfigPage_Draw(KeyConfigPage *page, unsigned int *ot, int x, int y, int brightness);
+void Options_KanjiReset(void);
+void Options_KanjiCache(char *sjis);
+void AnalogSettings_CachePrompt(void);
+void SteerCalib_Clamp(SteerCalib *c);
+void SteerCalib_SetMargin(SteerCalib *c, int v);
+void SteerCalib_SetMax(SteerCalib *c, int v);
+void SteerCalib_SetCenter(SteerCalib *c, int v);
+void PedalCalib_Clamp(PedalCalib *c);
+void PedalCalib_SetMargin(PedalCalib *c, int v);
+void PedalCalib_SetMax(PedalCalib *c, int v);
+unsigned char Analog_GetSteerMap(int port);
+unsigned char Analog_GetAccelMap(int port);
+unsigned char Analog_GetBrakeMap(int port);
+void AnalogSettings_Close(AnalogSettings *s);
+void TabSelector_Init(TabSelector *tabs, void *callback, void *userData);
+void TabSelector_Close(TabSelector *tabs);
+unsigned char MainMenu_LoadStringsB(void);
+void DataTransferRoot_Enter(int back);
+void DataTransferRoot_Draw(DrawLayer *layer);
+void DataTransferUnusedWait_Enter(int back);
+void DataTransferUnusedWait_Draw(DrawLayer *layer);
+void DataTransferCarList_Draw(DrawLayer *layer);
+void DataTransferMix_Draw(DrawLayer *layer);
+void DataTransferConvert_Draw(DrawLayer *layer);
+void DataXfer_CacheKanjiCommon(void);
+void DataXfer_CacheKanji(char *sjis);
+void DataXfer_CacheMessages(void);
+void DataXfer_CacheErrorText(void);
+unsigned int Gt1Save_Checksum(unsigned char *data, unsigned int size);
+unsigned char Gt1Save_Check(unsigned char *data);
+int DataXfer_StateIdle(int event, void *ot);
+void DataXfer_SetState(int state);
+void DataXfer_InitWidgets(void);
+void DataXfer_Start(short mode);
+void DataXfer_Draw(unsigned int *ot);
+void *DataXfer_GetCarList(void);
+void *DataXfer_GetCourseRecords(void);
+void *DataXfer_GetLicenseTests(void);
+void *DataXfer_GetMachineTest0(void);
+void *DataXfer_GetMachineTest1(void);
+void *DataXfer_GetMachineTest2(void);
+unsigned char *DataXfer_GetGt1Data(void);
+int DemoReplay_Count(void *buf);
 
 // OVL2 (the arcade menus).
 void *ArcadeCar_GetEntry(unsigned int carId, int racingMod);

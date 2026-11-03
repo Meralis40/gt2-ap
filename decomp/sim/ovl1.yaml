@@ -40,6 +40,27 @@ segments:
       - [0x1c4, cpp, randompick] # src/sim/ovl1/randompick.cpp, shared with OVL3
       - [0x434, cpp, ../ovl3/setcolor] # src/sim/ovl3/setcolor.cpp, shared with OVL3
       - [0x4e0, cpp, initevent] # src/sim/ovl1/initevent.cpp, shared with OVL3
-      - [0x9c0, asm]
+      - [0x9c0, asm, racesetup] # 0x800109c0
+      - [0x10c4, asm, timload] # 0x800110c4
+      - [0x10fc, asm, timupload] # 0x800110fc
+      - [0x1178, asm, mainmenu] # 0x80011178
+      - [0x1868, asm, timload2] # 0x80011868
+      - [0x191c, cpp, basemenu] # 0x8001191c
+      - [0x24a4, cpp, replaypages] # 0x800124a4
+      - [0x3230, cpp, replaycopy] # 0x80013230
+      - [0x6254, cpp, mainstrings] # 0x80016254
+      - [0x6394, asm, menusprite] # 0x80016394
+      - [0x69b0, cpp, autoload] # 0x800169b0
+      - [0x721c, cpp, langselect] # 0x8001721c
+      - [0x7720, asm, timupload2] # 0x80017720
+      - [0x779c, cpp, mainmenupage] # 0x8001779c
+      - [0x7d74, cpp, options] # 0x80017d74
+      - [0x9218, cpp, keyconfig] # 0x80019218
+      - [0xaad4, cpp, analogsettings] # 0x8001aad4
+      - [0xd4b0, cpp, tabselector] # 0x8001d4b0
+      - [0xda08, cpp, datatransfer] # 0x8001da08
+      - [0xe808, asm, buycar] # 0x8001e808
+      - [0xf508, cpp, dataxfer] # 0x8001f508
+      - [0x10dcc, asm, demoreplay] # 0x80020dcc
       - [0x10f2c, rodata] # 0x80020f2c
   - [0x3c8c4]
