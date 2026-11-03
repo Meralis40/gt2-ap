@@ -149,6 +149,9 @@ CXX_NAMES = {"exe": {
     "ApplyVideoMode__11psxViewLoop": "psxViewLoop__ApplyVideoMode", "__tf11psxViewLoop": "psxViewLoop____tf",
     "__ti11psxViewLoop": "psxViewLoop__typeinfo",
     "Run__14ScreenViewLoop": "ScreenViewLoop__Run", "Execute__14ScreenViewLoop": "ScreenViewLoop__Execute",
+}, "ovl0": {
+    # The race loops call the resident ScreenViewLoop::Execute.
+    "Execute__14ScreenViewLoop": "ScreenViewLoop__Execute",
 }, "ovl1": {
     # BaseMenu (ovl1.h): MainMenu_Run's menus call its constructor and destructor,
     # still assembly, and the resident ScreenViewLoop::Execute.

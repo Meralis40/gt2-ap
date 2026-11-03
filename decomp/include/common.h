@@ -1,7 +1,7 @@
 // Declarations shared by the decompiled sources: every game function that a
 // source file defines or calls, once, with the prototype of its definition when
 // there is one. The C library's are in syslib.h. Methods are declared in their
-// classes. The types are in resident.h, ovl1.h, ovl2.h, ovl4.h, gtmenu.h and movie.h.
+// classes. The types are in resident.h, ovl0.h, ovl1.h, ovl2.h, ovl4.h, gtmenu.h and movie.h.
 #ifndef COMMON_H
 #define COMMON_H
 
@@ -11,6 +11,7 @@
 #include "ovl4.h"
 #include "gtmenu.h"
 #include "movie.h"
+#include "ovl0.h"
 
 // Functions are extern "C" while their callers are still assembly, so the
 // symbols keep the names the disassembly uses.
@@ -736,6 +737,148 @@ int printf(const char *fmt, ...);
 
 // OVL0 (the race).
 void Race_Entry(int arg);
+void RaceCam_SetProjection(RaceCam *cam, int projH, int offsetX, int offsetY);
+void RaceCam_SetDefaultProjection(RaceCam *cam);
+void RaceCam_SetChaseProjection(RaceCam *cam, int projH);
+void RaceCam_SetChase(RaceCam *cam, int view);
+int Vector_Length(VECTOR *v);
+void RaceCam_TvCarView(RaceCam *cam, void *entry);
+void RaceCam_SetCarView(RaceCam *cam, int view);
+void Race_DefaultEntry(void);
+void *TimeTrial_GetGhostState(void);
+void *TimeTrial_GetLapSlot(void);
+void *TimeTrial_GetBestLapLog(void);
+void *TimeTrial_GetLapLog(void);
+void TimeTrial_RestartGhost(void);
+void RaceVehicle_StartSound(RaceVehicle *v);
+void RaceVehicle_StopSound(RaceVehicle *v);
+void RaceVehicle_MuteSound(RaceVehicle *v);
+void RaceVehicle_UnmuteSound(RaceVehicle *v);
+void RaceWorld_Init(RaceWorld *w, unsigned char isReplay);
+void Race_Nop(void);
+void InputLog_Reset(InputLog *log, int forPlayback, unsigned short capacity);
+void RaceMem_ResetFlags(void *mem);
+void RaceMem_InitDrawBuffers(void *mem, psxViewLoop *view);
+void RaceLoop_EnterMenus(RaceLoop *loop);
+void RaceLoop_LeaveMenus(RaceLoop *loop);
+void EngineSound_EnableReverb(EngineSound *es);
+void CarSound_Stop(CarSound *cs);
+void Race_LoadSfxBank(void *race, int bootId);
+void CourseWalls_Relocate(int *walls, int base);
+void CourseVisList_Relocate(unsigned short *list, int base);
+void CourseObjGroup_Relocate(unsigned int *group, int base);
+void Course_Relocate(CourseData *course);
+void TimList_Upload(int *list);
+void Race_LoadSky(void *race, int skyId);
+void Race_LoadCourseMap(void *race, int course);
+void Race_LoadCourse(void *race, int course);
+unsigned int *Ground_FindTriangle(short *grid, void *verts, int x, int z);
+unsigned int *CourseSection_FindGround(CourseSection *sect, int *pos);
+int World_LocateSection(void *world, int hint, int *pos);
+void RaceView_DrawHud(void *view);
+void RaceView_RenderView(void *view, int idx);
+void RaceView_DrawSingle(void *view);
+void RaceMusic_Request(void *view, int track, int loop);
+void RaceMusic_PlayRaceTrack(void *view);
+void PauseMenu_Reset(void *view);
+void Countdown_Init(short *cnt, short introFrames);
+void ResultBanner_Hide(short *anim);
+void ResultBanner_Start(short *anim);
+void Result_Init(short *res);
+void Result_Start(short *res);
+void Hud_LoadCluts(void *view, int pack);
+void CarAi_SetMessage(CarPhys *phys, unsigned char msg, int hold);
+int CarPhys_ClampMin12000A(int x);
+int CarPhys_ClampMin12000B(int x);
+void CarPhys_SetUnk1c(CarPhys *phys, unsigned char v);
+void CarPhys_SetControl(CarPhys *phys, unsigned char control);
+int Damper_LevelToRate(int level);
+void CarPhys_ClearProximity(CarPhys *phys);
+void CarPhys_SaveState(int *snap, CarPhys *phys);
+void Ai_SyncToLine(CarPhys *phys);
+void Ai_SetLine(CarPhys *phys, unsigned char line);
+int AiLine_FindSegmentXZ(int x, int z, int hint);
+int Speed_FactorAbove30Kmh(int speed);
+void Clutch_UpdateShiftState(CarPhys *car);
+void Engine_SetRpmDisplay(CarPhys *car);
+unsigned char Race_IsEnduranceTimeUp(void);
+void GhostRec_StartFree(CarPhys *car);
+void GhostRecState_Clear(void *state);
+void GhostRecord_Clear(void *record);
+void GhostPlayer_Clear(void *player);
+void CatchUp_Apply2PSide(CarPhys *other, CarPhys *body, int lapDiff, int distDiff);
+void CatchUp_Apply2P(CarPhys *bodyA, CarPhys *bodyB);
+int Body_GetLap(CarPhys *body);
+void Body_GetGap(CarPhys *a, CarPhys *b, int *outLaps, int *outDist);
+void Body_UpdateWheelHeights(CarPhys *body);
+void Body_UpdateWheelOffsets(CarPhys *body);
+void Body_UpdateWheelPositions(CarPhys *body);
+void RaceCars_ComputeBrakeTorque(RaceVehicle *cars, int count);
+void RaceCars_ApplyLsdBias(RaceVehicle *cars, int count);
+void RaceCars_UpdateDrivetrain(RaceVehicle *cars, int count);
+void RaceCars_UpdateDifferentials(RaceVehicle *cars, int count);
+void RaceCars_StepDrivetrain(RaceVehicle *cars, int count);
+void QuickMenu_PlayMusic(int track);
+void QuickMenu_StopMusic(void);
+void AsyncRead_Start(AsyncRead *r, void *dst, int sector, int count);
+void ResultCar_Draw(ResultCar *car, DrawLayer *layer, DrawLayer *shadowLayer, ResultCarView *view, int bodyOnly);
+void TitleBanner_Draw(TitleBanner *b, unsigned int *ot, int x, int y, TextCtx *ctx);
+void InfoBar_Update(InfoBar *b);
+void ResultCarView_Spin(ResultCarView *view, int frame);
+void ResultRoot_Enter(int back);
+void ResultRoot_Draw(DrawLayer *layer);
+void QuitPage_Enter(int back);
+int QuitPage_Update(int active);
+void QuitPage_Draw(DrawLayer *layer);
+void TimeTrialRoot_Draw(DrawLayer *layer);
+void TimeTrialQuit_Enter(int back);
+int TimeTrialQuit_Update(int active);
+void TimeTrialQuit_Draw(DrawLayer *layer);
+void TimeTrialName_Draw(DrawLayer *layer);
+void Kanji_AddGlyph15(void *ot, unsigned int rgb, short x, short y, void *glyph);
+void LicenseResult_SetFresh(unsigned char fresh);
+void LicenseRoot_Draw(DrawLayer *layer);
+void LicenseRetry_Enter(int back);
+void LicenseRetry_Draw(DrawLayer *layer);
+int License_GetDemoFileId(int license, int test);
+void LicenseDemo_Enter(int back);
+void LicenseDemo_Draw(DrawLayer *layer);
+void LicenseName_Draw(DrawLayer *layer);
+void LicenseAcquired_Draw(DrawLayer *layer);
+void License_DrawRule(void *ot, short y, int fade);
+void SaveReplay_Enter(int back);
+void SaveReplay_Draw(DrawLayer *layer);
+void SaveGhost_Enter(int back);
+void SaveGhost_Draw(DrawLayer *layer);
+void LoadGhost_Enter(int back);
+void LoadGhost_Draw(DrawLayer *layer);
+void SaveGame_Enter(int back);
+void SaveGame_Draw(DrawLayer *layer);
+void QuickMenu_SetupCardUi(void *work);
+void RaceResults_SpinView(ResultCarView *view, int frame);
+void RaceResultsRoot_Draw(DrawLayer *layer);
+void MachineTestName_Draw(DrawLayer *layer);
+void ChangeParts_SetHelpTitle(char *sjis);
+void ChangeParts_Install(int category, int variant, CarWork *work);
+void *ChangeParts_GetGroup(int index);
+void ChangeParts_SelectGroup(void *menu, int group);
+void ChangeParts_Open(void *menu);
+void ChangeParts_Draw(void *menu, unsigned int *ot);
+void PartsSetting_Open(void *menu);
+void PartsSetting_Draw(void *menu, unsigned int *ot);
+void *Settings_SetWork(void *work);
+void ChangePartsPage_Draw(DrawLayer *layer);
+void PartsSettingPage_Draw(DrawLayer *layer);
+void PowerGraph_Reset(void *g, void *buffer);
+void PowerGraph_Clear(void *g);
+void GtRaceRoot_Enter(int back);
+void GtRaceRoot_Draw(DrawLayer *layer);
+void MachineTestRecords_Enter(int back);
+void PrizeRoot_Draw(DrawLayer *layer);
+unsigned int Rand_Below(unsigned int n);
+void EndingRoot_Enter(int back);
+void EndingRoot_Draw(DrawLayer *layer);
+void Ending_Enter(int back);
 
 // OVL1.
 int Max3(int a, int b, int c);
