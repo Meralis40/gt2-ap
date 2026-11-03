@@ -68,6 +68,7 @@ segments:
       - [0x5962c, cpp, replaydir]  # 0x80068e2c
       - [0x5a090, cpp, replaydata]  # 0x80069890
       - [0x5a7f8, cpp, savefile]  # 0x80069ff8
+      - [0x5ab48, cpp, negconcalib]  # 0x8006a348, OVL1 builds it too
       - [0x5abfc, cpp, replaydraw]  # 0x8006a3fc
       - [0x5b468, cpp, text]  # 0x8006ac68
       - [0x5bd48, cpp, rgblerp]  # 0x8006b548

@@ -42,8 +42,11 @@ public:
     unsigned int drawStamp; // copy of DAT_801f0698
     int frameCount;
     unsigned char pad218[4];
-    unsigned char result; // non-zero after the arcade menu: start a race
+    signed char result; // non-zero when a replay was chosen: start it
     unsigned char pad21d[3];
+
+    BaseMenu();
+    virtual ~BaseMenu();
 };
 
 struct KeyConfig {
@@ -99,6 +102,29 @@ struct TabSelector {
     unsigned char pad12[2];
     void *callback;
     void *userData;
+};
+
+// ovl1/menusprite.cpp
+
+// A menu row image: a sprite that opens with a fade and closes as two bands.
+struct MenuSprite {
+    unsigned char flags; // 1 glow when selected, 2 semi-transparent, 4 zoom trail, 0x18 blend mode, 0x60 anchor
+    unsigned char unk01;
+    short zoomWidth; // distance of the trail copies at the start of the open animation
+    short x;
+    short y;
+    unsigned char maxBrightness;
+    unsigned char pad09[3];
+    struct SpriteDesc *sprite; // ovl4.h
+    short anim; // 0 to 12 opening, -1 hidden, below -1 closing
+    short brightness;
+};
+
+// MenuSprite_Init's style.
+struct MenuSpriteStyle {
+    unsigned char flags;
+    unsigned char brightness;
+    short zoomWidth;
 };
 
 #endif

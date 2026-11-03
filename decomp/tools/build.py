@@ -46,12 +46,12 @@ CC1_FLAGS = ["-quiet", "-O2", "-g0", "-G0", "-fsigned-char", "-fstrict-aliasing"
 MOVE = re.compile(rb"(?m)^\tmove\t(\$\w+),(\$\w+)")
 MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
 # C++ sources assembled by GNU as, like the C ones: ScreenViewLoop::Run,
-# Credits_FormatCommas, CardMenu_SetState, CarInfoA_FindIndex, CdAudio_ExecScript,
+# Credits_FormatCommas (and OVL1's Str_FormatThousands, buycar.cpp), CardMenu_SetState, CarInfoA_FindIndex, CdAudio_ExecScript,
 # GameDataTable_SearchId, CarWork_GetPartIdx and Records_GetSectorTime jump past the load delay nop before a
 # label, as only GNU as places it (garage2.cpp, the rest of garage.cpp, needs it too), and Gpu_SetDisplayStart has its GPU
 # store in the return's delay slot, which GCC leaves empty for a volatile store, and
 # ReplayEntry_GetInfo has a store in a j's delay slot that GCC leaves empty (replaydir.cpp),
-# as Options_ApplyNeGconCalib has in its return's (savefile.cpp) and the SPU stores
+# as Options_ApplyNeGconCalib has in its return's (negconcalib.cpp) and the SPU stores
 # in seq.cpp have in theirs and in a jal's, and OT_InsertChain has its last swl asm
 # in its return's (menudata.cpp).
 # GCC 2.8.1 writes divisions as assembler macros, which GNU as
@@ -64,7 +64,8 @@ GAS_CXX = {"src/sim/exe/screenviewloop.cpp", "src/sim/exe/format.cpp", "src/sim/
            "src/sim/exe/cdstream.cpp", "src/sim/exe/gamedata.cpp", "src/sim/exe/garage.cpp",
            "src/sim/exe/garage2.cpp", "src/sim/exe/padbuttons.cpp",
            "src/sim/exe/powergraph.cpp", "src/sim/exe/records.cpp", "src/sim/exe/replaydir.cpp",
-           "src/sim/exe/savefile.cpp", "src/sim/exe/seq.cpp", "src/sim/exe/sfx.cpp",
+           "src/sim/exe/negconcalib.cpp", "src/sim/exe/seq.cpp", "src/sim/exe/sfx.cpp",
+           "src/sim/ovl1/negconcalib.cpp", "src/sim/ovl1/buycar.cpp",
            "src/sim/ovl4/battletable.cpp", "src/sim/ovl4/carwork2.cpp", "src/sim/ovl4/formatprice.cpp", "src/sim/ovl4/gtmode.cpp",
            "src/sim/ovl4/menudraw.cpp",
            "src/sim/ovl4/menudata.cpp"}
@@ -148,6 +149,11 @@ CXX_NAMES = {"exe": {
     "ApplyVideoMode__11psxViewLoop": "psxViewLoop__ApplyVideoMode", "__tf11psxViewLoop": "psxViewLoop____tf",
     "__ti11psxViewLoop": "psxViewLoop__typeinfo",
     "Run__14ScreenViewLoop": "ScreenViewLoop__Run", "Execute__14ScreenViewLoop": "ScreenViewLoop__Execute",
+}, "ovl1": {
+    # BaseMenu (ovl1.h): MainMenu_Run's menus call its constructor and destructor,
+    # still assembly, and the resident ScreenViewLoop::Execute.
+    "__8BaseMenu": "BaseMenu__BaseMenu", "_._8BaseMenu": "BaseMenu__BaseMenu_dtor",
+    "Execute__14ScreenViewLoop": "ScreenViewLoop__Execute",
 }, "ovl2": {
     # ArcadeMenu (arcademenu.cpp, menupages.cpp): its resident bases...
     "__23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer",
@@ -223,6 +229,7 @@ CXX_NAMES = {"exe": {
 # their addresses: the unit's symbol file can't name them, as they fall in its
 # own address range.
 OVERLAY_ENTRIES = {
+    "ovl1": {"Race_Entry": "0x80011F64"},
     "ovl2": {"Race_Entry": "0x80011F64", "MainMenu_StartNextDemo": "0x8001172C", "Movie_ArcadeEntry": "0x800114E0"},
     "ovl3": {"Race_Entry": "0x80011F64"},
     "ovl4": {"Race_Entry": "0x80011F64", "MainMenu_StartNextDemo": "0x8001172C"},

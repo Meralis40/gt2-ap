@@ -1,4 +1,4 @@
-// Resident code 80069ff8-8006a3fc (savefile): the game save on the memory card.
+// Resident code 80069ff8-8006a348 (savefile): the game save on the memory card.
 #include "common.h"
 
 extern "C" {
@@ -7,7 +7,6 @@ extern char D_80091CA8[];
 extern char D_80091CC4[];
 extern char D_80091CE4[];
 extern GameState g_GameState;
-extern NeGconCalib g_NeGconCalib[2];
 
 int SaveFile_GetDataSize(void)
 {
@@ -149,11 +148,5 @@ int SaveFile_CheckCrc(GameSaveFile *file, GameSaveFile *data)
     uVar2 = data->crc;
     uVar1 = Crc32((unsigned char *)data, 0x7e9c);
     return uVar2 == uVar1;
-}
-
-void Options_ApplyNeGconCalib(GameState *state)
-{
-    g_NeGconCalib[0] = state->ports[0].negconCalib;
-    g_NeGconCalib[1] = state->ports[1].negconCalib;
 }
 }

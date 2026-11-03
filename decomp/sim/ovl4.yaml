@@ -60,6 +60,7 @@ segments:
       - [0x83ec, cpp, events]  # 0x800183ec
       - [0x8f6c, cpp, menubgm]  # 0x80018f6c
       - [0x907c, cpp, eventrules]  # 0x8001907c
+      - [0x9bf0, cpp, ghostfile]  # 0x80019bf0, OVL1 builds it too
       - [0x9c60, cpp, playerstats]  # 0x80019c60
       - [0x9f5c, cpp, battletable]  # 0x80019f5c
       - [0xa454, cpp, carpreview]  # 0x8001a454

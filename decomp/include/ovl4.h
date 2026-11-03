@@ -478,6 +478,7 @@ struct FlowMenuState {
     unsigned char pad06[2];
     int page;
     short bgmTrack;
+    short demoReplayIndex;      // g_Flow_DemoReplayIndex: the next demo race or replay
 };
 
 // A cursor direction's unit vector (4.12), g_MapCursor_DirVectors.

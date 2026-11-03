@@ -1,4 +1,4 @@
-// OVL4 8001907c-80019c60 (eventrules): Licenses and event entry rules.
+// OVL4 8001907c-80019bf0 (eventrules): Licenses and event entry rules.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
 #define INCLUDE_ASM_USE_MACRO_INC 1
@@ -11,7 +11,6 @@ extern GameState g_GameState;
 extern char *g_RandomCourseNames[];
 extern char *g_LicenseRaceCodes[6];
 extern char *g_EventCodes[];
-extern GhostEventFile g_GhostEventFiles[];
 extern EventRules g_EventRules[];
 extern unsigned int g_EventAllowedCars[];
 extern void *g_GtModeRaceData;
@@ -451,17 +450,5 @@ int License_CheckEntry(char *raceCode, int *msgPage)
             return -3;
     }
     return 1;
-}
-
-// The replay file of event eventCode's ghost, or that of IA dirt (no name).
-VolBootId Event_GetGhostFileId(char *eventCode)
-{
-    int i;
-
-    for (i = 0; g_GhostEventFiles[i].eventCode; i++) {
-        if (strcmp(eventCode, g_GhostEventFiles[i].eventCode) == 0)
-            return g_GhostEventFiles[i].fileId;
-    }
-    return VOLID_DIRT_IA_NO_NAME_DIRT;
 }
 }

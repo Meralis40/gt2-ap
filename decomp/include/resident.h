@@ -1183,10 +1183,8 @@ struct PlayerStats { /* Player career statistics (0x160, cleared by PlayerStats_
     undefined field63_0x3f;
     int day; /* 1 on a new game (g_day) */
 
-    undefined field65_0x44;
-    undefined field66_0x45;
-    undefined field67_0x46;
-    undefined field68_0x47;
+    short unk44; /* cleared by OVL1's MainMenu_Run */
+    short unk46; /* cleared by OVL1's MainMenu_Run */
     uint racesEntered; /* incremented by the GT race loop when a GT race starts */
 
     uint racesWon; /* wins of GT prize races (PlayerStats_AddRaceResult) */
