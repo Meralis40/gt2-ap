@@ -40,46 +40,51 @@ segments:
       - [0x1ec8, cpp, racedev] # 0x80011ec8
       - [0x22c4, cpp, timetrial] # 0x800122c4
       - [0x2cd4, cpp, racevehicle] # 0x80012cd4
-      - [0x4b54, asm, racepad] # 0x80014b54
+      - [0x4b54, cpp, racepad] # 0x80014b54
       - [0x4e28, cpp, raceworld] # 0x80014e28
-      - [0x57a8, asm, raceloops] # 0x800157a8
+      - [0x57a8, cpp, raceloops] # 0x800157a8
       - [0x63b8, cpp, inputlog] # 0x800163b8
-      - [0x681c, asm, particles] # 0x8001681c
+      - [0x681c, cpp, particles] # 0x8001681c
       - [0x6a3c, cpp, racemem] # 0x80016a3c
-      - [0x6b78, asm, arcaderace] # 0x80016b78
+      - [0x6b78, cpp, arcaderace] # 0x80016b78
       - [0x7098, cpp, gtrace] # 0x80017098
       - [0x7e18, cpp, carsound] # 0x80017e18
-      - [0x8a68, asm, raceload] # 0x80018a68
-      - [0x8d1c, asm, coursedraw] # 0x80018d1c
+      - [0x8a68, cpp, raceload] # 0x80018a68
+      - [0x8d1c, cpp, coursedraw] # 0x80018d1c
       - [0x16bb4, cpp, courseload] # 0x80026bb4
       - [0x179e8, cpp, ground] # 0x800279e8
-      - [0x18cc0, asm, raceassets] # 0x80028cc0
+      - [0x18cc0, cpp, raceassets] # 0x80028cc0
       - [0x192a0, cpp, raceview] # 0x800292a0
       - [0x199d8, cpp, racemusic] # 0x800299d8
       - [0x19d58, cpp, racepause] # 0x80029d58
       - [0x1bcf0, cpp, hud] # 0x8002bcf0
       - [0x1ee98, textbin, text_data_8002ee98] # tables inside .text
+      # 0x8002ef20: RaceMenuLoop::Run's jump table, vtables and type names of RaceMenuLoop and RaceViewLoop
+      - {start: 0x1ef20, type: .rodata, name: raceloops, linker_section_order: .text}
+      # 0x8002f000: vtable and type name of ArcadeRaceLoop
+      - {start: 0x1f000, type: .rodata, name: arcaderace, linker_section_order: .text}
+      - [0x1f054, textbin, text_data_8002f054] # tables inside .text, from the padding after arcaderace.cpp's .rodata
       - [0x1f92c, cpp, carphys] # 0x8002f92c
       - [0x25714, cpp, ai] # 0x80035714
       - [0x292d8, cpp, drivetrain] # 0x800392d8
-      - [0x2b69c, asm, physparams] # 0x8003b69c
+      - [0x2b69c, cpp, physparams] # 0x8003b69c
       - [0x2c360, cpp, lapprogress] # 0x8003c360
-      - [0x2d848, asm, dynamics] # 0x8003d848
+      - [0x2d848, cpp, dynamics] # 0x8003d848
       - [0x2ef18, cpp, ghost] # 0x8003ef18
-      - [0x2fe8c, asm, carcoll] # 0x8003fe8c
+      - [0x2fe8c, cpp, carcoll] # 0x8003fe8c
       - [0x31e4c, cpp, catchup] # 0x80041e4c
       - [0x33388, cpp, suspension] # 0x80043388
       - [0x36bac, textbin, text_data_80046bac] # tables inside .text
-      - [0x36fb0, asm, timslot] # 0x80046fb0, a copy of OVL4's Tim_UploadToPage
+      - [0x36fb0, cpp, timslot] # 0x80046fb0, a copy of OVL4's Tim_UploadToPage
       - [0x37024, cpp, quickmenu] # 0x80047024
       - [0x38418, cpp, asyncread] # 0x80048418
-      - [0x38528, asm, resultcar] # 0x80048528
+      - [0x38528, cpp, resultcar] # 0x80048528
       - [0x389d8, textbin, text_data_800489d8] # tables inside .text
       - [0x38bd8, cpp, resultwidgets] # 0x80048bd8
       - [0x39a14, cpp, resultmenu] # 0x80049a14
       - [0x3a718, cpp, timetrialmenu] # 0x8004a718
       - [0x3c728, cpp, license] # 0x8004c728
-      - [0x3f8b4, asm, licenserecords] # 0x8004f8b4
+      - [0x3f8b4, cpp, licenserecords] # 0x8004f8b4
       - [0x4019c, cpp, cardpages] # 0x8005019c
       - [0x405ac, cpp, raceresults] # 0x800505ac
       - [0x42838, cpp, changeparts] # 0x80052838

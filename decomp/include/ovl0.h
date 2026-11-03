@@ -344,6 +344,9 @@ struct QuickMenu {
     uint drawStamp;
     int frameCount;
     int updateCount;
+
+    QuickMenu();                // still assembly (quickmenu.cpp)
+    ~QuickMenu();
 };
 
 typedef struct RaceCam RaceCam, *PRaceCam;
@@ -402,35 +405,11 @@ struct RaceCam { /* A race camera (RaceViewLoop.cams; RaceCam_*). */
     byte lookBack; /* action 9 held */
 };
 
-typedef struct RaceLoop RaceLoop, *PRaceLoop;
-typedef struct RaceMenuLoop RaceMenuLoop, *PRaceMenuLoop;
-
-typedef struct RaceViewLoop RaceViewLoop, *PRaceViewLoop;
-typedef struct PreQuickMenuIO PreQuickMenuIO, *PPreQuickMenuIO;
-
-typedef struct RaceMenuLoop_vtbl RaceMenuLoop_vtbl, *PRaceMenuLoop_vtbl;
-
-struct RaceMenuLoop_vtbl {
-    int offset; /* always 0 */
-    void * (*tf)(void *); /* __tf type_info function */
-    void (*dtor)(void *, int);
-    void (*Init)(void *);
-    void (*Run)(void *);
-    void (*Finish)(void *);
-    int (*State4)(void *);
-    int (*State5)(void *);
-    int (*State6)(void *);
-    int (*State7)(void *);
-    int (*State8)(void *);
-    int (*State9)(void *);
-    int (*State10)(void *);
-    int (*State11)(void *);
-    int (*State12)(void *);
-    int (*State13)(void *);
-};
-
-struct RaceViewLoop { /* The race screen loop (vtable RaceViewLoop__vtable). Start(mode) runs it; Update steps the race once per frame. */
-    struct psxViewLoopDoubleBuffer base;
+// The race screen loop (0x2f4 bytes), derived from the resident
+// psxViewLoopDoubleBuffer (viewloop.h); raceloops.cpp emits its vtable. Start(mode)
+// runs it; Update steps the race once per frame. RaceDevelopment derives from it.
+class RaceViewLoop : public psxViewLoopDoubleBuffer {
+public:
     uint randomSeed; /* vsync count + g_RandomSeed at construction */
     struct DrawLayer layer0; /* not added to the draw context */
     struct DrawLayer layers[4]; /* priorities 0x200 (3D), 0x300, 0x400, 0x500 */
@@ -443,6 +422,15 @@ struct RaceViewLoop { /* The race screen loop (vtable RaceViewLoop__vtable). Sta
     byte twoPlayer;
     byte drawFront; /* 2P: draws into the displayed buffer (BeginDraw swaps bufferIndex) */
     unsigned char unk2ec[8];
+
+    RaceViewLoop();
+    virtual ~RaceViewLoop();
+    virtual void Enter();
+    virtual void Leave();
+    virtual int Update();
+    virtual void BeginDraw();
+    virtual void Draw();
+    virtual void Start(int mode);
 };
 
 struct PreQuickMenuIO {
@@ -454,18 +442,68 @@ struct PreQuickMenuIO {
     uchar fontTimUploaded;
     uchar menuTimUploaded;
     uchar mode;
+
+    PreQuickMenuIO();           // still assembly (quickmenu.cpp)
+    ~PreQuickMenuIO();
 };
 
-struct RaceMenuLoop { /* Base of the race flow state machines (RaceMenuLoop__Run). */
+// Base of the race flow state machines (0x10 bytes; raceloops.cpp emits its
+// vtable). Execute runs Init, Run and Finish; Run steps through the states
+// (State4..State13), each returning 1 to leave, a state, or a direction: 3
+// forward, 2 back, 0 the last one.
+class RaceMenuLoop {
+public:
     int arg; /* Race_Entry argument: non-zero = replay only (attract demo, raceType 0xc) */
-    struct RaceViewLoop *view;
+    RaceViewLoop *view;
     int state; /* last direction: 3 forward (initial), 2 back */
-    struct RaceMenuLoop_vtbl *vptr;
+
+    RaceMenuLoop(RaceViewLoop *view, int arg);
+    virtual ~RaceMenuLoop();
+    virtual void Init();
+    virtual void Run();
+    virtual void Finish();
+    virtual int State4();       // load
+    virtual int State5();
+    virtual int State6();       // menus
+    virtual int State7();
+    virtual int State8();       // before the race
+    virtual int State9();       // the race
+    virtual int State10();
+    virtual int State11();
+    virtual int State12();      // the replay
+    virtual int State13();
+    void Execute();
+    int ResolveState(int ret);
 };
 
-struct RaceLoop { /* ArcadeRaceLoop (0x5d8 bytes) and GranTurismoRaceLoop (0x5e0 bytes): RaceMenuLoop + race view + menu screens. */
-    struct RaceMenuLoop base;
-    struct RaceViewLoop view;
+// The arcade race loop (0x5d8 bytes; arcaderace.cpp emits its vtable),
+// constructed on ArcadeRace_Run's stack: the race view, the loading screen
+// around the menus and the QuickMenu.
+class ArcadeRaceLoop : public RaceMenuLoop {
+public:
+    RaceViewLoop raceView;
+    PreQuickMenuIO menuIO; /* loading screen run before / after the menus (mode: 0 enter menus, 1 back to the race) */
+    QuickMenu menu; /* menu.unk7c is the choice: 0 replay, 1 retry, 2 quit, 4 start / next race */
+    unsigned char unk5cc[4];
+    signed char firstEntry; /* the menus' first time after a race: shows the results */
+    signed char ghostKept; /* time trial: a ghost was kept, car 1 races it */
+    unsigned char unk5d2[6];
+
+    ArcadeRaceLoop(int arg);
+    virtual ~ArcadeRaceLoop();
+    virtual int State4();
+    virtual int State6();
+    virtual int State8();
+    virtual int State10();
+    virtual int State13();
+};
+
+// GranTurismoRaceLoop's layout (0x5e0 bytes) until it is a class: its
+// RaceMenuLoop, then the members ArcadeRaceLoop has too. RaceLoop_EnterMenus
+// and RaceLoop_LeaveMenus take it.
+struct RaceLoop {
+    RaceMenuLoop base;
+    RaceViewLoop view;
     struct PreQuickMenuIO menuIO; /* loading screen run before / after the menus (mode +0x87: 0 enter menus, 1 back to the race) */
     struct QuickMenu menu; /* QuickMenu; menu.unk7c is the choice: 0 replay, 1 retry, 2 quit, 4 start / next race */
     byte raceDoneA; /* GT: set after a race */
@@ -583,6 +621,13 @@ struct RaceWorld { /* The race state (g_RaceWorld, 0x800a9504; RaceWorld_Init). 
     byte carCount; /* cars in the race (2 in time trial: player and ghost) */
     byte showGhost; /* toggled by player 1 action 17 */
     unsigned char unk5d2f;
+};
+
+// The race's memory from g_Race_IsDemo on: the game addresses g_RaceWorld from it.
+struct RaceMem {
+    unsigned char isDemo;
+    unsigned char pad1[3];
+    RaceWorld world;
 };
 
 typedef struct ResultCar ResultCar, *PResultCar;
