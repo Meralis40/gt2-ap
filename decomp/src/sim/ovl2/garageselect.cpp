@@ -7,7 +7,7 @@
 
 extern "C" {
 extern MenuList g_ArcList_Garage;
-extern unsigned char g_Arc_CarCarousel;
+extern ArcGridPicker g_Arc_CarCarousel;
 extern unsigned char g_Arc_CarGrowBar;
 extern ArcDialog g_Arc_TransPicker;
 extern ResultCarView g_Arc_CarView;

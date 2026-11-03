@@ -6,7 +6,7 @@
 #include "common.h"
 
 extern "C" {
-extern unsigned char g_Arc_CarCarousel;
+extern ArcGridPicker g_Arc_CarCarousel;
 extern unsigned char g_Arc_CarGrowBar;
 extern ArcDialog g_Arc_TransPicker;
 extern ArcDialog g_Arc_SettingPicker;

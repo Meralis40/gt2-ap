@@ -223,6 +223,7 @@ CXX_NAMES = {"exe": {
 # their addresses: the unit's symbol file can't name them, as they fall in its
 # own address range.
 OVERLAY_ENTRIES = {
+    "ovl2": {"Race_Entry": "0x80011F64", "MainMenu_StartNextDemo": "0x8001172C", "Movie_ArcadeEntry": "0x800114E0"},
     "ovl3": {"Race_Entry": "0x80011F64"},
     "ovl4": {"Race_Entry": "0x80011F64", "MainMenu_StartNextDemo": "0x8001172C"},
 }

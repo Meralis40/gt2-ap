@@ -45,7 +45,7 @@ void ColorChips_Update(ArcColorChips *c)
 }
 
 // Sets the highlighted colour.
-void ColorChips_Select(ArcColorChips *c, short index)
+void ColorChips_Select(ArcColorChips *c, int index)
 {
     c->selected = index;
 }

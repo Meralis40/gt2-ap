@@ -42,9 +42,9 @@ segments:
       - [0x4a8, cpp, setcolor] # src/sim/ovl2/setcolor.cpp, shared with OVL3
       - [0x554, cpp, initevent] # src/sim/ovl2/initevent.cpp, shared with OVL3
       - [0xa34, cpp, racesetup] # src/sim/ovl2/racesetup.cpp, shared with OVL3
-      - [0xc84, asm, arcademode] # 0x80010c84
+      - [0xc84, cpp, arcademode] # 0x80010c84
       - [0x1a50, cpp, menuquad] # 0x80011a50, src/sim/ovl2/copies.h
-      - [0x1bb0, asm, sprite] # 0x80011bb0
+      - [0x1bb0, cpp, sprite] # 0x80011bb0
       - [0x1ebc, cpp, gradientbar] # 0x80011ebc
       - [0x21e0, cpp, powergraph] # 0x800121e0
       - [0x3218, cpp, garage] # 0x80013218
@@ -64,20 +64,20 @@ segments:
       - [0x824c, cpp, colorchips] # 0x8001824c
       - [0x8548, cpp, statbar] # 0x80018548
       - [0x894c, cpp, spectable] # 0x8001894c
-      - [0x9064, asm, carspecpanel] # 0x80019064
+      - [0x9064, cpp, carspecpanel] # 0x80019064
       - [0x94c0, cpp, lerp] # 0x800194c0, src/sim/ovl2/copies.h
       - [0x9518, cpp, carspecpanel2] # 0x80019518
       - [0x9e60, cpp, carrating] # 0x80019e60
       - [0x9fe4, cpp, textitem] # 0x80019fe4
       - [0xaab4, cpp, dialog] # 0x8001aab4
-      - [0xb37c, asm, menuitem] # 0x8001b37c
+      - [0xb37c, cpp, menuitem] # 0x8001b37c
       - [0xc118, cpp, iconitem] # 0x8001c118
-      - [0xc7ac, asm, gridpicker] # 0x8001c7ac
+      - [0xc7ac, cpp, gridpicker] # 0x8001c7ac
       - [0xd13c, cpp, arclists] # 0x8001d13c
       - [0xd568, cpp, selectpages] # 0x8001d568
       - [0xe53c, cpp, carselect] # 0x8001e53c
       - [0xf238, cpp, garageselect] # 0x8001f238
-      - [0x10224, asm, battle2p] # 0x80020224
+      - [0x10224, cpp, battle2p] # 0x80020224
       - [0x128c0, cpp, courseselect] # 0x800228c0
       - [0x1344c, cpp, racelaunch] # 0x8002344c
       - [0x13690, cpp, bonus] # 0x80023690
@@ -94,8 +94,12 @@ segments:
       - [0x1635c, cpp, decodevlc] # 0x8002635c, src/sim/ovl2/copies.h
       - [0x165d4, cpp, strplayer] # 0x800265d4
       - [0x1678c, rodata] # 0x8002678c
+      - [0x167dc, .rodata, arcademode] # 0x800267dc: ArcadeMode_Run's jump table
+      - [0x167f0, rodata] # 0x800267f0
       - [0x16f98, .rodata, arcademenu] # 0x80026f98: Update's jump table, vtable and type name of ArcadeMenu
       - [0x1700c, rodata] # 0x8002700c, the padding before arcaderacingmenu.cpp's .rodata
       - [0x17010, .rodata, arcaderacingmenu] # 0x80027010: vtable and type name of ArcadeRacingMenu
       - [0x17068, rodata] # 0x80027068
+      - [0x173fc, .rodata, battle2p] # 0x800273fc: Battle2P_ClosePlayer's jump table
+      - [0x17420, rodata] # 0x80027420
   - [0x43544]

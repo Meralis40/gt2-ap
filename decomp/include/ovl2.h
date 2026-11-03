@@ -80,6 +80,100 @@ struct ArcIconItem {
     short pad16;
 };
 
+// A sprite of a texture page (Sprite_AddScaled).
+struct ArcSprite {
+    unsigned char u;
+    unsigned char v;
+    unsigned short clut;
+    short w;
+    short h;
+    unsigned short tpage;
+};
+
+// A menu list row: a text item (kind bit 0 clear) or an icon item (set); kind < 0 is disabled.
+struct ArcMenuItem {
+    signed char kind;
+    char pad01;
+    short height; // 0 or less: the list's itemHeight
+    void *item; // ArcTextItem or ArcIconItem
+    void *tmpl; // its template (TextItem_Init_OVL2, IconItem_Init)
+    void *data; // its text or sprite
+    int value; // MenuList_Update_OVL2's result when chosen
+};
+
+// The OVL2 menu list (0x20 bytes), another version of the resident MenuList, with ArcMenuItem rows.
+struct ArcMenuList {
+    signed char count;
+    unsigned char flags; // 4: Up and Down wrap
+    signed char visibleRows;
+    char pad03;
+    short cursorWidth;
+    short itemHeight;
+    short itemGap;
+    short pad0a;
+    ArcMenuItem *items;
+    short x;
+    short y;
+    signed char selected;
+    signed char revealIndex;
+    short scrollAnim; // -8 to 8, toward 0
+    short blinkTimer; // 0 to 60
+    short revealTimer; // shows the next item at 0, every 6 frames
+    short state; // 0 to 45 while open; -1 closed, -0x41 up to -1 closing
+    short pad1e;
+};
+
+struct ArcGridPicker;
+
+// A row and an item of a grid picker.
+struct ArcGridPos {
+    short row;
+    short item;
+};
+
+// What GridPicker_Draw passes to the item callback, for the current and the previous item.
+struct ArcGridPickerDraw {
+    ArcGridPicker *picker;
+    void *ot;
+    short x;
+    short y;
+    short brightness; // 0x80 shown
+    ArcGridPos pos;
+    short pad12;
+    void *arg; // ArcGridPicker.drawArg
+};
+
+// What GridPicker_Init copies.
+struct ArcGridPickerTmpl {
+    short x;
+    short y;
+    short w;
+    short h;
+    void (*draw)(ArcGridPickerDraw *ctx, int item);
+    void *drawArg;
+};
+
+// The car and course selection pages' picker (0x2c bytes): rows of items, Left/Right change the
+// item, Up/Down the row, the item sliding in; the callback draws each item.
+struct ArcGridPicker {
+    short x;
+    short y;
+    short w;
+    short h;
+    ArcGridPos cur;
+    short rowItems[2]; // items per row
+    short rowCount;
+    ArcGridPos prev; // the item sliding out; row -1: none
+    short anim; // open 0 to 12 then 12 to 56 (arrows), close -17 up to -1
+    short slide; // -12 to 12, toward 0
+    short slideVertical; // 1: the slide is between rows
+    signed char moving; // the row has more than one item (Left/Right shown)
+    unsigned char pad1d[3];
+    void (*draw)(ArcGridPickerDraw *ctx, int item);
+    void *drawArg;
+    signed char *enabled; // per item; NULL: all
+};
+
 struct ArcColorChips {
     short selected;
     short count;
@@ -108,6 +202,31 @@ struct ArcSpecTable {
     short valueWidth;
     short anim;
     short pad24e;
+};
+
+// The power graph of the car spec panel (PowerGraphView_*_OVL2), 0x44 bytes.
+struct ArcPowerGraph {
+    short state[0x14];
+    void *powerCurve;
+    void *torqueCurve;
+    unsigned char pad30[0x14];
+};
+
+// The arcade car spec panel (g_ArcCarSpecPanel): two slots that alternate, so that the old car's
+// widgets close while the new one's open.
+struct ArcCarSpecPanel {
+    ArcTextItem name[2];
+    ArcIconItem icon[2];
+    ArcPowerGraph graph[2];
+    unsigned char levels[2][4]; // the 3 meters' levels
+    ArcStatBar bars[2][3];
+    ArcSpecTable table[2];
+    ArcColorChips chips[2];
+    char nameText[2][0x100];
+    unsigned char powerCurve[2][0xa0];
+    unsigned char torqueCurve[2][0xa0];
+    signed char shown[2];
+    signed char slot; // the current one
 };
 
 struct ArcRecordPanel {
@@ -238,7 +357,7 @@ struct ResultCarView {
     unsigned int discRgb;
 };
 
-// Arcade mode menu loop (0x298 bytes), derived from the resident psxViewLoopDoubleBuffer
+// Arcade mode menu loop (0x4b8 bytes), derived from the resident psxViewLoopDoubleBuffer
 // (viewloop.h), like OVL4's GTMenu; arcademenu.cpp emits its vtable. Constructed on
 // ArcadeMode_Run's stack.
 class ArcadeMenu : public psxViewLoopDoubleBuffer {
@@ -269,7 +388,7 @@ public:
     unsigned char pad230[8];
     int logoArcReady; // CarLogoArc_Update result; forces the logo uploads
     ArcLogo logos[2];
-    int unk294; // object set up by OVL2::CourseMap_Init (size unknown)
+    unsigned char courseMap[0x224]; // set up by CourseMap_Init (ArcadeMode_Run's frame gives its size)
 
     ArcadeMenu();
     virtual ~ArcadeMenu();
