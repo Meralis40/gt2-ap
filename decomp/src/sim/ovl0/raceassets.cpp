@@ -20,6 +20,11 @@ struct MapDot {
 extern "C" {
 extern RaceText sR_Lap;             // the race text of the current language (its first string is "Lap")
 extern RaceWorld g_RaceWorld;
+extern RaceSetup g_RaceSetup;
+extern RaceMem g_Race_IsDemo;
+extern unsigned char g_HudTexFile[];
+void *memcpy(void *dst, const void *src, unsigned int n);
+void *memset(void *p, int c, unsigned int n);
 
 // Reads TEXT_DATA_RACE_TXD and copies the block of g_GameState.language to the race
 // text. Called first by Race_Entry.
@@ -31,7 +36,65 @@ void RaceText_Load(void)
     sR_Lap = texts[g_GameState.language];
 }
 
+#ifdef NON_MATCHING
+// Loads each car's model and textures, with the course's lighting blended into its
+// palettes (slots 0-2; slot 3 is black), and its wheel.
+void RaceCars_LoadModels(RaceWorld *world)
+{
+    CourseEntry *course = Course_Get(world->course);
+    unsigned int rgb[4];
+    int t[4];
+    unsigned int *rgbs = rgb;
+    int *ts = t;
+    int i;
+
+    rgb[0] = Rgb555ToRgb24(*(unsigned short *)((char *)course + 0xc));
+    rgb[1] = Rgb555ToRgb24(*(unsigned short *)((char *)course + 0x14));
+    rgb[2] = Rgb555ToRgb24(*(unsigned short *)((char *)course + 0x10));
+    rgb[3] = 0;
+    t[0] = *(unsigned short *)((char *)course + 0xe);
+    t[1] = *(unsigned short *)((char *)course + 0x16);
+    t[2] = *(unsigned short *)((char *)course + 0x12);
+    t[3] = 0x1000;
+    for (i = 0; i < g_RaceWorld.carCount; i++) {
+        RaceCar *car = &g_RaceSetup.cars[i];
+        int color = car->colorCode;
+        CarAsset *asset = CarAsset_Find(car->carId);
+        CarModelHeader *model = (CarModelHeader *)((char *)&g_Race_IsDemo + 0xb6394 + i * 0x5000);
+        int slot = 0x1a - i;
+        int file;
+        unsigned short *clut = (unsigned short *)(g_HudTexFile + 0xb3a0);
+        unsigned short *src;
+        unsigned int *r = rgbs;
+        int *u = ts;
+        int j;
+
+        file = asset->file + (*(unsigned short *)((char *)course + 8) & 1) * 2;
+        world->carModels[i] = model;
+        CarModel_Load(file, model, slot);
+        CarModel_ReadTim(file, g_HudTexFile);
+        Vram_UploadCarSlot(g_HudTexFile + 0x43a0, slot);
+        src = (unsigned short *)(g_HudTexFile + CarTex_FindColorIndex((CarTex *)g_HudTexFile, color) * 0x240 + 0x20);
+        if (Wheel_LoadTim(car->setup.wheel, clut + 0x100) != 0) {
+            memcpy(src, (char *)clut + 0x214, 0x20);
+            Tim_LoadToSlot((char *)(clut + 0x100), slot, 0);
+        }
+        for (j = 0; j < 4; j++) {
+            if (j < 3) {
+                Clut_Blend(clut, src, *r, *u);
+            } else {
+                memset(clut, 0, 0x200);
+            }
+            Clut_UploadToSlot(clut, slot, j);
+            CarModel_SetColor(model, j, clut[0]);
+            r++;
+            u++;
+        }
+    }
+}
+#else
 INCLUDE_ASM("asm/sim/ovl0/nonmatchings/raceassets", RaceCars_LoadModels);
+#endif
 
 // When the map option is on: a dot per car (red for player, green for the others) with a
 // black border, over the 96x96 map texture at x, y.

@@ -421,7 +421,13 @@ public:
     byte pausedBy; /* player (1/2) who opened the pause menu, 0 = running */
     byte twoPlayer;
     byte drawFront; /* 2P: draws into the displayed buffer (BeginDraw swaps bufferIndex) */
-    unsigned char unk2ec[8];
+    signed char musicPlaying; /* track playing, -1 none */
+    unsigned char musicLoop;
+    signed char musicTrack; /* track requested (RaceMusic_Request) */
+    unsigned char raceTrack; /* the random race track */
+    signed char musicNext; /* played when the current one ends */
+    unsigned char musicKind; /* picks the finish track */
+    unsigned char pad2f2[2];
 
     RaceViewLoop();
     virtual ~RaceViewLoop();
