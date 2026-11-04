@@ -325,7 +325,8 @@ struct ArcCarSpecPanel {
     ArcTextItem name[2];
     ArcIconItem icon[2];
     ArcPowerGraph graph[2];
-    unsigned char levels[2][4]; // the 3 meters' levels
+    signed char levels[2][3]; // the 3 meters' levels
+    unsigned char pad116[2];
     ArcStatBar bars[2][3];
     ArcSpecTable table[2];
     ArcColorChips chips[2];
@@ -465,6 +466,16 @@ struct ArcGuestLoadConfig {
     short textPri;
 };
 
+// The memory a car view loads into.
+struct ArcCarBuffers {
+    void *model; // inflated CarModelHeader
+    void *tex; // inflated textures: colour count (u16), palette blocks of 0x240 from +0x20, image at +0x43a0
+    void *modelGz; // compressed model read from the CD
+    void *texGz; // compressed textures read from the CD
+    void *wheelBuf; // wheel model / TIM
+    GzipStream *gzip; // shared inflate state
+};
+
 // Arcade 3D car preview: streams a car model, its textures and wheel from the CD, inflates them in a menu hook and draws them with a ground disc. Two of them (ArcadeMenu.carViews).
 struct ArcCarView {
     unsigned short clutY; // CarModelInst.unk06
@@ -472,23 +483,23 @@ struct ArcCarView {
     unsigned short firstFile; // CarAssetEntry.firstFile (model file; +1 textures)
     unsigned char pad6[2];
     unsigned int carId;
-    char vramSlot; // texture/CLUT slot (0x18 + view index)
+    signed char vramSlot; // texture/CLUT slot (0x18 + view index)
     signed char colorIdx;
     signed char loaded; // model, textures and wheel ready: drawable
     signed char perfDone; // performance computed (CarParams_GetPerformance) for this load
     unsigned char loadState; // ArcCarView_Update state: 1 start, 2/3 model read, 4/5 texture read, 6/7 wheel read, 8 wait for decode
-    unsigned char hasWheel; // car has a non-default wheel
+    signed char hasWheel; // car has a non-default wheel
     unsigned char pad12[2];
     unsigned int wheelFile; // Wheel_GetFileId
-    unsigned char hookActive; // decode hook installed (ArcCarView_DecodeHook)
-    unsigned char hookPending; // install the decode hook when the menu hook is free
-    unsigned char decoded; // decode finished
-    unsigned char decodeState; // ArcCarView_DecodeHook state 0-6
-    unsigned char cdBusy; // owns the menu CD read
-    unsigned char cancel; // stop the read on the next update
+    signed char hookActive; // decode hook installed (ArcCarView_DecodeHook)
+    signed char hookPending; // install the decode hook when the menu hook is free
+    signed char decoded; // decode finished
+    signed char decodeState; // ArcCarView_DecodeHook state 0-6
+    signed char cdBusy; // owns the menu CD read
+    signed char cancel; // stop the read on the next update
     unsigned char modelRead;
     unsigned char texRead;
-    unsigned char wheelRead;
+    signed char wheelRead;
     signed char colorDirty; // re-apply the colour on the next BeginFrame
     unsigned char pad22[2];
     unsigned int modelBytes; // bytes read so far
@@ -498,18 +509,13 @@ struct ArcCarView {
     unsigned int wheelBytes;
     unsigned int wheelSize;
     unsigned int decodePos; // output bytes inflated so far
-    void *model; // inflated CarModelHeader
-    void *tex; // inflated textures: colour count (u16), palette blocks of 0x240 from +0x20, image at +0x43a0
-    void *modelGz; // compressed model read from the CD
-    void *texGz; // compressed textures read from the CD
-    void *wheelBuf; // wheel model / TIM
-    GzipStream *gzip; // shared inflate state
+    ArcCarBuffers buf;
     GroundDisc disc; // ground shadow disc
     CarSetup setup;
     CarParams params;
     EnginePerf perf; // maxPower, powerRpm, maxTorque, torqueRpm used by the spec panel
     int hasPerf; // perf computed from params (1) or copied from the garage Car (0)
-    unsigned short wheelColor; // index into g_WheelOffsetTable; 2 by default
+    short wheelColor; // index into g_WheelOffsetTable; 2 by default
     unsigned char pad446[2];
 };
 
@@ -560,8 +566,8 @@ struct ResultCarView {
     int unk_bc;
     short viewport[4];
     short frustum[6];
-    unsigned char drawDisc;
-    unsigned char discSemi;
+    signed char drawDisc;
+    signed char discSemi;
     unsigned char pad_d6[2];
     unsigned int discRgb;
 };

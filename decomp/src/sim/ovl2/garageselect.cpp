@@ -469,7 +469,7 @@ void GarageSelect_Draw(void *menu, DrawLayer *layer)
     Dialog_Draw_OVL2(&g_Arc_TransPicker, ot_00, ctx);
     if (*(int *)(iVar1 + 0x14) == 0) {
         ArcCarView_Draw(*(ArcCarView **)((int)menu + 0x228), (DrawLayer *)((int)menu + 0xbc),
-                                        (DrawLayer *)((int)menu + 0xcc), (unsigned char *)&g_Arc_CarView);
+                                        (DrawLayer *)((int)menu + 0xcc), &g_Arc_CarView);
     }
     local_20.x = 0x30;
     local_20.y = 0xb4;

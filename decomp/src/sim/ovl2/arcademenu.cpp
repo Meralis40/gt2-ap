@@ -46,7 +46,70 @@ extern Font D_80123810;                 // 5
 extern Font D_80129840;                 // 3
 }
 
+#ifdef NON_MATCHING
+// Draws page: its title bar, with fade (0-128) dimming it, then the page itself.
+void ArcadeMenu_DrawPage(ArcadeMenu *menu, MenuPage *page, DrawLayer *layer, int fade)
+{
+    char *ot = (char *)layer->ot;
+    TextCtx *text = menu->text;
+    uint *titleOt = (uint *)(ot + 0x10);
+    int r;
+    int g;
+    int b;
+
+    if (page == 0) {
+        return;
+    }
+    if (page->title != 0) {
+        int spacing;
+        int size;
+        int x;
+        RECT *rect;
+        PrimG4 *p;
+        unsigned int color;
+
+        Text_SetFont(text, &D_80129830);
+        spacing = 0x22 - (fade >> 2);
+        text->ot = titleOt;
+        size = Text_MeasureString(text, (signed char *)page->title, spacing);
+        r = fade * 0xf5 >> 7;
+        g = fade * 0x5c >> 7;
+        b = fade * 0x19 >> 7;
+        x = (0x160 - size) >> 1;
+        rect = Prim_AddTile(titleOt, r | g << 8 | b << 16);
+        r = fade * 0xf5 >> 8;
+        g = fade * 0x5c >> 8;
+        b = fade * 0x19 >> 8;
+        rect->x = x + 1;
+        rect->y = 0x4e;
+        rect->w = size;
+        rect->h = 2;
+        text->rgb = r | g << 8 | b << 16;
+        Text_DrawString(text, (signed char *)page->title, x, 0x4c, spacing);
+        text->rgb = 0;
+        Text_DrawString(text, (signed char *)page->title, x + 3, 0x4f, spacing);
+        color = page->titleColor;
+        r = (int)(color & 0xff) * fade >> 7;
+        g = (int)(color >> 8 & 0xff) * fade >> 7;
+        b = (int)(color >> 16 & 0xff) * fade >> 7;
+        size = fade * 0x2d >> 7;
+        p = Prim_AddPolyG4((uint *)(ot + 0x18));
+        p->c2 = p->c3 = 0;
+        p->x0 = p->x2 = 0;
+        p->x1 = p->x3 = 0x160;
+        p->c0 = p->c1 = r | g << 8 | b << 16 | 0x3a000000;
+        p->y0 = p->y1 = 0x2d - size;
+        p->y2 = p->y3 = size + 0x2d;
+        Prim_AddDrawMode(ot + 0x18, 0x220);
+    }
+    menu->activePage = page;
+    if (page->draw != 0) {
+        page->draw(menu, layer);
+    }
+}
+#else
 INCLUDE_ASM("asm/sim/ovl2/nonmatchings/arcademenu", ArcadeMenu_DrawPage);
+#endif
 
 // Starts the course preview movie movie.
 void ArcadeMenu_PlayMovie(ArcadeMenu *menu, int movie)
@@ -170,7 +233,7 @@ void ArcadeMenu::Enter()
         buffers[4] = wheel;
         buffers[5] = D_800DF4A8;
         carViews[i] = view;
-        ArcCarView_Init(view, buffers, i + 0x18, D_800454D4[1], D_800454D4[4]);
+        ArcCarView_Init(view, (ArcCarBuffers *)buffers, i + 0x18, D_800454D4[1], D_800454D4[4]);
         view++;
         model += 0x6000;
         tex += 0xb3a0;
