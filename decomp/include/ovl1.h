@@ -95,7 +95,7 @@ struct AnalogSettings {
     SteerCalib steer;
     PedalCalib accel;
     PedalCalib brake;
-    unsigned char icons[3][28];
+    WipeBar icons[3]; // the gauges' bars
 };
 
 struct TabSelector {
