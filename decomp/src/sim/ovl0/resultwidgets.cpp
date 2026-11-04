@@ -306,7 +306,7 @@ void AnimatedTime_Draw(short *fade, uint *ot, TextCtx *ctx, int value, int x, in
 }
 
 #ifdef NON_MATCHING
-void RecordRow_Init(void *rowPtr, short rank, void *record, uint *rgb)
+void RecordRow_Init(void *rowPtr, int rank, void *record, uint *rgb)
 {
     RecordRow *row = (RecordRow *)rowPtr;
 

@@ -992,7 +992,7 @@ void CarModel_DrawBodyOnly(Camera *cam, CarModelInst *inst);
 void ResultCar_Draw(ResultCar *car, DrawLayer *layer, DrawLayer *shadowLayer, ResultCarView *view, int bodyOnly);
 void TitleBanner_Draw(TitleBanner *b, unsigned int *ot, int x, int y, TextCtx *ctx);
 void InfoBar_Update(InfoBar *b);
-void RecordRow_Init(void *row, short place, void *times, uint *colors);
+void RecordRow_Init(void *row, int place, void *times, uint *colors);
 void RecordRow_Draw(void *row, uint *ot, TextCtx *ctx, int x, int y, int fade);
 void ResultCarView_Spin(ResultCarView *view, int frame);
 void ResultRoot_Enter(int back);
