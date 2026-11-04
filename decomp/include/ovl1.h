@@ -127,6 +127,19 @@ struct TabEvent {
     short pad12[3];
 };
 
+// ovl1/dataxfer.cpp
+
+// What DataXfer_Setup takes.
+struct DataXferConfig {
+    unsigned int heap; // the work area (g_OVL1_EndFontInfo)
+    KanjiFont *font;
+    short *cardSlots;
+    Font *fontSmall;
+    Font *fontMedium;
+    Font *fontLarge;
+    short textPri;
+};
+
 // ovl1/menusprite.cpp
 
 // A menu row image: a sprite that opens with a fade and closes as two bands.
