@@ -127,6 +127,19 @@ struct TabEvent {
     short pad12[3];
 };
 
+// ovl1/replaycopy.cpp
+
+// What ReplayCopy_Setup takes.
+struct ReplayCopyConfig {
+    unsigned int heap; // the work area
+    KanjiFont *font;
+    short *cardSlots;
+    Font *fontSmall;
+    Font *fontMedium;
+    Font *fontLarge;
+    short textPri;
+};
+
 // ovl1/dataxfer.cpp
 
 // What DataXfer_Setup takes.

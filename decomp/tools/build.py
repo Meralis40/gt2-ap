@@ -66,7 +66,7 @@ GAS_CXX = {"src/sim/exe/screenviewloop.cpp", "src/sim/exe/format.cpp", "src/sim/
            "src/sim/exe/powergraph.cpp", "src/sim/exe/records.cpp", "src/sim/exe/replaydir.cpp",
            "src/sim/exe/misc.cpp", "src/sim/exe/negconcalib.cpp", "src/sim/exe/pad.cpp", "src/sim/exe/seq.cpp", "src/sim/exe/sfx.cpp", "src/sim/exe/util.cpp",
            "src/sim/ovl0/particles.cpp",
-           "src/sim/ovl1/negconcalib.cpp", "src/sim/ovl1/buycar.cpp", "src/sim/ovl1/tabselector.cpp", "src/sim/ovl1/options.cpp", "src/sim/ovl1/dataxfer.cpp",
+           "src/sim/ovl1/negconcalib.cpp", "src/sim/ovl1/buycar.cpp", "src/sim/ovl1/tabselector.cpp", "src/sim/ovl1/options.cpp", "src/sim/ovl1/dataxfer.cpp", "src/sim/ovl1/replaycopy.cpp",
            "src/sim/ovl4/battletable.cpp", "src/sim/ovl4/carwork2.cpp", "src/sim/ovl4/formatprice.cpp", "src/sim/ovl4/gtmode.cpp",
            "src/sim/ovl4/menudraw.cpp",
            "src/sim/ovl4/menudata.cpp"}
