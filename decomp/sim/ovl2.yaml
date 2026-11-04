@@ -109,4 +109,6 @@ segments:
       - [0x17420, rodata] # 0x80027420
       - [0x17424, .rodata, courseselect] # 0x80027424: ArcCourseList_GetCurrent's jump table
       - [0x17438, rodata] # 0x80027438
+      - [0x17444, .rodata, bonus] # 0x80027444: BonusItems_ListCallback's jump table
+      - [0x17468, rodata] # 0x80027468
   - [0x43544]

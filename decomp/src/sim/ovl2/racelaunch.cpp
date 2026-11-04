@@ -119,7 +119,7 @@ int ArcBonus_AllCoursesWon(void)
     GameState *state = &g_GameState;
     unsigned char *stats = (unsigned char *)&state->stats;
 
-    for (; course->code != 0; course++) {
+    for (; course->name != 0; course++) {
         if (course->stat >= 0) {
             ArcBonusFlags *flags = (ArcBonusFlags *)&stats[course->stat];
 
