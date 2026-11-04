@@ -12,14 +12,6 @@ struct MainStringsBlockB {
     char data[0x7a9];
 };
 
-// What DataXfer_Setup takes. The pages here don't set the fourth field.
-struct DataXferConfig {
-    unsigned int heap; // g_OVL1_EndFontInfo
-    KanjiFont *font;
-    short *cardSlots;
-    void *unk0c;
-};
-
 // The GT1 save DataXfer_GetGt1Data returns, as far as it's read here.
 struct Gt1Save {
     unsigned char pad0[0x2b5c];
@@ -43,8 +35,6 @@ extern short g_CardSlotStatus[];
 extern BaseMenuPage g_Page_DataTransferMenu;
 extern BaseMenuPage g_Page_DataTransferBuyCar;
 void PushPage(BaseMenu *menu, BaseMenuPage *page);
-void DataXfer_Setup(DataXferConfig *config);
-int DataXfer_Update(PadState *pad);
 int DataTransferMenu_ItemCallback(MenuListEventId event, MenuListEvent *ev, int index);
 void Mix_MergeCourseRecords(void);
 void Mix_MergeLicenseTimes(void);
