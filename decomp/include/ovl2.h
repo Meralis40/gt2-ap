@@ -427,10 +427,14 @@ struct ArcCourseMap {
     unsigned int hashes[129];
 };
 
-// A bonus course of the arcade menu (g_ArcBonusCourses, ends with a code of 0).
+// A bonus course of the arcade menu (g_ArcBonusCourses, ends with no name).
 struct ArcBonusCourse {
-    int code;
-    int pad04[2];
+    char *name;
+    signed char gold;
+    signed char lit;
+    signed char lamp;
+    unsigned char pad07;
+    int license;
     int stat; // byte of PlayerStats, bit 1 or 2 set when won; negative: none
 };
 
