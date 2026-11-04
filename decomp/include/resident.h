@@ -2747,17 +2747,23 @@ struct ArcadeRaceSel {
     short lapOption;          // 0x4
     short garage;             // 0x6
     short slot;               // 0x8
-    char unkA[0x18 - 0xa];
+    char unkA[2];
+    unsigned int carCodes[2]; // 0xc: CarCode_Encode
+    short unk14;
+    short color;              // 0x16
     signed char unk18;        // RaceCar.unk8f of the player's car
     char unk19[0xa0 - 0x19];
     short garages[2];         // 0xa0: 2-player battle, per player
     short slots[2];           // 0xa4
     char unkA8[0xb6 - 0xa8];
     signed char unkB6[2];     // 0xb6: RaceCar.unk8f per player
-    char unkB8[0x2c8 - 0xb8];
+    char courseName[0x100];   // 0xb8
+    unsigned int courseHash;  // 0x1b8
+    short courseStat;         // 0x1bc
+    char unk1BE[0x2c8 - 0x1be];
     int useGarageCars;        // 0x2c8
     int dirt;                 // 0x2cc: dirt course (dirt tyres)
-    char unk2D0[0x2d4 - 0x2d0];
+    void *courseMap;          // 0x2d0
 };
 
 // ovl3/storesetup.cpp

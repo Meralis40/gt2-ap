@@ -42,7 +42,7 @@ int ArcCourseList_UpdateUnlocks(ArcCourse *list, int reverse)
     unsigned char *stats = (unsigned char *)&state->stats;
     int count = 0;
 
-    for (; list->unk04 != 0; list++) {
+    for (; list->label != 0; list++) {
         list->hash = Str_Hash(list->name);
         list->unlocked = 0;
         if (License_IsEarned_OVL2(list->license) != 0) {

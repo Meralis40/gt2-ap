@@ -131,6 +131,7 @@ struct ArcSprite {
     short w;
     short h;
     unsigned short tpage;
+    unsigned short pad0a;
 };
 
 // A menu list row: a text item (kind bit 0 clear) or an icon item (set); kind < 0 is disabled.
@@ -354,8 +355,8 @@ struct ArcCoursePreviewMovie {
 
 struct ArcCarRating {
     unsigned char unk00;
-    unsigned char dirtTires;
-    unsigned char pwrClass;
+    signed char dirtTires;
+    signed char pwrClass;
     unsigned char unk03;
     short power;
     short unk06;
@@ -378,10 +379,16 @@ struct ArcBonusFlags {
 };
 
 // A course of the arcade course lists (0x20 bytes, ends with an unk04 of 0).
+struct ArcCourseInfo {
+    short pad00[3];
+    short movie;
+};
+
 struct ArcCourse {
     char *name;
-    int unk04;
-    int pad08[2];
+    char *label;
+    ArcCourseInfo *info;
+    unsigned int flags;
     unsigned int hash; // Str_Hash of name
     short license;
     short pad16;
@@ -462,9 +469,9 @@ struct ArcCarView {
     unsigned char pad6[2];
     unsigned int carId;
     char vramSlot; // texture/CLUT slot (0x18 + view index)
-    char colorIdx;
-    unsigned char loaded; // model, textures and wheel ready: drawable
-    unsigned char perfDone; // performance computed (CarParams_GetPerformance) for this load
+    signed char colorIdx;
+    signed char loaded; // model, textures and wheel ready: drawable
+    signed char perfDone; // performance computed (CarParams_GetPerformance) for this load
     unsigned char loadState; // ArcCarView_Update state: 1 start, 2/3 model read, 4/5 texture read, 6/7 wheel read, 8 wait for decode
     unsigned char hasWheel; // car has a non-default wheel
     unsigned char pad12[2];
