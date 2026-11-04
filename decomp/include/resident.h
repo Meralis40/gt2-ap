@@ -2740,9 +2740,11 @@ struct RaceCarPick {
 
 // The arcade race selection that OVL2 leaves at 0x801d5fa0 (g_RaceCarWorkAlt).
 struct ArcadeRaceSel {
-    char unk0[2];
+    signed char level;        // 0x0
+    signed char cls;          // 0x1
     signed char raceType;     // 0: 2-player battle, 4: single race, 6: time trial
-    char unk3[3];
+    char unk3;
+    short lapOption;          // 0x4
     short garage;             // 0x6
     short slot;               // 0x8
     char unkA[0x18 - 0xa];

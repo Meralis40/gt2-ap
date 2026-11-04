@@ -321,6 +321,22 @@ struct ArcBonusCourse {
     int stat; // byte of PlayerStats, bit 1 or 2 set when won; negative: none
 };
 
+// A page with a delay, in frames, and the last choice of its list.
+struct ArcPage : MenuPage {
+    int delay;
+    int choice;
+};
+
+// The last choices of the pages, saved after g_GameState.
+struct ArcSavedSel {
+    signed char mode;
+    signed char game1P;
+    signed char level;
+    signed char cls;
+    signed char rallyCls;
+    signed char game2P;
+};
+
 // What GuestLoad_Setup uses.
 struct ArcGuestLoadConfig {
     void *buffer;
