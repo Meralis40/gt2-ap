@@ -32,8 +32,42 @@ struct CarPhysAxleView {
     short axleGrip[2]; // 0x42c
 };
 
+// A wheel's steering sine and cosine in the scratchpad, from 0x1f80001c, four per
+// 0x90 bytes of car.
+struct PhysWheelTrig {
+    short sin;
+    short cos;
+    char unk4[0x18];
+};
+
+// A driving class's parameters (PhysParams_Init).
+struct AiDriveParams {
+    char unk0[0x18];
+    short unk18;
+    short unk1a;
+    short unk1c;
+    short unk1e;
+    int unk20;
+    char unk24[4];
+};
+
 extern RaceMem g_Race_IsDemo;
 extern RaceWorld g_RaceWorld;
+extern AiDriveParams g_AiDriveParams[];
+extern short g_SinTable[];
+extern unsigned short g_CosTable[];
+int Ghost_ShouldHold(void);
+void Body_ApplyTimeScale(CarPhys *car);
+void Tyres_ComputeGripLimit(RaceVehicle *cars, int count);
+void Tyres_ComputeSlipAngle(RaceVehicle *cars, int count);
+void Tyres_ComputeSlipRatios(RaceVehicle *cars, int count);
+void CarInput_Get(void *input, RaceVehicle *car);
+void Car_ApplyControls(CarPhys *car, short *input, int *out, int index);
+void CarAi_Drive(CarPhys *car, short *input, int index);
+int Body_GetCollisionRule(CarPhys *car);
+void CarPhys_UpdateDrivetrain(RaceVehicle *cars, int count);
+void Cars_ComputeFrameDelta(RaceVehicle *cars, int count);
+void Cars_UpdateDynamics(RaceVehicle *cars, int count);
 extern GameState g_GameState;
 extern unsigned char g_RaceEventParams[];
 extern signed char g_RaceOrder[];
@@ -339,7 +373,240 @@ void CarInput_ApplyFlags(CarPhys *car, short *input)
     }
 }
 
-INCLUDE_ASM("asm/sim/ovl0/nonmatchings/dynamics", Cars_UpdateDynamics);
+void Cars_UpdateDynamics(RaceVehicle *cars, int count)
+{
+    unsigned int intro = g_RaceWorld.introTimer;
+    int i;
+    int frozen;
+    int recorded;
+    int forever;
+
+    i = 0;
+    recorded = 2;
+    forever = 0xff;
+    frozen = i < intro;
+    for (; i < count; i++) {
+        RaceVehicle *car = &cars[i];
+        CarPhys *p = &car->phys;
+        int hold;
+
+        p->unk718 = frozen;
+        if (Race_IsTimeTrial() && p->ghost == recorded) {
+            p->unk718 |= Ghost_ShouldHold();
+        }
+        if (CARPHYS_FIELD(p, short, 0x73e) != 0) {
+            CARPHYS_FIELD(p, short, 0x73e)--;
+        }
+        if ((unsigned short)p->pitTimer != 0) {
+            p->pitTimer--;
+        }
+        hold = p->aiMessageHold;
+        if ((unsigned char)hold != 0 && (unsigned char)hold != forever) {
+            p->aiMessageHold = hold - 1;
+        }
+        Body_ApplyTimeScale(p);
+    }
+    for (i = 0; i < count; i++) {
+        CarPhys *p = &cars[i].phys;
+
+        g_FrameDt = p->timeStep;
+        CarPhys_UpdateAero(p);
+    }
+    for (i = 0; i < count; i++) {
+        RaceVehicle *car = &cars[i];
+        CarPhys *p = &car->phys;
+
+        p->engineFriction = EngineCurve_TorqueAt(&p->engine, p->engineSpeed);
+        p->engineBraking = Fixed_MulFloor(p->engine.unk90, p->engineSpeed);
+    }
+    Tyres_ComputeGripLimit(cars, count);
+    Tyres_ComputeSlipAngle(cars, count);
+    {
+    char *pad;
+
+    i = 0;
+    pad = (char *)0x1f800000;
+    for (; i < count; i++) {
+        RaceVehicle *car = &cars[i];
+        int offset = i * 4 + 0x364;
+        CarPhys *p;
+        short input[6];
+
+        CarInput_Get(input, car);
+        p = &car->phys;
+        *(int *)pad = p->timeStep;
+        p->unk6fd = 1;
+        switch ((signed char)p->control) {
+        case 0:
+            CarInput_ApplyFlags(p, input);
+            if (p->aiMode == 0 || (unsigned short)p->pitTimer != 0) {
+                unsigned int w;
+
+                Car_ApplyControls(p, input, (int *)(offset + (int)pad), i);
+                p->throttleTarget = p->throttle;
+                for (w = 0; w < 4; w++) {
+                    p->wheels[w].brake = p->brake;
+                }
+                break;
+            }
+            CarAi_Drive(p, input, i);
+            break;
+        case 2:
+            CarAi_Drive(p, 0, i);
+            break;
+        }
+    }
+    }
+    {
+    char *pad;
+    unsigned short *cosTable;
+
+    i = 0;
+    pad = (char *)0x1f800000;
+    cosTable = g_CosTable;
+    for (; i < count; i++) {
+        CarPhys *p = &cars[i].phys;
+        int steer = p->steer;
+        CarPhys *c = p;
+        int axle;
+        unsigned int w;
+        int rule;
+        unsigned short *sinTable;
+
+        if (steer >= 0) {
+            p->wheels[0].heading = steer * CARPHYS_FIELD(p, short, 0x64) >> 12;
+            p->wheels[1].heading = steer * CARPHYS_FIELD(p, short, 0x66) >> 12;
+        } else {
+            steer = -steer;
+            p->wheels[0].heading = -(steer * CARPHYS_FIELD(p, short, 0x66) >> 12);
+            p->wheels[1].heading = -(steer * CARPHYS_FIELD(p, short, 0x64) >> 12);
+        }
+        p->wheels[2].heading = 0;
+        p->wheels[3].heading = 0;
+        for (axle = 0; axle < 2; axle++) {
+            unsigned short toe = (&CARPHYS_FIELD(c, unsigned short, 0x36c))[axle];
+
+            p->wheels[axle * 2].heading -= toe;
+            p->wheels[axle * 2 + 1].heading += toe;
+        }
+        rule = Body_GetCollisionRule(p);
+        w = 0;
+        if (rule == 2) {
+            p->wheels[0].heading -= p->wheels[0].dirt;
+            p->wheels[1].heading += p->wheels[1].dirt;
+            p->wheels[2].heading += p->wheels[2].dirt;
+            p->wheels[3].heading -= p->wheels[3].dirt;
+        }
+        sinTable = (unsigned short *)g_SinTable;
+        for (; w < 4; w++) {
+            int offset = i * 0x90 + w * 0x1c;
+            PhysWheelTrig *trig = (PhysWheelTrig *)(offset + (int)pad + 0x1c);
+
+            trig->cos = cosTable[p->wheels[w].heading & 0xfff];
+            trig->sin = sinTable[p->wheels[w].heading & 0xfff];
+        }
+    }
+    }
+    Tyres_ComputeSlipRatios(cars, count);
+    {
+    short *sinTable;
+    PhysScratch *scratch;
+    int n;
+
+    n = 0;
+    sinTable = g_SinTable;
+    scratch = g_PhysScratch;
+    for (; n < count; n++) {
+        CarPhys *p = &cars[n].phys;
+
+        scratch->cars[n].absSlip = 0;
+        scratch->cars[n].handbrake = 0;
+        if (p->speedFwd > 0) {
+            int steer = p->steer;
+            int yaw = p->yawRate;
+            int angle;
+
+            if (steer * yaw >= 0) {
+                int turn;
+
+                if (steer < 0) {
+                    steer = -steer;
+                    yaw = -yaw;
+                }
+                turn = (int)Fixed_MulFloor(p->speedFwd, sinTable[steer & 0xfff]);
+                turn = ((long long)turn << 12) / ((int)(p->wheelbase * 25736) >> 12);
+                if (turn != 0) {
+                    int limit = turn << 7;
+
+                    if (yaw < limit) {
+                        scratch->cars[n].absSlip = 0x1000 - ((long long)yaw << 12) / limit;
+                    }
+                }
+            }
+            angle = Math_Atan2(-p->speedLat, p->speedFwd);
+            if (angle != 0) {
+                if (angle > 0) {
+                    if (p->yawRate > 0) {
+                        continue;
+                    }
+                } else {
+                    if (p->yawRate < 0) {
+                        continue;
+                    }
+                    angle = -angle;
+                }
+                if (p->speedFwd >= 0) {
+                    int value;
+
+                    Math_ApproxDist2(p->speedFwd, p->speedLat);
+                    value = Fixed_MulShift(angle, p->speedFwd, 2);
+                    if (value >= 0) {
+                        if (value > 0x1000) {
+                            value = 0x1000;
+                        }
+                        scratch->cars[n].handbrake = value;
+                    }
+                }
+            }
+        }
+    }
+    }
+    for (i = 0; i < count; i++) {
+        CarPhys *p = &cars[i].phys;
+
+        switch ((signed char)p->control) {
+        case 0:
+            if (p->aiMode == 0 || (unsigned short)p->pitTimer != 0) {
+                CarPhys *c = p;
+                int steer = CARPHYS_FIELD(p, short, 0x454);
+
+                if (steer != 0) {
+                    int factor = Input_Attenuate(CARPHYS_FIELD(p, short, 0x64a), steer, 0x400);
+                    int brake;
+
+                    if (p->gear == 0) {
+                        brake = 0;
+                    } else {
+                        brake = CARPHYS_FIELD(p, short, 0x700) * CARPHYS_FIELD(p, short, 0x456) >> 12;
+                    }
+                    CarPhys_ApplyTractionControl(p, CARPHYS_FIELD(c, int, 0x450), factor, brake);
+                }
+                CarPhys_ApplyBrakes(p, CARPHYS_FIELD(c, short, 0x458), CARPHYS_FIELD(c, short, 0x45a));
+                break;
+            }
+        case 2: {
+            AiDriveParams *params = &g_AiDriveParams[p->driveClass];
+            int factor = Input_Attenuate(CARPHYS_FIELD(p, short, 0x64a), params->unk1c, params->unk1e);
+
+            CarPhys_ApplyTractionControl(p, params->unk20, factor, 0);
+            CarPhys_ApplyBrakes(p, params->unk18, params->unk1a);
+            break;
+        }
+        }
+    }
+    CarPhys_UpdateDrivetrain(cars, count);
+    Cars_ComputeFrameDelta(cars, count);
+}
 
 // Body pitch and roll from the four wheel ground heights, and the body matrix from them.
 void CarPhys_UpdatePitchRoll(CarPhys *car)

@@ -310,7 +310,7 @@ unsigned int Records_GetLapTime(RaceRecord *rec, int lap)
 }
 
 // Adds lap: kept with the last 10, and as the best if it is. An invalid lap is -1.
-void RaceRecord_AddLap(RaceRecord *rec, int lap, unsigned int lapTime, short extra, int invalid)
+void RaceRecord_AddLap(RaceRecord *rec, int lap, unsigned int lapTime, unsigned short extra, int invalid)
 {
     int better;
 
