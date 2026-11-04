@@ -32,12 +32,6 @@ struct OptionList {
 };
 
 // A root page: a BaseMenuPage, then a delay and the back flag.
-struct RootMenuPage {
-    BaseMenuPage page;
-    int delay;
-    int back;
-};
-
 extern "C" {
 extern BaseMenu *g_CurrentMenu;
 extern Font g_OVL1_FontMedium;

@@ -22,6 +22,13 @@ struct BaseMenuPage {
     char *title; // NULL = no title bar
 };
 
+// A root or list page: BaseMenuPage, then its delay and back flag.
+struct RootMenuPage {
+    BaseMenuPage page;
+    int delay;
+    int back;
+};
+
 // Main menu loop (0x220 bytes), derived from the resident psxViewLoopDoubleBuffer
 // (viewloop.h), like OVL2's ArcadeMenu. Only its fields so far.
 class BaseMenu : public psxViewLoopDoubleBuffer {
