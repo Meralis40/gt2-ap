@@ -66,5 +66,78 @@ void ColorChips_Select(ArcColorChips *c, int index)
     c->selected = index;
 }
 
+#ifdef NON_MATCHING
+// A column of swatches 10 apart, each lighting up in turn, the selected one with a
+// brighter outline.
+void ColorChips_Draw(ArcColorChips *c, void *ot, int x, int y)
+{
+    if (c->anim >= 0) {
+        int i = 0;
+        unsigned short *colors;
+
+        y -= c->count * 10;
+        colors = (unsigned short *)c;
+        while (i < c->count) {
+            int t = c->anim - i * 24 / c->count;
+
+            if (t >= 0) {
+                int fade = 8 - t;
+                GouraudQuad quad;
+                unsigned int col;
+                int r;
+                int g;
+                int b;
+                RECT *tile;
+                PrimLineF4 *line;
+                int left;
+
+                if (fade < 0) {
+                    fade = 0;
+                }
+                col = colors[2];
+                r = (col & 0x1f) << 3;
+                g = (col & 0x3e0) >> 2;
+                b = (col & 0xf800) >> 7;
+                r += (0xff - r) * fade / 8;
+                g += (0xff - g) * fade / 8;
+                b += (0xff - b) * fade / 8;
+                quad.rect.x = x;
+                quad.rect.y = y;
+                quad.rect.w = 8;
+                quad.rect.h = 6;
+                quad.top = r | g << 8 | b << 16;
+                quad.bottom = r >> 2 | (g >> 2) << 8 | (b >> 2) << 16;
+                Menu_AddGouraudQuad((uint *)ot, &quad);
+                tile = Prim_AddTile(ot, 0);
+                tile->w = 8;
+                tile->x = x;
+                tile->y = y;
+                tile->h = 6;
+                fade = 0x28;
+                if (i == c->selected) {
+                    fade = 0x80;
+                }
+                line = Prim_AddLineF4(ot, fade | fade << 8 | fade << 16);
+                left = x - 1;
+                line->x2 = x + 8;
+                line->x1 = x + 8;
+                line->y4 = y - 1;
+                line->y1 = y - 1;
+                line->y0 = y - 1;
+                line->x4 = left;
+                line->x3 = left;
+                line->x0 = left;
+                line->y3 = y + 6;
+                line->y2 = y + 6;
+            }
+            y += 10;
+            colors++;
+            i++;
+        }
+        Prim_AddDrawMode(ot, 0x20);
+    }
+}
+#else
 INCLUDE_ASM("asm/sim/ovl2/nonmatchings/colorchips", ColorChips_Draw);
+#endif
 }

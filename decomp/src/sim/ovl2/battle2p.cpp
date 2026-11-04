@@ -266,8 +266,8 @@ void Battle2P_Draw(ArcadeMenu *menu, DrawLayer *layer)
     }
     TextItem_DrawAt(&D_800F1778[0], 0x14, 0x6c, ot, ctx);
     TextItem_DrawAt(&D_800F1778[1], 0x14c, 0x1c8, ot, ctx);
-    GradientBar_Draw(D_800F1740[0], ot2, 0, 0x58);
-    GradientBar_Draw(D_800F1740[1], ot2, 0x160, 0x1b4);
+    GradientBar_Draw((ArcGradientBar *)D_800F1740[0], ot2, 0, 0x58);
+    GradientBar_Draw((ArcGradientBar *)D_800F1740[1], ot2, 0x160, 0x1b4);
     Prim_AddDrawMode(ot2, 0x220);
     TextItem_DrawAt(&D_800F1980[0], 0x9c, 0x6c, ot, ctx);
     TextItem_DrawAt(&D_800F1980[1], 0xc4, 0x1c8, ot, ctx);
