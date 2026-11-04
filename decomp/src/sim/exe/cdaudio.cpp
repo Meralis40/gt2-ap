@@ -131,12 +131,12 @@ void CdAudio_WaitIdle(void)
 #ifdef NON_MATCHING
 // The game loads &g_CdAudio into $a0 before the prologue and copies it to $s0 in
 // the call's delay slot; GCC loads it into $s0 directly.
-void Music_Stop(void)
+int Music_Stop(void)
 {
     CdAudio *cd = &g_CdAudio;
 
     CdAudio_ClearPending(cd);
-    CdAudio_RunScript_8007C4F8(cd, 2);
+    return CdAudio_RunScript_8007C4F8(cd, 2);
 }
 #else
 INCLUDE_ASM("asm/sim/exe/nonmatchings/cdaudio", Music_Stop);

@@ -23,5 +23,13 @@ void *ArcadeCar_GetEntry(unsigned int carId, int racingMod)
     return pvVar1;
 }
 
-INCLUDE_ASM("asm/sim/ovl2/nonmatchings/arcadecar", ArcadeCar_GetColorCode);
+// The code of a colour of carId.
+int ArcadeCar_GetColorCode(unsigned int carId, int color)
+{
+    unsigned short *rgb;
+    char *codes;
+
+    CarInfoA_GetColors(carId, &rgb, &codes);
+    return ((signed char *)codes)[color];
+}
 }

@@ -15,7 +15,23 @@ void ColorChips_Init(ArcColorChips *c)
     c->selected = 0;
 }
 
-INCLUDE_ASM("asm/sim/ovl2/nonmatchings/colorchips", ColorChips_Set);
+// Sets the colours, and starts the open animation.
+void ColorChips_Set(ArcColorChips *c, int count, unsigned short *colors)
+{
+    int i = 0;
+
+    if ((count <= 0) | (colors == 0)) {
+        return;
+    }
+    c->anim = 0;
+    c->count = count;
+    if (count > 0) {
+        do {
+            c->colors[i] = *colors++;
+            i++;
+        } while (i < count);
+    }
+}
 
 // Starts the close animation (anim -17).
 void ColorChips_Close(ArcColorChips *c)
