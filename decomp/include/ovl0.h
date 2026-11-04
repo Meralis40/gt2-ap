@@ -21,7 +21,10 @@ struct CarPhysWheel { /* Per-wheel state of CarPhys (4 at +0x460: front left, fr
     byte surface2;
     unsigned char unk16[2];
     int rollSpeed; /* wheel rolling speed */
-    unsigned char unk1c[4];
+    byte fxSmoke; /* tyre smoke (Body_UpdateTyreFx) */
+    byte fxSqueal;
+    byte fxTimer; /* frames between smoke puffs, 0xff = idle */
+    byte fxGravel;
     ushort spinAngle; /* wheel rotation angle (0..0xfff) */
     byte dirt; /* grows on dirt surface type 2 hits; cleared by CarPhys_ServiceTyres */
     unsigned char unk23;
@@ -33,7 +36,16 @@ struct CarPhysWheel { /* Per-wheel state of CarPhys (4 at +0x460: front left, fr
     int velLat; /* wheel velocity, lateral */
     unsigned char unk34[4];
     short tyreGrip; /* 0x1000 = new tyre; lowered by wear when g_TyreWearEnabled */
-    unsigned char unk3a[38];
+    unsigned char unk3a[6];
+    short unk40;
+    unsigned char unk42[2];
+    short unk44;
+    unsigned char unk46[6];
+    int unk4c;
+    short unk50;
+    unsigned char unk52[6];
+    int unk58;
+    int unk5c;
     short brake; /* brake input of this wheel (0..0x1000) */
     unsigned char unk62;
     byte unk63; /* 0: wheel speed follows the road speed (CarPhys_UpdateWheelRotation) */
@@ -115,10 +127,12 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     unsigned char unk650[4];
     short wallNormalX;
     short wallNormalZ;
-    unsigned char unk658[4];
+    uint unk658;
     int pos[3]; /* world position x, y, z */
     short fwdDir[3]; /* body forward direction (0x1000 = unit), from the matrix build Matrix_FromAngles(+0x668, +0x670, +0x678) */
-    unsigned char unk66e[54];
+    unsigned char unk66e[2];
+    short rightDir[3]; /* body right direction */
+    unsigned char unk676[46];
     int speedFwd; /* forward speed (body frame) */
     int speedLat; /* lateral speed */
     short rpm;
@@ -143,14 +157,23 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     int engineBraking;
     unsigned char unk718;
     byte wheelContact; /* bits 0-3: wheel below its rest height; bits 4-7 previous pass (RaceCars_UpdateSuspension) */
-    unsigned char unk71a[38];
+    unsigned char unk71a[30];
+    ushort unk738;
+    unsigned char unk73a[4];
+    short unk73e;
     short wallHit;
     short boost;
     short blowOffState;
     short boostDisplay;
-    unsigned char unk748[17];
+    unsigned char unk748[8];
+    byte racePos; /* place in the race, from 1 (RaceOrder_Update) */
+    unsigned char unk751[6];
+    byte unk757;
+    byte unk758;
     byte blowOffVolume; /* turbo blow-off sound volume */
-    unsigned char unk75a[10];
+    unsigned char unk75a[8];
+    byte unk762;
+    byte unk763;
     byte aiMessage; /* CarAi_SetMessage */
     byte aiMessageHold;
     short catchUp; /* catch-up time factor, 4.12 (CatchUp_ApplyAI / CatchUp_Apply2P) */
@@ -161,7 +184,7 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     short pushed; /* pushed from behind (0..0x1000) Disputed: CarPhys_UpdateAero reads it as the slipstream build-up rate. */
     unsigned char unk776[2];
     int pushVec[2]; /* car to car separation push x, z (CarColl_SeparateOverlaps) */
-    unsigned char unk780[4];
+    uint raceTime; /* the car's race clock (Result_DrawTimeRow, GhostPlay_RestartLap) */
     byte aiPitLimit;
     byte aiBlockMask;
     byte aiMode; /* Ai_SetMode: 0 race, 2 pit entry, 3 pit stop, 4 pit exit, 5/6 stop, 7 stopped */
