@@ -841,15 +841,15 @@ void Poly_Clip(ViewScratch *sp, int count)
 
         v->sxy = in->v[i].sxy;
         v->rgbc = in->v[i].rgbc;
-        // The input point is projected (as is) only for the GTE's error flag: the record
-        // keeps the input's screen position when that projection failed.
+        // The input point is projected (as is) only for the GTE's error flag: the rescaled
+        // record's screen position replaces the input's only when that projection failed.
         gte_LoadDataReg(GTE_VXY0, &in->v[i].xy);
         gte_LoadDataReg(GTE_VZ0, &in->v[i].z);
         gte_rtps();
         flags = gte_GetCtrlReg(GTE_FLAG);
         ClipVert_SetPos(v, (short)in->v[i].xy, in->v[i].xy >> 16, in->v[i].z,
                         Clip_Shift(in->v[i].extent));
-        ClipVert_Classify(sp, v, flags >= 0);
+        ClipVert_Classify(sp, v, flags < 0);
         v->next = v + 1;
         (v + 1)->prev = v;
         codeOr |= v->code;

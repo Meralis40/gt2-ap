@@ -2763,4 +2763,44 @@ struct ArcadeRaceSel {
 // The top 3 bits of a halfword (Car.stat94's drivetrain).
 struct Hi3 { unsigned short lo:13; unsigned short hi:3; };
 
+// exe/boot.cpp
+
+// A record of GT2.VOL's directory, VOL file 1, loaded at g_VolDir; entry 0 is the root.
+struct VolDirEntry {
+    unsigned int mtime;     // Unix time (1999)
+    unsigned short index;   // a file: its index in the VOL's table; a directory: its first entry (a ".." entry)
+    unsigned char flags;    // bit 0: directory, bit 7: last entry of the directory
+    char name[25];
+};
+
+// exe/boot_iso.cpp
+
+// An ISO 9660 directory record. Records are not aligned on disc, so neither are its fields.
+struct IsoDirRecord {
+    unsigned char length;
+    unsigned char extAttrLength;
+    unsigned int lba;
+    unsigned int lbaBE;
+    unsigned int size;
+    unsigned int sizeBE;
+    unsigned char date[7];
+    unsigned char flags;    // bit 1: directory
+    unsigned char unitSize;
+    unsigned char gapSize;
+    unsigned short volSeq;
+    unsigned short volSeqBE;
+    unsigned char nameLength;
+    char name[1];           // nameLength bytes, with the ";1"
+} __attribute__((packed));
+
+// The boot code's ISO 9660 reader (g_IsoCtx), used to find GT2.VOL, MUSIC.DAT, STREAM.DAT and GT2.OVL.
+struct IsoContext {
+    IsoDirRecord root;
+    IsoDirRecord curDir;
+    unsigned char error;    // 0: ok, 2: bad volume descriptor, 3: not found
+    unsigned char spillRecord[291]; // a directory record that crosses a sector, put back together
+    int cachedLba;          // sector held in sector[], -1: none
+    unsigned char sector[0x800];
+};
+
 #endif

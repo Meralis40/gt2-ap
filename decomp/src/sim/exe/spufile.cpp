@@ -117,8 +117,16 @@ void SpuFile_OnRetry(void)
     g_SpuFileLoad.spuCur = g_SpuFileLoad.spuBase;
 }
 
-// SpuFile_Load for boot file index id: a handwritten neg $a0 that runs on into it.
+// SpuFile_Load for boot file index id.
+#ifdef NON_MATCHING
+// A handwritten neg $a0 that runs on into SpuFile_Load: GCC falls into no function.
+int SpuFile_LoadNegId(int id, SeqBank *ram, int spu, int isEngine)
+{
+    return SpuFile_Load(-id, (uchar *)ram, spu, isEngine);
+}
+#else
 INCLUDE_ASM("asm/sim/exe/nonmatchings/spufile", SpuFile_LoadNegId);
+#endif
 
 // Reads sound file id (a boot file index when negative) through a sector buffer on
 // the stack: its header to ram, its samples to SPU RAM at spu. Returns the header

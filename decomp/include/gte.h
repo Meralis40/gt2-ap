@@ -56,6 +56,9 @@ enum {
     __asm__ volatile("lwc2 $%1, 0(%0)" : : "r"(ptr), "i"(reg))
 #define gte_StoreDataReg(reg, ptr) \
     __asm__ volatile("swc2 $%1, 0(%0)" : : "r"(ptr), "i"(reg) : "memory")
+// Writes LZCS and reads LZCR, the count of leading zeros (or ones), when it's ready.
+#define gte_Lzc(value) \
+    ({ int _gte_v; __asm__ volatile("mtc2 %1, $30\n\tnop\n\tnop\n\tmfc2 %0, $31" : "=r"(_gte_v) : "r"(value)); _gte_v; })
 
 #define GTE_COMMAND(text) __asm__ volatile("nop\n\tnop\n\t" text)
 #define gte_rtps() GTE_COMMAND("rtps")
@@ -80,6 +83,7 @@ void gte_SetCtrlReg(int reg, int value);
 int gte_GetCtrlReg(int reg);
 void gte_LoadDataReg(int reg, const void *ptr);
 void gte_StoreDataReg(int reg, void *ptr);
+int gte_Lzc(int value);
 void gte_rtps(void);
 void gte_rtpt(void);
 void gte_nclip(void);

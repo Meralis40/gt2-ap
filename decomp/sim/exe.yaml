@@ -40,9 +40,9 @@ segments:
     start: 0x800
     vram: 0x80010000
     subsegments:
-      - [0x800, asm, boot]              # 0x80010000 boot code
+      - [0x800, cpp, boot]              # 0x80010000 boot code
       - [0x1224, cpp, bootlogo]         # 0x80010a24 class VendorBootLogo, Boot_Init
-      - [0x171c, asm, boot_iso]         # 0x80010f1c
+      - [0x171c, cpp, boot_iso]         # 0x80010f1c
       - [0x2530, rodata, boot_data]     # 0x80011d30 boot data
       - [0x2538, .rodata, bootlogo]     # 0x80011d38 Boot_Init's string, VendorBootLogo's vtable and type name
       - [0x2598, data, boot_data2]      # 0x80011d98 zeros from 0x80033de2
@@ -54,6 +54,7 @@ segments:
       # Resident code (EXE entry point), one file per group of functions. The
       # cpp files keep the functions that do not match yet as INCLUDE_ASM.
       - [0x4de00, asm, start]  # 0x8005d600
+      - [0x4dee0, cpp, main]  # 0x8005d6e0
       - [0x4df18, cpp, vol]  # 0x8005d718
       - [0x4e1bc, cpp, overlay]  # 0x8005d9bc
       - [0x4e390, cpp, records]  # 0x8005db90
@@ -62,7 +63,7 @@ segments:
       - [0x51124, cpp, carinfo]  # 0x80060924
       - [0x51810, cpp, carmodel]  # 0x80061010
       - [0x588a0, cpp, spufile]  # 0x800680a0
-      - [0x58bfc, asm, roundedbox]  # 0x800683fc
+      - [0x58bfc, cpp, roundedbox]  # 0x800683fc
       - [0x58ea0, cpp, soundvsync]  # 0x800686a0
       - [0x58f34, cpp, format]  # 0x80068734
       - [0x5962c, cpp, replaydir]  # 0x80068e2c
@@ -77,12 +78,12 @@ segments:
       - [0x5c4b8, cpp, widgets]  # 0x8006bcb8
       - [0x5ca74, cpp, grounddisc]  # 0x8006c274, built by OVL2 too
       - [0x5cc60, cpp, textitem]  # 0x8006c460
-      - [0x5d5cc, asm, menulist]  # 0x8006cdcc
+      - [0x5d5cc, cpp, menulist]  # 0x8006cdcc
       - [0x5e1c8, cpp, numberpicker]  # 0x8006d9c8
       - [0x5e4b8, cpp, buttonprompt]  # 0x8006dcb8
       - [0x5e9cc, cpp, carddialog]  # 0x8006e1cc
       - [0x5f3f0, cpp, cardmenu]  # 0x8006ebf0
-      - [0x6386c, asm, textentry]  # 0x8007306c
+      - [0x6386c, cpp, textentry]  # 0x8007306c
       - [0x644e4, cpp, powergraph]  # 0x80073ce4
       - [0x65044, cpp, lerp]  # 0x80074844, built by OVL2 too
       - [0x6509c, cpp, enginecurve]  # 0x8007489c
@@ -93,34 +94,34 @@ segments:
       - [0x6b314, cpp, cdread]  # 0x8007ab14
       - [0x6b558, asm, setjmp]  # 0x8007ad58
       - [0x6b5c8, cpp, gte]  # 0x8007adc8
-      - [0x6ca68, asm, dma]  # 0x8007c268
+      - [0x6ca68, cpp, dma]  # 0x8007c268
       - [0x6cb6c, cpp, cdaudio]  # 0x8007c36c
-      - [0x6d824, asm, gpu]  # 0x8007d024
+      - [0x6d824, cpp, gpu]  # 0x8007d024
       - [0x6db2c, cpp, mccard]  # 0x8007d32c
       - [0x6e244, cpp, font]  # 0x8007da44
-      - [0x6e8b0, asm, prim]  # 0x8007e0b0
-      - [0x6f0a0, asm, card]  # 0x8007e8a0
+      - [0x6e8b0, cpp, prim]  # 0x8007e0b0
+      - [0x6f0a0, cpp, card]  # 0x8007e8a0
       - [0x6f81c, cpp, kanjifont]  # 0x8007f01c
       - [0x6fda8, cpp, mcformat]  # 0x8007f5a8
-      - [0x6fff4, asm, misc]  # 0x8007f7f4
-      - [0x70124, asm, pad]  # 0x8007f924
+      - [0x6fff4, cpp, misc]  # 0x8007f7f4
+      - [0x70124, cpp, pad]  # 0x8007f924
       - [0x7068c, cpp, viewloopdb]  # 0x8007fe8c class psxViewLoopDoubleBuffer
       - [0x70888, cpp, viewdraw]  # 0x80080088
-      - [0x70cf8, asm, krom]  # 0x800804f8
+      - [0x70cf8, cpp, krom]  # 0x800804f8
       - [0x71020, cpp, viewloop]  # 0x80080820 class psxViewLoop
-      - [0x716ec, asm, music]  # 0x80080eec
+      - [0x716ec, cpp, music]  # 0x80080eec
       - [0x71884, cpp, vsynccb]  # 0x80081084
-      - [0x718f8, asm, math]  # 0x800810f8
+      - [0x718f8, cpp, math]  # 0x800810f8
       - [0x7245c, cpp, cdstream]  # 0x80081c5c
       - [0x72e4c, cpp, mcport]  # 0x8008264c
-      - [0x733a8, asm, gpu2]  # 0x80082ba8
-      - [0x737ac, asm, util]  # 0x80082fac
-      - [0x739bc, asm, negcon]  # 0x800831bc
+      - [0x733a8, cpp, gpu2]  # 0x80082ba8
+      - [0x737ac, cpp, util]  # 0x80082fac
+      - [0x739bc, cpp, negcon]  # 0x800831bc
       - [0x73ba0, cpp, screenviewloop]  # 0x800833a0 class ScreenViewLoop
       - [0x73cfc, cpp, padbuttons]  # 0x800834fc
-      - [0x742e0, asm, rand]  # 0x80083ae0
+      - [0x742e0, cpp, rand]  # 0x80083ae0
       - [0x7430c, cpp, inflate]  # 0x80083b0c
-      - [0x76058, asm, padanalog]  # 0x80085858
+      - [0x76058, cpp, padanalog]  # 0x80085858
       # GCC 2.8.1's libgcc, built from the GNU sources into build/psyq/libgcc.a
       # (tools/libgcc.py, docs/runtime-libs.md). __main's .bss and the commons
       # are placed by tools/build.py.
