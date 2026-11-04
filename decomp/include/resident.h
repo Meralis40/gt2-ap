@@ -2752,15 +2752,19 @@ struct ArcadeRaceSel {
     short unk14;
     short color;              // 0x16
     signed char unk18;        // RaceCar.unk8f of the player's car
-    char unk19[0xa0 - 0x19];
+    char unk19[3];
+    struct CarSetup setup;    // 0x1c
     short garages[2];         // 0xa0: 2-player battle, per player
     short slots[2];           // 0xa4
-    char unkA8[0xb6 - 0xa8];
+    unsigned int carIds[2];   // 0xa8: the cars picked, per player
+    signed char settings[2];  // 0xb0
+    short colors[2];          // 0xb2
     signed char unkB6[2];     // 0xb6: RaceCar.unk8f per player
     char courseName[0x100];   // 0xb8
     unsigned int courseHash;  // 0x1b8
     short courseStat;         // 0x1bc
-    char unk1BE[0x2c8 - 0x1be];
+    char unk1BE[2];
+    struct CarSetup setupCopy[2]; // 0x1c0
     int useGarageCars;        // 0x2c8
     int dirt;                 // 0x2cc: dirt course (dirt tyres)
     void *courseMap;          // 0x2d0
