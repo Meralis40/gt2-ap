@@ -70,7 +70,7 @@ struct GhostLap {
 #define CAR_POSE(car) (*(GhostPose *)&(car)->pos)
 #define CAR_POSE_B(car) (*(GhostPose *)((char *)(car) + 0x680))
 #define CAR_TAIL(car) (*(CarTail *)&(car)->carIndex)
-#define CAR_CLOCK(car) (*(unsigned int *)(car)->unk780)
+#define CAR_CLOCK(car) ((car)->raceTime)
 
 extern "C" {
 extern RaceMem g_Race_IsDemo;
