@@ -58,5 +58,91 @@ void GradientBar_Update(short *bar)
     }
 }
 
-INCLUDE_ASM("asm/sim/ovl2/nonmatchings/gradientbar", GradientBar_Draw);
+// The colours fade to the end colour and the bar widens as the counter runs out.
+void GradientBar_Draw(ArcGradientBar *bar, void *ot, int x, int y)
+{
+    int w = bar->w;
+    int h = bar->h;
+    int counter = bar->counter;
+    int length = bar->length;
+    int t;
+    int left;
+    int right;
+    int inset;
+    int endR;
+    int endG;
+    int endB;
+    int r0;
+    int g0;
+    int b0;
+    int r1;
+    int g1;
+    int b1;
+    int dr0;
+    int dg0;
+    int db0;
+    int dr1;
+    int dg1;
+    int db1;
+    int code;
+    PrimG4 *p;
+    unsigned int c0;
+    unsigned int c1;
+
+    if (counter != -1) {
+        t = length - counter;
+        if (counter < 0) {
+            int last = length + 1;
+
+            t = last + counter;
+        }
+        if (bar->flags & 1) {
+            left = x - w;
+            right = x;
+        } else {
+            left = x;
+            right = left + w;
+        }
+        inset = w * t / length;
+        r0 = bar->start[0];
+        endR = bar->end[0];
+        dr0 = (endR - r0) * t / length;
+        g0 = bar->start[1];
+        endG = bar->end[1];
+        dg0 = (endG - g0) * t / length;
+        b0 = bar->start[2];
+        endB = bar->end[2];
+        db0 = (endB - b0) * t / length;
+        r1 = bar->start2[0];
+        dr1 = (endR - r1) * t / length;
+        g1 = bar->start2[1];
+        dg1 = (endG - g1) * t / length;
+        b1 = bar->start2[2];
+        db1 = (endB - b1) * t / length;
+        left -= inset;
+        right += inset;
+        r0 += dr0;
+        g0 += dg0;
+        code = bar->start[3];
+        b0 += db0;
+        r1 += dr1;
+        g1 += dg1;
+        b1 += db1;
+        p = Prim_AddPolyG4((uint *)ot);
+        c0 = (code | 0x38) << 24 | (r0 | g0 << 8 | b0 << 16);
+        c1 = r1 | g1 << 8 | b1 << 16;
+        p->c2 = c0;
+        p->c0 = c0;
+        p->c3 = c1;
+        p->c1 = c1;
+        p->x2 = left;
+        p->x0 = left;
+        p->x3 = right;
+        p->x1 = right;
+        p->y1 = y;
+        p->y0 = y;
+        p->y3 = y + h;
+        p->y2 = y + h;
+    }
+}
 }

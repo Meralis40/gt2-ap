@@ -38,7 +38,7 @@ void CarSpecPanel_Init(ArcCarSpecPanel *panel)
         panel->shown[i] = 0;
         TextItem_Init_OVL2(&panel->name[i], D_8004F634);
         panel->name[i].text = D_80027108;
-        IconItem_Init(&panel->icon[i], D_8004F650);
+        IconItem_Init(&panel->icon[i], (ArcIconItemTmpl *)D_8004F650);
         panel->icon[i].sprite = D_800454E0;
         PowerGraphView_Init_OVL2(&panel->graph[i], D_8004F65C);
         panel->graph[i].powerCurve = panel->powerCurve[i];

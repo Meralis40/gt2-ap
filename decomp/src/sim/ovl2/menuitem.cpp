@@ -20,7 +20,7 @@ void MenuItem_Init_OVL2(ArcMenuItem *it)
     }
     case 1: {
         ArcIconItem *icon = (ArcIconItem *)it->item;
-        IconItem_Init(icon, it->tmpl);
+        IconItem_Init(icon, (ArcIconItemTmpl *)it->tmpl);
         icon->sprite = it->data;
         break;
     }

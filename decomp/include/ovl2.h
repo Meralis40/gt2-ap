@@ -111,6 +111,18 @@ struct ArcIconItem {
     short pad16;
 };
 
+// What IconItem_Init copies.
+struct ArcIconItemTmpl {
+    unsigned char flags;
+    unsigned char pad01;
+    unsigned short pulseSteps;
+    unsigned short revealSteps;
+    unsigned char brightness;
+    unsigned char pulseBrightness;
+    short zoomWidth;
+    unsigned short scale;
+};
+
 // A sprite of a texture page (Sprite_AddScaled).
 struct ArcSprite {
     unsigned char u;
@@ -205,6 +217,19 @@ struct ArcGridPicker {
     signed char *enabled; // per item; NULL: all
 };
 
+struct ArcGradientBar {
+    short counter; // -1 hidden
+    short pad02[2];
+    short w;
+    short h;
+    short length;
+    unsigned short flags; // bit 0: grows leftwards
+    short pad0e;
+    unsigned char start[4];
+    unsigned char start2[4];
+    unsigned char end[4];
+};
+
 struct ArcColorChips {
     short selected;
     short count;
@@ -217,6 +242,15 @@ struct ArcStatBar {
     short pad02;
     ArcTextItem label;
     char *text;
+};
+
+// The figures SpecTable_Set shows.
+struct ArcSpecValues {
+    short power;
+    short powerRpm;
+    short torque;
+    short torqueRpm;
+    short weight;
 };
 
 struct ArcSpecTable {
