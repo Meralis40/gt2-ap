@@ -298,7 +298,7 @@ struct InputLog { /* Header of a run-length coded input recording (InputLog_*): 
     int framesWritten; /* frames recorded */
     int framesLeft; /* playback: frames left (copied from framesWritten on reset) */
     int runLength; /* frames the current values repeat; -1 = nothing pending */
-    short ended; /* 1 when full (record) or at the end (playback) */
+    ushort ended; /* 1 when full (record) or at the end (playback) */
     ushort pos; /* byte offset of the next packet in data */
     ushort length; /* bytes written */
     ushort capacity; /* data size; 0x4400 for a race, 0x1000 for a time-trial lap */
