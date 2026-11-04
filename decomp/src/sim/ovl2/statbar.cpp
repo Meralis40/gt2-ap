@@ -6,9 +6,19 @@
 #include "common.h"
 
 extern "C" {
+extern unsigned char D_8004F67C[];
 
 
-INCLUDE_ASM("asm/sim/ovl2/nonmatchings/statbar", StatBar_Init);
+// Hidden, with the label text.
+void StatBar_Init(ArcStatBar *b, void *text)
+{
+    ArcTextItem *label = &b->label;
+
+    b->anim = -1;
+    TextItem_Init_OVL2(label, D_8004F67C);
+    label->text = (char *)text;
+    b->text = (char *)text;
+}
 
 // Starts the open animation and the label reveal.
 void StatBar_Show(ArcStatBar *b)

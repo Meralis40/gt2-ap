@@ -19,8 +19,8 @@ struct MenuPage {
 };
 
 struct AsyncRead {
-    unsigned char busy;
-    unsigned char state;
+    signed char busy;
+    signed char state;
 };
 
 struct ArcTextItem {
@@ -185,7 +185,7 @@ struct ArcStatBar {
     short anim;
     short pad02;
     ArcTextItem label;
-    unsigned char pad30[4];
+    char *text;
 };
 
 struct ArcSpecTable {
@@ -237,10 +237,10 @@ struct ArcRecordPanel {
 };
 
 struct ArcCoursePreviewMovie {
-    char state;
-    char cdClaimed;
-    char stopRequested;
-    char started;
+    signed char state;
+    signed char cdClaimed;
+    signed char stopRequested;
+    signed char started;
     void *buffer;
     short movie;
     short pad0a;
@@ -254,6 +254,28 @@ struct ArcCarRating {
     short power;
     short unk06;
     short weight;
+};
+
+// The car ratings of a garage, in the order of its list.
+struct ArcGarageInfo {
+    short count;
+    short pad02;
+    Garage *garage;
+    ArcCarRating ratings[100];
+};
+
+// A bonus course of the arcade menu (g_ArcBonusCourses, ends with a code of 0).
+struct ArcBonusCourse {
+    int code;
+    int pad04[2];
+    int stat; // byte of PlayerStats, bit 1 or 2 set when won; negative: none
+};
+
+// What GuestLoad_Setup uses.
+struct ArcGuestLoadConfig {
+    void *buffer;
+    void *font;
+    short *slots;
 };
 
 // Arcade 3D car preview: streams a car model, its textures and wheel from the CD, inflates them in a menu hook and draws them with a ground disc. Two of them (ArcadeMenu.carViews).
@@ -382,7 +404,7 @@ public:
     int frameCount;
     int pageFrames; // reset by Enter, counted by Update
     AsyncRead cdRead; // menu CD read, shared by the car views, logos and logo archive
-    unsigned char cdBusy; // a client owns cdRead
+    signed char cdBusy; // a client owns cdRead
     unsigned char pad227;
     ArcCarView *carViews[2];
     unsigned char pad230[8];

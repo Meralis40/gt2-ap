@@ -30,12 +30,6 @@ struct ArcGarageList {
     int unk30;
 };
 
-// The car ratings of a garage, in the order of its list.
-struct ArcGarageInfo {
-    unsigned char pad[8];
-    ArcCarRating ratings[100];
-};
-
 extern GameState g_GameState;
 extern Arc2PPlayer g_Arc_2PPlayers[2];
 extern short g_Arc_2PGarageOrder[2][100];

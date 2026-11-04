@@ -8,7 +8,19 @@
 extern "C" {
 
 
-INCLUDE_ASM("asm/sim/ovl2/nonmatchings/carrating", CarRating_WeightPowerScore);
+// 300000 * weight / power^2: the higher, the weaker the car for its weight; 35001
+// without power.
+int CarRating_WeightPowerScore(int power, int weight)
+{
+    int squared = power * power;
+    int score = 0x88b9;
+    int scaled = weight * 300000;
+
+    if (squared > 0) {
+        score = scaled / squared;
+    }
+    return score;
+}
 
 // Rating of one arcade car: dirt tyres fitted, stat94 >> 13, power (flags98 & 0x3fff),
 // stat96, weight (stat94 & 0x1fff), and pwrClass 0..3 from CarRating_WeightPowerScore
@@ -36,5 +48,20 @@ void CarRating_Fill(ArcCarRating *r, Car *car)
     }
 }
 
-INCLUDE_ASM("asm/sim/ovl2/nonmatchings/carrating", CarRatingTable_Build);
+// The ratings of the 100 cars of garage.
+void CarRatingTable_Build(ArcGarageInfo *info, Garage *garage)
+{
+    int i;
+    int count = garage->carCount;
+
+    info->count = count;
+    info->pad02 = 0;
+    info->garage = garage;
+    for (i = 0; i < 100; i++) {
+        Car *car = &garage->cars[i];
+        ArcCarRating *rating = &info->ratings[i];
+
+        CarRating_Fill(rating, car);
+    }
+}
 }
