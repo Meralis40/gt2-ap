@@ -5,13 +5,6 @@
 #include "include_asm.h"
 #include "common.h"
 
-// What ReplayCopy_Setup takes, as far as the page sets it.
-struct ReplayCopyConfig {
-    unsigned int heap;
-    KanjiFont *font;
-    short *cardSlots;
-};
-
 extern "C" {
 extern BaseMenu *g_CurrentMenu;
 extern pointer g_OVL1_EndFontInfo;
@@ -37,8 +30,6 @@ extern BaseMenuPage g_Page_DemoStart;
 extern BaseMenuPage g_Page_SaveGameCard;
 extern BaseMenuPage g_Page_LoadGameCard;
 void PushPage(BaseMenu *menu, BaseMenuPage *page);
-void *ReplayCopy_Setup(ReplayCopyConfig *config);
-int ReplayCopy_Update(PadState *pad);
 int ReplayTheaterMenu_ItemCallback(MenuListEventId event, MenuListEvent *ev, int index);
 int DemoSelect_ItemCallback(MenuListEventId event, MenuListEvent *ev, int index);
 
