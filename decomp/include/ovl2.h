@@ -230,7 +230,7 @@ struct ArcCarSpecPanel {
 };
 
 struct ArcRecordPanel {
-    char active;
+    signed char active;
     char pad01;
     short anim;
     void *data;
@@ -381,19 +381,19 @@ struct ArcLogo {
     short vramPage; // texture page of the two logo slots (x (p&0xf)*64, y (p&0x10)*16); slot n at +n*0x80 lines
     unsigned char pad2[2];
     unsigned char *archive; // arc_carlogo archive in memory (offset table at +4)
-    char cur; // slot used by the last request (alternates 0/1)
+    signed char cur; // slot used by the last request (alternates 0/1)
     unsigned char pad9;
     short w[2]; // logo width per slot (pixels)
     short h[2]; // logo height per slot
     unsigned char pad12[2];
     unsigned int carId[2]; // car whose logo is in each slot
-    unsigned char ready[2]; // slot uploaded and drawable
+    signed char ready[2]; // slot uploaded and drawable
     short archIdx[2]; // archive image index; -1: read from the CD (logoFile+1) into timBuf
-    unsigned char pending[2]; // upload on the next BeginFrame
+    signed char pending[2]; // upload on the next BeginFrame
     unsigned char pad24;
-    char loadState; // CD read state: 1 wait for the drive, 2 start, 3 poll
-    unsigned char cdBusy; // owns the menu CD read
-    unsigned char cancel; // stop the read on the next update
+    signed char loadState; // CD read state: 1 wait for the drive, 2 start, 3 poll
+    signed char cdBusy; // owns the menu CD read
+    signed char cancel; // stop the read on the next update
     void *timBuf; // buffer for a logo read from the CD
 };
 
