@@ -342,6 +342,10 @@ struct ArcGuestLoadConfig {
     void *buffer;
     void *font;
     short *slots;
+    Font *fontSmall;
+    Font *fontMedium;
+    Font *fontLarge;
+    short textPri;
 };
 
 // Arcade 3D car preview: streams a car model, its textures and wheel from the CD, inflates them in a menu hook and draws them with a ground disc. Two of them (ArcadeMenu.carViews).
