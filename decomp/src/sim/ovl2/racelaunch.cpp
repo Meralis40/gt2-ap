@@ -14,11 +14,6 @@ extern short g_ArcCardSlotStatus[];
 extern void *g_ArcKanjiFont;
 extern unsigned char D_801C9AF5;
 
-// A page with a delay: RaceLaunch's.
-struct RaceLaunchPage : MenuPage {
-    int delay;
-};
-
 
 
 // 24-frame delay.
@@ -30,7 +25,7 @@ void RaceLaunch_Enter(void *menu, int back)
 // 3 at the end of the delay: leaves the menu for the race.
 int RaceLaunch_Update(ArcadeMenu *menu, int active)
 {
-    RaceLaunchPage *page = (RaceLaunchPage *)menu->activePage;
+    ArcPage *page = (ArcPage *)menu->activePage;
     int result = 0;
 
     if (page->delay > 0 && --page->delay == 0) {

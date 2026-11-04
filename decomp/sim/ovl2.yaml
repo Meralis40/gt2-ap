@@ -103,6 +103,8 @@ segments:
       - [0x17084, rodata] # 0x80027084
       - [0x170c8, .rodata, coursemap] # 0x800270c8: CourseMap_Update's jump table
       - [0x170f4, rodata] # 0x800270f4
+      - [0x17314, .rodata, selectpages] # 0x80027314: the class pages' jump tables
+      - [0x17364, rodata] # 0x80027364
       - [0x173fc, .rodata, battle2p] # 0x800273fc: Battle2P_ClosePlayer's jump table
       - [0x17420, rodata] # 0x80027420
   - [0x43544]
