@@ -196,10 +196,29 @@ CXX_NAMES = {"exe": {
     "ArcadeRaceLoop____tf": "__tf14ArcadeRaceLoop", "ArcadeRaceLoop__vtable": "__vt_14ArcadeRaceLoop",
     "__ti14ArcadeRaceLoop": "0x801C6C10",
 }, "ovl1": {
-    # BaseMenu (ovl1.h): MainMenu_Run's menus call its constructor and destructor,
-    # still assembly, and the resident ScreenViewLoop::Execute.
-    "__8BaseMenu": "BaseMenu__BaseMenu", "_._8BaseMenu": "BaseMenu__BaseMenu_dtor",
-    "Execute__14ScreenViewLoop": "ScreenViewLoop__Execute",
+    # BaseMenu (basemenu.cpp): its resident bases, the names its assembly calls them by,
+    # and its typeinfo.
+    "__23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer",
+    "_._23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer_dtor",
+    "Leave__23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__Leave",
+    "BeginDraw__23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__BeginDraw",
+    "SwapDisplay__23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__SwapDisplay",
+    "__tf23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer____tf",
+    "__ti23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__typeinfo",
+    "SetVideoMode__23psxViewLoopDoubleBufferUi": "psxViewLoopDoubleBuffer__SetVideoMode",
+    "Enter__11psxViewLoop": "psxViewLoop__Enter", "Step__11psxViewLoop": "psxViewLoop__Step",
+    "Flip__11psxViewLoop": "psxViewLoop__Flip", "BeginFrame__11psxViewLoop": "psxViewLoop__BeginFrame",
+    "Update__11psxViewLoop": "psxViewLoop__Update", "Draw__11psxViewLoop": "psxViewLoop__Draw",
+    "EndDraw__11psxViewLoop": "psxViewLoop__EndDraw", "DrawFrame__11psxViewLoop": "psxViewLoop__DrawFrame",
+    "ApplyVideoMode__11psxViewLoop": "psxViewLoop__ApplyVideoMode",
+    "UpdateDisplay__11psxViewLoop": "psxViewLoop__UpdateDisplay",
+    "Run__14ScreenViewLoop": "ScreenViewLoop__Run", "Execute__14ScreenViewLoop": "ScreenViewLoop__Execute",
+    "BaseMenu__BaseMenu": "__8BaseMenu", "BaseMenu__BaseMenu_dtor": "_._8BaseMenu",
+    "Enter__8BaseMenu": "BaseMenu__Enter", "BaseMenu__Update": "Update__8BaseMenu",
+    "BaseMenu__Draw": "Draw__8BaseMenu", "BaseMenu__Leave": "Leave__8BaseMenu",
+    "BaseMenu__BeginFrame": "BeginFrame__8BaseMenu",
+    "BaseMenu____tf": "__tf8BaseMenu", "BaseMenu__vtable": "__vt_8BaseMenu",
+    "__ti8BaseMenu": "0x801B95E0",
 }, "ovl2": {
     # ArcadeMenu (arcademenu.cpp, menupages.cpp): its resident bases...
     "__23psxViewLoopDoubleBuffer": "psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer",

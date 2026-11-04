@@ -70,6 +70,8 @@ segments:
       - [0x11030, rodata]
       - [0x11034, .rodata, mainmenu] # MainMenu_Run's jump table
       - [0x11050, rodata]
+      - [0x11054, .rodata, basemenu] # 0x80021054: Update's jump table, vtable and type name of BaseMenu
+      - [0x110bc, rodata]
       - [0x12bdc, .rodata, autoload] # 0x80022bdc: AutoLoad_Update's jump table
       - [0x12c08, rodata]
       - [0x12c0c, .rodata, langselect] # 0x80022c0c: LangSelect_ItemCallback's jump table

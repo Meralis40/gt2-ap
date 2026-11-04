@@ -76,6 +76,12 @@ def check(unit, name):
     if "NON_MATCHING" not in source:
         return []
     data, syms, masks = text_of(compile_file(unit, name))
+    # A method's splat name, from the g++ name CXX_NAMES links it to.
+    for mangled, alias in build.CXX_NAMES.get(unit, {}).items():
+        if alias in syms:
+            syms[mangled] = syms[alias]
+        if mangled in syms:
+            syms[alias] = syms[mangled]
     results = []
     for path in sorted(glob.glob(os.path.join(ROOT, "asm/sim", unit, "nonmatchings", name, "*.s"))):
         func = os.path.basename(path)[:-2]
