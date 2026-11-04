@@ -3,8 +3,69 @@
 #define INCLUDE_ASM_USE_MACRO_INC 1
 #include "include_asm.h"
 #include "common.h"
+#include "gamestate.h"
+
+// g_RaceSetup, as the game reaches it: g_GameState plus 0xbf7c, added at run time.
+static inline RaceSetup *RaceSetup_Get(void)
+{
+    char *base = (char *)&g_GameState;
+    int offset = 0xbf7c;
+
+    return (RaceSetup *)(base + offset);
+}
+
+// One driving class's parameters as bytes, converted by PhysParams_Init.
+struct PhysDriveBytes {
+    unsigned char b[16];
+};
+
+struct PhysDriveTable {
+    PhysDriveBytes classes[5];
+};
+
+// One driving class's parameters in fixed point (0x28 bytes). The fields are not named yet.
+struct AiDriveParams {
+    short unk00;
+    short unk02;
+    int unk04;
+    short unk08;
+    short unk0a;
+    short unk0c;
+    short unk0e;
+    int unk10;
+    int unk14;
+    short unk18;
+    short unk1a;
+    short unk1c;
+    short unk1e;
+    int unk20;
+    short unk24;
+    short unk26;
+};
 
 extern "C" {
+extern RaceWorld g_RaceWorld;
+extern PhysDriveTable D_80046E5C;
+extern AiDriveParams g_AiDriveParams[];
+extern int g_FrameRate;
+extern unsigned char D_80046ED4[];
+extern short g_PhysFrameRates[2];
+extern short D_80046DB4[2];
+extern short D_80046DB8[2];
+extern short D_80046DBC[2];
+extern short D_80046DC0[2];
+extern short D_80046DC4[2];
+extern int g_TyreWearEnabled;
+extern int g_TyreWear_MaxGripLoss;
+extern int g_TyreWear_WornGrip;
+extern int g_TyreWearInit;
+extern int g_TyreGripLossInit;
+extern int g_TyreWear_Knee;
+extern int g_TyreWear_KneeGripLoss;
+void CatchUp_Init(int on);
+void SplitTimes_Reset(void);
+void TimeTrial_InitBuffers(void);
+void PhysParams_Init(int unused);
 extern unsigned char g_RaceEventParams[];
 extern unsigned char g_Race_IsDemo;
 
@@ -147,10 +208,180 @@ void PhysConsts_Init(void)
     D_80046F40 = (g_PhysConstBytes.unkC6 << 12) / 10;
 }
 
-INCLUDE_ASM("asm/sim/ovl0/nonmatchings/physparams", PhysParams_Init);
+#ifdef NON_MATCHING
+void PhysParams_Init(int unused)
+{
+    int i;
+    RaceWorld *world;
+    PhysDriveTable *table;
+    AiDriveParams *drive;
 
-// Uses a jump table on g_RaceSetup.raceType.
-INCLUDE_ASM("asm/sim/ovl0/nonmatchings/physparams", Race_InitPhysicsParams);
+    PhysConsts_Init();
+    i = 0;
+    world = &g_RaceWorld;
+    table = &D_80046E5C;
+    drive = g_AiDriveParams;
+    for (; i < 4; i++) {
+        AiDriveParams *params = &drive[i];
+        int idx = i;
+        PhysDriveBytes *src;
+
+        if (Course_Get(world->course)->flags & 4) {
+            idx = 4;
+        }
+        src = (PhysDriveBytes *)(idx * 16 + (int)table);
+        params->unk08 = (src->b[3] << 12) / 100;
+        params->unk10 = src->b[7] << 16;
+        params->unk14 = src->b[8] << 16;
+        params->unk0e = Fixed_Div(0x1000, src->b[6] * 2276, 0);
+        params->unk00 = 0x64000 / src->b[0];
+        params->unk02 = (src->b[1] << 12) / 100;
+        params->unk04 = (src->b[2] - 100) * 1138;
+        params->unk0a = (src->b[4] << 12) / 100;
+        params->unk0c = (src->b[5] << 12) / 100;
+        params->unk24 = (src->b[14] << 12) / 100;
+        params->unk18 = (src->b[9] << 12) / 100;
+        params->unk1a = (src->b[10] << 12) / 100;
+        params->unk1c = (src->b[11] << 12) / 10;
+        params->unk1e = (src->b[12] << 12) / 100;
+        params->unk20 = (src->b[13] << 12) / 10;
+    }
+    {
+        unsigned char *event;
+
+    i = 0;
+    event = g_RaceEventParams;
+    drive = g_AiDriveParams;
+    for (; i < 4; i++) {
+        AiDriveParams *params = &drive[i];
+        unsigned char *p = (unsigned char *)(i + (int)event);
+        int grip = p[0xc];
+        int brake;
+
+        if (grip == 0) {
+            grip = 100;
+        }
+        if (grip > 100) {
+            grip = 100;
+        }
+        params->unk26 = (grip << 12) / 100;
+        brake = p[0x10];
+        if (brake == 0) {
+            brake = 100;
+        }
+        if (brake > 100) {
+            brake = 100;
+        }
+        params->unk00 = params->unk00 * 100 / brake;
+    }
+    }
+    g_TyreWearEnabled = 0;
+    g_TyreWear_MaxGripLoss = 0;
+    g_TyreWear_WornGrip = 0;
+    g_TyreWearInit = 0;
+    g_TyreGripLossInit = 0;
+    g_TyreWear_Knee = 0;
+    g_TyreWear_KneeGripLoss = 0;
+    unsigned char *event = g_RaceEventParams;
+    if (event[0x1d] != 0 && (Course_Get(g_RaceWorld.course)->flags & 4) == 0 &&
+        event[0x22] < event[0x1d] && event[0x23] < event[0x1e] && event[0x1f] < event[0x1e]) {
+        g_TyreWear_MaxGripLoss = (event[0x1e] << 12) / 100;
+        g_TyreWearEnabled = event[0x1d] * 10000;
+        g_TyreWear_WornGrip = ((100 - event[0x1f]) << 12) / 100;
+        g_TyreWearInit = -event[0x20] * 10000;
+        g_TyreGripLossInit = (event[0x21] << 12) / 100;
+        g_TyreWear_Knee = event[0x22] * 10000;
+        g_TyreWear_KneeGripLoss = (event[0x23] << 12) / 100;
+    }
+    {
+        unsigned char *step;
+        int rate;
+        short *base0;
+        short *base1;
+        short *base2;
+        short *base3;
+        short *base4;
+        short *base5;
+
+        i = 0;
+        step = D_80046ED4;
+        rate = g_FrameRate;
+        base0 = g_PhysFrameRates;
+        base1 = D_80046DB4;
+        base2 = D_80046DB8;
+        base3 = D_80046DBC;
+        base4 = D_80046DC0;
+        base5 = D_80046DC4;
+        for (; i < 2; i++) {
+            short *r0 = &base0[i];
+            short *r1 = &base1[i];
+            short *r2 = &base2[i];
+            short *r3 = &base3[i];
+            short *r4 = &base4[i];
+            short *r5 = &base5[i];
+
+            *r0 = 0x64000 / (step[0] * rate);
+            *r1 = 0x64000 / (step[1] * rate);
+            *r2 = 0x64000 / (step[2] * rate);
+            *r3 = 0x64000 / (step[3] * rate);
+            *r4 = 0x64000 / (step[4] * rate);
+            *r5 = 0x64000 / (step[5] * rate);
+            if (*r0 > 0x1000) {
+                *r0 = 0x1000;
+            }
+            if (*r1 > 0x1000) {
+                *r1 = 0x1000;
+            }
+            if (*r2 > 0x1000) {
+                *r2 = 0x1000;
+            }
+            if (*r3 > 0x1000) {
+                *r3 = 0x1000;
+            }
+            if (*r4 > 0x1000) {
+                *r4 = 0x1000;
+            }
+            if (*r5 > 0x1000) {
+                *r5 = 0x1000;
+            }
+        }
+    }
+}
+#else
+INCLUDE_ASM("asm/sim/ovl0/nonmatchings/physparams", PhysParams_Init);
+#endif
+
+void Race_InitPhysicsParams(void)
+{
+    int on = 0;
+    int wear = on;
+
+    switch (RaceSetup_Get()->raceType) {
+    case 2:
+    case 4:
+    case 12:
+        on = 1;
+    case 1:
+        wear = -1;
+        break;
+    case 0: {
+        RaceSetup *setup = RaceSetup_Get();
+
+        on = RaceParams_SetCatchUp((signed char)setup->options[7]);
+        wear = setup->options[3];
+        break;
+    }
+    }
+    CatchUp_Init(on);
+    if (wear >= 0) {
+        RaceParams_SetTyreWear(wear);
+    }
+    PhysParams_Init(1);
+    SplitTimes_Reset();
+    if (Race_IsTimeTrial()) {
+        TimeTrial_InitBuffers();
+    }
+}
 
 // Race start: resets the car collisions and the race order.
 void Race_InitCarState(void)

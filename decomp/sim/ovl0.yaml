@@ -75,6 +75,9 @@ segments:
       - [0x31e4c, cpp, catchup] # 0x80041e4c
       - [0x33388, cpp, suspension] # 0x80043388
       - [0x36bac, textbin, text_data_80046bac] # tables inside .text
+      # 0x80046c5c: Race_InitPhysicsParams's jump table
+      - {start: 0x36c5c, type: .rodata, name: physparams, linker_section_order: .text}
+      - [0x36c90, textbin, text_data_80046c90] # tables inside .text
       - [0x36fb0, cpp, timslot] # 0x80046fb0, a copy of OVL4's Tim_UploadToPage
       - [0x37024, cpp, quickmenu] # 0x80047024
       - [0x38418, cpp, asyncread] # 0x80048418
