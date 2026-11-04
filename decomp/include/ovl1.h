@@ -26,7 +26,7 @@ struct BaseMenuPage {
 // (viewloop.h), like OVL2's ArcadeMenu. Only its fields so far.
 class BaseMenu : public psxViewLoopDoubleBuffer {
 public:
-    unsigned char hookActive; // hook runs each frame while it returns non-zero
+    signed char hookActive; // hook runs each frame while it returns non-zero
     unsigned char pad71[3];
     unsigned char (*hook)(void *, int, int);
     void *hookArg;
@@ -37,7 +37,7 @@ public:
     BaseMenuPage *leavingPage; // drawn fading out during a back transition
     BaseMenuPage *pageStack[16];
     signed char pageDepth;
-    unsigned char transitionBack;
+    signed char transitionBack;
     short transitionTimer; // 16 down to 0
     unsigned int drawStamp; // copy of DAT_801f0698
     int frameCount;
@@ -47,6 +47,11 @@ public:
 
     BaseMenu();
     virtual ~BaseMenu();
+    virtual void Enter();
+    virtual void Leave();
+    virtual void BeginFrame();
+    virtual int Update();
+    virtual void Draw();
 };
 
 struct KeyConfig {
