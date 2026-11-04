@@ -74,4 +74,6 @@ segments:
       - [0x12c08, rodata]
       - [0x12c0c, .rodata, langselect] # 0x80022c0c: LangSelect_ItemCallback's jump table
       - [0x12c30, rodata]
+      - [0x12c5c, .rodata, options] # 0x80022c5c: the jump tables of Option_Get and Option_Set
+      - [0x12cd8, rodata] # 0x80022cd8, from the padding after options.cpp's .rodata
   - [0x3c8c4]
