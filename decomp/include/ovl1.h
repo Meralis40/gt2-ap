@@ -91,17 +91,28 @@ struct TabSelector {
     short y;
     short width;
     short unk06;
-    char count;
-    char selected;
+    signed char count;
+    signed char selected;
     short anim;
     short slide;
-    char previous;
-    unsigned char hadInput;
-    unsigned char active;
-    unsigned char skipInput;
+    signed char previous;
+    signed char hadInput;
+    signed char active;
+    signed char skipInput;
     unsigned char pad12[2];
     void *callback;
     void *userData;
+};
+
+// What TabSelector_Update and TabSelector_Draw pass to the callback.
+struct TabEvent {
+    TabSelector *tabs;
+    PadState *pad;
+    uint *ot;
+    short x;
+    short y;
+    short brightness;
+    short pad12[3];
 };
 
 // ovl1/menusprite.cpp
