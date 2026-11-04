@@ -30,8 +30,8 @@ struct ArcTextItem {
     short zoomWidth;
     short blinkSteps;
     short fadeSteps;
-    char spacing;
-    char height;
+    signed char spacing;
+    signed char height;
     unsigned short flags;
     unsigned char brightness;
     unsigned char pad0f;
@@ -47,13 +47,44 @@ struct ArcTextItem {
     short pad2a;
 };
 
+// What TextItem_Init_OVL2 copies.
+struct ArcTextItemTmpl {
+    unsigned char charsPerStep;
+    unsigned char echoDiv;
+    short revealSteps;
+    short zoomWidth;
+    short blinkSteps;
+    short fadeSteps;
+    signed char spacing;
+    unsigned char pad0b;
+    unsigned short flags;
+    signed char height;
+    unsigned char pad0f;
+    Font *font;
+    unsigned int rgbFrom;
+    unsigned int rgbTo;
+};
+
+// What Dialog_Init_OVL2 copies.
+struct ArcDialogDesc {
+    char *message;
+    char *option0;
+    char *option1;
+    unsigned char choice;
+    unsigned char pad0d;
+    unsigned short flags;
+    signed char spacing;
+    unsigned char pad11[3];
+    Font *font;
+};
+
 struct ArcDialog {
     short x;
     short y;
     ArcTextItem message;
     ArcTextItem option0;
     ArcTextItem option1;
-    char choice;
+    signed char choice;
     unsigned char pad89;
     unsigned char boxHeight;
     unsigned char boxWidth;
@@ -206,10 +237,51 @@ struct ArcSpecTable {
 
 // The power graph of the car spec panel (PowerGraphView_*_OVL2), 0x44 bytes.
 struct ArcPowerGraph {
-    short state[0x14];
+    signed char abr;        // the labels' blend mode, and the draw mode at the end
+    unsigned char stagger;  // frames from the first tick's fade-in to the last's
+    short x, y, w, h;
+    signed char labelGap;
+    signed char textMode;
+    signed char charH;
+    unsigned char pad0d[3];
+    Font *font;
+    unsigned char powerRgb[4];
+    unsigned char torqueRgb[4];
+    unsigned char rpmRgb[4];
+    short maxRpm;
+    short maxPower;
+    short maxTorque;
+    short pad26;
     void *powerCurve;
     void *torqueCurve;
-    unsigned char pad30[0x14];
+    short frame;            // the fade-in frame; -1 hidden, below -1 closing
+    short powerTop;
+    short powerTicks;
+    short powerStep;
+    short torqueTop;
+    short torqueTicks;
+    short torqueStep;
+    short rpmTicks;
+    short samples;
+    short endFrame;
+};
+
+// What PowerGraphView_Init_OVL2 copies.
+struct ArcPowerGraphTmpl {
+    short w;
+    short h;
+    signed char labelGap;
+    signed char textMode;
+    signed char charH;
+    unsigned char pad07;
+    short maxRpm;
+    short maxPower;
+    short maxTorque;
+    short pad0e;
+    unsigned int powerRgb;
+    unsigned int torqueRgb;
+    unsigned int rpmRgb;
+    Font *font;
 };
 
 // The arcade car spec panel (g_ArcCarSpecPanel): two slots that alternate, so that the old car's

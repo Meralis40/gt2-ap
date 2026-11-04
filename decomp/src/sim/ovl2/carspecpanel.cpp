@@ -40,7 +40,7 @@ void CarSpecPanel_Init(ArcCarSpecPanel *panel)
         panel->name[i].text = D_80027108;
         IconItem_Init(&panel->icon[i], D_8004F650);
         panel->icon[i].sprite = D_800454E0;
-        PowerGraphView_Init_OVL2((unsigned char *)&panel->graph[i], (short *)D_8004F65C);
+        PowerGraphView_Init_OVL2(&panel->graph[i], D_8004F65C);
         panel->graph[i].powerCurve = panel->powerCurve[i];
         panel->graph[i].torqueCurve = panel->torqueCurve[i];
         b = panel->bars[i];
@@ -66,7 +66,7 @@ void CarSpecPanel_Close(ArcCarSpecPanel *panel)
 
         TextItem_Hide_OVL2(&panel->name[slot]);
         IconItem_Hide(&panel->icon[slot]);
-        PowerGraphView_Close_OVL2((short *)&panel->graph[slot]);
+        PowerGraphView_Close_OVL2(&panel->graph[slot]);
         b = panel->bars[slot];
         StatBar_Hide(b);
         StatBar_Hide(b + 1);
@@ -93,7 +93,7 @@ void CarSpecPanel_Next(ArcCarSpecPanel *panel)
 
         TextItem_Hide_OVL2(&panel->name[slot]);
         IconItem_Hide(&panel->icon[slot]);
-        PowerGraphView_Close_OVL2((short *)&panel->graph[slot]);
+        PowerGraphView_Close_OVL2(&panel->graph[slot]);
         b = panel->bars[slot];
         StatBar_Hide(b);
         StatBar_Hide(b + 1);

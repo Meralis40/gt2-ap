@@ -32,7 +32,7 @@ void CarSpecPanel_Update(void *panel)
     do {
         TextItem_Update_OVL2(item);
         IconItem_Update((ArcIconItem *)((int)panel + iVar1));
-        PowerGraphView_Update_OVL2((short *)((int)panel + iVar2));
+        PowerGraphView_Update_OVL2((ArcPowerGraph *)((int)panel + iVar2));
         b = (ArcStatBar *)((int)panel + iVar3);
         StatBar_Update(b);
         StatBar_Update(b + 1);
