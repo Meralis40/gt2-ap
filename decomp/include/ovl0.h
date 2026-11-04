@@ -167,11 +167,15 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     short boostDisplay;
     unsigned char unk748[8];
     byte racePos; /* place in the race, from 1 (RaceOrder_Update) */
-    unsigned char unk751[6];
+    byte licenseState; /* 1 passed, 2 failed (LicenseTest_Succeed / LicenseTest_Fail) */
+    unsigned char unk752[4];
+    byte licenseResult; /* 1 cleared; why it failed: 3 overran, 4 hit or moved, 5 hit (LicenseTest_CheckEnd) */
     byte unk757;
     byte unk758;
     byte blowOffVolume; /* turbo blow-off sound volume */
-    unsigned char unk75a[8];
+    unsigned char unk75a[2];
+    uint licenseTime;
+    unsigned char unk760[2];
     byte unk762;
     byte unk763;
     byte aiMessage; /* CarAi_SetMessage */
@@ -300,7 +304,8 @@ struct CourseData {
     uint *objModels;
     ushort *table1c;
     void *data20;
-    uchar unk24[244];
+    int checkpointCount;
+    int checkpoints[60]; /* course distance of each sector line */
     uint *objGroups[33];
 };
 
@@ -347,7 +352,7 @@ struct QuickMenuPage {
 
 struct QuickMenu {
     struct psxViewLoopDoubleBuffer base;
-    uchar hookActive;
+    signed char hookActive;
     uchar pad71[3];
     uchar (*hook)(void *, int, int);
     void *hookArg;
@@ -359,16 +364,16 @@ struct QuickMenu {
     struct QuickMenuPage *activePage;
     struct QuickMenuPage *leavingPage;
     struct QuickMenuPage *pageStack[16];
-    char pageDepth;
-    char transitionTimer;
-    uchar transitionKind;
+    signed char pageDepth;
+    signed char transitionTimer;
+    signed char transitionKind;
     uchar pad213;
     struct TextCtx text;
     uint drawStamp;
     int frameCount;
     int updateCount;
 
-    QuickMenu();                // still assembly (quickmenu.cpp)
+    QuickMenu();                // QuickMenu__QuickMenu (quickmenu.cpp)
     ~QuickMenu();
 };
 
@@ -467,12 +472,12 @@ struct PreQuickMenuIO {
     struct DrawLayer layer;
     short loader;
     short frames;
-    uchar step;
-    uchar fontTimUploaded;
-    uchar menuTimUploaded;
-    uchar mode;
+    signed char step;
+    signed char fontTimUploaded;
+    signed char menuTimUploaded;
+    signed char mode;
 
-    PreQuickMenuIO();           // still assembly (quickmenu.cpp)
+    PreQuickMenuIO();           // PreQuickMenuIO__PreQuickMenuIO (quickmenu.cpp)
     ~PreQuickMenuIO();
 };
 

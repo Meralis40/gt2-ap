@@ -877,7 +877,7 @@ void RaceWorld_UnmuteSounds(RaceWorld *w);
 void RaceWorld_SetupCars(RaceWorld *w);
 void RaceWorld_Start(RaceWorld *w);
 void RaceWorld_Shutdown(RaceWorld *w);
-void Race_Nop(void);
+void Race_Nop(int index, int behind);
 void InputLog_Reset(InputLog *log, int forPlayback, unsigned short capacity);
 void Particles_Init(ParticlePool *pool);
 void Particles_Update(ParticlePool *pool);
