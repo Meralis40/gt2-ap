@@ -515,8 +515,8 @@ struct RaceLoop {
     byte raceDoneA; /* GT: set after a race */
     byte raceDoneB;
     unsigned char unk5ce[2];
-    byte firstEntry;
-    byte resultsPending; /* race finished: show the result pages */
+    signed char firstEntry;
+    signed char resultsPending; /* race finished: show the result pages */
     short savedLapCount; /* RaceSetup.unk0f before the practice run */
     short savedCarCount;
     short savedIntro; /* RaceSetup.unk0d */
