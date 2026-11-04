@@ -78,4 +78,6 @@ segments:
       - [0x12c30, rodata]
       - [0x12c5c, .rodata, options] # 0x80022c5c: the jump tables of Option_Get and Option_Set
       - [0x12cd8, rodata] # 0x80022cd8, from the padding after options.cpp's .rodata
+      - [0x13d30, .rodata, datatransfer] # 0x80023d30: DataTransferMenu_ItemCallback's jump table
+      - [0x13d54, rodata]
   - [0x3c8c4]
