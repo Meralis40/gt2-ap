@@ -14,13 +14,6 @@ extern short g_ArcCardSlotStatus[];
 extern void *g_ArcKanjiFont;
 extern unsigned char D_801C9AF5;
 
-// A course's stat byte.
-struct ArcBonusFlags {
-    unsigned char bit0 : 1;
-    unsigned char bit1 : 1;
-    unsigned char bit2 : 1;
-};
-
 // A page with a delay: RaceLaunch's.
 struct RaceLaunchPage : MenuPage {
     int delay;

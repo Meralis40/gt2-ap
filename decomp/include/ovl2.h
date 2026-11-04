@@ -264,6 +264,56 @@ struct ArcGarageInfo {
     ArcCarRating ratings[100];
 };
 
+// A course's or a car's stat byte.
+struct ArcBonusFlags {
+    unsigned char bit0 : 1;
+    unsigned char bit1 : 1;
+    unsigned char bit2 : 1;
+};
+
+// A course of the arcade course lists (0x20 bytes, ends with an unk04 of 0).
+struct ArcCourse {
+    char *name;
+    int unk04;
+    int pad08[2];
+    unsigned int hash; // Str_Hash of name
+    short license;
+    short pad16;
+    int stat; // byte of PlayerStats, -1: none
+    signed char unlocked;
+    unsigned char pad1d[3];
+};
+
+// An entry of the course map file's header: entry 0's nameOffset is the count, and the
+// name of map i is at entry i + 1.
+struct ArcCourseMapEntry {
+    int nameOffset;
+    int pad04;
+    int size;
+    int sector;
+};
+
+// The course map of the course selection page (0x224 bytes).
+struct ArcCourseMap {
+    short tpage;
+    short pad02;
+    ArcCourseMapEntry *info;
+    void *buf;
+    void *buf2;
+    short state; // 1 wait for the CD, 2/3 read, 4 wait for the hook, 11 show
+    short pad12;
+    unsigned int hash; // the requested map
+    signed char ready; // drawn
+    signed char loaded;
+    signed char hookActive;
+    signed char hookPending;
+    signed char decoded;
+    signed char unk1d;
+    signed char cdClaimed;
+    signed char stopRequested;
+    unsigned int hashes[129];
+};
+
 // A bonus course of the arcade menu (g_ArcBonusCourses, ends with a code of 0).
 struct ArcBonusCourse {
     int code;
@@ -410,7 +460,7 @@ public:
     unsigned char pad230[8];
     int logoArcReady; // CarLogoArc_Update result; forces the logo uploads
     ArcLogo logos[2];
-    unsigned char courseMap[0x224]; // set up by CourseMap_Init (ArcadeMode_Run's frame gives its size)
+    ArcCourseMap courseMap; // set up by CourseMap_Init (ArcadeMode_Run's frame gives its size)
 
     ArcadeMenu();
     virtual ~ArcadeMenu();
