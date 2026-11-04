@@ -51,7 +51,7 @@ INCLUDE_ASM("asm/sim/ovl2/nonmatchings/arccarview", ArcCarView_Unload);
 INCLUDE_ASM("asm/sim/ovl2/nonmatchings/arccarview", ArcCarView_Update);
 
 // Inflate steps 0x17d0 (model) / 9000 (textures) bytes per frame.
-void ArcCarView_SetFastDecode(void)
+void ArcCarView_SetFastDecode(ArcCarView *view)
 {
     g_ArcCarView_ModelStep = 0x17d0;
     g_ArcCarView_TexStep = 9000;

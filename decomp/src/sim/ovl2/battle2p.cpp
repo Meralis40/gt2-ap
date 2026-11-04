@@ -72,7 +72,7 @@ int Battle2P_ListP1Home(int event, void *ctx, int index)
     ArcGarageInfo *info = &g_Arc_HomeGarageInfo;
     GameState *gs = &g_GameState;
 
-    return GarageList_Callback(event, ctx, index, &gs->garages[0], &info->ratings[slot], slot);
+    return GarageList_Callback(event, (MenuListEvent *)ctx, index, &gs->garages[0], &info->ratings[slot], slot);
 }
 
 // GarageList_Callback for player 1, guest garage.
@@ -82,7 +82,7 @@ int Battle2P_ListP1Guest(int event, void *ctx, int index)
     ArcGarageInfo *info = &g_Arc_GuestGarageInfo;
     GameState *gs = &g_GameState;
 
-    return GarageList_Callback(event, ctx, index, &gs->garages[1], &info->ratings[slot], slot);
+    return GarageList_Callback(event, (MenuListEvent *)ctx, index, &gs->garages[1], &info->ratings[slot], slot);
 }
 
 // GarageList_Callback for player 2, home garage.
@@ -92,7 +92,7 @@ int Battle2P_ListP2Home(int event, void *ctx, int index)
     ArcGarageInfo *info = &g_Arc_HomeGarageInfo;
     GameState *gs = &g_GameState;
 
-    return GarageList_Callback(event, ctx, index, &gs->garages[0], &info->ratings[slot], slot);
+    return GarageList_Callback(event, (MenuListEvent *)ctx, index, &gs->garages[0], &info->ratings[slot], slot);
 }
 
 // GarageList_Callback for player 2, guest garage.
@@ -102,7 +102,7 @@ int Battle2P_ListP2Guest(int event, void *ctx, int index)
     ArcGarageInfo *info = &g_Arc_GuestGarageInfo;
     GameState *gs = &g_GameState;
 
-    return GarageList_Callback(event, ctx, index, &gs->garages[1], &info->ratings[slot], slot);
+    return GarageList_Callback(event, (MenuListEvent *)ctx, index, &gs->garages[1], &info->ratings[slot], slot);
 }
 
 INCLUDE_ASM("asm/sim/ovl2/nonmatchings/battle2p", Battle2P_Enter);
