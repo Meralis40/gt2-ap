@@ -346,7 +346,7 @@ INCLUDE_ASM("asm/sim/ovl0/nonmatchings/raceworld", Race_ShowGap);
 #endif
 
 // Empty race logic callback.
-void Race_Nop(void)
+void Race_Nop(int index, int behind)
 {
 }
 
