@@ -45,10 +45,10 @@ void Text_DrawCentered(TextCtx *ctx, signed char *s, int x, int y, int spacing)
     Text_DrawString(ctx, s, x, y, spacing);
 }
 
-void Text_DrawStringRight(TextCtx *ctx, signed char *s, int x, int y, int spacing)
+int Text_DrawStringRight(TextCtx *ctx, signed char *s, int x, int y, int spacing)
 {
     x -= Text_MeasureString(ctx, s, spacing);
-    Text_DrawString(ctx, s, x, y, spacing);
+    return Text_DrawString(ctx, s, x, y, spacing);
 }
 
 // Cuts s at the first character that would end past maxWidth. Returns 1 if it did.
