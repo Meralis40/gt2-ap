@@ -101,6 +101,8 @@ segments:
       - [0x17010, .rodata, arcaderacingmenu] # 0x80027010: vtable and type name of ArcadeRacingMenu
       - [0x17068, .rodata, asyncread] # 0x80027068: AsyncRead_Poll_OVL2's jump table
       - [0x17084, rodata] # 0x80027084
+      - [0x170c8, .rodata, coursemap] # 0x800270c8: CourseMap_Update's jump table
+      - [0x170f4, rodata] # 0x800270f4
       - [0x173fc, .rodata, battle2p] # 0x800273fc: Battle2P_ClosePlayer's jump table
       - [0x17420, rodata] # 0x80027420
   - [0x43544]

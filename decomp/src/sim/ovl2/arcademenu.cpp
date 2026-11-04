@@ -182,7 +182,7 @@ void ArcadeMenu::Enter()
     for (i = 0; i < 2; i++) {
         ArcLogo_Init(&logos[i], i + 0x16, g_OVL2_FileBuf, D_800E34A8 + i * 0x6000);
     }
-    CourseMap_Init(courseMap, 0x16, mapInfo, g_OVL2_CarGzBuf, D_800C74A8);
+    CourseMap_Init(&courseMap, 0x16, (ArcCourseMapEntry *)mapInfo, g_OVL2_CarGzBuf, D_800C74A8);
     text = &g_ArcadeText;
     Text_Init(&g_ArcadeText, 0x1e);
     text->unk1c = 1;
@@ -308,7 +308,7 @@ int ArcadeMenu::Update()
     for (i = 0; i < 2; i++) {
         ArcCarView_Update(carViews[i], this);
     }
-    CourseMap_Update(courseMap, this);
+    CourseMap_Update(&courseMap, this);
     CoursePreviewMovie_Update(&g_ArcCoursePreviewMovie, this);
     return result;
 }
