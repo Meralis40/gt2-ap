@@ -1081,22 +1081,9 @@ struct Garage {
 struct CourseRecord { /* Per-course best (0x24). Merged by FUN_OVL1__8001e014 keeping the lower time. */
 
     struct TimeRecord best;
-    undefined field1_0x14;
-    undefined field2_0x15;
-    undefined field3_0x16;
-    undefined field4_0x17;
-    undefined field5_0x18;
-    undefined field6_0x19;
-    undefined field7_0x1a;
-    undefined field8_0x1b;
-    undefined field9_0x1c;
-    undefined field10_0x1d;
-    undefined field11_0x1e;
-    undefined field12_0x1f;
-    undefined field13_0x20;
-    undefined field14_0x21;
-    undefined field15_0x22;
-    undefined field16_0x23;
+    uint carId; /* the car that set it */
+
+    char name[12]; /* the driver's name */
 };
 
 struct MachineTestEntry { /* One machine test result (tentative). */
