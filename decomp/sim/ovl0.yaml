@@ -63,7 +63,9 @@ segments:
       - {start: 0x1ef20, type: .rodata, name: raceloops, linker_section_order: .text}
       # 0x8002f000: vtable and type name of ArcadeRaceLoop
       - {start: 0x1f000, type: .rodata, name: arcaderace, linker_section_order: .text}
-      - [0x1f054, textbin, text_data_8002f054] # tables inside .text, from the padding after arcaderace.cpp's .rodata
+      - [0x1f054, textbin, text_data_8002f054] # the padding after arcaderace.cpp's .rodata
+      - {start: 0x1f058, type: .rodata, name: gtrace, linker_section_order: .text}
+      - [0x1f110, textbin, text_data_8002f110] # tables inside .text
       - [0x1f92c, cpp, carphys] # 0x8002f92c
       - [0x25714, cpp, ai] # 0x80035714
       - [0x292d8, cpp, drivetrain] # 0x800392d8
