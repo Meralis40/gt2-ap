@@ -4,196 +4,24 @@
 
 void Sys_Init(void)
 {
-    Heap_InitDefault();
     Boot_InitHardware();
 }
 
-// Fills by words, with swr and swl for an unaligned head and tail. When dst is
-// unaligned and n >= 4, it returns dst rounded up to a word, not dst.
-// The loops count down to the -1 kept in end (at the top), not to 0.
-void *memset(void *dst, int c, size_t n)
-{
-    unsigned char *p;
-    unsigned int *w;
-    unsigned int a, x, rem;
-    unsigned int end = -1;
-    if (n == 0) {
-        return dst;
-    }
-    c &= 0xff;
-    if (n < 4) {
-        p = dst;
-        if (--n != end) {
-            do {
-                *p++ = c;
-            } while (--n != -1);
-        }
-    } else {
-        a = (unsigned int)dst & 3;
-        x = c | (c << 8);
-        c = x | (x << 16);
-        if (a != 0) {
-            __asm__ volatile("swr %0, 0(%1)" : : "r"(c), "r"(dst));
-            a = 4 - a;
-            dst = (char *)dst + a;
-            n -= a;
-        }
-        w = dst;
-        a = n >> 2;
-        rem = n & 3;
-        if (--a != end) {
-            do {
-                *w++ = c;
-            } while (--a != -1);
-        }
-        if (rem != 0) {
-            p = (unsigned char *)w + rem;
-            __asm__ volatile("swl %0, -1(%1)" : : "r"(c), "r"(p));
-        }
-    }
-    return dst;
-}
 
-char *strcpy(char *dst, const char *src)
-{
-    char *d = dst;
-    while ((*d++ = *src++) != 0) {
-    }
-    return dst;
-}
 
-// Returns -1, 0 or 1. The sign is computed before the test, which puts it in
-// the branch's delay slot.
-int strcmp(const char *s1, const char *s2)
-{
-    char c1, c2;
-    int d, r;
-    for (;;) {
-        c1 = *s1++;
-        c2 = *s2++;
-        d = c1 - c2;
-        r = d >> 31;
-        if (d != 0) {
-            return r | 1;
-        }
-        if (c1 == 0) {
-            return 0;
-        }
-    }
-}
 
 int sprintf(char *buf, const char *fmt, ...)
 {
     return vsprintf(buf, fmt, (char *)&fmt + 4);
 }
 
-char *strncpy(char *dst, const char *src, size_t n)
-{
-    size_t len = strlen(src) + 1;
-    if (n < len) {
-        len = n;
-    }
-    bcopy(src, dst, len);
-    return dst;
-}
 
-size_t strlen(const char *s)
-{
-    size_t n = -1;
-    int c;
-    do {
-        c = *s++;
-        n++;
-    } while (c != 0);
-    return n;
-}
 
-void *memcpy(void *dst, const void *src, size_t n)
-{
-    unsigned char *d;
-    const unsigned char *s = (const unsigned char *)src;
-    if (src == dst) {
-        return dst;
-    }
-    d = (unsigned char *)dst;
-    while (n--) {
-        *d++ = *s++;
-    }
-    return dst;
-}
 
-char *strcat(char *dst, const char *src)
-{
-    strcpy(dst + strlen(dst), src);
-    return dst;
-}
 
-// Compares up to n characters, ignoring ASCII case.
-int strncasecmp(const char *a, const char *b, int n)
-{
-    int ca, cb;
-    while (n != 0) {
-        ca = *a++;
-        cb = *b++;
-        if ((unsigned int)(ca - 'a') < 26) {
-            ca = (char)(ca - 0x20);
-        }
-        if ((unsigned int)(cb - 'a') < 26) {
-            cb = (char)(cb - 0x20);
-        }
-        if (ca != cb) {
-            return ca - cb;
-        }
-        n--;
-        if (ca == 0) {
-            break;
-        }
-    }
-    return 0;
-}
 
-// Best fit: the smallest free block that holds size rounded up to 16 bytes.
-void *malloc(size_t size)
-{
-    HeapBlock *b;
-    HeapBlock *best = 0;
-    size = (size + 15) & ~15;
-    for (b = g_HeapBase; b != 0; b = b->next) {
-        if (b->used == 0 && size <= b->size && (best == 0 || b->size < best->size)) {
-            best = b;
-        }
-    }
-    if (best == 0) {
-        return 0;
-    }
-    Heap_SplitBlock(best, size);
-    best->used = 1;
-    return best + 1;
-}
 
-int abs(int x)
-{
-    return (x >= 0) ? x : -x;
-}
 
-int memcmp(const void *a, const void *b, int n)
-{
-    const unsigned char *p = (const unsigned char *)a;
-    const unsigned char *q = (const unsigned char *)b;
-    unsigned int ca, cb;
-    while (n != 0) {
-        ca = *p++;
-        cb = *q++;
-        if (ca < cb) {
-            return -1;
-        }
-        n--;
-        if (cb < ca) {
-            return 1;
-        }
-    }
-    return 0;
-}
 
 // %s: at most prec characters of s (all of them when prec < 0), padded to
 // width. Flag 1 pads on the right ('-'), flag 4 pads a right-aligned string
@@ -599,53 +427,8 @@ int Printf_Format(PutcFunc putc, const char *fmt, char *args)
     return count;
 }
 
-// The whole region becomes one free block.
-void InitHeap(unsigned long *base, unsigned long size)
-{
-    g_HeapBase = (HeapBlock *)base;
-    g_HeapSize = size;
-    if (size < sizeof(HeapBlock)) {
-        size = 0;
-    } else {
-        size -= sizeof(HeapBlock);
-    }
-    g_HeapBase->prev = 0;
-    g_HeapBase->next = 0;
-    g_HeapBase->size = size;
-    g_HeapBase->used = 0;
-}
 
-// The heap runs from the end of the BSS to g_StackSize below the stack that
-// start was called with, both aligned to 16 bytes, or is empty.
-void Heap_InitDefault(void)
-{
-    int base, top, size;
-    base = (int)(D_801F0D60 + 15) & ~15;
-    base |= 0x80000000;
-    top = g_StartupSP & ~15;
-    top = (top - g_StackSize + 15) & ~15;
-    top |= 0x80000000;
-    size = 0;
-    if (base < top) {
-        size = top - base;
-    }
-    InitHeap((unsigned long *)base, size);
-}
 
-// Frees the block, then merges it with the free blocks around it: back to the
-// first of the free blocks before it, then forward.
-void free(void *ptr)
-{
-    HeapBlock *b = (HeapBlock *)ptr - 1;
-    HeapBlock *p;
-    b->used = 0;
-    for (p = b->prev; p != 0 && p->used == 0; p = p->prev) {
-        b = p;
-    }
-    for (p = b->next; p != 0 && p->used == 0; p = b->next) {
-        Heap_MergeNext(b);
-    }
-}
 
 // vsprintf's sink: appends c to the output buffer.
 int Printf_PutcToBuffer(int c)
@@ -663,38 +446,4 @@ int vsprintf(char *buf, const char *fmt, void *args)
     return n;
 }
 
-// Cuts block to size bytes when the rest holds a header and 16 bytes or more;
-// the rest becomes a free block after it.
-void Heap_SplitBlock(HeapBlock *block, unsigned int size)
-{
-    HeapBlock *nb, *next;
-    if (block->size >= size + 2 * sizeof(HeapBlock)) {
-        nb = (HeapBlock *)((char *)block + size) + 1;
-        *nb = *block;
-        next = block->next;
-        block->size = size;
-        block->next = nb;
-        nb->prev = block;
-        nb->used = 0;
-        nb->size -= sizeof(HeapBlock);
-        nb->size -= size;
-        if (next != 0) {
-            next->prev = nb;
-        }
-    }
-}
 
-// Absorbs the next block, header and payload, into block.
-void Heap_MergeNext(HeapBlock *block)
-{
-    HeapBlock *next = block->next;
-    HeapBlock *nn;
-    if (next != 0) {
-        nn = next->next;
-        if (nn != 0) {
-            nn->prev = block;
-        }
-        block->next = nn;
-        block->size += next->size + sizeof(HeapBlock);
-    }
-}

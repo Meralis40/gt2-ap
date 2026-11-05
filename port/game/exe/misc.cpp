@@ -16,11 +16,11 @@ LineF2 *Prim_AddLineF2(uint *ot, uint rgb)
     unsigned int *p;
     unsigned int link;
 
-    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+    link = Mips_Lwl2(ot);
     p = (unsigned int *)g_PacketPtr;
     ((unsigned char *)p)[3] = 3;
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+    Mips_Swl2(link, p);
+    Mips_Swl2((unsigned int)p << 8, ot);
     p[1] = rgb ^ 0x40000000;
     g_PacketPtr = (char *)(p + 4);
     return (LineF2 *)(p + 2);

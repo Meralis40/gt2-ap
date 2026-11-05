@@ -154,7 +154,7 @@ int Card_EvHwUnknown(int unused)
 // Records an event. The handlers run in the interrupt, Card_VSync picks it up.
 int Card_SetEventFlag(int unused, int bit)
 {
-    register CardDriver *card __asm__("a0") = (CardDriver *)&g_Card;
+    CardDriver *card = (CardDriver *)&g_Card;
 
     card->flags |= bit;
     return 0;

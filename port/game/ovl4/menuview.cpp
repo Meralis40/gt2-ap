@@ -65,10 +65,10 @@ void MenuView_Init(GTMenuView *view, void **assets, void *previewConfig)
     view->carId = 0;
     view->carWash = 0;
     view->carWashTimer = 0;
-    CarPreview_Init(&view->preview, previewConfig);
+    CarPreview_Init(&view->preview, (CarPreviewConfig *)previewConfig);
     CarCamera_Init(&view->camera);
     MenuData_Load(assets[1], 0x58c0);
-    MenuData_LoadIcons(assets[0]);
+    MenuData_LoadIcons((unsigned int *)assets[0]);
     MenuData_SetBuffers(assets[2], assets[0]);
     MenuPage_Enter(view, view->page, 0);
     if (view->bgmTrack >= 0)
@@ -222,7 +222,7 @@ void MenuView_ShowCar(GTMenuView *view, int baseCarId, int carId, int colorIdx, 
 
 void FUN_OVL4__8001d660(GTMenuView *view)
 {
-    FUN_OVL4__8001ab64(&view->preview);
+    FUN_OVL4__8001ab64((int)&view->preview);
 }
 
 // prevBackPage.

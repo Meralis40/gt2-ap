@@ -5,6 +5,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include "mips.h"
 #include "resident.h"
 #include "ovl1.h"
 #include "ovl2.h"
@@ -589,7 +590,7 @@ int Gpu_TransferImage(RECT *rect, unsigned int *data, int store);
 void *Gpu_LoadImageBlock(int *block, RECT *rect);
 void *Tim_LoadClut(void *tim, RECT *rect);
 void Tim_LoadImage(void *tim, RECT *rect);
-void Tim_LoadClutAndImage(void *tim, RECT *clutRect, RECT *imageRect);
+void *Tim_LoadClutAndImage(void *tim, RECT *clutRect, RECT *imageRect);
 void Poly_Clip(ViewScratch *sp, int count);
 void Spu_DmaTransfer(void *src, int spuAddr, unsigned int size, int dir);
 void Dma_WaitGpu(...);
@@ -651,7 +652,7 @@ void Card_VSync(void);
 void Gpu_SetDisplayMode(unsigned int mode);
 void Gpu_SetHRange(int x0, int x1);
 void Gpu_SetVRange(int y0, int y1);
-void Gpu_WaitField();
+int Gpu_WaitField();
 int Irq_WaitVSyncs(int count);
 void McHeader_Init(McFileHeader *h);
 void McHeader_SetTitle(McFileHeader *h, char *title);
@@ -823,7 +824,8 @@ int CdControlF(unsigned char com, unsigned char *param);
 int CheckCallback(void);
 void FlushCache(void);
 void *DMACallback(int channel, void (*func)(void));
-void *Psyq_VSyncCallback(void (*func)(void)) __asm__("VSyncCallback");  // named after libetc's: a struct has that name here
+#define Psyq_VSyncCallback VSyncCallback_Psyq
+void *Psyq_VSyncCallback(void (*func)(void));  // named after libetc's: a struct has that name here
 int strncmp(const char *a, const char *b, size_t n);
 int ResetCallback(void);
 int CdInit(void);

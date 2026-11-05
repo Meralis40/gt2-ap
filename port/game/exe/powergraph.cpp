@@ -160,12 +160,12 @@ void PowerGraphView_DrawAxis(PowerGraphView *v, uint *ot, int torque)
                 tx = x + 4;
                 limit = x + 2;
             } else {
-                tx = Text_MeasureStringMonoDigits(&ctx, buf, 1, 0) + 4;
+                tx = Text_MeasureStringMonoDigits(&ctx, (signed char *)buf, 1, 0) + 4;
                 tx = x - tx; // in one expression, GCC subtracts 4 from x instead
                 limit = x - 2;
             }
             ctx.rgb = c16;
-            Text_DrawStringMonoDigits(&ctx, buf, tx, ly, 0, v->textMode, 0);
+            Text_DrawStringMonoDigits(&ctx, (signed char *)buf, tx, ly, 0, v->textMode, 0);
             t = Prim_AddTile(ot, c8);
             t->x = limit; // the label's tick
             t->y = ty;
@@ -177,11 +177,11 @@ void PowerGraphView_DrawAxis(PowerGraphView *v, uint *ot, int torque)
             int ux = x + 3;
 
             if (torque == 0) {
-                ux = Text_MeasureString(&ctx, unit, 1) + 2;
+                ux = Text_MeasureString(&ctx, (signed char *)unit, 1) + 2;
                 ux = x - ux;
             }
             ctx.rgb = c16;
-            Text_DrawString(&ctx, unit, ux, labelY, 1);
+            Text_DrawString(&ctx, (signed char *)unit, ux, labelY, 1);
         }
         value += step;
     }
@@ -236,14 +236,14 @@ void PowerGraphView_DrawRpmAxis(PowerGraphView *v, uint *ot)
         t->w = tickW;
         t->y = v->y + v->h;
         sprintf(buf, D_8008FB38, i);
-        w = Text_MeasureString(&ctx, buf, v->textMode);
+        w = Text_MeasureString(&ctx, (signed char *)buf, v->textMode);
         tx = x - (w >> 1) - 1;
         if (limit < tx) {
             LineF2 *l;
             int d;
 
             ctx.rgb = c16;
-            Text_DrawString(&ctx, buf, tx, labelY, v->textMode);
+            Text_DrawString(&ctx, (signed char *)buf, tx, labelY, v->textMode);
             d = 8 - k;
             limit = tx + w + 1;
             d = d * d / 8;
@@ -255,8 +255,8 @@ void PowerGraphView_DrawRpmAxis(PowerGraphView *v, uint *ot)
         }
         if (i == ticks - 1) {
             ctx.rgb = c16;
-            w = Text_MeasureString(&ctx, sB_1000rpm, 1);
-            Text_DrawString(&ctx, sB_1000rpm, v->x + v->w - w - 5, v->y + v->h - 2, 1);
+            w = Text_MeasureString(&ctx, (signed char *)sB_1000rpm, 1);
+            Text_DrawString(&ctx, (signed char *)sB_1000rpm, v->x + v->w - w - 5, v->y + v->h - 2, 1);
         }
     }
 }

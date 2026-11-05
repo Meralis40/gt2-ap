@@ -34,6 +34,7 @@ int Printf_EmitNumber(PutcFunc putc, unsigned int flags, int width, int prec, ch
                       int base);
 int Printf_PutcToBuffer(int c);
 void InitHeap(unsigned long *base, unsigned long size);
+void Rt_Unimplemented(const char *what); // port/rt: stops with a message
 
 void Sys_Init(void);
 void *memset(void *dst, int c, size_t n);

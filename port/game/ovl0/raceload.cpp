@@ -130,7 +130,7 @@ void RaceLoad_VSyncDraw(void)
 // to the GTE's translation registers).
 void Gte_LoadRotationOnly(ViewScratch *scr)
 {
-    register int zero asm("$0");
+    const int zero = 0;
 
     Gte_LoadScaled(scr, 0, 0, 0);
     gte_SetCtrlReg(GTE_TRX, zero);

@@ -76,7 +76,7 @@ void NumberPicker_Draw(NumberPicker *p, uint *ot, TextCtx *ctx)
     Text_SetFont(ctx, p->font);
     ctx->ot = ot;
     ctx->rgb = p->rgb;
-    Text_DrawCenteredMonoDigits(ctx, text, p->x, p->y + (p->unk14 >> 1), p->spacing, p->unk18, 0);
+    Text_DrawCenteredMonoDigits(ctx, (signed char *)text, p->x, p->y + (p->unk14 >> 1), p->spacing, p->unk18, 0);
     t = 40 - p->anim;
     x = p->x;
     y = p->y;

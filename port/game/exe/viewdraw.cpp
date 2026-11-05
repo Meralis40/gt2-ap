@@ -83,9 +83,9 @@ void ViewDrawContext_Begin(ViewDrawContext *ctx, RECT *area)
     ((uchar *)p)[3] = 1;
     p[1] = 0;
     ot = (OtTag *)ctx->otBase;
-    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(tag), "r"(ot) : "memory");
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+    link = Mips_Lwl2(ot);
+    Mips_Swl2(tag, ot);
+    Mips_Swl2(link, p);
     header = (LayerHeader *)(p + 2);
     next = ctx->layers;
     slice = (uint *)ctx->otStart;
@@ -123,24 +123,24 @@ void ViewDrawContext_End(ViewDrawContext *ctx)
         next = l->next;
         last = (OtTag *)l->ot + l->otSize - 1;
         header = l->header;
-        __asm__ volatile("lwl\t%0,%1" : "=r"(link) : "m"(((char *)last)[2]));
+        link = Mips_Lwl2(last);
         ((uchar *)header)[3] = 3;
-        __asm__ volatile("swl\t%1,%0" : "=m"(((char *)header)[2]) : "r"(link));
-        __asm__ volatile("swl\t%1,%0" : "=m"(((char *)last)[2]) : "r"((uint)header << 8));
+        Mips_Swl2(link, header);
+        Mips_Swl2((uint)header << 8, last);
     }
     ot = (OtTag *)ctx->otEnd;
     mode = ctx->drawMode;
     p = (uint *)ctx->tailPackets;
     p[1] = 0x1000000;
-    __asm__ volatile("lwl\t%0,%1" : "=r"(link) : "m"(((char *)ot)[2]));
+    link = Mips_Lwl2(ot);
     ((uchar *)p)[3] = 1;
-    __asm__ volatile("swl\t%1,%0" : "=m"(((char *)p)[2]) : "r"(link));
-    __asm__ volatile("swl\t%1,%0" : "=m"(((char *)ot)[2]) : "r"((uint)p << 8));
+    Mips_Swl2(link, p);
+    Mips_Swl2((uint)p << 8, ot);
     p[3] = mode ^ 0xe1000200;
-    __asm__ volatile("lwl\t%0,%1" : "=r"(link) : "m"(((char *)ot)[2]));
+    link = Mips_Lwl2(ot);
     ((uchar *)p)[11] = 1;
-    __asm__ volatile("swl\t%1,%0" : "=m"(((char *)(p + 2))[2]) : "r"(link));
-    __asm__ volatile("swl\t%1,%0" : "=m"(((char *)ot)[2]) : "r"((uint)(p + 2) << 8));
+    Mips_Swl2(link, (p + 2));
+    Mips_Swl2((uint)(p + 2) << 8, ot);
 }
 
 void ViewDrawContext_Submit(ViewDrawContext *ctx)
@@ -235,11 +235,11 @@ void *Prim_AddTexQuad(OtTag *ot, uint rgb)
     uint *p;
     uint link;
 
-    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+    link = Mips_Lwl2(ot);
     p = g_PacketPtr;
     ((uchar *)p)[3] = 5;
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"((uint)p << 8), "r"(ot) : "memory");
+    Mips_Swl2(link, p);
+    Mips_Swl2((uint)p << 8, ot);
     p[1] = 0xe1000000;
     p[2] = rgb ^ 0x64000000;
     g_PacketPtr = p + 6;

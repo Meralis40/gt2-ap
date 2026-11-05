@@ -266,7 +266,7 @@ void LicenseRecords_Draw(DrawLayer *layer)
     int offset;
 
     page = g_QuickMenu->activePage;
-    ot = layer->ot;
+    ot = (uint *)layer->ot;
     if (WORK->fade >= 0) {
         WipeBar_GetLevel(&WORK->bar);
         LicenseTest_DrawBestTimes(ot, 0x10, 0xb0, WORK->fade);

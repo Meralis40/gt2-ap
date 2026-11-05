@@ -324,9 +324,9 @@ void OT_InsertChain(OtTag *ot, OtTag *head, OtTag *tail)
 {
     unsigned int link;
 
-    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(tail) : "memory");
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)head << 8), "r"(ot) : "memory");
+    link = Mips_Lwl2(ot);
+    Mips_Swl2(link, tail);
+    Mips_Swl2((unsigned int)head << 8, ot);
 }
 
 // The page's element index, or null past the last one.

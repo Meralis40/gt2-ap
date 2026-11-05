@@ -19,7 +19,7 @@ void *GameData_GetEntryIn(GameData *data, int table, int index)
 // String index of table's string pool.
 char *GameData_GetTableString(GameData *data, int table, int index)
 {
-    return StrPool_Get(data->tables[table + (data->tableCount >> 1)].entries, index);
+    return StrPool_Get((char *)data->tables[table + (data->tableCount >> 1)].entries, index);
 }
 
 // The entry of table whose first word is id (the table is sorted by it), or 0.
@@ -171,14 +171,14 @@ static inline GameDataTable *GameData_Events(GameData *data)
 // String id of the race event string pool.
 char *GameData_GetString(GameData *data, int id)
 {
-    return StrPool_Get(GameData_EventStrings(data), id);
+    return StrPool_Get((char *)GameData_EventStrings(data), id);
 }
 
 // The index of the race event whose code is code, or -1. The events are sorted by
 // the code's string id.
 int GameData_FindEventIndex(GameData *data, char *code)
 {
-    int str = StrPool_Find(GameData_EventStrings(data), code);
+    int str = StrPool_Find((unsigned short *)GameData_EventStrings(data), code);
     GameDataTable *t;
     GameDataTable *events;
     int lo, hi, mid;

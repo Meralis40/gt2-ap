@@ -4,6 +4,7 @@
 #include "gamestate.h"
 
 extern "C" {
+void Body_ComputeFootprint(CarPhys *body);
 extern RaceWorld g_RaceWorld;
 extern unsigned char g_Race_IsDemo;
 

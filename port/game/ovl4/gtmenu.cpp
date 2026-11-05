@@ -298,7 +298,12 @@ void GTMenu_QueueCarPreview(GTMenu *menu, int delay, int baseCarId, int carId, i
     menu->pendingCarDirt = dirt;
 }
 
-INCLUDE_ASM("asm/sim/ovl4/nonmatchings/gtmenu", SimMap_Update);
+// SimMap_Update has no C++ yet (M4).
+int SimMap_Update(GTMenu *menu, MenuElement *element, int arg)
+{
+    Rt_Unimplemented("SimMap_Update");
+    return 0;
+}
 }
 
 GTLoadingMenu::GTLoadingMenu()

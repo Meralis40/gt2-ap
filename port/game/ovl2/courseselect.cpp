@@ -11,6 +11,11 @@ static inline void WipeBar_Reverse(WipeBar *bar)
 }
 
 extern "C" {
+void CourseInfoPanel_Draw(ArcRecordPanel *p, void *ot, TextCtx *text, int x, int y, int lineHeight);
+void SlideAnim_Clear(ArcRecordPanel *p);
+void SlideAnim_Open(ArcRecordPanel *p, void *data);
+void SlideAnim_Close(ArcRecordPanel *p);
+void CourseInfoPanel_Update(ArcRecordPanel *p);
 extern GameState g_GameState;
 extern ArcadeRaceSel g_ArcSel_Level;
 extern short g_Arc_CourseSet;
@@ -137,7 +142,7 @@ void CourseSelect_DrawItem(ArcGridPickerDraw *ctx, int item)
     int row;
     ArcCourse *course;
 
-    bzero(line, 0x80);
+    memset(line, 0, 0x80);
     mark[0] = 0x7f;
     mark[1] = 0;
     index = ctx->pos.item;

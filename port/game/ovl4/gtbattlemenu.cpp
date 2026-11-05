@@ -121,7 +121,7 @@ void GTBattleMenu::Draw()
     RECT *r;
 
     psxViewLoop::Draw();
-    CardProgress_Draw(&g_Battle_Progress, ot);
+    CardProgress_Draw(&g_Battle_Progress, (uint *)ot);
     r = Prim_AddTile(ot, 0);
     r->w = 0x200;
     r->x = 0;

@@ -358,7 +358,7 @@ void ArcCarView_LoadCarCode(ArcCarView *view, ArcadeMenu *menu, char *code, int 
     unsigned short *puStack_18;
     char *pcStack_14;
 
-    carId = CarCode_Encode(code);
+    carId = CarCode_Encode((signed char *)code);
     ArcCarView_Begin(view, menu, carId);
     iVar1 = CarInfoA_GetColors(carId, &puStack_18, &pcStack_14);
     view->colorIdx = (char)(color % iVar1);

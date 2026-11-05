@@ -269,8 +269,8 @@ void GhostRec_StartFree(CarPhys *car)
     unsigned char *puVar1;
     unsigned short *puVar2;
 
-    puVar1 = TimeTrial_GetLapLog();
-    puVar2 = TimeTrial_GetLapSlot();
+    puVar1 = (unsigned char *)TimeTrial_GetLapLog();
+    puVar2 = (unsigned short *)TimeTrial_GetLapSlot();
     CarPhys_SaveState((int *)(puVar2 + 4), car);
     puVar1[1] = 2;
     *puVar1 = 1;

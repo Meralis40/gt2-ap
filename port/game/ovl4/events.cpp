@@ -256,8 +256,8 @@ void ChampRaceList_Build(ChampRaceList *list, char *eventCode)
                 EventCode_Format(code, base, i + 1);
             else
                 strcpy(code, eventCode);
-            event = GameData_FindEvent(data, code);
-            course = GameData_GetString(data, event->courseString);
+            event = (RaceEvent *)GameData_FindEvent((GameData *)data, code);
+            course = GameData_GetString((GameData *)data, event->courseString);
             if (strcmp(course, D_80022F74) == 0)
                 course = Course_PickRandom(&seed);
             list->param45[i] = event->lapCount;
@@ -350,7 +350,7 @@ void Event_LoadPrizeInfo(EventPrizeInfo *info, char *eventCode)
         n = CarInfoA_GetColors(carId, &rgb, (char **)&colors);
         color = colors[Rand_Next(&seed) % n];
         Car_GetDefaultSetup(carId, &setup);
-        value = ((unsigned int *)GameData_FindEntryById(gtMode, 0x1e, carId))[0x11];
+        value = ((unsigned int *)GameData_FindEntryById((GameData *)gtMode, 0x1e, carId))[0x11];
         racingMod = CarSetup_Finalize(carId, &setup);
         flag14 = Car_GetTransFlag14(carId);
         carTires = Car_GetIncludedTires(carId, tires);

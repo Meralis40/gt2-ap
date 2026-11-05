@@ -220,7 +220,7 @@ unsigned int *CourseSection_FindGround(CourseSection *sect, int *pos)
 {
     unsigned int *puVar1;
 
-    puVar1 = Ground_FindTriangle(sect->groundGrid, (sect->mesh).verts,
+    puVar1 = Ground_FindTriangle((short *)sect->groundGrid, (sect->mesh).verts,
                                  (int)(*pos - (sect->center[0] & 0xffc00000U)) >> 10,
                                  (int)(pos[2] - (sect->center[2] & 0xffc00000U)) >> 10);
     return puVar1;

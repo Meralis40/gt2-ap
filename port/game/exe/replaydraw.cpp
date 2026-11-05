@@ -35,11 +35,11 @@ void ReplayEntry_DrawField(ReplayField *f, char *str, int maxWidth, int x, int y
 {
     RECT *r;
 
-    if (Text_TruncateToWidth(f->text, str, f->spacing, maxWidth) != 0) {
+    if (Text_TruncateToWidth(f->text, (signed char *)str, f->spacing, maxWidth) != 0) {
         strcat(str, (char *)&D_8008FA74);
     }
     f->text->rgb = Rgb_Lerp((uchar *)&f->rgb, (uchar *)&D_80091E7C, f->fade, 0x80);
-    Text_DrawStringMonoDigits(f->text, str, x + 5, y, f->spacing, -2, 0);
+    Text_DrawStringMonoDigits(f->text, (signed char *)str, x + 5, y, f->spacing, -2, 0);
     r = Prim_AddTile(f->ot, f->tickRgb);
     r->w = 4;
     r->h = 6;
@@ -84,7 +84,7 @@ void ReplayEntry_Draw(ReplayEntryStyle *style, uint *ot, TextCtx *ctx, ReplayDir
 
         Text_SetFont(ctx, style->titleFont);
         ctx->rgb = Rgb_Lerp((uchar *)&D_80091E6C, (uchar *)&D_80091E7C, t, 0x80);
-        Text_DrawString(ctx, entry->title, x - 0x80, y - 10, style->titleArg);
+        Text_DrawString(ctx, (signed char *)entry->title, x - 0x80, y - 10, style->titleArg);
         q.rect.x = x - 0x80;
         q.rect.y = y - 0x12;
         q.rect.w = 0x100;
@@ -107,8 +107,8 @@ void ReplayEntry_Draw(ReplayEntryStyle *style, uint *ot, TextCtx *ctx, ReplayDir
         Text_SetFont(ctx, style->fieldFont);
         ctx->rgb = Rgb_Lerp((uchar *)&D_80091E74, (uchar *)&D_80091E7C, t, 0x80);
         sprintf(buf, sB_NSector, entry->sectorCount);
-        w = Text_MeasureStringMonoDigits(ctx, buf, style->spacing, 0) - 0x7c;
-        Text_DrawStringMonoDigits(ctx, buf, x - w, y + 0x26, style->spacing, -2, 0);
+        w = Text_MeasureStringMonoDigits(ctx, (signed char *)buf, style->spacing, 0) - 0x7c;
+        Text_DrawStringMonoDigits(ctx, (signed char *)buf, x - w, y + 0x26, style->spacing, -2, 0);
         if (entry->kind == 1) {
             s = sB_Ghost;
         } else {
@@ -161,17 +161,17 @@ void ReplayEntry_Draw(ReplayEntryStyle *style, uint *ot, TextCtx *ctx, ReplayDir
     case 1:
         Text_SetFont(ctx, style->titleFont);
         ctx->rgb = Rgb_Lerp((uchar *)&D_80091E68, (uchar *)&D_80091E7C, t, 0x80);
-        Text_DrawCentered(ctx, sB_NewFile, x, y - 10, style->titleArg);
+        Text_DrawCentered(ctx, (signed char *)sB_NewFile, x, y - 10, style->titleArg);
         break;
     case 3:
         Text_SetFont(ctx, style->titleFont);
         ctx->rgb = Rgb_Lerp((uchar *)&D_80091E68, (uchar *)&D_80091E7C, t, 0x80);
-        Text_DrawCentered(ctx, sB_Exit, x, y - 10, style->titleArg);
+        Text_DrawCentered(ctx, (signed char *)sB_Exit, x, y - 10, style->titleArg);
         break;
     case 2:
         Text_SetFont(ctx, style->titleFont);
         ctx->rgb = Rgb_Lerp((uchar *)&D_80091E68, (uchar *)&D_80091E7C, t, 0x80);
-        Text_DrawCentered(ctx, sB_Ok_2, x, y - 10, style->titleArg);
+        Text_DrawCentered(ctx, (signed char *)sB_Ok_2, x, y - 10, style->titleArg);
         break;
     }
     bg = Rgb_Lerp((uchar *)&style->rgb, (uchar *)&D_80091E7C, t, 0x80);

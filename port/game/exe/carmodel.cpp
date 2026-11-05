@@ -271,7 +271,7 @@ loop:
 
 void FUN_800616a0(unsigned int param_1)
 {
-    FUN_800608e8(param_1, &D_801C946C);
+    FUN_800608e8(param_1, (int)&D_801C946C);
 }
 
 // Turns each normal of a body mesh into environment map texture coordinates: the normal
@@ -2193,7 +2193,7 @@ void Clut_UploadToSlot(void *clut, unsigned int slot, int row)
     rect.y = ((slot << 4) & 0x100) + row * 4 + 0xe0;
     rect.w = 0x40;
     rect.h = 4;
-    Gpu_TransferImage(&rect, clut, 0);
+    Gpu_TransferImage(&rect, (unsigned int *)clut, 0);
     Gpu_DrawSync();
 }
 
@@ -2206,7 +2206,7 @@ void Vram_UploadCarSlot(void *image, unsigned int slot)
     rect.y = (slot << 4) & 0x100;
     rect.w = 0x40;
     rect.h = 0xe0;
-    Gpu_TransferImage(&rect, image, 0);
+    Gpu_TransferImage(&rect, (unsigned int *)image, 0);
     Gpu_DrawSync();
 }
 

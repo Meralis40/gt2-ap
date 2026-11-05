@@ -67,7 +67,7 @@ void VendorBootLogo::Draw()
     clut = 0x7ff0;
     width = 0x100;
     for (; i < 6; i++) {
-        TexQuad *q = Prim_AddTexQuad(layer.ot, rgb);
+        TexQuad *q = (TexQuad *)Prim_AddTexQuad((OtTag *)layer.ot, rgb);
         int texX = i << 8;
         short y = 0;
         int h = 0x100;
