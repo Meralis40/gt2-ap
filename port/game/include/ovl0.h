@@ -425,8 +425,7 @@ struct QuickMenuPage {
     uchar pad1c[8];
 };
 
-struct QuickMenu {
-    struct psxViewLoopDoubleBuffer base;
+struct QuickMenu : public psxViewLoopDoubleBuffer {
     signed char hookActive;
     uchar pad71[3];
     uchar (*hook)(void *, int, int);
@@ -448,6 +447,12 @@ struct QuickMenu {
     int frameCount;
     int updateCount;
 
+
+    void Enter() override;
+    void Leave() override;
+    void BeginFrame() override;
+    int Update() override;
+    void Draw() override;
 };
 
 typedef struct RaceCam RaceCam, *PRaceCam;
@@ -540,8 +545,7 @@ public:
     virtual void Start(int mode);
 };
 
-struct PreQuickMenuIO {
-    struct psxViewLoopDoubleBuffer base;
+struct PreQuickMenuIO : public psxViewLoopDoubleBuffer {
     struct DrawLayer layer;
     short loader;
     short frames;
@@ -550,6 +554,11 @@ struct PreQuickMenuIO {
     signed char menuTimUploaded;
     signed char mode;
 
+    void Enter() override;
+    void Leave() override;
+    void BeginFrame() override;
+    int Update() override;
+    void Draw() override;
 };
 
 // Base of the race flow state machines (0x10 bytes; raceloops.cpp emits its
@@ -606,8 +615,7 @@ public:
 // GranTurismoRaceLoop's layout (0x5e0 bytes) until it is a class: its
 // RaceMenuLoop, then the members ArcadeRaceLoop has too. RaceLoop_EnterMenus
 // and RaceLoop_LeaveMenus take it.
-struct RaceLoop {
-    RaceMenuLoop base;
+struct RaceLoop : public RaceMenuLoop {
     RaceViewLoop view;
     struct PreQuickMenuIO menuIO; /* loading screen run before / after the menus (mode +0x87: 0 enter menus, 1 back to the race) */
     struct QuickMenu menu; /* QuickMenu; menu.unk7c is the choice: 0 replay, 1 retry, 2 quit, 4 start / next race */
@@ -621,6 +629,13 @@ struct RaceLoop {
     short savedIntro; /* RaceSetup.unk0d */
     short savedRaceType; /* GranTurismoRaceLoop only */
     unsigned char unk5da[6];
+
+    explicit RaceLoop(int arg);
+    int State4() override;
+    int State6() override;
+    int State8() override;
+    int State10() override;
+    int State13() override;
 };
 
 typedef struct RaceVehicle RaceVehicle, *PRaceVehicle;

@@ -4,6 +4,7 @@
 #include "hw.h"
 
 #include <algorithm>
+#include <array>
 #include <cstdint>
 #include <cstring>
 

@@ -122,7 +122,7 @@ int ArcadeRaceLoop::State6()
 
     raceView.unk2e7 = 0;
     menuIO.mode = 0;
-    RUN_LOOP(menuIO.base);
+    RUN_LOOP(menuIO);
     if (g_Flow_HomeOverlay == 0 || g_Flow_HomeOverlay == 2) {
         return 7;
     }
@@ -135,29 +135,29 @@ int ArcadeRaceLoop::State6()
         if (firstEntry) {
             if (records) {
                 QuickMenu_SetRootPage(&menu, &g_Page_RaceResultsRoot.page);
-                RUN_LOOP(menu.base);
+                RUN_LOOP(menu);
             }
             firstEntry = 0;
         }
         QuickMenu_SetRootPage(&menu, &g_Page_ResultRoot.page);
-        RUN_LOOP(menu.base);
+        RUN_LOOP(menu);
         break;
     case 6:
         TimeTrial_SetFreshResult(firstEntry != 0);
         QuickMenu_SetRootPage(&menu, &g_Page_TimeTrialRoot.page);
-        RUN_LOOP(menu.base);
+        RUN_LOOP(menu);
         firstEntry = 0;
         ghostKept = TimeTrial_IsGhostLoaded();
         break;
     case 3:
         LicenseResult_SetFresh(firstEntry != 0);
         QuickMenu_SetRootPage(&menu, &g_Page_LicenseRoot.page);
-        RUN_LOOP(menu.base);
+        RUN_LOOP(menu);
         firstEntry = 0;
         break;
     }
     menuIO.mode = 1;
-    RUN_LOOP(menuIO.base);
+    RUN_LOOP(menuIO);
     switch ((signed char)menu.unk7c) {
     case 0:
         return 11;
