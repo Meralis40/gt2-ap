@@ -10,6 +10,15 @@
 
 typedef struct CarPhys CarPhys, *PCarPhys;
 typedef struct CarPhysWheel CarPhysWheel, *PCarPhysWheel;
+typedef struct TyreAxle TyreAxle, *PTyreAxle;
+
+struct TyreAxle { /* Tyre curves of one axle (2 at +0x194 of CarPhys). */
+    unsigned char angleCurve[0x2c]; /* TyreCurve_EvalAngle */
+    unsigned char slipCurve[0x40]; /* Tyres_LookupSlipCurve */
+    unsigned char slipCurve2[0x24];
+    unsigned char loadCurve[0x2c]; /* an EngineCurve_TorqueAt curve (Tyres_ComputeGripLimit) */
+    unsigned char camberCurve[0x1c];
+};
 
 struct CarPhysWheel { /* Per-wheel state of CarPhys (4 at +0x460: front left, front right, rear left, rear right; index >> 1 = axle). */
     int groundY; /* ground height under the wheel */
@@ -34,16 +43,21 @@ struct CarPhysWheel { /* Per-wheel state of CarPhys (4 at +0x460: front left, fr
     short slipGrip; /* 0x1000, lower at high wheel speed (CarPhys_UpdateLocalVelocity) */
     int velFwd; /* wheel velocity, forward */
     int velLat; /* wheel velocity, lateral */
-    unsigned char unk34[4];
+    int gripLimit; /* Tyres_ComputeGripLimit */
     short tyreGrip; /* 0x1000 = new tyre; lowered by wear when g_TyreWearEnabled */
-    unsigned char unk3a[6];
+    short slipAbs; /* |slip ratio| (Tyres_LookupSlipCurve) */
+    short lateralAbs; /* |cornering force before the grip limit| (CarPhys_UpdateDrivetrain) */
+    byte wearRate; /* tyre wear of this frame, at most 0xff */
+    signed char wearLevel; /* -0x80..0x7f (Tyres_ComputeGripLimit) */
     short unk40;
     unsigned char unk42[2];
-    short unk44;
-    unsigned char unk46[6];
+    short unk44; /* slip ratio (Tyre_ComputeSlipRatio) */
+    short unk46; /* second output of the slip curve (Tyres_LookupSlipCurve) */
+    unsigned char unk48[4];
     int unk4c;
-    short unk50;
-    unsigned char unk52[6];
+    short unk50; /* slip angle (Tyres_ComputeSlipAngle) */
+    short slipFade; /* 0..0x1000, fades the slip angle in with speed */
+    int lateral; /* cornering force (CarPhys_UpdateDrivetrain) */
     int unk58;
     int unk5c;
     short brake; /* brake input of this wheel (0..0x1000) */
@@ -75,15 +89,22 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     short steerSpeed; /* steering rate per frame (0x5c7 on dirt courses) */
     unsigned char unk64[24];
     struct EngineCurve engine; /* torque curve (EngineCurve_Build); +0x8c redline rpm, +0x8e idle rpm, +0xac turbo */
-    unsigned char unk12c[536];
+    unsigned char unk12c[104];
+    struct TyreAxle tyres[2]; /* front, rear */
     int topSpeed; /* CarPhys_ComputeTopSpeed */
-    unsigned char unk348[40];
+    short surfaceGrip[16]; /* by CarPhysWheel.surface (Tyres_ComputeGripLimit) */
+    short camber[2]; /* front, rear */
+    unsigned char unk36c[4];
     byte driveLayout; /* start of the drivetrain block (Drivetrain_Init) */
     unsigned char unk371;
     byte gearCount; /* Disputed: used as the gear count by the gearbox code, but CarPhys_UpdateDrivetrain / RaceCars_UpdateDrivetrain branch on it being 1 or 2 like a transmission mode. */
-    unsigned char unk373[35];
+    unsigned char unk373;
+    short centerSplit; /* front share of the wheel speed, layout 6 */
+    unsigned char unk376[30];
+    ushort launchLimit; /* rpm above which the clutch starts slipping (CarPhys_UpdateDrivetrain) */
     ushort launchRpm; /* drivetrain +0x26: min redline rpm (x100 from CarParams) */
-    unsigned char unk398[44];
+    unsigned char unk398[12];
+    int gearRatio[8]; /* Drivetrain_EngineSpeedFromWheels */
     int gearSpeed[8]; /* speed per rpm of each gear */
     short tyreRadius[2]; /* front, rear */
     short invTyreRadius[2]; /* 0x1000000 / tyreRadius */
