@@ -1130,6 +1130,230 @@ static inline void ObjRoot_Check(MeshVert *v)
         }
     }
 }
+
+// A vertex in view space, for a mesh that crosses the frustum.
+struct MeshViewVert {
+    short x, y;
+    unsigned short out;         // as Vert_Out
+    short z;
+    int sxy;
+    int extent;                 // |x| | |y| | |z|
+};
+
+#define MESH_MAX_VERTS 512
+
+// Moves a mesh's vertices into view space and finds their outcodes, then leaves the GTE
+// with no rotation or translation: polygons split or clipped from here project directly.
+static inline void Mesh_TransformVerts(MeshModelVert *src, int count, MeshViewVert *dst)
+{
+    int i;
+
+    for (i = 0; i < count; i++, src++, dst++) {
+        int x, y, z;
+        int flag;
+        int out;
+
+        gte_LoadDataRegAt(GTE_VXY0, src, 0);
+        gte_LoadDataRegAt(GTE_VZ0, src, 4);
+        gte_rtps();
+        x = gte_GetDataReg(GTE_IR1);
+        y = gte_GetDataReg(GTE_IR2);
+        z = gte_GetDataReg(GTE_IR3);
+        flag = gte_GetCtrlReg(GTE_FLAG);
+        dst->sxy = gte_GetDataReg(GTE_SXY2);
+        dst->x = x;
+        dst->y = y;
+        dst->z = z;
+        dst->extent = MESH_ABS(x) | MESH_ABS(y) | MESH_ABS(z);
+        out = z < 1;
+        gte_mvmva(1, 1, 3, 3, 0);
+        if (gte_GetDataReg(GTE_IR1) < 0) {
+            out |= 2;
+        }
+        if (gte_GetDataReg(GTE_IR2) < 0) {
+            out |= 4;
+        }
+        gte_SetDataReg(GTE_VXY1, (x & 0xffff) | y << 16);
+        gte_SetDataReg(GTE_VZ1, z);
+        gte_mvmva(1, 2, 1, 3, 0);
+        if (gte_GetDataReg(GTE_IR1) < 0) {
+            out |= 8;
+        }
+        if (gte_GetDataReg(GTE_IR2) < 0) {
+            out |= 0x10;
+        }
+        if (flag < 0) {
+            out |= 0x20;
+        }
+        dst->out = out;
+    }
+    gte_SetCtrlReg(GTE_TRX, 0);
+    gte_SetCtrlReg(GTE_TRY, 0);
+    gte_SetCtrlReg(GTE_TRZ, 0);
+    gte_SetCtrlReg(GTE_R11R12, 0x1000);
+    gte_SetCtrlReg(GTE_R13R21, 0);
+    gte_SetCtrlReg(GTE_R22R23, 0x1000);
+    gte_SetCtrlReg(GTE_R31R32, 0);
+    gte_SetCtrlReg(GTE_R33, 0x1000);
+}
+
+static inline MeshViewVert *ViewVert_At(char *verts, unsigned int offset)
+{
+    return (MeshViewVert *)(verts + (offset & 0x1ff0));
+}
+
+static inline void ClipRoot_Begin(MeshVert *root, MeshViewVert *v)
+{
+    root->z = v->z;
+    *Vert_Out(root) = v->out;
+}
+
+// A polygon of these can't use its screen area when a vertex is out of the GTE's range,
+// so bad holds bit 5 of the outcodes and the facing tests below decide later. It returns
+// 0 if the polygon is wholly off one side or faces away.
+static inline int ClipTri_Project(MeshScratch *scr, int word0, MeshViewVert **v, unsigned int **slot, int *area,
+                                  int *all)
+{
+    char *verts = scr->view.verts;
+    MeshVert *root = OBJ_ROOT(scr);
+    int bad;
+    int z;
+
+    v[0] = ViewVert_At(verts, word0 << 4);
+    v[1] = ViewVert_At(verts, word0 >> 5);
+    v[2] = ViewVert_At(verts, word0 >> 14);
+    ClipRoot_Begin(&root[0], v[0]);
+    ClipRoot_Begin(&root[1], v[1]);
+    ClipRoot_Begin(&root[2], v[2]);
+    if (v[0]->out & v[1]->out & v[2]->out & 0x1f) {
+        return 0;
+    }
+    *area = Mesh_NClip(v[0]->sxy, v[2]->sxy, v[1]->sxy);
+    *all = v[0]->out | v[1]->out | v[2]->out;
+    bad = *all & 0x20;
+    if ((*area | bad) == 0 || (*area & word0 & (bad - 0x20)) < 0) {
+        return 0;
+    }
+    z = Mesh_Max(v[0]->z, v[1]->z);
+    z = Mesh_Max(z, v[2]->z);
+    *slot = Mesh_Slot(scr, word0, z);
+    return 1;
+}
+
+static inline int ClipQuad_Project(MeshScratch *scr, int word0, int word1, MeshViewVert **v, unsigned int **slot,
+                                   int *area1, int *area2, int *all)
+{
+    char *verts = scr->view.verts;
+    MeshVert *root = OBJ_ROOT(scr);
+    int bad;
+    int z;
+
+    v[0] = ViewVert_At(verts, word0 << 4);
+    v[1] = ViewVert_At(verts, word0 >> 5);
+    v[2] = ViewVert_At(verts, word0 >> 14);
+    v[3] = ViewVert_At(verts, word1 << 4);
+    ClipRoot_Begin(&root[0], v[0]);
+    ClipRoot_Begin(&root[1], v[1]);
+    ClipRoot_Begin(&root[2], v[2]);
+    ClipRoot_Begin(&root[3], v[3]);
+    if (v[0]->out & v[1]->out & v[2]->out & v[3]->out & 0x1f) {
+        return 0;
+    }
+    z = Mesh_Max(v[0]->z, v[1]->z);
+    z = Mesh_Max(z, v[2]->z);
+    z = Mesh_Max(z, v[3]->z);
+    *slot = Mesh_Slot(scr, word0, z);
+    *area1 = -Mesh_NClip(v[1]->sxy, v[2]->sxy, v[0]->sxy);
+    *area2 = Mesh_NClip(v[2]->sxy, v[0]->sxy, v[3]->sxy);
+    *all = v[0]->out | v[1]->out | v[2]->out | v[3]->out;
+    bad = *all & 0x20;
+    if ((*area1 | *area2 | bad) == 0) {
+        return 0;
+    }
+    return ((*area1 - 1) & (*area2 - 1) & word0 & (bad - 0x20)) >= 0;
+}
+
+// Facing tests in view space, for one-sided polygons with no usable screen area.
+static inline int ViewTri_FacesAway(MeshViewVert **v)
+{
+    MeshViewVert *a = v[0];
+    MeshViewVert *b = v[1];
+    MeshViewVert *c = v[2];
+    int nx = b->y * c->z - b->z * c->y;
+    int ny = b->z * c->x - b->x * c->z;
+    int nz = b->x * c->y - b->y * c->x;
+
+    return (long long)a->x * nx + (long long)a->y * ny + (long long)a->z * nz >= 0;
+}
+
+static inline int ViewQuad_FacesAway(MeshViewVert **v)
+{
+    MeshViewVert *a = v[0];
+    MeshViewVert *b = v[1];
+    MeshViewVert *c = v[2];
+    MeshViewVert *d = v[3];
+    int nx = b->y * d->z - b->z * d->y;
+    int ny = b->z * d->x - b->x * d->z;
+    int nz = b->x * d->y - b->y * d->x;
+    int dotA = ((long long)a->x * nx + (long long)a->y * ny + (long long)a->z * nz) >> 24;
+    int dotC = ((long long)c->x * nx + (long long)c->y * ny + (long long)c->z * nz) >> 24;
+
+    return (dotA | -dotC) >= 0;
+}
+
+// Sets the root vertices' positions, with the extents where the texture coordinates
+// will go for Poly_Clip.
+static inline void ClipRoot_Set(MeshVert *root, MeshViewVert **v, int count)
+{
+    int i;
+
+    for (i = 0; i < count; i++) {
+        *(int *)&root[i].x = *(int *)&v[i]->x;
+        *(short *)&root[i].u = v[i]->extent;
+        root[i].sxy = v[i]->sxy;
+    }
+}
+
+// Scales a polygon up to fill the GTE's precision, for those it can't project yet.
+static inline void ClipRoot_Normalize(MeshVert *root, MeshViewVert **v, int count)
+{
+    int bits = 0;
+    int shift;
+    int i;
+
+    for (i = 0; i < count; i++) {
+        bits |= (short)v[i]->extent;
+    }
+    shift = gte_Lzc(bits) - 17;
+    if (shift > 0) {
+        for (i = 0; i < count; i++) {
+            root[i].x <<= shift;
+            root[i].y <<= shift;
+            root[i].z <<= shift;
+        }
+    }
+}
+
+static inline void ClipRoot_SetRgb(MeshVert *root, unsigned int rgb)
+{
+    root->rgb = (root->rgb & 0xff000000) | (rgb & 0xffffff);
+}
+
+// Clips a flat or Gouraud polygon of the root vertices against the frustum. Returns 1 if
+// the list may go on.
+static inline int Mesh_ClipPoly(MeshScratch *scr, unsigned int *slot, unsigned int code, int count, int lit)
+{
+    PolyClipIn *in = (PolyClipIn *)scr->corners;
+
+    in->ot = slot;
+    in->code = code;
+    if (lit) {
+        Poly_ClipLit(&scr->view, count);
+    } else {
+        Poly_Clip(&scr->view, count);
+    }
+    return scr->view.packetPtr < scr->view.packetLimit;
+}
 #endif
 
 extern "C" {
@@ -2451,5 +2675,404 @@ void CourseMesh_DrawUnclipped(CourseMesh *mesh)
 INCLUDE_ASM("asm/sim/ovl0/nonmatchings/coursedraw", CourseMesh_DrawUnclipped);
 #endif
 
+#ifdef NON_MATCHING
+// Draws a section's mesh that crosses the frustum. The vertices go to view space first.
+// Flat and Gouraud polygons off the screen go through Poly_Clip; textured ones split
+// until their parts are wholly on or off it, as an object's do.
+void CourseMesh_DrawClipped(CourseMesh *mesh)
+{
+    MeshViewVert views[MESH_MAX_VERTS];
+    MeshScratch *scr = MESH_SCRATCH;
+    MeshVert *root = OBJ_ROOT(scr);
+    MeshViewVert *v[4];
+    unsigned int *slot;
+    int area, area2, all;
+    int *entry;
+    int *end;
+
+    if (*(int *)&mesh->vertCount == 0) {
+        return;
+    }
+    scr->view.verts = (char *)views;
+    Mesh_TransformVerts((MeshModelVert *)mesh->verts, *(int *)&mesh->vertCount, views);
+
+    entry = (int *)mesh->prims[0];
+    end = entry + mesh->primCount[0] * 3;
+    for (; entry != end; entry += 3) {
+        if (ClipTri_Project(scr, entry[0], v, &slot, &area, &all)) {
+            unsigned int rgb = Mesh_Colour(entry[2]);
+
+            ClipRoot_Set(root, v, 3);
+            if ((all & 0x20) && entry[0] < 0 && ViewTri_FacesAway(v)) {
+                continue;
+            }
+            if (all & 0x3f) {
+                if (!Mesh_ClipPoly(scr, slot, rgb, 3, 1)) {
+                    break;
+                }
+            } else {
+                int *p = (int *)scr->view.packetPtr;
+
+                p[1] = rgb;
+                p[2] = v[0]->sxy;
+                p[3] = v[1]->sxy;
+                p[4] = v[2]->sxy;
+                ((unsigned char *)p)[3] = 4;
+                ot_AddPrim(slot, p);
+                if (Mesh_Advance(scr, &scr->view.packetPtr, 0x14)) {
+                    break;
+                }
+            }
+        }
+    }
+
+    entry = (int *)mesh->prims[1];
+    end = entry + mesh->primCount[1] * 3;
+    for (; entry != end; entry += 3) {
+        if (ClipQuad_Project(scr, entry[0], entry[1], v, &slot, &area, &area2, &all)) {
+            unsigned int rgb = Mesh_Colour(entry[2]);
+
+            ClipRoot_Set(root, v, 4);
+            if ((all & 0x20) && entry[0] < 0 && ViewQuad_FacesAway(v)) {
+                continue;
+            }
+            if (all & 0x3f) {
+                if (!Mesh_ClipPoly(scr, slot, rgb, 4, 1)) {
+                    break;
+                }
+            } else {
+                int *p = (int *)scr->view.packetPtr;
+
+                p[1] = rgb;
+                p[2] = v[0]->sxy;
+                p[3] = v[1]->sxy;
+                p[4] = v[3]->sxy;
+                p[5] = v[2]->sxy;
+                ((unsigned char *)p)[3] = 5;
+                ot_AddPrim(slot, p);
+                if (Mesh_Advance(scr, &scr->view.packetPtr, 0x18)) {
+                    break;
+                }
+            }
+        }
+    }
+
+    entry = (int *)mesh->prims[2];
+    end = entry + mesh->primCount[2] * 5;
+    for (; entry != end; entry += 5) {
+        if (ClipTri_Project(scr, entry[0], v, &slot, &area, &all)) {
+            unsigned int c0, c1, c2;
+
+            gte_SetDataReg(GTE_RGBC, entry[2]);
+            Mesh_Colours(entry[2], entry[3], entry[4]);
+            c0 = gte_GetDataReg(GTE_RGB0);
+            c1 = gte_GetDataReg(GTE_RGB1);
+            c2 = gte_GetDataReg(GTE_RGB2);
+            ClipRoot_Set(root, v, 3);
+            if ((all & 0x20) && entry[0] < 0 && ViewTri_FacesAway(v)) {
+                continue;
+            }
+            if (all & 0x3f) {
+                root[0].rgb = c0;
+                root[1].rgb = c1;
+                root[2].rgb = c2;
+                if (!Mesh_ClipPoly(scr, slot, c0, 3, 0)) {
+                    break;
+                }
+            } else {
+                int *p = (int *)scr->view.packetPtr;
+
+                p[1] = c0;
+                p[3] = c1;
+                p[5] = c2;
+                p[2] = v[0]->sxy;
+                p[4] = v[1]->sxy;
+                p[6] = v[2]->sxy;
+                ((unsigned char *)p)[3] = 6;
+                ot_AddPrim(slot, p);
+                if (Mesh_Advance(scr, &scr->view.packetPtr, 0x1c)) {
+                    break;
+                }
+            }
+        }
+    }
+
+    entry = (int *)mesh->prims[3];
+    end = entry + mesh->primCount[3] * 6;
+    for (; entry != end; entry += 6) {
+        if (ClipQuad_Project(scr, entry[0], entry[1], v, &slot, &area, &area2, &all)) {
+            unsigned int c0 = Mesh_Colour(entry[2]);
+            unsigned int c1, c2, c3;
+
+            Mesh_Colours(entry[3], entry[4], entry[5]);
+            c1 = gte_GetDataReg(GTE_RGB0);
+            c2 = gte_GetDataReg(GTE_RGB1);
+            c3 = gte_GetDataReg(GTE_RGB2);
+            ClipRoot_Set(root, v, 4);
+            if ((all & 0x20) && entry[0] < 0 && ViewQuad_FacesAway(v)) {
+                continue;
+            }
+            if (all & 0x3f) {
+                root[0].rgb = c0;
+                root[1].rgb = c1;
+                root[2].rgb = c2;
+                root[3].rgb = c3;
+                if (!Mesh_ClipPoly(scr, slot, c0, 4, 0)) {
+                    break;
+                }
+            } else {
+                int *p = (int *)scr->view.packetPtr;
+
+                p[1] = c0;
+                p[3] = c1;
+                p[7] = c2;
+                p[5] = c3;
+                p[2] = v[0]->sxy;
+                p[4] = v[1]->sxy;
+                p[6] = v[3]->sxy;
+                p[8] = v[2]->sxy;
+                ((unsigned char *)p)[3] = 8;
+                ot_AddPrim(slot, p);
+                if (Mesh_Advance(scr, &scr->view.packetPtr, 0x24)) {
+                    break;
+                }
+            }
+        }
+    }
+
+    entry = (int *)mesh->prims[4];
+    end = entry + mesh->primCount[4] * 3;
+    for (; entry != end; entry += 3) {
+        if (ClipTri_Project(scr, entry[0], v, &slot, &area, &all)) {
+            unsigned int rgb = Mesh_Colour(entry[2]);
+            MeshTex *tex = Mesh_Tex(scr, entry[1], area);
+            MeshVert *p[3];
+            MeshBatch batch;
+
+            ClipRoot_Set(root, v, 3);
+            if (all & 0x20) {
+                if (entry[0] < 0 && ViewTri_FacesAway(v)) {
+                    continue;
+                }
+                ClipRoot_Normalize(root, v, 3);
+            } else if (MESH_ABS(area) <= scr->subdivTri) {
+                PrimFT3Words *prim = (PrimFT3Words *)scr->view.packetPtr;
+
+                prim->rgb = rgb;
+                prim->uv0 = tex->uv0;
+                prim->uv1 = tex->uv1;
+                prim->uv2 = tex->uv2;
+                prim->xy0 = v[0]->sxy;
+                prim->xy1 = v[1]->sxy;
+                prim->xy2 = v[2]->sxy;
+                ((unsigned char *)prim)[3] = 7;
+                ot_AddPrim(slot, prim);
+                if (Mesh_Advance(scr, &scr->view.packetPtr, sizeof(PrimFT3Words))) {
+                    break;
+                }
+                continue;
+            }
+            *(unsigned short *)&root[0].u = tex->uv0;
+            *(unsigned short *)&root[1].u = tex->uv1;
+            *(unsigned short *)&root[2].u = tex->uv2;
+            p[0] = &root[0];
+            p[1] = &root[1];
+            p[2] = &root[2];
+            ObjRoot_Check(&root[0]);
+            ObjRoot_Check(&root[1]);
+            ObjRoot_Check(&root[2]);
+            Mesh_BatchBegin(scr, &batch, slot, rgb, tex, scr->subdivTri, 0);
+            batch.obj = 1;
+            if (!Mesh_BatchEnd(scr, &batch, Mesh_SplitTri(scr, &batch, p, 0))) {
+                break;
+            }
+        }
+    }
+
+    entry = (int *)mesh->prims[5];
+    end = entry + mesh->primCount[5] * 3;
+    for (; entry != end; entry += 3) {
+        if (ClipQuad_Project(scr, entry[0], entry[1], v, &slot, &area, &area2, &all)) {
+            unsigned int rgb = Mesh_Colour(entry[2]);
+            int total = MESH_ABS(area + area2);
+            MeshTex *tex = Mesh_Tex(scr, entry[1], total);
+            MeshVert *p[4];
+            MeshBatch batch;
+
+            ClipRoot_Set(root, v, 4);
+            if (all & 0x20) {
+                if (entry[0] < 0 && ViewQuad_FacesAway(v)) {
+                    continue;
+                }
+                ClipRoot_Normalize(root, v, 4);
+            } else if (total <= scr->subdivQuad) {
+                PrimFT4Words *prim = (PrimFT4Words *)scr->view.packetPtr;
+
+                prim->rgb = rgb;
+                prim->uv0 = tex->uv0;
+                prim->uv1 = tex->uv1;
+                prim->uv2 = tex->uv2 >> 16;
+                prim->uv3 = tex->uv2;
+                prim->xy0 = v[0]->sxy;
+                prim->xy1 = v[1]->sxy;
+                prim->xy2 = v[3]->sxy;
+                prim->xy3 = v[2]->sxy;
+                ((unsigned char *)prim)[3] = 9;
+                ot_AddPrim(slot, prim);
+                if (Mesh_Advance(scr, &scr->view.packetPtr, sizeof(PrimFT4Words))) {
+                    break;
+                }
+                continue;
+            }
+            *(unsigned short *)&root[0].u = tex->uv0;
+            *(unsigned short *)&root[1].u = tex->uv1;
+            *(unsigned short *)&root[2].u = tex->uv2;
+            *(unsigned short *)&root[3].u = tex->uv2 >> 16;
+            p[0] = &root[0];
+            p[1] = &root[1];
+            p[2] = &root[2];
+            p[3] = &root[3];
+            ObjRoot_Check(&root[0]);
+            ObjRoot_Check(&root[1]);
+            ObjRoot_Check(&root[2]);
+            ObjRoot_Check(&root[3]);
+            Mesh_BatchBegin(scr, &batch, slot, rgb, tex, scr->subdivQuad, 0);
+            batch.obj = 1;
+            if (!Mesh_BatchEnd(scr, &batch, Mesh_SplitQuad(scr, &batch, p, 0))) {
+                break;
+            }
+        }
+    }
+
+    entry = (int *)mesh->prims[6];
+    end = entry + mesh->primCount[6] * 5;
+    for (; entry != end; entry += 5) {
+        if (ClipTri_Project(scr, entry[0], v, &slot, &area, &all)) {
+            unsigned int c0, c1, c2;
+            MeshTex *tex;
+            MeshVert *p[3];
+            MeshBatch batch;
+
+            gte_SetDataReg(GTE_RGBC, entry[2]);
+            Mesh_Colours(entry[2], entry[3], entry[4]);
+            c0 = gte_GetDataReg(GTE_RGB0);
+            c1 = gte_GetDataReg(GTE_RGB1);
+            c2 = gte_GetDataReg(GTE_RGB2);
+            tex = Mesh_Tex(scr, entry[1], area);
+            ClipRoot_Set(root, v, 3);
+            if (all & 0x20) {
+                if (entry[0] < 0 && ViewTri_FacesAway(v)) {
+                    continue;
+                }
+                ClipRoot_Normalize(root, v, 3);
+            } else if (MESH_ABS(area) <= scr->subdivTri) {
+                PrimGT3Words *prim = (PrimGT3Words *)scr->view.packetPtr;
+
+                prim->c0 = c0;
+                prim->c1 = c1;
+                prim->c2 = c2;
+                prim->uv0 = tex->uv0;
+                prim->uv1 = tex->uv1;
+                prim->uv2 = tex->uv2;
+                prim->xy0 = v[0]->sxy;
+                prim->xy1 = v[1]->sxy;
+                prim->xy2 = v[2]->sxy;
+                ((unsigned char *)prim)[3] = 9;
+                ot_AddPrim(slot, prim);
+                if (Mesh_Advance(scr, &scr->view.packetPtr, sizeof(PrimGT3Words))) {
+                    break;
+                }
+                continue;
+            }
+            // As when unclipped, the colours turn round one corner.
+            ClipRoot_SetRgb(&root[0], c2);
+            ClipRoot_SetRgb(&root[1], c0);
+            ClipRoot_SetRgb(&root[2], c1);
+            *(unsigned short *)&root[0].u = tex->uv0;
+            *(unsigned short *)&root[1].u = tex->uv1;
+            *(unsigned short *)&root[2].u = tex->uv2;
+            p[0] = &root[0];
+            p[1] = &root[1];
+            p[2] = &root[2];
+            ObjRoot_Check(&root[0]);
+            ObjRoot_Check(&root[1]);
+            ObjRoot_Check(&root[2]);
+            Mesh_BatchBegin(scr, &batch, slot, c2, tex, scr->subdivTri, 1);
+            batch.obj = 1;
+            if (!Mesh_BatchEnd(scr, &batch, Mesh_SplitTri(scr, &batch, p, 0))) {
+                break;
+            }
+        }
+    }
+
+    entry = (int *)mesh->prims[7];
+    end = entry + mesh->primCount[7] * 6;
+    for (; entry != end; entry += 6) {
+        if (ClipQuad_Project(scr, entry[0], entry[1], v, &slot, &area, &area2, &all)) {
+            unsigned int c0 = Mesh_Colour(entry[2]);
+            int total = MESH_ABS(area + area2);
+            MeshTex *tex = Mesh_Tex(scr, entry[1], total);
+            unsigned int c1, c2, c3;
+            MeshVert *p[4];
+            MeshBatch batch;
+
+            Mesh_Colours(entry[3], entry[4], entry[5]);
+            c1 = gte_GetDataReg(GTE_RGB0);
+            c2 = gte_GetDataReg(GTE_RGB1);
+            c3 = gte_GetDataReg(GTE_RGB2);
+            ClipRoot_Set(root, v, 4);
+            if (all & 0x20) {
+                if (entry[0] < 0 && ViewQuad_FacesAway(v)) {
+                    continue;
+                }
+                ClipRoot_Normalize(root, v, 4);
+            } else if (total <= scr->subdivQuad) {
+                PrimGT4Words *prim = (PrimGT4Words *)scr->view.packetPtr;
+
+                prim->c0 = c0;
+                prim->c1 = c1;
+                prim->c2 = c3;
+                prim->c3 = c2;
+                prim->uv0 = tex->uv0;
+                prim->uv1 = tex->uv1;
+                prim->uv2 = tex->uv2 >> 16;
+                prim->uv3 = tex->uv2;
+                prim->xy0 = v[0]->sxy;
+                prim->xy1 = v[1]->sxy;
+                prim->xy2 = v[3]->sxy;
+                prim->xy3 = v[2]->sxy;
+                ((unsigned char *)prim)[3] = 12;
+                ot_AddPrim(slot, prim);
+                if (Mesh_Advance(scr, &scr->view.packetPtr, sizeof(PrimGT4Words))) {
+                    break;
+                }
+                continue;
+            }
+            ClipRoot_SetRgb(&root[0], c0);
+            ClipRoot_SetRgb(&root[1], c1);
+            ClipRoot_SetRgb(&root[2], c2);
+            ClipRoot_SetRgb(&root[3], c3);
+            *(unsigned short *)&root[0].u = tex->uv0;
+            *(unsigned short *)&root[1].u = tex->uv1;
+            *(unsigned short *)&root[2].u = tex->uv2;
+            *(unsigned short *)&root[3].u = tex->uv2 >> 16;
+            p[0] = &root[0];
+            p[1] = &root[1];
+            p[2] = &root[2];
+            p[3] = &root[3];
+            ObjRoot_Check(&root[0]);
+            ObjRoot_Check(&root[1]);
+            ObjRoot_Check(&root[2]);
+            ObjRoot_Check(&root[3]);
+            Mesh_BatchBegin(scr, &batch, slot, c0, tex, scr->subdivQuad, 1);
+            batch.obj = 1;
+            if (!Mesh_BatchEnd(scr, &batch, Mesh_SplitQuad(scr, &batch, p, 0))) {
+                break;
+            }
+        }
+    }
+}
+#else
 INCLUDE_ASM("asm/sim/ovl0/nonmatchings/coursedraw", CourseMesh_DrawClipped);
+#endif
 }
