@@ -159,7 +159,7 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     byte wheelContact; /* bits 0-3: wheel below its rest height; bits 4-7 previous pass (RaceCars_UpdateSuspension) */
     unsigned char unk71a[30];
     ushort unk738;
-    unsigned char unk73a[4];
+    short chaseSway[2]; /* taken off the chase camera's angles (RaceCam_SetChase) */
     short unk73e;
     short wallHit;
     short boost;
