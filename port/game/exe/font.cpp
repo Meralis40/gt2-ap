@@ -1,5 +1,6 @@
 // Resident code 8007da44-8007e0b0 (font). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
+#include <stdarg.h>
 #include "common.h"
 
 extern "C" {
@@ -23,11 +24,11 @@ void *Prim_AddDrawMode(void *ot, unsigned int mode)
     unsigned int *p;
     unsigned int link;
 
-    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+    link = Mips_Lwl2(ot);
     p = (unsigned int *)g_PacketPtr;
     ((unsigned char *)p)[3] = 1;
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+    Mips_Swl2(link, p);
+    Mips_Swl2((unsigned int)p << 8, ot);
     p[1] = mode | 0xe1000000;
     g_PacketPtr = (char *)(p + 2);
     return p + 1;
@@ -73,13 +74,17 @@ void FUN_8007db30(TextCtx *ctx, char *fmt, void *args)
 
     prev = D_8009314C;
     D_8009314C = ctx;
-    Printf_Format((void *)FUN_8007da9c, fmt, args);
+    Printf_Format((PutcFunc)(void *)FUN_8007da9c, fmt, (char *)args);
     D_8009314C = prev;
 }
 
 void FUN_8007db70(TextCtx *ctx, char *fmt, ...)
 {
-    FUN_8007db30(ctx, fmt, __builtin_next_arg(fmt));
+    va_list args;
+
+    va_start(args, fmt);
+    FUN_8007db30(ctx, fmt, args);
+    va_end(args);
 }
 
 // Draws s at the pen with kerning; the pen doesn't move.
@@ -147,8 +152,7 @@ int Text_GetAdvance(TextCtx *ctx, int left, int right)
             unsigned char *q = kern->rows + (bit >> 3) + rowOff;
             int w;
 
-            __asm__("lwr\t%0,0(%1)" : "=r"(w) : "r"(q));
-            __asm__("lwl\t%0,3(%1)" : "+r"(w) : "r"(q));
+            w = Mips_ReadWord(q);
             k = (w >> (bit & 7)) & ((1 << n) - 1);
         }
     }
@@ -192,10 +196,10 @@ void Text_DrawGlyph(TextCtx *ctx, int code, int x, int y)
     ((ushort *)p)[9] = ctx->clut + ((s >> 27) & 3);
     ((ushort *)p)[8] = s;
     ot = (OtTag *)ctx->ot;
-    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+    link = Mips_Lwl2(ot);
+    Mips_Swl2(link, p);
     ((unsigned char *)p)[3] = 5;
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+    Mips_Swl2((unsigned int)p << 8, ot);
     if ((g0 >> 14) & 7) {
         s = ((unsigned int *)tbl->accents)[((g0 >> 14) & 7) - 1];
         p += 6;
@@ -208,10 +212,10 @@ void Text_DrawGlyph(TextCtx *ctx, int code, int x, int y)
         ((short *)p)[11] = (s >> 21) & 0x3f;
         ((ushort *)p)[9] = ctx->clut + ((s >> 27) & 3);
         ot = (OtTag *)ctx->ot;
-        __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+        link = Mips_Lwl2(ot);
         ((unsigned char *)p)[3] = 5;
-        __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
-        __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+        Mips_Swl2(link, p);
+        Mips_Swl2((unsigned int)p << 8, ot);
     }
     g_PacketPtr = (char *)(p + 6);
 }
@@ -232,7 +236,7 @@ int RaceFont_OnSector(unsigned int sector, void *header)
         ret = 0;
         if (u->remaining) {
             CdGetSector(g_RaceFont_Buf.buf, 0x200);
-            Gpu_TransferImage(&u->rect, g_RaceFont_Buf.buf, ret);
+            Gpu_TransferImage(&u->rect, (unsigned int *)g_RaceFont_Buf.buf, ret);
             u->rect.y += u->step;
             if (--u->remaining == 0) {
                 cd->unk167 = 0;

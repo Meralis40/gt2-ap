@@ -102,9 +102,11 @@ extern TimeStyle D_8005B664;
 extern TimeStyle D_8005B678;
 extern TimeStyle D_8005B68C;
 extern InfoBarDesc D_8005B6A0;
-extern FadedBar g_TotalBarFade asm("D_8005B6C0");
+#define g_TotalBarFade D_8005B6C0
+extern FadedBar D_8005B6C0;
 extern InfoBarDesc D_8005B6E0;
-extern FadedBar g_BestBarFade asm("D_8005B700");
+#define g_BestBarFade D_8005B700
+extern FadedBar D_8005B700;
 extern InfoBarDesc D_8005B720;
 extern FadedBar g_LapBarFade asm("D_8005B740");
 extern short D_8005B760[];
@@ -853,7 +855,7 @@ int MachineTestName_Update(void)
 // TextEntry_Draw.
 void MachineTestName_Draw(DrawLayer *layer)
 {
-    TextEntry_Draw((TextEntry *)((int)g_OVL0_EndFontInfo + 0x5c8), layer->ot);
+    TextEntry_Draw((TextEntry *)((int)g_OVL0_EndFontInfo + 0x5c8), (uint *)layer->ot);
 }
 
 void MachineTestResult_Enter(int back)

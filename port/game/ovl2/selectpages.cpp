@@ -4,6 +4,8 @@
 #include "common.h"
 
 extern "C" {
+void ArcCourseList_InitAll(void);
+void ArcCarList_UpdateUnlocks(void);
 extern GameState g_GameState;
 extern ArcGarageInfo g_Arc_HomeGarageInfo;
 extern ArcadeRaceSel g_ArcSel_Level;

@@ -65,7 +65,7 @@ void AiLines_Init(void *lines);
 void Race_LoadBanners(void *race, int index);
 void Race_LoadCourseTims(void *race);
 void Race_LoadCourse(void *race, int course);
-extern void *Tim_LoadNext(void *tim, RECT *clutRect, RECT *imageRect) __asm__("Tim_LoadClutAndImage");
+#define Tim_LoadNext Tim_LoadClutAndImage
 
 // Places a banner's clut and image in its slot.
 static inline void Banner_Place(char *tim, BannerSlot *slot, int index)

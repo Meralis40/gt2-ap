@@ -341,8 +341,8 @@ void Body_UpdateTyreFx(CarPhys *body)
         unsigned char *p;
 
         if (body->unk718 == 0) {
-            if (wheel->unk4c > 0) {
-                amount = wheel->unk4c / 12;
+            if (wheel->damper > 0) {
+                amount = wheel->damper / 12;
                 if (amount >= 0x1001) {
                     amount = 0x1000;
                 }
@@ -411,7 +411,7 @@ void Body_UpdateTyreFx(CarPhys *body)
             level += amount;
 capped:
             if (soft != 0) {
-                level += (wheel->unk40 >> 4) * params[0x94] / 100;
+                level += (wheel->bumpFade >> 4) * params[0x94] / 100;
             }
             if (params[0x92] < level) {
                 level = params[0x92];
@@ -421,7 +421,7 @@ capped:
             wheel->fxSqueal = level;
             wheel->fxGravel = 0;
             if (soft != 0) {
-                amount = (wheel->unk40 >> 5) + 0x40;
+                amount = (wheel->bumpFade >> 5) + 0x40;
                 if (amount >= 0x100) {
                     amount = 0xff;
                 }
@@ -483,7 +483,7 @@ capped:
             level = p[0xa4];
         }
         if (soft != 0) {
-            amount = (wheel->unk40 >> 4) * params[0xaa] / 100;
+            amount = (wheel->bumpFade >> 4) * params[0xaa] / 100;
             if (params[0xab] < amount) {
                 amount = params[0xab];
             }
@@ -499,7 +499,7 @@ capped:
             level = 0;
         }
         if (level != 0) {
-            amount = wheel->fxTimer + (*(int *)0x1f800000 * wheel->unk40 >> 16);
+            amount = wheel->fxTimer + (*(int *)0x1f800000 * wheel->bumpFade >> 16);
             if (amount < p[0xa8]) {
                 level = 0;
                 wheel->fxTimer = amount;

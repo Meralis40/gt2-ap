@@ -329,8 +329,8 @@ int ReplayFile_StartWriteData(ReplayDir *dir, int port, void *data, int size, sh
     int iVar1;
 
     iVar1 = McCard_StartTransfer
-                                        ('\a',port,D_80091AB8,data,0x1580,size + 0x7fU & 0xffffff80,
-                                          sectors + 1);
+                                        ('\a',port,D_80091AB8,(unsigned char *)data,0x1580,size + 0x7fU & 0xffffff80,
+                                          (unsigned short *)sectors + 1);
     return iVar1;
 }
 
@@ -351,6 +351,6 @@ int ReplayFile_StartReadEntry(ReplayDir *dir, int port, int i, void *buf, Sector
     int size = e->size;
 
     SectorMap_GetChain(&dir->sectorMap, e->firstSector, chain);
-    return McCard_StartTransfer(6, port, D_80091AB8, buf, 0x1580, size + 0x7f & ~0x7f, chain->sectors);
+    return McCard_StartTransfer(6, port, D_80091AB8, (unsigned char *)buf, 0x1580, size + 0x7f & ~0x7f, (unsigned short *)chain->sectors);
 }
 }

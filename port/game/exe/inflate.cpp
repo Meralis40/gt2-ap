@@ -8,98 +8,36 @@ extern ushort g_InflateLenExtra[];
 extern ushort g_InflateDistBase[];
 extern ushort g_InflateDistExtra[];
 extern byte g_InflateCodeLenOrder[];
-extern jmpbuf g_GzipCallerCtx;
 extern int g_GzipChunkSize;
-extern jmpbuf g_GzipInflateCtx;
-extern GzipStream *g_GzipStream;
 
-void GzipStream_Main(void)
+// The game inflates as a coroutine, a chunk per frame, on its own stack. A PC does the whole
+// stream at once, so these only keep the game's interface.
+static InflateState *GzipStream_NoYield(InflateState *state)
 {
-    Inflate_Run(&g_GzipStream->state);
-    g_GzipStream = 0;
-    longjmp(&g_GzipCallerCtx, 2);
-}
-
-InflateState *GzipStream_Yield(InflateState *state)
-{
-    int iVar1;
-
-    iVar1 = setjmp(&g_GzipInflateCtx);
-    if (iVar1 == 0) {
-        longjmp(&g_GzipCallerCtx, 1);
-    }
     return state;
 }
 
-InflateState *GzipStream_Flush(InflateState *state)
-{
-    int iVar1;
-
-    iVar1 = setjmp(&g_GzipInflateCtx);
-    if (iVar1 == 0) {
-        longjmp(&g_GzipCallerCtx, 1);
-    }
-    state->outEnd = state->out + g_GzipChunkSize;
-    return state;
-}
-
-// Starts inflating src into dst as a coroutine (setjmp and longjmp, on its own stack, which starts
-// at stream + 0x3ffc, past the GzipStream fields). It stops after each chunkSize bytes of output (0: never) and at each block
-// header and table build. Returns 0 when it stopped, 1 when it's done; GzipStream_Continue
-// resumes it. One stream at a time (g_GzipStream).
-// Matches but for one instruction's place: the copy of stream into $t0 (stream itself lives in
-// its argument slot, because of setjmp) comes three instructions earlier here than in the game,
-// which has it after GzipStream_Yield's address. A local state pointer or an inline init
-// function don't move it, nor did the permuter.
+// Inflates src into dst. Returns 1: done.
 int GzipStream_Begin(void *src, void *dst, int chunkSize, GzipStream *stream)
 {
-    InflateState *(*flush)(InflateState *);
-    byte *heap;
-
-    g_GzipStream = stream;
     g_GzipChunkSize = chunkSize;
     stream->state.inBase = (byte *)src;
     stream->state.in = (ushort *)src;
-    stream->state.yield = GzipStream_Yield;
+    stream->state.yield = GzipStream_NoYield;
     stream->state.refill = 0;
     stream->state.inEnd = (ushort *)((byte *)src - 1);
-    flush = GzipStream_Flush;
-    heap = stream->heap;
-    if (flush == 0 || chunkSize == 0) {
-        chunkSize = -1;
-    }
-    stream->state.flush = flush;
-    stream->state.outEnd = (byte *)dst + chunkSize;
+    stream->state.flush = GzipStream_NoYield;
+    stream->state.outEnd = (byte *)-1;
     stream->state.outBase = (byte *)dst;
     stream->state.out = (byte *)dst;
-    stream->state.heapBase = heap;
-    stream->state.heapEnd = heap + sizeof(stream->heap);
-    switch (setjmp(&g_GzipCallerCtx)) {
-    case 0:
-        // Runs the inflate on its own stack at the end of the stream buffer.
-        __asm__ volatile(".set\tnoreorder\n\tmove\t$3,$sp\n\tjal\tGzipStream_Main\n\tmove\t$sp,%0\n\t.set\treorder"
-                         : : "r"((byte *)stream + 0x3ffc) : "$3", "memory");
-    case 1:
-        return 0;
-    }
+    stream->state.heapBase = stream->heap;
+    stream->state.heapEnd = stream->heap + sizeof(stream->heap);
+    Inflate_Run(&stream->state);
     return 1;
 }
 
-// Resumes the stream's inflate. Returns 0 when it stopped again, 1 when it's done (or there's
-// no stream).
 int GzipStream_Continue(void)
 {
-    int r;
-
-    if (g_GzipStream != 0) {
-        switch (setjmp(&g_GzipCallerCtx)) {
-        case 0:
-            longjmp(&g_GzipInflateCtx, 1);
-            break;
-        case 1:
-            return 0;
-        }
-    }
     return 1;
 }
 
@@ -125,13 +63,12 @@ unsigned char *Lz_Decompress(unsigned char *dst, unsigned char *src, int size)
         // The item's bytes come from one unaligned load that the game splits in two: lwr here,
         // and lwl (the next two bytes) only for a copy. GCC emits lwl and lwr together, so both
         // are asm. Giving v a new value here (=r) gets it the game's register.
-        __asm__("lwr\t%0,0(%1)" : "=r"(v) : "r"(src));
+        v = Mips_ReadWord(src);
         src++;
         if (!(flags & 1)) {
             *out++ = v;
             size--;
         } else {
-            __asm__("lwl\t%0,2(%1)" : "+r"(v) : "r"(src));
             src++;
             len = v & 0xff;
             dist = v >> 8;
@@ -154,11 +91,9 @@ unsigned char *Lz_Decompress(unsigned char *dst, unsigned char *src, int size)
                 // has lwr then lwl (and swr then swl); GCC's unaligned word copy (a packed
                 // struct) is lwl then lwr.
                 do {
-                    __asm__("lwr\t%0,0(%1)" : "=r"(v) : "r"(p));
-                    __asm__("lwl\t%0,3(%1)" : "+r"(v) : "r"(p));
+                    v = Mips_ReadWord(p);
                     len -= 4;
-                    __asm__("swr\t%0,0(%1)" : : "r"(v), "r"(out) : "memory");
-                    __asm__("swl\t%0,3(%1)" : : "r"(v), "r"(out) : "memory");
+                    Mips_WriteWord(out, v);
                     p += 4;
                     out += 4;
                 } while (len >= 4);

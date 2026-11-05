@@ -207,11 +207,11 @@ void FUN_80082f74(void *p, unsigned int area0, unsigned int area1, unsigned int 
     unsigned int *pkt;
     unsigned int link;
 
-    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(p));
+    link = Mips_Lwl2(p);
     pkt = g_PacketPtr;
     ((unsigned char *)pkt)[3] = 3;
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(pkt) : "memory");
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)pkt << 8), "r"(p) : "memory");
+    Mips_Swl2(link, pkt);
+    Mips_Swl2((unsigned int)pkt << 8, p);
     pkt[1] = area0;
     pkt[2] = area1;
     pkt[3] = offset;

@@ -269,7 +269,7 @@ unsigned int WheelCode_FromName(char *name)
 // The decimal value of the digits s starts with.
 int Str_ParseUInt(char *s)
 {
-    register int value asm("a1") = 0;
+    int value = 0;
     int c;
     int tens;
 

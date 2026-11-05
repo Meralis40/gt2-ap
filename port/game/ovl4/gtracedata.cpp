@@ -8,7 +8,7 @@ extern void *g_GtModeData;
 // Entry index of table 0 of g_GtModeRaceData.
 unsigned short *GtRaceData_GetEvent(int index)
 {
-    return (unsigned short *)GameData_GetEntryIn(g_GtModeRaceData, 0, index);
+    return (unsigned short *)GameData_GetEntryIn((GameData *)g_GtModeRaceData, 0, index);
 }
 
 // The event of the race data whose code is eventCode, or 0.
@@ -21,7 +21,7 @@ unsigned short *GtRaceData_FindEvent(char *eventCode)
 
     for (i = 0; i < count; i++) {
         event = GtRaceData_GetEvent(i);
-        if (strcmp(eventCode, GameData_GetTableString(data, 0, *event)) == 0)
+        if (strcmp(eventCode, GameData_GetTableString((GameData *)data, 0, *event)) == 0)
             return event;
     }
     return 0;
@@ -30,7 +30,7 @@ unsigned short *GtRaceData_FindEvent(char *eventCode)
 // The index of the wheel wheelCode in table 0x1d.
 int Wheel_FindIndex(int wheelCode)
 {
-    return GameData_BinarySearch(g_GtModeData, 0x1d, wheelCode);
+    return GameData_BinarySearch((GameData *)g_GtModeData, 0x1d, wheelCode);
 }
 
 // Fits the wheels of table 0x1d's entry wheelIndex; the car's own wheels
@@ -38,12 +38,12 @@ int Wheel_FindIndex(int wheelCode)
 void CarSetup_SetWheels(CarSetup *setup, int wheelIndex)
 {
     void *data = g_GtModeData;
-    WheelEntry *wheel = (WheelEntry *)GameData_GetEntryIn(data, 0x1d, wheelIndex);
+    WheelEntry *wheel = (WheelEntry *)GameData_GetEntryIn((GameData *)data, 0x1d, wheelIndex);
     unsigned int code = wheel->code;
     unsigned int variant = wheel->variant;
 
     if (code == 0) {
-        unsigned char *rm = (unsigned char *)GameData_GetEntryIn(data, 5, (unsigned short)setup->idx_t05);
+        unsigned char *rm = (unsigned char *)GameData_GetEntryIn((GameData *)data, 5, (unsigned short)setup->idx_t05);
 
         if (rm[0xe] != 0)
             variant = wheel->altVariant;
@@ -55,7 +55,7 @@ void CarSetup_SetWheels(CarSetup *setup, int wheelIndex)
 // The variant of the wheel wheelCode, or its other one if altVariant.
 unsigned char Wheel_GetVariant(int wheelCode, int altVariant)
 {
-    WheelEntry *wheel = (WheelEntry *)GameData_GetEntryIn(g_GtModeData, 0x1d, Wheel_FindIndex(wheelCode));
+    WheelEntry *wheel = (WheelEntry *)GameData_GetEntryIn((GameData *)g_GtModeData, 0x1d, Wheel_FindIndex(wheelCode));
     unsigned char variant = wheel->variant;
 
     if (altVariant != 0)

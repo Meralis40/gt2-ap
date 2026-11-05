@@ -393,7 +393,7 @@ void Kanji_AddGlyph15(void *ot, unsigned int rgb, int x, int y, void *glyph)
 {
     KanjiQuad *pKVar1;
 
-    pKVar1 = KanjiFont_AddGlyphQuad(glyph, ot, rgb);
+    pKVar1 = KanjiFont_AddGlyphQuad((KanjiGlyph *)glyph, (unsigned int *)ot, rgb);
     pKVar1->y0 = y;
     pKVar1->y1 = y;
     pKVar1->x0 = x;
@@ -1014,7 +1014,7 @@ int LicenseName_Update(int active)
 // TextEntry_Draw.
 void LicenseName_Draw(DrawLayer *layer)
 {
-    TextEntry_Draw(NAME_ENTRY, layer->ot);
+    TextEntry_Draw(NAME_ENTRY, (uint *)layer->ot);
 }
 
 void PrizeCarView_ZoomIn(ResultCarView *view, int t)
@@ -1143,7 +1143,7 @@ void LicenseAcquired_Draw(DrawLayer *layer)
     unsigned int *ot;
 
     pQVar1 = g_QuickMenu;
-    ot = layer->ot;
+    ot = (unsigned int *)layer->ot;
     ctx = &g_QuickMenu->text;
     CardDialog_Draw((CardDialog *)((int)g_OVL0_EndFontInfo + 0x58), ot, ctx);
     TextItem_Draw((TextItem *)((int)g_OVL0_EndFontInfo + 4), ot, 0xb0, 200, ctx);
@@ -1384,7 +1384,7 @@ void LicenseMenu_Draw(DrawLayer *layer)
     char *base = (char *)&g_GameState;
     int offset = 0xbf7c;
     RaceSetup *setup = (RaceSetup *)(base + offset);
-    uint *ot = layer->ot;
+    uint *ot = (uint *)layer->ot;
     int license = setup->licenseId;
     LicenseTestInfo info;
     QuickMenuPage *page = g_QuickMenu->activePage;

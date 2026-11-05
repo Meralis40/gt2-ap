@@ -52,9 +52,9 @@ extern "C" RaceSetup *RaceSetup_InitEvent(int keep, int gtMode, RaceEvent *event
         setup->showIntro = event->noIntro == 0;
         setup->unk0e = 0;
         setup->lapCount = event->lapCount;
-        RaceSetup_SetEventCode(setup, GameData_GetString(data, event->codeString));
-        RaceSetup_SetCourseByName(setup, GameData_GetString(data, event->courseString));
-        strcpy(setup->eventName, GameData_GetString(data, event->nameString));
+        RaceSetup_SetEventCode(setup, GameData_GetString((GameData *)data, event->codeString));
+        RaceSetup_SetCourseByName(setup, GameData_GetString((GameData *)data, event->courseString));
+        strcpy(setup->eventName, GameData_GetString((GameData *)data, event->nameString));
         setup->eventIndex = -1;
         setup->unk582 = -1;
         setup->garageSlot = -1;
@@ -147,7 +147,7 @@ extern "C" RaceSetup *RaceSetup_InitEvent(int keep, int gtMode, RaceEvent *event
             strcpy(car->name, CarInfoA_GetName(car->carId));
         }
     } else {
-        event = GameData_FindEvent(data, setup->eventCode);
+        event = (RaceEvent *)GameData_FindEvent((GameData *)data, setup->eventCode);
     }
     g_RaceEventParams = *(RaceEventParams *)((char *)event + 0x44);
     for (j = 0; j < setup->carCount; j++) {

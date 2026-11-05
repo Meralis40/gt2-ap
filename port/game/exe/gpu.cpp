@@ -19,11 +19,11 @@ RECT *Prim_AddTile(void *ot, unsigned int rgb)
     unsigned int *p;
     unsigned int link;
 
-    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+    link = Mips_Lwl2(ot);
     p = (unsigned int *)g_PacketPtr;
     ((unsigned char *)p)[3] = 3;
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+    Mips_Swl2(link, p);
+    Mips_Swl2((unsigned int)p << 8, ot);
     p[1] = rgb ^ 0x60000000;
     g_PacketPtr = (char *)(p + 4);
     return (RECT *)(p + 2);
@@ -35,11 +35,11 @@ unsigned int *Prim_AddPolyF4(void *ot, unsigned int rgb)
     unsigned int *p;
     unsigned int link;
 
-    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+    link = Mips_Lwl2(ot);
     p = (unsigned int *)g_PacketPtr;
     ((unsigned char *)p)[3] = 5;
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+    Mips_Swl2(link, p);
+    Mips_Swl2((unsigned int)p << 8, ot);
     p[1] = rgb ^ 0x28000000;
     g_PacketPtr = (char *)(p + 6);
     return p + 1;
@@ -109,8 +109,7 @@ void Gpu_SetVRange(int y0, int y1)
 // an even field.
 // The address in $a0 first; pinned there, one load is still scheduled differently.
 // common.h declares it void, for the callers that ignore the result.
-int Gpu_WaitField_(void) __asm__("Gpu_WaitField");
-int Gpu_WaitField_(void)
+int Gpu_WaitField(void)
 {
     GfxIrqState *irq = &g_GfxIrq;
     unsigned int stat = irq->gpustatAtWait;

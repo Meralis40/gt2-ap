@@ -48,15 +48,15 @@ unsigned int *DisplayList_Reserve(unsigned int *p, int words)
 {
     unsigned int len = g_DisplayList_ChunkLen;
     // those two registers variables with the forced registers are necessary for correct compilation.
-    register unsigned int link asm("a0");
-    register unsigned int *temp asm("v0");
+    unsigned int link;
+    unsigned int *temp;
     unsigned int *a0 = p;
     
     if ((int)(len + words) > 16) {
         link = (unsigned int)a0 << 8;
         ((unsigned char*)g_DisplayList_Chunk)[3] = len;
         temp = g_DisplayList_Chunk;
-        __asm__("swl\t%0,2(%1)" : : "r"(link), "r"(temp) : "memory");
+        Mips_Swl2(link, temp);
         len = 0;
         g_DisplayList_Chunk = a0;
         a0++;
@@ -86,7 +86,7 @@ void *DisplayList_End(void)
     ((unsigned char *)g_DisplayList_Chunk)[3] = g_DisplayList_ChunkLen;
     unsigned int *chunk = g_DisplayList_Chunk;  // a local: the game loads it into $v0
 
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(0xffffff00), "r"(chunk) : "memory");
+    Mips_Swl2(0xffffff00, chunk);
     return g_DisplayList_Chunk;
 }
 

@@ -1007,6 +1007,8 @@ void Tyre_BuildLoadCurves(unsigned char *loads, unsigned char *grips, unsigned c
 }
 
 // The whole car, from its race parameters.
+void Drivetrain_Init(CarParams *params, CarDrive *drive, EngineCurve *curve, int arg);
+
 int CarPhys_Init(CarPhys *phys, CarParams *params, int control, int arg, unsigned char unk1c)
 {
     int i;

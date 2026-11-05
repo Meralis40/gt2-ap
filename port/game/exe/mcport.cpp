@@ -1,5 +1,6 @@
 // Resident code 8008264c-80082ba8 (mcport). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
+#include <stdarg.h>
 #include "common.h"
 
 extern "C" {
@@ -268,7 +269,11 @@ void FUN_80082af8(unsigned int *ot, int x, int y, char *fmt, ...)
     ((short *)&ctx->unk18)[0] = x;
     y += ctx->font.unk0a;
     ((short *)&ctx->unk18)[1] = y;
-    FUN_8007db30(ctx, fmt, __builtin_next_arg(fmt));
+    va_list args;
+
+    va_start(args, fmt);
+    FUN_8007db30(ctx, fmt, args);
+    va_end(args);
 }
 
 // Draws s at (x, y) into ot with the default text context.
@@ -279,7 +284,7 @@ void FUN_80082b40(unsigned int *ot, int x, int y, char *s)
     ctx->ot = ot;
     ((short *)&ctx->unk18)[0] = x;
     ((short *)&ctx->unk18)[1] = y;
-    FUN_8007db9c(ctx, s);
+    FUN_8007db9c(ctx, (signed char *)s);
 }
 
 unsigned char McFrame_Checksum(unsigned int *frame)

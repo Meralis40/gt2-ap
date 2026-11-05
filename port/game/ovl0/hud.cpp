@@ -1062,7 +1062,7 @@ int Hud_Update(RaceViewLoop *view, PadState *pad)
 void Hud_DrawFull(RaceViewLoop *view, RaceVehicle *car, RaceCam *cam)
 {
     RaceMem *race = &g_Race_IsDemo;
-    uint *ot = view->layers[0].ot;
+    uint *ot = (uint *)view->layers[0].ot;
     RaceWorld *world = &race->world;
 
     if (RACE_SETUP->raceType == 0xc) {
@@ -1112,7 +1112,7 @@ void Hud_DrawReplayLabel(RaceViewLoop *view, int index)
         TextCtx text;
         TextCtx *ctx;
         RaceCar *raceCar = &RACE_SETUP->cars[index];
-        uint *ot = view->layers[0].ot;
+        uint *ot = (uint *)view->layers[0].ot;
 
         Text_Init(&text, -1);
         ctx = &text;
@@ -1134,7 +1134,7 @@ void Hud_DrawSplit(RaceViewLoop *view, RaceVehicle *car, RaceCam *cam)
 {
     RaceMem *race = &g_Race_IsDemo;
     int index = car->index;
-    uint *ot = view->layers[0].ot;
+    uint *ot = (uint *)view->layers[0].ot;
     RaceWorld *world = &race->world;
     RECT *tile;
     int y;

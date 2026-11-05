@@ -108,7 +108,7 @@ int CdAudio_RunScript_8007C4F8(CdAudio *cd, int index)
 // The game keeps &g_CdAudio in $a0, as its other functions load it there first.
 void CdAudio_WaitIdle(void)
 {
-    register CdAudio *cd asm("a0") = &g_CdAudio;
+    CdAudio *cd = &g_CdAudio;
 
     while (*(volatile unsigned char *)&cd->state != 0) {
     }

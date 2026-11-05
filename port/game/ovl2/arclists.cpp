@@ -4,6 +4,7 @@
 #include "common.h"
 
 extern "C" {
+int License_IsEarned_OVL2(int license);
 extern GameState g_GameState;
 extern ArcCourse g_ArcCourses_Race[];
 extern ArcCourse g_ArcCourses_RaceRev[];

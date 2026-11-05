@@ -114,7 +114,7 @@ void CarSpecPanel_Update(void *panel)
     iVar3 = 0x118;
     iVar2 = 0x88;
     iVar1 = 0x58;
-    item = panel;
+    item = (ArcTextItem *)panel;
     do {
         TextItem_Update_OVL2(item);
         IconItem_Update((ArcIconItem *)((int)panel + iVar1));

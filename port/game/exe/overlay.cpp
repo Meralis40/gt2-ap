@@ -1,5 +1,6 @@
 // Resident code 8005d9bc-8005db90 (overlay): loads the overlays from their gzip pack and
 // runs their entries from a setjmp point.
+#include <stdarg.h>
 #include "common.h"
 
 extern "C" {
@@ -33,18 +34,20 @@ void Overlay_Start(int index)
     Overlay_StartAt(index, (&g_OverlayDefaultEntries)[index], 0, 0, 0, 0);
 }
 
-#define NEXT_INT(ap) (*(int *)(ap += 4, ap - 4))
 
 // Loads overlay index and runs entry with the four ints after it, from Overlay_Dispatch.
 // Variadic, as the game stores $a1-$a3 to their home slots and reads the ints from there.
 void Overlay_StartAt(int index, void *entry, ...)
 {
-    char *ap = (char *)__builtin_next_arg(entry); // va_start, va_arg written out
+    va_list ap;
 
-    g_OverlayArgs[0] = NEXT_INT(ap);
-    g_OverlayArgs[1] = NEXT_INT(ap);
-    g_OverlayArgs[2] = NEXT_INT(ap);
-    g_OverlayArgs[3] = NEXT_INT(ap);
+    va_start(ap, entry);
+
+    g_OverlayArgs[0] = va_arg(ap, int);
+    g_OverlayArgs[1] = va_arg(ap, int);
+    g_OverlayArgs[2] = va_arg(ap, int);
+    g_OverlayArgs[3] = va_arg(ap, int);
+    va_end(ap);
     Overlay_Load(index);
     longjmp(&g_OverlayJmpBuf, (int)entry);
 }

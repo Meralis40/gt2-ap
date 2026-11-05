@@ -4,6 +4,7 @@
 #include "common.h"
 
 extern "C" {
+void QuickMenu_PushPage(QuickMenu *menu, QuickMenuPage *page);
 extern QuickMenu *g_QuickMenu;
 extern short g_Ending_Fade;
 extern QuickMenuPage g_Page_Ending;

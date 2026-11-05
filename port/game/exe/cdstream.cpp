@@ -59,11 +59,11 @@ void *FUN_80081cc8(OtTag *ot)
     unsigned int *p;
     unsigned int link;
 
-    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+    link = Mips_Lwl2(ot);
     p = (unsigned int *)g_PacketPtr;
     ((unsigned char *)p)[3] = 12;
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+    Mips_Swl2(link, p);
+    Mips_Swl2((unsigned int)p << 8, ot);
     g_PacketPtr = (unsigned char *)p + 0x34;
     return p + 1;
 }
@@ -269,27 +269,10 @@ unsigned char *CdStream_WaitSector(void)
     return CdStream_GetReadPtr((CdAudio *)cd);
 }
 
-// Returns the bytes between the stack pointer and the end of the heap, printing
-// the heap and stack bounds when they overlap.
-// The game copies $sp to $s3 after the register saves; the asm here copies it two
-// instructions later.
+// The game checks its stack against the heap here. The port has neither limit.
 int Stack_Check(void)
 {
-    unsigned char *heap = (unsigned char *)g_HeapBase;
-    unsigned char *heapEnd = heap + g_HeapSize;
-    unsigned char *stack;
-    int free;
-
-    asm volatile("move %0,$sp" : "=r"(stack));
-    free = stack - heapEnd;
-
-    if (free < 0) {
-        printf(D_80090894, -free);
-        printf(D_800908B0, heap);
-        printf(D_800908C4, heapEnd);
-        printf(D_800908D8, stack);
-    }
-    return free;
+    return 0x10000;
 }
 
 void CdAudio_SetupStream(void *buf, int bufSectors, int start, unsigned int end)

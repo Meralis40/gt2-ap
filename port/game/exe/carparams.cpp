@@ -408,7 +408,7 @@ int Part_Lookup(int part, unsigned int carCode, int *outPrice)
     }
     index = GameData_FindPart(table, stage, offset, carCode);
     if (index == -1) {
-        index = GameData_FindPart(table, stage, offset, CarCode_Encode("00000"));
+        index = GameData_FindPart(table, stage, offset, CarCode_Encode((signed char *)"00000"));
     }
     if (outPrice != 0) {
         if (index == -1) {
@@ -431,7 +431,7 @@ int GameData_FindPart(int table, char stage, int stageOffset, unsigned int carCo
     i = GameData_FindFirstForCar(table, carCode);
     if (i != -1) {
         for (k = 4;; i++) {
-            e = (unsigned char *)GameData_GetEntryIn(data, table, i);
+            e = (unsigned char *)GameData_GetEntryIn((GameData *)data, table, i);
             if (*(unsigned int *)e != carCode) {
                 break;
             }
@@ -449,12 +449,12 @@ int GameData_FindFirstForCar(int table, unsigned int carCode)
     int i;
 
     data = (void *)g_GtModeData;
-    i = GameData_BinarySearch(data, table, carCode);
+    i = GameData_BinarySearch((GameData *)data, table, carCode);
     if (i == -1) {
         return i;
     }
     while (i > 0) {
-        if (carCode != *(unsigned int *)GameData_GetEntryIn(data, table, i - 1)) {
+        if (carCode != *(unsigned int *)GameData_GetEntryIn((GameData *)data, table, i - 1)) {
             return i;
         }
         i--;
@@ -471,12 +471,12 @@ void *GameData_GetCarEntry(unsigned int carCode)
     data = 0;
     switch ((unsigned int)g_GameDataMode) {
     case 2:
-        return GameData_GetEntryIn(g_GtModeRaceData, 1, idx - 1);
+        return GameData_GetEntryIn((GameData *)g_GtModeRaceData, 1, idx - 1);
     case 1:
     case 3:
         data = g_RaceGameData;
     }
-    return GameData_GetEntryIn(data, 0x1f, idx - 1);
+    return GameData_GetEntryIn((GameData *)data, 0x1f, idx - 1);
 }
 
 int Car_GetDefaultSetup(unsigned int carId, CarSetup *setup)
@@ -635,8 +635,8 @@ void *GameData_LoadGtMode(void *buffer, int size)
     g_GameDataMode = 2;
     g_DataLanguage = (unsigned int)g_GameState.language;
     VolId_ReadFileAsync((unsigned int)g_LangCarParamFiles[g_DataLanguage].gtmodeData, buffer);
-    g_GtModeData = buffer;
-    g_GameDataBase = buffer;
+    g_GtModeData = (unsigned int)buffer;
+    g_GameDataBase = (unsigned int)buffer;
     GameData_Relocate(buffer, (unsigned int *)&g_GtModeDataEntrySizes);
     D_801C94E4 = (unsigned int)*(unsigned short *)((int)buffer + 4);
     return buffer;
@@ -648,7 +648,7 @@ void *GameData_LoadArcade(void *buffer, int size)
     g_DataLanguage = (unsigned int)g_GameState.language;
     VolId_ReadFileAsync((unsigned int)g_LangCarParamFiles[g_DataLanguage].arcadeData, buffer);
     g_RaceGameData = buffer;
-    g_GameDataBase = buffer;
+    g_GameDataBase = (unsigned int)buffer;
     GameData_Relocate(buffer, (unsigned int *)&g_ArcadeDataEntrySizes);
     return buffer;
 }
@@ -659,14 +659,14 @@ void *GameData_LoadLicense(void *buffer, int size)
     g_DataLanguage = (unsigned int)g_GameState.language;
     VolId_ReadFileAsync((unsigned int)g_LangCarParamFiles[g_DataLanguage].licenseData, buffer);
     g_RaceGameData = buffer;
-    g_GameDataBase = buffer;
+    g_GameDataBase = (unsigned int)buffer;
     GameData_Relocate(buffer, (unsigned int *)&g_LicenseDataEntrySizes);
     return buffer;
 }
 
 void *GameData_GetGtMode(void)
 {
-    return g_GtModeData;
+    return (void *)g_GtModeData;
 }
 
 void *FUN_80076f1c(void)
@@ -678,7 +678,7 @@ void *GameData_GetEntry(int table, int index)
 {
     void *pvVar1;
 
-    pvVar1 = GameData_GetEntryIn(g_GameDataBase, table, index);
+    pvVar1 = GameData_GetEntryIn((GameData *)g_GameDataBase, table, index);
     return pvVar1;
 }
 
@@ -1020,7 +1020,7 @@ void CarParams_CopyT05(CarSpec *spec, void *params)
 
 void CarParams_ApplyDesc8e08(CarSpec *spec, void *params)
 {
-    CarSetup_ApplyDescriptors((unsigned int *)&D_80092E08, spec, params);
+    CarSetup_ApplyDescriptors((unsigned int *)&D_80092E08, spec, (CarSetup *)params);
 }
 
 void CarParams_ApplySuspension(CarSpec *spec, void *params)
@@ -1090,6 +1090,6 @@ void CarParams_ApplySettingB5(CarSpec *spec, void *params)
 
 void CarParams_ApplyDesc8e50(CarSpec *spec, void *params)
 {
-    CarSetup_ApplyDescriptors((unsigned int *)&D_80092E50, spec, params);
+    CarSetup_ApplyDescriptors((unsigned int *)&D_80092E50, spec, (CarSetup *)params);
 }
 }

@@ -435,7 +435,7 @@ void RaceVehicle_UpdateTransform(RaceVehicle *v)
 
         motor[3] = 2;
         if (((char *)&g_GameState)[index * 0x52 + 0x36] == 0 && v->finishTime == 0) {
-            *(short *)(pad + 0x5a) = v->phys.unk760;
+            *(short *)(pad + 0x5a) = *(short *)v->phys.unk760;
             *(short *)(pad + 0x5c) = v->phys.unk762 << 4;
             *(short *)(pad + 0x5e) = v->phys.unk763 << 4;
         } else {

@@ -111,8 +111,8 @@ void AutoLoad_Enter(int back)
 {
     g_AutoLoad_State = 0;
     g_AutoLoad_Port = 0;
-    g_AutoLoad_Line1 = &g_AutoLoad_EmptyLine;
-    g_AutoLoad_Line2 = &g_AutoLoad_EmptyLine;
+    g_AutoLoad_Line1 = (char *)&g_AutoLoad_EmptyLine;
+    g_AutoLoad_Line2 = (char *)&g_AutoLoad_EmptyLine;
     AutoLoad_CacheKanjiMessages();
     SaveFile_InitHeader(&g_SaveFileBuf);
 }

@@ -12,11 +12,11 @@ PrimG4 *Prim_AddPolyG4(uint *ot)
     unsigned int *p;
     unsigned int link;
 
-    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+    link = Mips_Lwl2(ot);
     p = g_PacketPtr;
     ((unsigned char *)p)[3] = 8;
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+    Mips_Swl2(link, p);
+    Mips_Swl2((unsigned int)p << 8, ot);
     g_PacketPtr = p + 9;
     return (PrimG4 *)(p + 1);
 }
@@ -27,11 +27,11 @@ PrimF3 *Prim_AddPolyF3(uint *ot, uint rgb)
     unsigned int *p;
     unsigned int link;
 
-    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+    link = Mips_Lwl2(ot);
     p = g_PacketPtr;
     ((unsigned char *)p)[3] = 4;
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+    Mips_Swl2(link, p);
+    Mips_Swl2((unsigned int)p << 8, ot);
     p[1] = rgb ^ 0x20000000;
     g_PacketPtr = p + 5;
     return (PrimF3 *)(p + 1);
@@ -236,11 +236,11 @@ PrimG3 *Prim_AddPolyG3(uint *ot)
     unsigned int *p;
     unsigned int link;
 
-    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+    link = Mips_Lwl2(ot);
     p = g_PacketPtr;
     ((unsigned char *)p)[3] = 6;
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+    Mips_Swl2(link, p);
+    Mips_Swl2((unsigned int)p << 8, ot);
     g_PacketPtr = p + 7;
     return (PrimG3 *)(p + 1);
 }
@@ -251,11 +251,11 @@ PrimLineF4 *Prim_AddLineF4(void *ot, unsigned int rgb)
     unsigned int *p;
     unsigned int link;
 
-    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+    link = Mips_Lwl2(ot);
     p = g_PacketPtr;
     ((unsigned char *)p)[3] = 7;
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+    Mips_Swl2(link, p);
+    Mips_Swl2((unsigned int)p << 8, ot);
     p[1] = rgb ^ 0x48000000;
     p[7] = 0x50005000;
     g_PacketPtr = p + 8;
@@ -310,11 +310,11 @@ PrimFT4 *Prim_AddPolyFT4(uint *ot, uint rgb)
     unsigned int *p;
     unsigned int link;
 
-    __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+    link = Mips_Lwl2(ot);
     p = g_PacketPtr;
     ((unsigned char *)p)[3] = 9;
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
-    __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+    Mips_Swl2(link, p);
+    Mips_Swl2((unsigned int)p << 8, ot);
     p[1] = rgb ^ 0x2c000000;
     g_PacketPtr = p + 10;
     return (PrimFT4 *)(p + 1);

@@ -27,6 +27,7 @@ static inline int Half(unsigned short v)
 }
 
 extern "C" {
+int ArcCarList_FirstAvailable(int cls);
 extern signed char g_ArcSel_Class;
 extern signed char g_ArcSel_Trans;
 extern signed char g_ArcSel_Setting;

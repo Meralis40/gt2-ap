@@ -655,12 +655,12 @@ void Tim_LoadImage(void *tim, RECT *rect)
     Gpu_LoadImageBlock(block, rect);
 }
 
-void Tim_LoadClutAndImage(void *tim, RECT *clutRect, RECT *imageRect)
+void *Tim_LoadClutAndImage(void *tim, RECT *clutRect, RECT *imageRect)
 {
     int *block;
 
-    block = Tim_LoadClut(tim, clutRect);
-    Gpu_LoadImageBlock(block, imageRect);
+    block = (int *)Tim_LoadClut(tim, clutRect);
+    return Gpu_LoadImageBlock(block, imageRect);
 }
 
 // Clips a Gouraud triangle or quad (count points, from the scratchpad at 0x9c) against

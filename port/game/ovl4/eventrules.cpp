@@ -87,14 +87,14 @@ unsigned int *GtRaceData_GetAllowedCars(int listId)
 
     if (i < 0)
         return 0;
-    return (unsigned int *)GameData_GetEntryIn(data, 2, i);
+    return (unsigned int *)GameData_GetEntryIn((GameData *)data, 2, i);
 }
 
 // Fills rules from the race data of event raceCode, its allowed cars (at most 32)
 // going to allowedCars from allowedStart. Returns the number of allowed cars.
 int EventRules_Load(EventRules *rules, char *raceCode, unsigned int *allowedCars, int allowedStart)
 {
-    RaceEvent *event = GameData_FindEvent(g_GtModeRaceDataBuf, raceCode);
+    RaceEvent *event = (RaceEvent *)GameData_FindEvent((GameData *)g_GtModeRaceDataBuf, raceCode);
     int count;
     unsigned int *cars;
 

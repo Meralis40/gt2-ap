@@ -43,7 +43,7 @@ int CarSetup_Finalize(unsigned int carId, CarSetup *setup)
 // The price of a new car (word 0x11 of its table 0x1e entry), 0 when it isn't there.
 int Car_GetNewPrice(unsigned int carCode)
 {
-    unsigned int *entry = (unsigned int *)GameData_FindEntryById(GameData_GetGtMode(), 0x1e, carCode);
+    unsigned int *entry = (unsigned int *)GameData_FindEntryById((GameData *)GameData_GetGtMode(), 0x1e, carCode);
 
     if (entry)
         return entry[0x11];
@@ -54,7 +54,7 @@ int Car_GetNewPrice(unsigned int carCode)
 // (g_IncludedTireParts) available for it. Null when the car's entry has none.
 unsigned char *Car_GetIncludedTires(unsigned int carCode, unsigned char *partsOwned)
 {
-    unsigned char *entry = (unsigned char *)GameData_FindEntryById(GameData_GetGtMode(), 0x1e, carCode);
+    unsigned char *entry = (unsigned char *)GameData_FindEntryById((GameData *)GameData_GetGtMode(), 0x1e, carCode);
     short *part;
     int id;
     int i = 6;
@@ -351,7 +351,7 @@ unsigned short *GarageCar_GetMark(int flag)
 // The car's maker name (string id at +0x3c of its table 0x1e entry).
 unsigned short *Car_GetMakerName(unsigned int carId)
 {
-    unsigned char *entry = (unsigned char *)GameData_FindEntryById(GameData_GetGtMode(), 0x1e, carId);
+    unsigned char *entry = (unsigned char *)GameData_FindEntryById((GameData *)GameData_GetGtMode(), 0x1e, carId);
 
     if (entry)
         return (unsigned short *)UniStr_Get(*(unsigned short *)(entry + 0x3c));
@@ -361,7 +361,7 @@ unsigned short *Car_GetMakerName(unsigned int carId)
 // The car's model name (string id at +0x3e of its table 0x1e entry).
 unsigned short *Car_GetModelName(unsigned int carId)
 {
-    unsigned char *entry = (unsigned char *)GameData_FindEntryById(GameData_GetGtMode(), 0x1e, carId);
+    unsigned char *entry = (unsigned char *)GameData_FindEntryById((GameData *)GameData_GetGtMode(), 0x1e, carId);
 
     if (entry)
         return (unsigned short *)UniStr_Get(*(unsigned short *)(entry + 0x3e));

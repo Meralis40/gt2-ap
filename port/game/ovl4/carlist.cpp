@@ -59,7 +59,7 @@ int GarageList_DrawItem(MenuListEventId event, MenuListEvent *ev, int index)
             box.rect.h = 0x14;
             box.top = 0x141414;
             box.bottom = 0x505050;
-            Menu_DrawCursorBox(ot, &box, (g_GarageList_Blink << 7) / 60);
+            Menu_DrawCursorBox((uint *)ot, &box, (g_GarageList_Blink << 7) / 60);
             Prim_AddDrawMode(ot, 0x220);
         }
         car = g_GameState.garages[0].cars + index;
@@ -77,7 +77,7 @@ int GarageList_DrawItem(MenuListEventId event, MenuListEvent *ev, int index)
         box.rect.w = 9;
         box.rect.h = 0xc;
         box.top = CarInfoA_GetColorRgb(car->baseCarId, car->color);
-        Menu_DrawColorSwatch(ot, &box, t);
+        Menu_DrawColorSwatch((uint *)ot, &box, t);
         if (g_GameState.garages[0].currentCar == index) {
             RECT *r = Prim_AddTile(ot, Rgb_Lerp(g_GarageList_Black, g_GarageList_CurrentRgb, t, 0x80));
 
@@ -218,7 +218,7 @@ int UsedCarList_DrawItem(MenuListEventId event, MenuListEvent *ev, int index)
             box.rect.h = 0x18;
             box.top = 0x141414;
             box.bottom = 0x505050;
-            Menu_DrawCursorBox(ot, &box, (g_UsedCarList_Blink << 7) / 60);
+            Menu_DrawCursorBox((uint *)ot, &box, (g_UsedCarList_Blink << 7) / 60);
             Prim_AddDrawMode(ot, 0x220);
         }
         e = g_UsedCarListCars + index;
@@ -236,7 +236,7 @@ int UsedCarList_DrawItem(MenuListEventId event, MenuListEvent *ev, int index)
         box.rect.w = 9;
         box.rect.h = 0xc;
         box.top = CarInfoA_GetColorRgb(carId, color);
-        Menu_DrawColorSwatch(ot, &box, t);
+        Menu_DrawColorSwatch((uint *)ot, &box, t);
         rgb = Rgb_Lerp(g_UsedCarList_Black, g_UsedCarList_PriceRgb, t, 0x80);
         {
             unsigned short text[64];
@@ -287,7 +287,7 @@ void UsedCarList_Build(MenuCarList *list, MenuElement *element, int makerId)
     int count;
 
     list->element = element;
-    UsedCarList_GetCars(makerId, &count, &g_UsedCarListCars);
+    UsedCarList_GetCars(makerId, (unsigned int *)&count, &g_UsedCarListCars);
     if (count > 0) {
         int n = count;
 

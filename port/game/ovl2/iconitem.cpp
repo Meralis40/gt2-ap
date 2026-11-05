@@ -139,11 +139,11 @@ void IconItem_Draw(ArcIconItem *it, void *ot)
         quad.rect.h = rise * 2;
         quad.top = 0;
         quad.bottom = grey;
-        Menu_AddGreyBand_OVL2((uint *)ot, &quad);
+        Menu_AddGreyBand((uint *)ot, &quad);
         quad.rect.x = left - zoom;
         quad.top = grey;
         quad.bottom = 0;
-        Menu_AddGreyBand_OVL2((uint *)ot, &quad);
+        Menu_AddGreyBand((uint *)ot, &quad);
         Prim_AddDrawMode(ot, 0x20);
         return;
     }

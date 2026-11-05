@@ -148,7 +148,7 @@ void CarPreview_DrawColorChips(CarPreview *car, void *ot, int right, int y)
             q.rect.h = 8;
             q.top = 0;
             q.bottom = (c & 0x1f) << 3 | (c & 0x3e0) << 6 | (c & 0xf800) << 9;
-            Menu_AddGouraudQuad(ot, &q);
+            Menu_AddGouraudQuad((uint *)ot, &q);
             r = Prim_AddTile(ot, 0);
             r->x = right;
             r->y = y;
@@ -329,8 +329,8 @@ void CarPreview_Load(CarPreview *preview, unsigned int carId, int colorIdx, int 
     preview->logoH = b->h;
     Vol_ReadFileAsync(preview->firstFile, model);
     Vol_ReadFileAsync(preview->firstFile + 1, tex);
-    CarModel_Init(model, slot);
-    CarModel_GetWheelDims(model, &front, &rear);
+    CarModel_Init((CarModelHeader *)model, slot);
+    CarModel_GetWheelDims((CarModelHeader *)model, &front, &rear);
     CarModel_BuildWheels((WheelGeom *)((char *)model + 0x40), &front, &rear);
     r.x = (slot & 0xf) << 6;
     r.y = (page >> 20) & 0x100;
@@ -341,8 +341,8 @@ void CarPreview_Load(CarPreview *preview, unsigned int carId, int colorIdx, int 
     CarPreview_SetColor(preview, preview->colorIdx);
     if (hasWheel && (wheel & ~0x1f00)) {
         Wheel_LoadTim(wheel, wheelBuf);
-        Tim_LoadToSlot(wheelBuf, slot, 1);
-        CarModel_SetColor(model, 0, *(unsigned short *)((char *)wheelBuf + 0x14));
+        Tim_LoadToSlot((char *)wheelBuf, slot, 1);
+        CarModel_SetColor((CarModelHeader *)model, 0, *(unsigned short *)((char *)wheelBuf + 0x14));
     }
     if (garageSlot < 0) {
         CarSetup setup;
@@ -376,10 +376,10 @@ void CarPreview_SetWheel(CarPreview *preview, unsigned int wheel, int wheelColor
     int offset;
 
     Wheel_LoadTim(wheel, wheelBuf);
-    Tim_LoadToSlot(wheelBuf, (signed char)preview->vramPage, 1);
-    CarModel_SetColor(model, 0, *(unsigned short *)((char *)wheelBuf + 0x14));
+    Tim_LoadToSlot((char *)wheelBuf, (signed char)preview->vramPage, 1);
+    CarModel_SetColor((CarModelHeader *)model, 0, *(unsigned short *)((char *)wheelBuf + 0x14));
     offset = g_WheelOffsetTable[wheelColor];
-    CarModel_GetWheelDims(model, &front, &rear);
+    CarModel_GetWheelDims((CarModelHeader *)model, &front, &rear);
     rear.offset = offset;
     front.offset = offset;
     CarModel_BuildWheels((WheelGeom *)((char *)model + 0x40), &front, &rear);
@@ -397,7 +397,7 @@ void CarPreview_SpecFromDefault(CarSpecSheet *spec, int carId)
     CarSetup CStack_a0;
 
     pvVar1 = GameData_GetGtMode();
-    puVar2 = GameData_FindEntryById(pvVar1, 0x1e, carId);
+    puVar2 = (unsigned int *)GameData_FindEntryById((GameData *)pvVar1, 0x1e, carId);
     Car_GetDefaultSetup(carId, &CStack_a0);
     pvVar1 = GameData_GetEntry(3, (unsigned int)(unsigned short)CStack_a0.idx_0a);
     pvVar3 = GameData_GetEntry(5, (unsigned int)(unsigned short)CStack_a0.idx_t05);
@@ -424,7 +424,7 @@ void CarPreview_SpecFromDefault(CarSpecSheet *spec, int carId)
 // and its performance (power and its rpm, torque, and the max rpm as text).
 void CarPreview_SpecFromCar(CarSpecSheet *spec, int carId, CarSetup *setup, void *carParams, unsigned short *perf)
 {
-    unsigned int *entry = GameData_FindEntryById(GameData_GetGtMode(), 0x1e, carId);
+    unsigned int *entry = (unsigned int *)GameData_FindEntryById((GameData *)GameData_GetGtMode(), 0x1e, carId);
     unsigned char *body = (unsigned char *)GameData_GetEntry(3, (unsigned short)setup->idx_0a);
     unsigned char *t05 = (unsigned char *)GameData_GetEntry(5, (unsigned short)setup->idx_t05);
     unsigned char *engine = (unsigned char *)GameData_GetEntry(6, (unsigned short)setup->idx_0c);
@@ -459,7 +459,7 @@ unsigned short *CarPreview_GetEngineTextA(CarPreview *car)
     if (!car->loaded) {
         return g_CarPreview_NoText;
     }
-    return UniStr_Get(car->spec.engineStrA);
+    return (unsigned short *)UniStr_Get(car->spec.engineStrA);
 }
 
 unsigned short *FUN_OVL4__8001b2f8(CarPreview *car)
@@ -467,7 +467,7 @@ unsigned short *FUN_OVL4__8001b2f8(CarPreview *car)
     if (!car->loaded) {
         return g_CarPreview_NoText;
     }
-    return UniStr_Get(car->spec.engineStrB);
+    return (unsigned short *)UniStr_Get(car->spec.engineStrB);
 }
 
 unsigned short *CarPreview_GetEngineTextC(CarPreview *car)
@@ -475,7 +475,7 @@ unsigned short *CarPreview_GetEngineTextC(CarPreview *car)
     if (!car->loaded) {
         return g_CarPreview_NoText;
     }
-    return UniStr_Get(car->spec.engineStrC);
+    return (unsigned short *)UniStr_Get(car->spec.engineStrC);
 }
 
 // The torque rpm text: a game string, or the one CarPreview_SpecFromCar built.
@@ -484,7 +484,7 @@ unsigned short *CarPreview_GetTorqueRpmText(CarPreview *car)
     int index = car->spec.torqueRpmStr;
 
     if (index >= 0) {
-        return UniStr_Get(index);
+        return (unsigned short *)UniStr_Get(index);
     }
     return car->spec.rpmText;
 }

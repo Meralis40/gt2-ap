@@ -21,6 +21,7 @@ static inline void Row_PutSprite(void *ot, ArcSprite *sprite, unsigned int rgb, 
 }
 
 extern "C" {
+int License_IsEarned_OVL2(int license);
 extern Font D_80123810;
 extern ArcBonusCourse g_ArcBonusCourses[];
 extern MenuList g_ArcList_Bonus;

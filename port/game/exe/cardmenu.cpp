@@ -156,17 +156,17 @@ extern CardSystem g_Card;
 // its texture and CLUT in VRAM, and the glyph loader at +0x9824.
 void KanjiFont_Init(void *font, int vramX, int vramY, int texWidth, int texHeight, int clutX, int clutY)
 {
-    KanjiFont_SetBuffers(font, (unsigned char *)font + 0x1824, (KanjiGlyph *)((char *)font + 0x24), 0);
-    KanjiFont_SetVram(font, vramX, vramY, texWidth, texHeight);
+    KanjiFont_SetBuffers((KanjiFont *)font, (unsigned char *)font + 0x1824, (KanjiGlyph *)((char *)font + 0x24), 0);
+    KanjiFont_SetVram((KanjiFont *)font, vramX, vramY, texWidth, texHeight);
     *(short *)((char *)font + 0xe) = (clutX >> 4) + clutY * 64;
-    KanjiFont_Reset(font);
-    *(KanjiLoadFn *)((char *)font + 0x9824) = KanjiFont_RenderGlyph;
+    KanjiFont_Reset((KanjiFont *)font);
+    *(KanjiLoadFn *)((char *)font + 0x9824) = (KanjiLoadFn)KanjiFont_RenderGlyph;
 }
 
 void KanjiFont_Upload(void *font)
 {
-    KanjiFont_UploadClut(font);
-    KanjiFont_UploadTexture(font);
+    KanjiFont_UploadClut((KanjiFont *)font);
+    KanjiFont_UploadTexture((KanjiFont *)font);
 }
 
 // Finds (or adds) the glyph of each SJIS character and has the font's loader draw it.
@@ -175,7 +175,7 @@ void KanjiFont_CacheString(void *font, char *sjis)
     unsigned char *p = (unsigned char *)sjis;
 
     for (; *p != 0; p += 2) {
-        (*(KanjiLoadFn *)((char *)font + 0x9824))(font, KanjiFont_FindGlyph(font, p[0] << 8 | p[1]));
+        (*(KanjiLoadFn *)((char *)font + 0x9824))(font, KanjiFont_FindGlyph((KanjiFont *)font, p[0] << 8 | p[1]));
     }
 }
 
@@ -184,7 +184,7 @@ void CardMenu_CacheKanjiSlotNames(void)
     void *font = g_CardMenu->kanjiFont;
 
     if (g_GameState.language == 0) {
-        KanjiFont_Reset(font);
+        KanjiFont_Reset((KanjiFont *)font);
         KanjiFont_CacheString(font, TEXT(MemoryCard1));
         KanjiFont_CacheString(font, TEXT(MemoryCard2));
     }
@@ -222,10 +222,10 @@ void CardMenu_DrawKanji(uint *ot, char *sjis, int x, int y, int center, uint rgb
     p = (unsigned char *)sjis;
     semi = 0x2000000;
     while (*p != 0) {
-        void *glyph = KanjiFont_FindGlyph(font, p[0] << 8 | p[1]);
+        void *glyph = KanjiFont_FindGlyph((KanjiFont *)font, p[0] << 8 | p[1]);
 
         if (glyph != 0) {
-            PrimFT4 *q = (PrimFT4 *)KanjiFont_AddGlyphQuad(glyph, ot, rgb | semi);
+            PrimFT4 *q = (PrimFT4 *)KanjiFont_AddGlyphQuad((KanjiGlyph *)glyph, ot, rgb | semi);
 
             q->x0 = x;
             q->y0 = y;
@@ -757,7 +757,7 @@ int CardState_ReplayEntryList(int event, void *arg)
         Text_SetFont(p, &g_CardMenu_FontMedium);
         p->rgb = 0x20c3060;
         hint = TEXT(PressL1R1ForDeleteMode);
-        Text_DrawString(p, hint, 0x148 - Text_MeasureString(p, hint, 0), 0x7c, 0);
+        Text_DrawString(p, (signed char *)hint, 0x148 - Text_MeasureString(p, (signed char *)hint, 0), 0x7c, 0);
         switch ((short)m->mode) {
         case CARDMODE_SAVE_REPLAY: {
             MenuList *list = &g_CardMenu_EntryList;
@@ -776,13 +776,13 @@ int CardState_ReplayEntryList(int event, void *arg)
             p->rgb = 0x24a4136;
             d = &m->dir;
             sprintf(buf, TEXT(TotalNReplay), (signed char)d->count);
-            Text_DrawString(p, buf, 0x148 - Text_MeasureString(p, buf, 1), 0x1a4, 1);
+            Text_DrawString(p, (signed char *)buf, 0x148 - Text_MeasureString(p, (signed char *)buf, 1), 0x1a4, 1);
             sprintf(buf, TEXT(NNSectorFree), SectorMap_CountFree(&m->dir.sectorMap), d->totalSectors);
-            w = Text_MeasureString(p, buf, 1);
-            Text_DrawString(p, buf, 0x148 - w, 0x1b4, 1);
+            w = Text_MeasureString(p, (signed char *)buf, 1);
+            Text_DrawString(p, (signed char *)buf, 0x148 - w, 0x1b4, 1);
             sprintf(buf, TEXT(NeedNSector), (uint)(m->replaySize + 0x7f) >> 7);
-            x = 0x148 - Text_MeasureString(p, buf, 1);
-            Text_DrawString(p, buf, x - w - 8, 0x1b4, 1);
+            x = 0x148 - Text_MeasureString(p, (signed char *)buf, 1);
+            Text_DrawString(p, (signed char *)buf, x - w - 8, 0x1b4, 1);
             break;
         }
         case CARDMODE_EDIT_REPLAY: {
@@ -800,9 +800,9 @@ int CardState_ReplayEntryList(int event, void *arg)
             p->rgb = 0x24a4136;
             d = &m->dir;
             sprintf(buf, TEXT(TotalNReplay), (signed char)d->count);
-            Text_DrawString(p, buf, 0x148 - Text_MeasureString(p, buf, 1), 0x1a4, 1);
+            Text_DrawString(p, (signed char *)buf, 0x148 - Text_MeasureString(p, (signed char *)buf, 1), 0x1a4, 1);
             sprintf(buf, TEXT(NNSectorFree), SectorMap_CountFree(&m->dir.sectorMap), d->totalSectors);
-            Text_DrawString(p, buf, 0x148 - Text_MeasureString(p, buf, 1), 0x1b4, 1);
+            Text_DrawString(p, (signed char *)buf, 0x148 - Text_MeasureString(p, (signed char *)buf, 1), 0x1b4, 1);
             break;
         }
         }
@@ -903,7 +903,7 @@ int CardState_EditTitle(int event, void *arg)
         t->unk1c = 1;
         t->ot = (uint *)arg;
         t->rgb = 0x20c3060;
-        Text_DrawString(t, title, 0x148 - Text_MeasureString(t, title, 0), 0x7c, 0);
+        Text_DrawString(t, (signed char *)title, 0x148 - Text_MeasureString(t, (signed char *)title, 0), 0x7c, 0);
         break;
     }
     }
@@ -1281,7 +1281,7 @@ int CardState_LoadReplay(int event, void *arg)
             m->progress.visible = -1;
             bar->t = ~bar->duration;
             if (ReplayDir_CheckEntryCrc(&m->dir, sel, m->replayData) != 0) {
-                Replay_Unpack(m->replayData, 0);
+                Replay_Unpack((char *)m->replayData, 0);
                 next = CARD_REPLAY_LOADED;
             } else {
                 m->errorMsg = TEXT(LoadingFailed_2);
@@ -1429,7 +1429,7 @@ int CardState_LoadGhost(int event, void *arg)
             m->progress.visible = -1;
             bar->t = ~bar->duration;
             if (ReplayDir_CheckEntryCrc(&m->dir, sel, m->replayData) != 0) {
-                GhostReplay_Unpack(m->replayData);
+                GhostReplay_Unpack((char *)m->replayData);
                 g_CardMenu_GhostLoaded = 1;
                 next = 28;
             } else {
@@ -1754,7 +1754,7 @@ int CardState_ReadGameSave(int event, void *arg)
             m->progress.visible = -1;
             if (SaveFile_CheckCrc(m->saveFile, m->saveFile) != 0) {
                 next = 37;
-                GameState_ReadSave(m->saveFile, m->saveFile);
+                GameState_ReadSave((unsigned int)m->saveFile, (int)m->saveFile);
             } else {
                 m->errorMsg = TEXT(LoadingFailed);
                 CardMenu_CacheKanjiError();
@@ -1881,7 +1881,7 @@ int CardState_Error(int event, void *arg)
         if (g_GameState.language == 0) {
             CardMenu_DrawKanji(ot, m->errorMsg, 0xb0, 0xea, 1, 0x808080);
         } else {
-            Text_DrawCentered(&ctx, m->errorMsg, 0xb0, 0xfa, 1);
+            Text_DrawCentered(&ctx, (signed char *)m->errorMsg, 0xb0, 0xfa, 1);
         }
         break;
     }
@@ -2401,7 +2401,7 @@ void CardMenu_PrepareReplayEntry(void)
     RaceSetup *setup = (RaceSetup *)(base + offset);
     ReplayDirEntry *e;
 
-    m->replaySize = ReplayData_BuildRace(m->replayData);
+    m->replaySize = ReplayData_BuildRace((char *)m->replayData);
     e = &m->newEntry;
     ReplayEntry_SetTitle(e->title, (char *)D_8008FB14);
     e->unk40 = setup->game;
@@ -2421,7 +2421,7 @@ void CardMenu_PrepareGhostEntry(void)
     RaceSetup *setup = (RaceSetup *)(base + offset);
     ReplayDirEntry *e;
 
-    m->replaySize = ReplayData_BuildGhost(m->replayData);
+    m->replaySize = ReplayData_BuildGhost((char *)m->replayData);
     e = &m->newEntry;
     ReplayEntry_SetTitle(e->title, (char *)D_8008FB14);
     e->unk40 = setup->game;
@@ -2445,7 +2445,7 @@ void CardMenu_InitWidgets(void)
     CardDialog_Init(&m->dlgNoCard, &D_80091F64, 0);
     CardDialog_Init(&m->dlgFormat, &D_80091F94, 0);
     NumberPicker_Init(&g_CardMenu_BlockPicker);
-    MenuList_Init(&g_CardMenu_EntryList, (void *)CardMenu_EntryListCallback, 0);
+    MenuList_Init(&g_CardMenu_EntryList, (MenuListFn *)(void *)CardMenu_EntryListCallback, 0);
     CardDialog_Init(&m->dlgSaveFailed, &D_80092018, 0);
     CardDialog_Init(&m->dlgSaveError, &D_80092048, 0);
     CardDialog_Init(&m->dlgComplete, &D_80092078, 0);
@@ -2592,8 +2592,8 @@ void CardMenu_Draw(uint *ot)
             CardMenu_DrawKanji(ot, m->line1, 0xb0, 0xc6, center, 0x808080);
             CardMenu_DrawKanji(ot, m->line2, 0xb0, 0xea, center, 0x808080);
         } else {
-            Text_DrawCentered(t, m->line1, 0xb0, 0xd6, center);
-            Text_DrawCentered(t, m->line2, 0xb0, 0xfa, center);
+            Text_DrawCentered(t, (signed char *)m->line1, 0xb0, 0xd6, center);
+            Text_DrawCentered(t, (signed char *)m->line2, 0xb0, 0xfa, center);
         }
     }
     level = WipeBar_GetLevel(&m->slotBar);
@@ -2604,7 +2604,7 @@ void CardMenu_Draw(uint *ot)
             TextCtx *t = &ctx;
 
             t->rgb = Rgb_Lerp((uchar *)&from, (uchar *)&to, level, 0x80);
-            Text_DrawString(t, D_800921B4[m->slot], 0x1c, 0x7e, 1);
+            Text_DrawString(t, (signed char *)D_800921B4[m->slot], 0x1c, 0x7e, 1);
         }
         WipeBar_Draw(&m->slotBar, ot, 0x18, 0x6e);
         Prim_AddDrawMode(ot, 0x220);

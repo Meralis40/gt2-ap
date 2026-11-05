@@ -28,7 +28,7 @@ void MenuBgmBank_Load(MenuBgmBank *bank, int volId)
 void MenuBgmBank_LoadSeq(MenuBgmBank *bank, VolBootId id)
 {
     VolId_ReadFile(id, bank->seqData);
-    SeqFile_Relocate(bank->seqData);
+    SeqFile_Relocate((SeqFile *)bank->seqData);
 }
 
 // Starts song seq of the loaded sequence, at the music volume option.

@@ -4,6 +4,7 @@
 #include "common.h"
 
 extern "C" {
+void QuickMenu_PushPage(QuickMenu *menu, QuickMenuPage *page);
 extern QuickMenu *g_QuickMenu;
 extern CardMenuConfig g_QuickMenu_CardConfig;
 extern short g_OVL0_CardSlotStatus[];
