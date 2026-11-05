@@ -28,23 +28,7 @@ extern Font g_OVL0_FontA;
 extern Font g_OVL0_FontB;
 extern Font g_OVL0_FontC;
 extern Font g_OVL0_FontD;
-extern char QuickMenu__vtable[];
-extern char PreQuickMenuIO__vtable[];
-extern void *QuickMenu__typeinfo;
-extern void *PreQuickMenuIO__typeinfo;
-extern char psxViewLoopDoubleBuffer__typeinfo[];
-extern char D_8005A840[];
-extern char D_8005A854[];
-void psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer(void *self);
-void psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer_dtor(void *self, int flags);
-void psxViewLoopDoubleBuffer__SetVideoMode(void *self, unsigned int mode);
-void psxViewLoopDoubleBuffer__Leave(void *self);
-void *psxViewLoopDoubleBuffer____tf(void);
-void psxViewLoop__Enter(void *self);
 int psxViewLoop__Update(void *self);
-void psxViewLoop__Draw(void *self);
-void psxViewLoop__BeginFrame(void *self);
-void __rtti_si(void *info, char *name, void *base);
 void AsyncRead_Init(AsyncRead *r);
 int AsyncRead_Poll(AsyncRead *r);
 void Tim_UploadImageToSlot(void *tim, int slot);
@@ -141,19 +125,6 @@ void QuickMenu_DrawPage(QuickMenu *menu, QuickMenuPage *page, DrawLayer *layer, 
     }
 }
 
-void *QuickMenu__QuickMenu(void *self)
-{
-    psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer(self);
-    *(char **)self = QuickMenu__vtable;
-    return self;
-}
-
-void QuickMenu__QuickMenu_dtor(void *self, int flags)
-{
-    *(char **)self = QuickMenu__vtable;
-    psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer_dtor(self, flags);
-}
-
 void QuickMenu_SetRootPage(QuickMenu *menu, MenuPage *page)
 {
     menu->pageDepth = 0;
@@ -165,12 +136,12 @@ void QuickMenu__Enter(QuickMenu *menu)
     TextCtx *text;
     int two = 2;
 
-    psxViewLoop__Enter(menu);
+    menu->psxViewLoop::Enter();
     g_QuickMenu = menu;
     menu->unk7c = two;
-    psxViewLoopDoubleBuffer__SetVideoMode(menu, 100);
-    PacketBuffer_Init(&menu->base.packets, g_HudTexFile, 0x10000);
-    ViewDrawContext_Init(&menu->base.draw, g_QuickMenu_OtBuf, 0x13b0);
+    menu->psxViewLoopDoubleBuffer::SetVideoMode(100);
+    PacketBuffer_Init(&menu->packets, g_HudTexFile, 0x10000);
+    ViewDrawContext_Init(&menu->draw, g_QuickMenu_OtBuf, 0x13b0);
     menu->layers[0].priority = 0;
     menu->layers[0].otSize = two;
     menu->layers[1].priority = 1;
@@ -183,13 +154,13 @@ void QuickMenu__Enter(QuickMenu *menu)
     menu->layers[5].otSize = 0x118;
     menu->layers[3].priority = 5;
     menu->layers[3].otSize = 4;
-    ViewDrawContext_Reset(&menu->base.draw);
-    ViewDrawContext_AddLayer(&menu->base.draw, &menu->layers[0]);
-    ViewDrawContext_AddLayer(&menu->base.draw, &menu->layers[1]);
-    ViewDrawContext_AddLayer(&menu->base.draw, &menu->layers[2]);
-    ViewDrawContext_AddLayer(&menu->base.draw, &menu->layers[4]);
-    ViewDrawContext_AddLayer(&menu->base.draw, &menu->layers[5]);
-    ViewDrawContext_AddLayer(&menu->base.draw, &menu->layers[3]);
+    ViewDrawContext_Reset(&menu->draw);
+    ViewDrawContext_AddLayer(&menu->draw, &menu->layers[0]);
+    ViewDrawContext_AddLayer(&menu->draw, &menu->layers[1]);
+    ViewDrawContext_AddLayer(&menu->draw, &menu->layers[2]);
+    ViewDrawContext_AddLayer(&menu->draw, &menu->layers[4]);
+    ViewDrawContext_AddLayer(&menu->draw, &menu->layers[5]);
+    ViewDrawContext_AddLayer(&menu->draw, &menu->layers[3]);
     menu->hookActive = 0;
     PadDevice_Open(&menu->pads[0], 0, g_PadHandlers);
     PadDevice_Open(&menu->pads[1], 1, g_PadHandlers);
@@ -217,7 +188,7 @@ int QuickMenu__Update(QuickMenu *menu)
     int r;
     int (*update)(int);
 
-    psxViewLoop__Update(menu);
+    menu->psxViewLoop::Update();
     menu->frameCount += result;
     PadButtons_Read(&menu->pads[0].buttons, &menu->padState[0]);
     PadButtons_Read(&menu->pads[1].buttons, &menu->padState[1]);
@@ -319,7 +290,7 @@ void QuickMenu__Draw(QuickMenu *menu)
     int fade;
     int stamp;
 
-    psxViewLoop__Draw(menu);
+    menu->psxViewLoop::Draw();
     QuickMenu_GetTransitionRects(menu, &active, &leaving);
     fade = (menu->transitionTimer << 7) / 16;
     if (menu->transitionTimer > 0) {
@@ -339,39 +310,26 @@ void QuickMenu__Draw(QuickMenu *menu)
 
 void QuickMenu__Leave(QuickMenu *menu)
 {
-    psxViewLoopDoubleBuffer__Leave(menu);
+    menu->psxViewLoopDoubleBuffer::Leave();
     PadDevice_Close(&menu->pads[0]);
     PadDevice_Close(&menu->pads[1]);
-}
-
-void *PreQuickMenuIO__PreQuickMenuIO(void *self)
-{
-    psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer(self);
-    *(char **)self = PreQuickMenuIO__vtable;
-    return self;
-}
-
-void PreQuickMenuIO__PreQuickMenuIO_dtor(void *self, int flags)
-{
-    *(char **)self = PreQuickMenuIO__vtable;
-    psxViewLoopDoubleBuffer__psxViewLoopDoubleBuffer_dtor(self, flags);
 }
 
 void PreQuickMenuIO__Enter(PreQuickMenuIO *io)
 {
     unsigned char *tim;
 
-    psxViewLoop__Enter(io);
+    io->psxViewLoop::Enter();
     VolId_GetSize((VolBootId)0xd);
     tim = g_HudTexFile;
     VolId_GetSize((VolBootId)0x39);
-    psxViewLoopDoubleBuffer__SetVideoMode(io, 1);
-    PacketBuffer_Init(&io->base.packets, g_PreQuickMenu_PacketBuf, 0x1002);
-    ViewDrawContext_Init(&io->base.draw, g_QuickMenu_OtBuf, 0x13b0);
+    io->psxViewLoopDoubleBuffer::SetVideoMode(1);
+    PacketBuffer_Init(&io->packets, g_PreQuickMenu_PacketBuf, 0x1002);
+    ViewDrawContext_Init(&io->draw, g_QuickMenu_OtBuf, 0x13b0);
     io->layer.priority = 0;
     io->layer.otSize = 2;
-    ViewDrawContext_Reset(&io->base.draw);
-    ViewDrawContext_AddLayer(&io->base.draw, &io->layer);
+    ViewDrawContext_Reset(&io->draw);
+    ViewDrawContext_AddLayer(&io->draw, &io->layer);
     if (io->mode == 0) {
         AsyncRead *read = (AsyncRead *)&io->loader;
         int sector;
@@ -481,7 +439,7 @@ int PreQuickMenuIO__Update(PreQuickMenuIO *io)
     int result = 1;
     int *info = (int *)g_OVL0_FontInfo;
 
-    psxViewLoop__Update(io);
+    io->psxViewLoop::Update();
     io->frames += result;
     if (io->mode != 0) {
         if (io->mode == result) {
@@ -562,7 +520,7 @@ int PreQuickMenuIO__Update(PreQuickMenuIO *io)
 
 void PreQuickMenuIO__Draw(PreQuickMenuIO *io)
 {
-    psxViewLoop__Draw(io);
+    io->psxViewLoop::Draw();
     if (io->mode == 0) {
         RECT *r = Prim_AddTile(io->layer.ot, 0x2080810);
 
@@ -576,7 +534,7 @@ void PreQuickMenuIO__Draw(PreQuickMenuIO *io)
 
 void PreQuickMenuIO__Leave(PreQuickMenuIO *io)
 {
-    psxViewLoopDoubleBuffer__Leave(io);
+    io->psxViewLoopDoubleBuffer::Leave();
 }
 
 void QuickMenu_PlayMusic(int track)
@@ -590,27 +548,9 @@ void QuickMenu_StopMusic(void)
     Music_Stop();
 }
 
-void *PreQuickMenuIO____tf(void)
-{
-    if (PreQuickMenuIO__typeinfo == 0) {
-        psxViewLoopDoubleBuffer____tf();
-        __rtti_si(&PreQuickMenuIO__typeinfo, D_8005A840, psxViewLoopDoubleBuffer__typeinfo);
-    }
-    return &PreQuickMenuIO__typeinfo;
-}
-
-void *QuickMenu____tf(void)
-{
-    if (QuickMenu__typeinfo == 0) {
-        psxViewLoopDoubleBuffer____tf();
-        __rtti_si(&QuickMenu__typeinfo, D_8005A854, psxViewLoopDoubleBuffer__typeinfo);
-    }
-    return &QuickMenu__typeinfo;
-}
-
 void QuickMenu__BeginFrame(QuickMenu *menu)
 {
-    psxViewLoop__BeginFrame(menu);
+    menu->psxViewLoop::BeginFrame();
     if (menu->hookActive != 0) {
         menu->hookActive = menu->hook(menu->hookArg, 1, 0);
     }
@@ -657,4 +597,54 @@ int QuickMenu_PopPage(QuickMenu *menu)
     menu->leavingPage = menu->pageStack[menu->pageDepth];
     return --menu->pageDepth;
 }
+}
+
+void QuickMenu::Enter()
+{
+    QuickMenu__Enter(this);
+}
+
+void QuickMenu::Leave()
+{
+    QuickMenu__Leave(this);
+}
+
+void QuickMenu::BeginFrame()
+{
+    QuickMenu__BeginFrame(this);
+}
+
+int QuickMenu::Update()
+{
+    return QuickMenu__Update(this);
+}
+
+void QuickMenu::Draw()
+{
+    QuickMenu__Draw(this);
+}
+
+void PreQuickMenuIO::Enter()
+{
+    PreQuickMenuIO__Enter(this);
+}
+
+void PreQuickMenuIO::Leave()
+{
+    PreQuickMenuIO__Leave(this);
+}
+
+void PreQuickMenuIO::BeginFrame()
+{
+    PreQuickMenuIO__BeginFrame(this);
+}
+
+int PreQuickMenuIO::Update()
+{
+    return PreQuickMenuIO__Update(this);
+}
+
+void PreQuickMenuIO::Draw()
+{
+    PreQuickMenuIO__Draw(this);
 }

@@ -55,6 +55,7 @@ add_executable(gt2ap
     hw/card.cpp
     hw/cd.cpp
     hw/gpu.cpp
+    hw/gte.cpp
     hw/host.cpp
     hw/pad.cpp
     rt/irq.cpp

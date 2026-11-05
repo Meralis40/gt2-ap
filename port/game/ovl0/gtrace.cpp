@@ -92,10 +92,6 @@ extern signed char g_Flow_HomeOverlay;
 extern signed char g_Flow_GameMode;
 extern unsigned char g_Race_EndRequest;
 extern short D_8002F518[];
-extern char GranTurismoRaceLoop__vtable[];
-extern void *GranTurismoRaceLoop__typeinfo;
-extern char RaceMenuLoop__typeinfo[];
-extern char D_8002F150[];
 extern QuickMenuPage g_Page_GtRaceRoot;
 extern QuickMenuPage g_Page_ResultRoot;
 extern QuickMenuPage g_Page_LicenseRoot;
@@ -104,19 +100,6 @@ extern QuickMenuPage g_Page_EventPrizeRoot;
 extern QuickMenuPage g_Page_ChampRacePrizeRoot;
 extern QuickMenuPage g_Page_ChampWonPrizeRoot;
 extern QuickMenuPage g_Page_EndingRoot;
-void RaceMenuLoop__RaceMenuLoop(RaceLoop *loop, void *view, int arg);
-void RaceMenuLoop__RaceMenuLoop_dtor(RaceLoop *loop, int flags);
-void RaceMenuLoop__Execute(RaceLoop *loop);
-void RaceViewLoop__RaceViewLoop(void *view);
-void RaceViewLoop__RaceViewLoop_dtor(void *view, int flags);
-void PreQuickMenuIO__PreQuickMenuIO(void *io);
-void PreQuickMenuIO__PreQuickMenuIO_dtor(void *io, int flags);
-void QuickMenu__QuickMenu(void *menu);
-void QuickMenu__QuickMenu_dtor(void *menu, int flags);
-void *RaceMenuLoop____tf(void);
-void __rtti_si(void *info, char *name, void *base);
-RaceLoop *GranTurismoRaceLoop__GranTurismoRaceLoop(RaceLoop *loop, int arg);
-void GranTurismoRaceLoop__GranTurismoRaceLoop_dtor(RaceLoop *loop, int flags);
 void GTRace_BeginPractice(RaceLoop *loop);
 void GTRace_EndPractice(RaceLoop *loop, int raceType, int nextType);
 void GTRace_RunMenus(RaceLoop *loop, int fresh);
@@ -236,25 +219,6 @@ void GTRace_RunMenus(RaceLoop *loop, int fresh)
         RUN_LOOP(loop->menu);
         break;
     }
-}
-
-RaceLoop *GranTurismoRaceLoop__GranTurismoRaceLoop(RaceLoop *loop, int arg)
-{
-    RaceMenuLoop__RaceMenuLoop(loop, &loop->view, arg);
-    *(char **)((char *)loop + 0xc) = GranTurismoRaceLoop__vtable;
-    RaceViewLoop__RaceViewLoop(&loop->view);
-    PreQuickMenuIO__PreQuickMenuIO(&loop->menuIO);
-    QuickMenu__QuickMenu(&loop->menu);
-    return loop;
-}
-
-void GranTurismoRaceLoop__GranTurismoRaceLoop_dtor(RaceLoop *loop, int flags)
-{
-    *(char **)((char *)loop + 0xc) = GranTurismoRaceLoop__vtable;
-    QuickMenu__QuickMenu_dtor(&loop->menu, 2);
-    PreQuickMenuIO__PreQuickMenuIO_dtor(&loop->menuIO, 2);
-    RaceViewLoop__RaceViewLoop_dtor(&loop->view, 2);
-    RaceMenuLoop__RaceMenuLoop_dtor(loop, flags);
 }
 
 // Loading: what the race type keeps over the race.
@@ -531,11 +495,9 @@ int GTRace_Run(int arg)
     case 9:
     case 10:
     case 11: {
-        int loop[0x5e0 / 4];
+        RaceLoop loop(arg);
 
-        GranTurismoRaceLoop__GranTurismoRaceLoop((RaceLoop *)loop, arg);
-        RaceMenuLoop__Execute((RaceLoop *)loop);
-        GranTurismoRaceLoop__GranTurismoRaceLoop_dtor((RaceLoop *)loop, 2);
+        loop.Execute();
         break;
     }
     }
@@ -554,13 +516,33 @@ int GTRace_Run(int arg)
     return ret;
 }
 
-// The class's type info, set up on first use (the compiler writes this function).
-void *GranTurismoRaceLoop____tf(void)
-{
-    if (GranTurismoRaceLoop__typeinfo == 0) {
-        RaceMenuLoop____tf();
-        __rtti_si(&GranTurismoRaceLoop__typeinfo, D_8002F150, RaceMenuLoop__typeinfo);
-    }
-    return &GranTurismoRaceLoop__typeinfo;
 }
+
+RaceLoop::RaceLoop(int arg) : RaceMenuLoop(&view, arg)
+{
+}
+
+int RaceLoop::State4()
+{
+    return GranTurismoRaceLoop__State4(this);
+}
+
+int RaceLoop::State6()
+{
+    return GranTurismoRaceLoop__State6(this);
+}
+
+int RaceLoop::State8()
+{
+    return GranTurismoRaceLoop__State8(this);
+}
+
+int RaceLoop::State10()
+{
+    return GranTurismoRaceLoop__State10(this);
+}
+
+int RaceLoop::State13()
+{
+    return GranTurismoRaceLoop__State13(this);
 }

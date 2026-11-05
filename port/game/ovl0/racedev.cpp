@@ -18,35 +18,11 @@ void Race_LoadSfxBank(void *mem, int bank);
 int ArcadeRace_Run(int arg);
 int GTRace_Run(int arg);
 void RaceDevelopment_Run(int arg);
-extern void *RaceDevelopment__vtable[];
-extern int RaceDevelopment__typeinfo[];
-extern int RaceViewLoop__typeinfo[];
-extern char D_8002EF08[];
-void *RaceViewLoop__RaceViewLoop(void *self);
-void RaceViewLoop__RaceViewLoop_dtor(void *self, int inCharge);
-void RaceViewLoop__Start(void *self, int arg);
-void *RaceViewLoop____tf(void);
-void __rtti_si(void *ti, char *name, void *base);
-void *RaceDevelopment__RaceDevelopment(void *self)
-{
-    RaceViewLoop__RaceViewLoop(self);
-    *(void **)self = RaceDevelopment__vtable;
-    return self;
-}
-
-void RaceDevelopment__RaceDevelopment_dtor(void *self, int inCharge)
-{
-    *(void **)self = RaceDevelopment__vtable;
-    RaceViewLoop__RaceViewLoop_dtor(self, inCharge);
-}
-
 void RaceDevelopment_Run(int arg)
 {
-    char view[0x2f4];
+    RaceViewLoop view;
 
-    RaceDevelopment__RaceDevelopment(view);
-    RaceViewLoop__Start(view, arg);
-    RaceDevelopment__RaceDevelopment_dtor(view, 2);
+    view.Start(arg);
 }
 
 // Entry of the race overlay: sets up the race's memory and runs the mode's race.
@@ -113,12 +89,4 @@ void Race_DefaultEntry(void)
     Overlay_Start(1);
 }
 
-void *RaceDevelopment____tf(void)
-{
-    if (RaceDevelopment__typeinfo[0] == 0) {
-        RaceViewLoop____tf();
-        __rtti_si(RaceDevelopment__typeinfo, D_8002EF08, RaceViewLoop__typeinfo);
-    }
-    return RaceDevelopment__typeinfo;
-}
 }
