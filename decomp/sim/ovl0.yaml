@@ -68,6 +68,9 @@ segments:
       - [0x1f054, textbin, text_data_8002f054] # the padding after arcaderace.cpp's .rodata
       - {start: 0x1f058, type: .rodata, name: gtrace, linker_section_order: .text}
       - [0x1f110, textbin, text_data_8002f110] # tables inside .text
+      # 0x8002f320: Hud_DrawMessage's jump table
+      - {start: 0x1f320, type: .rodata, name: hud, linker_section_order: .text}
+      - [0x1f350, textbin, text_data_8002f350] # tables inside .text
       - [0x1f92c, cpp, carphys] # 0x8002f92c
       - [0x25714, cpp, ai] # 0x80035714
       - [0x292d8, cpp, drivetrain] # 0x800392d8
