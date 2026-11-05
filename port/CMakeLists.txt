@@ -23,7 +23,7 @@ target_include_directories(game PRIVATE game/include rt)
 target_compile_definitions(game PRIVATE GTE_C)
 target_compile_options(game PRIVATE
     -w -fwrapv -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-exceptions -fno-rtti -fno-builtin
-    -fno-stack-protector -fno-vectorize -fno-slp-vectorize
+    -fno-stack-protector -fno-vectorize -fno-slp-vectorize -fno-omit-frame-pointer -fno-strict-return
     $<$<COMPILE_LANGUAGE:CXX>:-funsigned-char -std=gnu++20>
     $<$<COMPILE_LANGUAGE:C>:-fsigned-char -std=gnu89>
     -nostdlibinc)
@@ -46,7 +46,11 @@ add_executable(gt2ap
     gen/fixups_ovl4.cpp
     gen/fixups_ovl5.cpp)
 target_include_directories(gt2ap PRIVATE . hw rt)
+target_compile_options(gt2ap PRIVATE -fno-omit-frame-pointer)
 target_link_libraries(gt2ap PRIVATE gt2ap::discio)
+if(WIN32)
+    target_link_libraries(gt2ap PRIVATE user32)
+endif()
 if(WIN32)
     target_link_options(gt2ap PRIVATE
         -Wl,/BASE:0x400000,/FIXED,/LARGEADDRESSAWARE,/DYNAMICBASE:NO,/NXCOMPAT,/SAFESEH:NO)

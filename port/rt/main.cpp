@@ -182,6 +182,7 @@ int main(int argc, char **argv)
             return 2;
         }
         Rt_SetRunLimits(maxVblanks, dumpEvery, dumpDir);
+        Rt_StartWatchdog();
         loadExecutable(loadFromDisc(cue));
         Hw_CdOpen(cue);
     } catch (const std::exception &e) {

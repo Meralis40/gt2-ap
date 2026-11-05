@@ -266,6 +266,7 @@ unsigned char *CdStream_WaitSector(void)
             CdAudio_RunScript_8007C4F8((CdAudio *)cd, 8);
         }
         Sys_CriticalSection(leave);
+        Rt_Pump();
     } while (fill == 0);
     return CdStream_GetReadPtr((CdAudio *)cd);
 }
