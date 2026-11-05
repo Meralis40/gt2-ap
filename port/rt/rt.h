@@ -21,6 +21,7 @@ void Rt_LoadOverlay(int index);
 
 // Test runs: stops after maxVblanks without waiting for real time, writing a frame to
 // dumpDir every dumpEvery vblanks. 0 for no limit, no frames.
+void Rt_StartWatchdog();
 void Rt_SetRunLimits(unsigned int maxVblanks, unsigned int dumpEvery, const char *dumpDir);
 #endif
 

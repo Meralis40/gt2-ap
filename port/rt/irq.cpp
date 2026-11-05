@@ -16,6 +16,10 @@
 #include <thread>
 #include <vector>
 
+#if defined(_WIN32)
+#include <windows.h>
+#endif
+
 namespace {
 
 using Clock = std::chrono::steady_clock;
@@ -81,7 +85,52 @@ void vblank()
     }
 }
 
+#if defined(_WIN32)
+// A wait with no Rt_Pump in it hangs the game silently: this reports where.
+volatile LONG g_PumpCount;
+
+void watchdog(HANDLE game)
+{
+    LONG seen = -1;
+
+    for (;;) {
+        Sleep(2000);
+        if (g_PumpCount != seen) {
+            seen = g_PumpCount;
+            continue;
+        }
+        SuspendThread(game);
+        CONTEXT context{};
+        context.ContextFlags = CONTEXT_CONTROL;
+        GetThreadContext(game, &context);
+        std::fprintf(stderr, "stuck: no pump for 2 s, at %08lx\n", context.Eip);
+        auto frame = static_cast<std::uintptr_t>(context.Ebp);
+        for (int i = 0; i < 16 && frame > 0x10000; i++) {
+            auto *words = reinterpret_cast<std::uintptr_t *>(frame);
+            std::fprintf(stderr, "  %08lx\n", static_cast<unsigned long>(words[1]));
+            if (words[0] <= frame) {
+                break;
+            }
+            frame = words[0];
+        }
+        std::fflush(stderr);
+        TerminateProcess(GetCurrentProcess(), 5);
+    }
+}
+#endif
+
 }  // namespace
+
+void Rt_StartWatchdog()
+{
+#if defined(_WIN32)
+    HANDLE game;
+
+    DuplicateHandle(GetCurrentProcess(), GetCurrentThread(), GetCurrentProcess(), &game, 0, FALSE,
+                    DUPLICATE_SAME_ACCESS);
+    std::thread(watchdog, game).detach();
+#endif
+}
 
 void Rt_SetRunLimits(unsigned int maxVblanks, unsigned int dumpEvery, const char *dumpDir)
 {
@@ -127,6 +176,9 @@ unsigned int Hw_GpuStat(void)
 
 void Rt_Pump(void)
 {
+#if defined(_WIN32)
+    g_PumpCount = g_PumpCount + 1;
+#endif
     if (g_InCallback != 0) {
         return;
     }
