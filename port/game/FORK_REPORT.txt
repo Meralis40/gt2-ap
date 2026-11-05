@@ -1,0 +1,103 @@
+include/common.h:826: void *Psyq_VSyncCallback(void (*func)(void)) __asm__("VSyncCallback");  // named after libetc's: a struct has that name here
+include/gte.h:47: __asm__ volatile("mtc2 %0, $%1" : : "r"(value), "i"(reg))
+include/gte.h:49: ({ int _gte_v; __asm__ volatile("mfc2 %0, $%1" : "=r"(_gte_v) : "i"(reg)); _gte_v; })
+include/gte.h:51: __asm__ volatile("ctc2 %0, $%1" : : "r"(value), "i"(reg))
+include/gte.h:53: ({ int _gte_v; __asm__ volatile("cfc2 %0, $%1" : "=r"(_gte_v) : "i"(reg)); _gte_v; })
+include/gte.h:56: __asm__ volatile("lwc2 $%1, 0(%0)" : : "r"(ptr), "i"(reg))
+include/gte.h:58: __asm__ volatile("lwc2 $%1, %2(%0)" : : "r"(ptr), "i"(reg), "i"(offset))
+include/gte.h:60: __asm__ volatile("swc2 $%1, 0(%0)" : : "r"(ptr), "i"(reg) : "memory")
+include/gte.h:63: ({ int _gte_v; __asm__ volatile("mtc2 %1, $30\n\tnop\n\tnop\n\tmfc2 %0, $31" : "=r"(_gte_v) : "r"(value)); _gte_v; })
+include/gte.h:70: __asm__ volatile("lwl %0, 2(%1)\n\tswl %2, 2(%1)\n\tswl %0, 2(%3)" \
+include/gte.h:75: #define GTE_COMMAND(text) __asm__ volatile("nop\n\tnop\n\t" text)
+exe/boot_iso.cpp:272: register int value asm("a1") = 0;
+exe/card.cpp:157: register CardDriver *card __asm__("a0") = (CardDriver *)&g_Card;
+exe/cdaudio.cpp:111: register CdAudio *cd asm("a0") = &g_CdAudio;
+exe/cdstream.cpp:62: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+exe/cdstream.cpp:65: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+exe/cdstream.cpp:66: __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+exe/font.cpp:26: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+exe/font.cpp:29: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+exe/font.cpp:30: __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+exe/font.cpp:150: __asm__("lwr\t%0,0(%1)" : "=r"(w) : "r"(q));
+exe/font.cpp:151: __asm__("lwl\t%0,3(%1)" : "+r"(w) : "r"(q));
+exe/font.cpp:195: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+exe/font.cpp:196: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+exe/font.cpp:198: __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+exe/font.cpp:211: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+exe/font.cpp:213: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+exe/font.cpp:214: __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+exe/gpu.cpp:22: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+exe/gpu.cpp:25: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+exe/gpu.cpp:26: __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+exe/gpu.cpp:38: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+exe/gpu.cpp:41: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+exe/gpu.cpp:42: __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+exe/gpu.cpp:112: int Gpu_WaitField_(void) __asm__("Gpu_WaitField");
+exe/gpu2.cpp:210: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(p));
+exe/gpu2.cpp:213: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(pkt) : "memory");
+exe/gpu2.cpp:214: __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)pkt << 8), "r"(p) : "memory");
+exe/inflate.cpp:80: __asm__ volatile(".set\tnoreorder\n\tmove\t$3,$sp\n\tjal\tGzipStream_Main\n\tmove\t$sp,%0\n\t.set\treorder"
+exe/inflate.cpp:128: __asm__("lwr\t%0,0(%1)" : "=r"(v) : "r"(src));
+exe/inflate.cpp:134: __asm__("lwl\t%0,2(%1)" : "+r"(v) : "r"(src));
+exe/inflate.cpp:157: __asm__("lwr\t%0,0(%1)" : "=r"(v) : "r"(p));
+exe/inflate.cpp:158: __asm__("lwl\t%0,3(%1)" : "+r"(v) : "r"(p));
+exe/inflate.cpp:160: __asm__("swr\t%0,0(%1)" : : "r"(v), "r"(out) : "memory");
+exe/inflate.cpp:161: __asm__("swl\t%0,3(%1)" : : "r"(v), "r"(out) : "memory");
+exe/kanjifont.cpp:19: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+exe/kanjifont.cpp:22: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+exe/kanjifont.cpp:23: __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+exe/math.cpp:185: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+exe/math.cpp:188: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+exe/math.cpp:189: __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+exe/misc.cpp:19: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+exe/misc.cpp:22: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+exe/misc.cpp:23: __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+exe/prim.cpp:15: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+exe/prim.cpp:18: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+exe/prim.cpp:19: __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+exe/prim.cpp:30: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+exe/prim.cpp:33: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+exe/prim.cpp:34: __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+exe/prim.cpp:239: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+exe/prim.cpp:242: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+exe/prim.cpp:243: __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+exe/prim.cpp:254: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+exe/prim.cpp:257: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+exe/prim.cpp:258: __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+exe/prim.cpp:313: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+exe/prim.cpp:316: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+exe/prim.cpp:317: __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)p << 8), "r"(ot) : "memory");
+exe/syslib.c:36: __asm__ volatile("swr %0, 0(%1)" : : "r"(c), "r"(dst));
+exe/syslib.c:51: __asm__ volatile("swl %0, -1(%1)" : : "r"(c), "r"(p));
+exe/viewdraw.cpp:86: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+exe/viewdraw.cpp:87: __asm__ volatile("swl\t%0,2(%1)" : : "r"(tag), "r"(ot) : "memory");
+exe/viewdraw.cpp:88: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+exe/viewdraw.cpp:126: __asm__ volatile("lwl\t%0,%1" : "=r"(link) : "m"(((char *)last)[2]));
+exe/viewdraw.cpp:128: __asm__ volatile("swl\t%1,%0" : "=m"(((char *)header)[2]) : "r"(link));
+exe/viewdraw.cpp:129: __asm__ volatile("swl\t%1,%0" : "=m"(((char *)last)[2]) : "r"((uint)header << 8));
+exe/viewdraw.cpp:135: __asm__ volatile("lwl\t%0,%1" : "=r"(link) : "m"(((char *)ot)[2]));
+exe/viewdraw.cpp:137: __asm__ volatile("swl\t%1,%0" : "=m"(((char *)p)[2]) : "r"(link));
+exe/viewdraw.cpp:138: __asm__ volatile("swl\t%1,%0" : "=m"(((char *)ot)[2]) : "r"((uint)p << 8));
+exe/viewdraw.cpp:140: __asm__ volatile("lwl\t%0,%1" : "=r"(link) : "m"(((char *)ot)[2]));
+exe/viewdraw.cpp:142: __asm__ volatile("swl\t%1,%0" : "=m"(((char *)(p + 2))[2]) : "r"(link));
+exe/viewdraw.cpp:143: __asm__ volatile("swl\t%1,%0" : "=m"(((char *)ot)[2]) : "r"((uint)(p + 2) << 8));
+exe/viewdraw.cpp:238: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+exe/viewdraw.cpp:241: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(p) : "memory");
+exe/viewdraw.cpp:242: __asm__ volatile("swl\t%0,2(%1)" : : "r"((uint)p << 8), "r"(ot) : "memory");
+ovl0/coursedraw.cpp:2686: register int zero asm("$0");
+ovl0/courseload.cpp:68: extern void *Tim_LoadNext(void *tim, RECT *clutRect, RECT *imageRect) __asm__("Tim_LoadClutAndImage");
+ovl0/raceload.cpp:133: register int zero asm("$0");
+ovl0/raceresults.cpp:105: extern FadedBar g_TotalBarFade asm("D_8005B6C0");
+ovl0/raceresults.cpp:107: extern FadedBar g_BestBarFade asm("D_8005B700");
+ovl0/raceresults.cpp:109: extern FadedBar g_LapBarFade asm("D_8005B740");
+ovl4/background.cpp:51: register unsigned int link asm("a0");
+ovl4/background.cpp:52: register unsigned int *temp asm("v0");
+ovl4/background.cpp:59: __asm__("swl\t%0,2(%1)" : : "r"(link), "r"(temp) : "memory");
+ovl4/background.cpp:89: __asm__ volatile("swl\t%0,2(%1)" : : "r"(0xffffff00), "r"(chunk) : "memory");
+ovl4/gtmenu.cpp:301: INCLUDE_ASM("asm/sim/ovl4/nonmatchings/gtmenu", SimMap_Update);
+ovl4/menudata.cpp:327: __asm__ volatile("lwl\t%0,2(%1)" : "=r"(link) : "r"(ot));
+ovl4/menudata.cpp:328: __asm__ volatile("swl\t%0,2(%1)" : : "r"(link), "r"(tail) : "memory");
+ovl4/menudata.cpp:329: __asm__ volatile("swl\t%0,2(%1)" : : "r"((unsigned int)head << 8), "r"(ot) : "memory");
+ovl4/txn.cpp:24: // known to CSE; an empty asm("" : "=r"(gs) : "0"(&g_GameState)) gives the
+ovl5/decodevlc.cpp:6: #define gte_lzcs(v) __asm__ volatile("mtc2 %0, $30" : : "r"(v))
+ovl5/decodevlc.cpp:7: #define gte_lzcr(r) __asm__ volatile("mfc2 %0, $31" : "=r"(r))
