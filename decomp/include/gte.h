@@ -54,11 +54,21 @@ enum {
 // A data register from or to memory (a 32-bit word).
 #define gte_LoadDataReg(reg, ptr) \
     __asm__ volatile("lwc2 $%1, 0(%0)" : : "r"(ptr), "i"(reg))
+#define gte_LoadDataRegAt(reg, ptr, offset) \
+    __asm__ volatile("lwc2 $%1, %2(%0)" : : "r"(ptr), "i"(reg), "i"(offset))
 #define gte_StoreDataReg(reg, ptr) \
     __asm__ volatile("swc2 $%1, 0(%0)" : : "r"(ptr), "i"(reg) : "memory")
 // Writes LZCS and reads LZCR, the count of leading zeros (or ones), when it's ready.
 #define gte_Lzc(value) \
     ({ int _gte_v; __asm__ volatile("mtc2 %1, $30\n\tnop\n\tnop\n\tmfc2 %0, $31" : "=r"(_gte_v) : "r"(value)); _gte_v; })
+
+// Links a primitive into an OT entry: the two tags' addresses swap, their top bytes stay.
+#define ot_AddPrim(ot, prim) \
+    do { \
+        int _ot_next; \
+        __asm__ volatile("lwl %0, 2(%1)\n\tswl %2, 2(%1)\n\tswl %0, 2(%3)" \
+                         : "=&r"(_ot_next) : "r"(ot), "r"((unsigned int)(prim) << 8), "r"(prim)); \
+    } while (0)
 
 #define GTE_COMMAND(text) __asm__ volatile("nop\n\tnop\n\t" text)
 #define gte_rtps() GTE_COMMAND("rtps")
@@ -82,8 +92,10 @@ int gte_GetDataReg(int reg);
 void gte_SetCtrlReg(int reg, int value);
 int gte_GetCtrlReg(int reg);
 void gte_LoadDataReg(int reg, const void *ptr);
+void gte_LoadDataRegAt(int reg, const void *ptr, int offset);
 void gte_StoreDataReg(int reg, void *ptr);
 int gte_Lzc(int value);
+void ot_AddPrim(unsigned int *ot, void *prim);
 void gte_rtps(void);
 void gte_rtpt(void);
 void gte_nclip(void);
