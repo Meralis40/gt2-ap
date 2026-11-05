@@ -515,6 +515,7 @@ struct MeshBatch {
     unsigned int tpage;
     unsigned int limit;         // pieces of a larger screen area split again
     int gouraud;
+    int obj;                    // an object's mesh: the vertices keep outcodes
     char *first;
     char *last;
 };
@@ -561,6 +562,8 @@ struct PrimGT4Words {
 };
 
 #define MESH_MAX_DEPTH 6
+#define OBJ_LIMIT_TRI 0x480
+#define OBJ_LIMIT_QUAD 0x800
 #define MESH_ABS(x) ((x) < 0 ? -(x) : (x))
 
 static inline MeshModelVert *Mesh_Vert(char *verts, unsigned int offset)
@@ -724,12 +727,50 @@ static inline void Vert_Mid(MeshVert *m, MeshVert *a, MeshVert *b, int gouraud)
     }
 }
 
-static inline void Vert_Project(MeshVert *v)
+// A vertex's outcode shares the top byte of its colour: bit 0 in front of the near
+// plane, bits 1-4 off the left, right, top and bottom of the screen, bit 5 out of the
+// GTE's range.
+static inline unsigned char *Vert_Out(MeshVert *v)
+{
+    return (unsigned char *)&v->rgb + 3;
+}
+
+static inline void Vert_ProjectOnly(MeshVert *v)
 {
     gte_LoadDataRegAt(GTE_VXY0, v, 0);
     gte_LoadDataRegAt(GTE_VZ0, v, 4);
     gte_rtps();
     v->sxy = gte_GetDataReg(GTE_SXY2);
+}
+
+static inline void Vert_Project(MeshScratch *scr, MeshBatch *batch, MeshVert *v)
+{
+    Vert_ProjectOnly(v);
+    if (batch->obj) {
+        int flag = gte_GetCtrlReg(GTE_FLAG);
+        int x = (short)v->sxy;
+        int y = v->sxy >> 16;
+        int out = gte_GetDataReg(GTE_IR3) < (unsigned short)scr->view.nearZ;
+
+        if (x < 0) {
+            out |= 2;
+        }
+        out |= (x > (unsigned short)scr->view.screenW - 1) << 2;
+        if (y < 0) {
+            out |= 8;
+        }
+        out |= (y > (unsigned short)scr->view.screenH - 1) << 4;
+        if (flag < 0) {
+            out |= 0x20;
+        }
+        *Vert_Out(v) = out;
+    }
+}
+
+// Whether a filling triangle or a part has a vertex out of the GTE's range.
+static inline int Verts_Bad(MeshVert *a, MeshVert *b, MeshVert *c)
+{
+    return (*Vert_Out(a) | *Vert_Out(b) | *Vert_Out(c)) & 0x20;
 }
 
 // Adds a piece to the batch's chain, which keeps the packets in order for the GPU.
@@ -773,8 +814,8 @@ static inline void Mesh_PutTri(MeshScratch *scr, MeshBatch *batch, MeshVert *a, 
     }
 }
 
-// A textured quad piece, around the centre. The game gives the centre's colour to the
-// third corner and the third corner's to the centre.
+// A textured quad piece, around the centre. In a section's mesh the game gives the
+// centre's colour to the third corner and the third corner's to the centre.
 static inline void Mesh_PutQuad(MeshScratch *scr, MeshBatch *batch, MeshVert *a, MeshVert *b, MeshVert *c,
                                 MeshVert *centre)
 {
@@ -783,8 +824,8 @@ static inline void Mesh_PutQuad(MeshScratch *scr, MeshBatch *batch, MeshVert *a,
 
         prim->c0 = (a->rgb & 0xffffff) | (batch->rgb & 0xff000000);
         prim->c1 = b->rgb;
-        prim->c2 = centre->rgb;
-        prim->c3 = c->rgb;
+        prim->c2 = batch->obj ? c->rgb : centre->rgb;
+        prim->c3 = batch->obj ? centre->rgb : c->rgb;
         prim->xy0 = a->sxy;
         prim->xy1 = b->sxy;
         prim->xy2 = c->sxy;
@@ -823,12 +864,15 @@ static int Mesh_SplitTri(MeshScratch *scr, MeshBatch *batch, MeshVert **p, int d
     Vert_Mid(&m[0], p[0], p[1], gouraud);
     Vert_Mid(&m[1], p[1], p[2], gouraud);
     Vert_Mid(&m[2], p[2], p[0], gouraud);
-    Vert_Project(&m[0]);
-    Vert_Project(&m[1]);
-    Vert_Project(&m[2]);
+    Vert_Project(scr, batch, &m[0]);
+    Vert_Project(scr, batch, &m[1]);
+    Vert_Project(scr, batch, &m[2]);
     for (i = 2; i >= 0; i--) {
         int j = i != 0 ? i - 1 : 2;
 
+        if (batch->obj && Verts_Bad(p[i], &m[j], p[j])) {
+            continue;
+        }
         if (Mesh_NClip(p[i]->sxy, m[j].sxy, p[j]->sxy) != 0) {
             Mesh_PutTri(scr, batch, p[i], &m[j], p[j], batch->rgb);
         }
@@ -839,6 +883,7 @@ static int Mesh_SplitTri(MeshScratch *scr, MeshBatch *batch, MeshVert **p, int d
     for (i = 3; i >= 0; i--) {
         MeshVert *v[3];
         int area;
+        int bad;
 
         if (i == 3) {
             v[0] = &m[0];
@@ -849,8 +894,15 @@ static int Mesh_SplitTri(MeshScratch *scr, MeshBatch *batch, MeshVert **p, int d
             v[1] = &m[i];
             v[2] = i != 0 ? &m[i - 1] : &m[2];
         }
+        bad = 0;
+        if (batch->obj) {
+            if (*Vert_Out(v[0]) & *Vert_Out(v[1]) & *Vert_Out(v[2]) & 0x1f) {
+                continue;
+            }
+            bad = Verts_Bad(v[0], v[1], v[2]);
+        }
         area = Mesh_NClip(v[0]->sxy, v[1]->sxy, v[2]->sxy);
-        if ((unsigned int)MESH_ABS(area) <= batch->limit) {
+        if (!bad && (unsigned int)MESH_ABS(area) <= batch->limit) {
             Mesh_PutTri(scr, batch, v[0], v[1], v[2], batch->rgb);
         } else if (depth < MESH_MAX_DEPTH && !Mesh_SplitTri(scr, batch, v, depth + 1)) {
             return 0;
@@ -860,7 +912,8 @@ static int Mesh_SplitTri(MeshScratch *scr, MeshBatch *batch, MeshVert **p, int d
 }
 
 // The same with a quad: four filling triangles, then four quads around the centre.
-// Gouraud quads pick the order of a part's corners differently.
+// Gouraud quads pick the order of a part's corners differently, and in a section's mesh
+// wait for the GPU between projections.
 static int Mesh_SplitQuad(MeshScratch *scr, MeshBatch *batch, MeshVert **p, int depth)
 {
     MeshVert centre;
@@ -879,19 +932,22 @@ static int Mesh_SplitQuad(MeshScratch *scr, MeshBatch *batch, MeshVert **p, int 
     centre.z = (p[0]->z + p[1]->z + p[2]->z + p[3]->z) >> 2;
     centre.u = (p[0]->u + p[1]->u + p[2]->u + p[3]->u) >> 2;
     centre.v = (p[0]->v + p[1]->v + p[2]->v + p[3]->v) >> 2;
-    Vert_Project(&centre);
-    if (gouraud) {
+    Vert_Project(scr, batch, &centre);
+    if (gouraud && !batch->obj) {
         Gpu_DrawSync();
     }
     for (i = 0; i < 4; i++) {
-        Vert_Project(&m[i]);
-        if (gouraud) {
+        Vert_Project(scr, batch, &m[i]);
+        if (gouraud && !batch->obj) {
             Gpu_DrawSync();
         }
     }
     for (i = 3; i >= 0; i--) {
         int j = (i - 1) & 3;
 
+        if (batch->obj && Verts_Bad(p[i], &m[j], p[j])) {
+            continue;
+        }
         if (Mesh_NClip(p[i]->sxy, m[j].sxy, p[j]->sxy) != 0) {
             Mesh_PutTri(scr, batch, p[i], &m[j], p[j], batch->rgb + 0xf8000000);
         }
@@ -903,14 +959,23 @@ static int Mesh_SplitQuad(MeshScratch *scr, MeshBatch *batch, MeshVert **p, int 
         MeshVert *a = p[i];
         MeshVert *b = &m[i];
         MeshVert *c = &m[(i - 1) & 3];
-        int area = Mesh_NClip(b->sxy, a->sxy, centre.sxy) - Mesh_NClip(c->sxy, a->sxy, centre.sxy);
+        int bad = 0;
+        int area;
 
-        if ((unsigned int)MESH_ABS(area) <= batch->limit) {
+        if (batch->obj) {
+            if (*Vert_Out(a) & *Vert_Out(b) & *Vert_Out(c) & *Vert_Out(&centre) & 0x1f) {
+                continue;
+            }
+            bad = Verts_Bad(a, b, c) | (*Vert_Out(&centre) & 0x20);
+        }
+        area = Mesh_NClip(b->sxy, a->sxy, centre.sxy) - Mesh_NClip(c->sxy, a->sxy, centre.sxy);
+        if (!bad && (unsigned int)MESH_ABS(area) <= batch->limit) {
             Mesh_PutQuad(scr, batch, a, b, c, &centre);
         } else if (depth < MESH_MAX_DEPTH) {
             MeshVert *v[4];
 
-            if (gouraud ? i == 0 : (i & 1) == 0) {
+            // The game tests the parent's centre byte, in which the outcode counts.
+            if (gouraud ? ((*Vert_Out(&centre) & 0x3f) | i << 6) == 0 : (i & 1) == 0) {
                 v[0] = a;
                 v[1] = b;
                 v[2] = &centre;
@@ -938,6 +1003,7 @@ static inline void Mesh_BatchBegin(MeshScratch *scr, MeshBatch *batch, unsigned 
     batch->tpage = tex->uv1 >> 16;
     batch->limit = limit & 0xffff;
     batch->gouraud = gouraud;
+    batch->obj = 0;
     batch->first = scr->view.packetPtr;
     batch->last = scr->view.packetPtr;
 }
@@ -952,6 +1018,117 @@ static inline int Mesh_BatchEnd(MeshScratch *scr, MeshBatch *batch, int ok)
         ot_AddPrims(batch->slot, batch->first, batch->last);
     }
     return scr->view.packetPtr < scr->view.packetLimit;
+}
+
+// An object mesh's polygons index the vertices in 10 bits. Bit 30 sorts them by their
+// deepest vertex, 0x60 entries further back, instead of their nearest.
+static inline MeshModelVert *ObjMesh_Vert(char *verts, unsigned int offset)
+{
+    return (MeshModelVert *)(verts + (offset & 0x1ff8));
+}
+
+static inline int ObjMesh_Pick(int a, int b, int far)
+{
+    return (a < b) == far ? b : a;
+}
+
+static inline unsigned int *ObjMesh_Slot(MeshScratch *scr, int z, int far)
+{
+    unsigned int index = ((unsigned int)(z << scr->view.otShift) >> 13) + (-far & 0x60);
+
+    if ((int)index >= 0x1000) {
+        index = 0xfff;
+    }
+    return scr->view.ot + index;
+}
+
+static inline int ObjTri_Project(MeshScratch *scr, int word0, MeshModelVert **v, unsigned int **slot, int *area)
+{
+    char *verts = scr->view.verts;
+    int far = ((unsigned int)word0 >> 30) & 1;
+    int flag;
+    int z;
+
+    v[0] = ObjMesh_Vert(verts, word0 << 3);
+    v[1] = ObjMesh_Vert(verts, word0 >> 7);
+    v[2] = ObjMesh_Vert(verts, word0 >> 17);
+    gte_LoadDataRegAt(GTE_VXY0, v[0], 0);
+    gte_LoadDataRegAt(GTE_VZ0, v[0], 4);
+    gte_LoadDataRegAt(GTE_VXY2, v[1], 0);
+    gte_LoadDataRegAt(GTE_VZ2, v[1], 4);
+    gte_LoadDataRegAt(GTE_VXY1, v[2], 0);
+    gte_LoadDataRegAt(GTE_VZ1, v[2], 4);
+    gte_rtpt();
+    flag = gte_GetCtrlReg(GTE_FLAG);
+    z = ObjMesh_Pick(gte_GetDataReg(GTE_SZ1), gte_GetDataReg(GTE_SZ3), far);
+    z = ObjMesh_Pick(z, gte_GetDataReg(GTE_SZ2), far);
+    gte_nclip();
+    *slot = ObjMesh_Slot(scr, z, far);
+    *area = gte_GetDataReg(GTE_MAC0);
+    return flag >= 0 && *area != 0 && (*area & word0) >= 0;
+}
+
+static inline int ObjQuad_Project(MeshScratch *scr, int word0, int word1, MeshModelVert **v, unsigned int **slot,
+                                  int *area1, int *area2, int *sxyB)
+{
+    char *verts = scr->view.verts;
+    int far = ((unsigned int)word0 >> 30) & 1;
+    int flag;
+    int z;
+
+    v[0] = ObjMesh_Vert(verts, word0 << 3);
+    v[1] = ObjMesh_Vert(verts, word0 >> 7);
+    v[2] = ObjMesh_Vert(verts, word0 >> 17);
+    v[3] = ObjMesh_Vert(verts, word1 << 3);
+    gte_LoadDataRegAt(GTE_VXY2, v[0], 0);
+    gte_LoadDataRegAt(GTE_VZ2, v[0], 4);
+    gte_LoadDataRegAt(GTE_VXY0, v[1], 0);
+    gte_LoadDataRegAt(GTE_VZ0, v[1], 4);
+    gte_LoadDataRegAt(GTE_VXY1, v[2], 0);
+    gte_LoadDataRegAt(GTE_VZ1, v[2], 4);
+    gte_rtpt();
+    flag = gte_GetCtrlReg(GTE_FLAG);
+    *sxyB = gte_GetDataReg(GTE_SXY0);
+    z = ObjMesh_Pick(gte_GetDataReg(GTE_SZ1), gte_GetDataReg(GTE_SZ2), far);
+    z = ObjMesh_Pick(z, gte_GetDataReg(GTE_SZ3), far);
+    gte_nclip();
+    *area1 = -gte_GetDataReg(GTE_MAC0);
+    gte_LoadDataRegAt(GTE_VXY0, v[3], 0);
+    gte_LoadDataRegAt(GTE_VZ0, v[3], 4);
+    gte_rtps();
+    flag |= gte_GetCtrlReg(GTE_FLAG);
+    z = ObjMesh_Pick(z, gte_GetDataReg(GTE_SZ3), far);
+    gte_nclip();
+    *area2 = gte_GetDataReg(GTE_MAC0);
+    *slot = ObjMesh_Slot(scr, z, far);
+    if (flag < 0 || (*area1 | *area2) == 0) {
+        return 0;
+    }
+    return ((*area1 - 1) & (*area2 - 1) & word0) >= 0;
+}
+
+// The root vertices of an object's polygon stay in the scratchpad between polygons. They
+// only write the outcode byte (the top of rgb) if Gouraud, so a flat polygon reads what
+// was there before: the placement's matrix, or an earlier polygon's colours. A vertex
+// with bit 5 set projects again, and clears the bit if it fits.
+#define OBJ_ROOT(scr) ((MeshVert *)((char *)(scr) + 0xa8))
+
+static inline void ObjRoot_Set(MeshVert *v, MeshModelVert *src, unsigned int uv, int sxy)
+{
+    *(int *)&v->x = src->xy;
+    v->z = src->z;
+    *(unsigned short *)&v->u = uv;
+    v->sxy = sxy;
+}
+
+static inline void ObjRoot_Check(MeshVert *v)
+{
+    if (*Vert_Out(v) & 0x20) {
+        Vert_ProjectOnly(v);
+        if (gte_GetCtrlReg(GTE_FLAG) >= 0) {
+            *Vert_Out(v) &= 0x1f;
+        }
+    }
 }
 #endif
 
@@ -1247,7 +1424,356 @@ INCLUDE_ASM("asm/sim/ovl0/nonmatchings/coursedraw", Sky_DrawHorizonFill);
 
 // The four mesh functions are the game's handwritten assembly ($at as a temporary, GTE
 // commands scheduled by hand), so C++ can't reproduce them.
+#ifdef NON_MATCHING
+// Draws an object's mesh, wholly in front of the near plane. Unlike a section's mesh its
+// textured entries hold their own texture coordinates, its limits on screen area are
+// fixed, and split parts wholly off one side of the screen are dropped.
+void CourseObj_DrawMeshUnclipped(CourseMesh *mesh)
+{
+    MeshScratch *scr = MESH_SCRATCH;
+    MeshVert *root = OBJ_ROOT(scr);
+    MeshModelVert *v[4];
+    unsigned int *slot;
+    int area, area2, sxyB;
+    int *entry;
+    int *end;
+
+    scr->view.verts = (char *)mesh->verts;
+
+    entry = (int *)mesh->prims[0];
+    end = entry + mesh->primCount[0] * 3;
+    if (entry != end) {
+        char *prim = scr->view.packetPtr;
+
+        for (; entry != end; entry += 3) {
+            if (ObjTri_Project(scr, entry[0], v, &slot, &area)) {
+                int *p = (int *)prim;
+
+                p[1] = Mesh_Colour(entry[2]);
+                p[2] = gte_GetDataReg(GTE_SXY0);
+                p[4] = gte_GetDataReg(GTE_SXY1);
+                p[3] = gte_GetDataReg(GTE_SXY2);
+                ((unsigned char *)p)[3] = 4;
+                ot_AddPrim(slot, p);
+                if (Mesh_Advance(scr, &prim, 0x14)) {
+                    break;
+                }
+            }
+        }
+        scr->view.packetPtr = prim;
+    }
+
+    entry = (int *)mesh->prims[1];
+    end = entry + mesh->primCount[1] * 3;
+    if (entry != end) {
+        char *prim = scr->view.packetPtr;
+
+        for (; entry != end; entry += 3) {
+            if (ObjQuad_Project(scr, entry[0], entry[1], v, &slot, &area, &area2, &sxyB)) {
+                int *p = (int *)prim;
+                int sxyC = gte_GetDataReg(GTE_SXY0);
+                int sxyA = gte_GetDataReg(GTE_SXY1);
+                int sxyD = gte_GetDataReg(GTE_SXY2);
+
+                p[1] = Mesh_Colour(entry[2]);
+                p[2] = sxyA;
+                p[3] = sxyB;
+                p[4] = sxyD;
+                p[5] = sxyC;
+                ((unsigned char *)p)[3] = 5;
+                ot_AddPrim(slot, p);
+                if (Mesh_Advance(scr, &prim, 0x18)) {
+                    break;
+                }
+            }
+        }
+        scr->view.packetPtr = prim;
+    }
+
+    entry = (int *)mesh->prims[2];
+    end = entry + mesh->primCount[2] * 5;
+    if (entry != end) {
+        char *prim = scr->view.packetPtr;
+
+        for (; entry != end; entry += 5) {
+            if (ObjTri_Project(scr, entry[0], v, &slot, &area)) {
+                int *p = (int *)prim;
+
+                p[2] = gte_GetDataReg(GTE_SXY0);
+                p[6] = gte_GetDataReg(GTE_SXY1);
+                p[4] = gte_GetDataReg(GTE_SXY2);
+                gte_SetDataReg(GTE_RGBC, entry[2]);
+                Mesh_Colours(entry[2], entry[3], entry[4]);
+                p[1] = gte_GetDataReg(GTE_RGB0);
+                p[3] = gte_GetDataReg(GTE_RGB1);
+                p[5] = gte_GetDataReg(GTE_RGB2);
+                ((unsigned char *)p)[3] = 6;
+                ot_AddPrim(slot, p);
+                if (Mesh_Advance(scr, &prim, 0x1c)) {
+                    break;
+                }
+            }
+        }
+        scr->view.packetPtr = prim;
+    }
+
+    entry = (int *)mesh->prims[3];
+    end = entry + mesh->primCount[3] * 6;
+    if (entry != end) {
+        char *prim = scr->view.packetPtr;
+
+        for (; entry != end; entry += 6) {
+            if (ObjQuad_Project(scr, entry[0], entry[1], v, &slot, &area, &area2, &sxyB)) {
+                int *p = (int *)prim;
+                int sxyC = gte_GetDataReg(GTE_SXY0);
+                int sxyA = gte_GetDataReg(GTE_SXY1);
+                int sxyD = gte_GetDataReg(GTE_SXY2);
+
+                p[1] = Mesh_Colour(entry[2]);
+                Mesh_Colours(entry[3], entry[4], entry[5]);
+                p[3] = gte_GetDataReg(GTE_RGB0);
+                p[7] = gte_GetDataReg(GTE_RGB1);
+                p[5] = gte_GetDataReg(GTE_RGB2);
+                p[2] = sxyA;
+                p[4] = sxyB;
+                p[6] = sxyD;
+                p[8] = sxyC;
+                ((unsigned char *)p)[3] = 8;
+                ot_AddPrim(slot, p);
+                if (Mesh_Advance(scr, &prim, 0x24)) {
+                    break;
+                }
+            }
+        }
+        scr->view.packetPtr = prim;
+    }
+
+    entry = (int *)mesh->prims[4];
+    end = entry + mesh->primCount[4] * 6;
+    for (; entry != end; entry += 6) {
+        if (ObjTri_Project(scr, entry[0], v, &slot, &area)) {
+            int sxy0 = gte_GetDataReg(GTE_SXY0);
+            int sxy1 = gte_GetDataReg(GTE_SXY1);
+            int sxy2 = gte_GetDataReg(GTE_SXY2);
+            unsigned int rgb = Mesh_Colour(entry[2]);
+            MeshTex *tex = (MeshTex *)(entry + 3);
+
+            if (MESH_ABS(area) <= OBJ_LIMIT_TRI) {
+                PrimFT3Words *prim = (PrimFT3Words *)scr->view.packetPtr;
+
+                prim->rgb = rgb;
+                prim->uv0 = tex->uv0;
+                prim->uv1 = tex->uv1;
+                prim->uv2 = tex->uv2;
+                prim->xy0 = sxy0;
+                prim->xy2 = sxy1;
+                prim->xy1 = sxy2;
+                ((unsigned char *)prim)[3] = 7;
+                ot_AddPrim(slot, prim);
+                if (Mesh_Advance(scr, &scr->view.packetPtr, sizeof(PrimFT3Words))) {
+                    break;
+                }
+            } else {
+                MeshVert *p[3];
+                MeshBatch batch;
+
+                ObjRoot_Set(&root[0], v[0], tex->uv0, sxy0);
+                ObjRoot_Set(&root[1], v[1], tex->uv1, sxy2);
+                ObjRoot_Set(&root[2], v[2], tex->uv2, sxy1);
+                p[0] = &root[0];
+                p[1] = &root[1];
+                p[2] = &root[2];
+                ObjRoot_Check(&root[0]);
+                ObjRoot_Check(&root[1]);
+                ObjRoot_Check(&root[2]);
+                Mesh_BatchBegin(scr, &batch, slot, rgb, tex, OBJ_LIMIT_TRI, 0);
+                batch.obj = 1;
+                if (!Mesh_BatchEnd(scr, &batch, Mesh_SplitTri(scr, &batch, p, 0))) {
+                    break;
+                }
+            }
+        }
+    }
+
+    entry = (int *)mesh->prims[5];
+    end = entry + mesh->primCount[5] * 6;
+    for (; entry != end; entry += 6) {
+        if (ObjQuad_Project(scr, entry[0], entry[1], v, &slot, &area, &area2, &sxyB)) {
+            int sxyC = gte_GetDataReg(GTE_SXY0);
+            int sxyA = gte_GetDataReg(GTE_SXY1);
+            int sxyD = gte_GetDataReg(GTE_SXY2);
+            int total = MESH_ABS(area + area2);
+            MeshTex *tex = (MeshTex *)(entry + 3);
+            unsigned int rgb = Mesh_Colour(entry[2]);
+
+            if (total <= OBJ_LIMIT_QUAD) {
+                PrimFT4Words *prim = (PrimFT4Words *)scr->view.packetPtr;
+
+                prim->rgb = rgb;
+                prim->uv0 = tex->uv0;
+                prim->uv1 = tex->uv1;
+                prim->uv2 = tex->uv2 >> 16;
+                prim->uv3 = tex->uv2;
+                prim->xy0 = sxyA;
+                prim->xy1 = sxyB;
+                prim->xy2 = sxyD;
+                prim->xy3 = sxyC;
+                ((unsigned char *)prim)[3] = 9;
+                ot_AddPrim(slot, prim);
+                if (Mesh_Advance(scr, &scr->view.packetPtr, sizeof(PrimFT4Words))) {
+                    break;
+                }
+            } else {
+                MeshVert *p[4];
+                MeshBatch batch;
+
+                ObjRoot_Set(&root[0], v[0], tex->uv0, sxyA);
+                ObjRoot_Set(&root[1], v[1], tex->uv1, sxyB);
+                ObjRoot_Set(&root[2], v[2], tex->uv2, sxyC);
+                ObjRoot_Set(&root[3], v[3], tex->uv2 >> 16, sxyD);
+                p[0] = &root[0];
+                p[1] = &root[1];
+                p[2] = &root[2];
+                p[3] = &root[3];
+                ObjRoot_Check(&root[0]);
+                ObjRoot_Check(&root[1]);
+                ObjRoot_Check(&root[2]);
+                ObjRoot_Check(&root[3]);
+                Mesh_BatchBegin(scr, &batch, slot, rgb, tex, OBJ_LIMIT_QUAD, 0);
+                batch.obj = 1;
+                if (!Mesh_BatchEnd(scr, &batch, Mesh_SplitQuad(scr, &batch, p, 0))) {
+                    break;
+                }
+            }
+        }
+    }
+
+    entry = (int *)mesh->prims[6];
+    end = entry + mesh->primCount[6] * 8;
+    for (; entry != end; entry += 8) {
+        if (ObjTri_Project(scr, entry[0], v, &slot, &area)) {
+            int sxy0 = gte_GetDataReg(GTE_SXY0);
+            int sxy1 = gte_GetDataReg(GTE_SXY1);
+            int sxy2 = gte_GetDataReg(GTE_SXY2);
+            MeshTex *tex = (MeshTex *)(entry + 3);
+            unsigned int c0, c1, c2;
+
+            gte_SetDataReg(GTE_RGBC, entry[2]);
+            Mesh_Colours(entry[2], entry[6], entry[7]);
+            c0 = gte_GetDataReg(GTE_RGB0);
+            c1 = gte_GetDataReg(GTE_RGB1);
+            c2 = gte_GetDataReg(GTE_RGB2);
+            if (MESH_ABS(area) <= OBJ_LIMIT_TRI) {
+                PrimGT3Words *prim = (PrimGT3Words *)scr->view.packetPtr;
+
+                prim->c0 = c0;
+                prim->c1 = c1;
+                prim->c2 = c2;
+                prim->uv0 = tex->uv0;
+                prim->uv1 = tex->uv1;
+                prim->uv2 = tex->uv2;
+                prim->xy0 = sxy0;
+                prim->xy2 = sxy1;
+                prim->xy1 = sxy2;
+                ((unsigned char *)prim)[3] = 9;
+                ot_AddPrim(slot, prim);
+                if (Mesh_Advance(scr, &scr->view.packetPtr, sizeof(PrimGT3Words))) {
+                    break;
+                }
+            } else {
+                MeshVert *p[3];
+                MeshBatch batch;
+
+                // As in a section's mesh, the colours turn round one corner.
+                ObjRoot_Set(&root[0], v[0], tex->uv0, sxy0);
+                ObjRoot_Set(&root[1], v[1], tex->uv1, sxy2);
+                ObjRoot_Set(&root[2], v[2], tex->uv2, sxy1);
+                root[0].rgb = c2;
+                root[1].rgb = c0;
+                root[2].rgb = c1;
+                p[0] = &root[0];
+                p[1] = &root[1];
+                p[2] = &root[2];
+                ObjRoot_Check(&root[0]);
+                ObjRoot_Check(&root[1]);
+                ObjRoot_Check(&root[2]);
+                Mesh_BatchBegin(scr, &batch, slot, c2, tex, OBJ_LIMIT_TRI, 1);
+                batch.obj = 1;
+                if (!Mesh_BatchEnd(scr, &batch, Mesh_SplitTri(scr, &batch, p, 0))) {
+                    break;
+                }
+            }
+        }
+    }
+
+    entry = (int *)mesh->prims[7];
+    end = entry + mesh->primCount[7] * 9;
+    for (; entry != end; entry += 9) {
+        if (ObjQuad_Project(scr, entry[0], entry[1], v, &slot, &area, &area2, &sxyB)) {
+            int sxyC = gte_GetDataReg(GTE_SXY0);
+            int sxyA = gte_GetDataReg(GTE_SXY1);
+            int sxyD = gte_GetDataReg(GTE_SXY2);
+            int total = MESH_ABS(area + area2);
+            MeshTex *tex = (MeshTex *)(entry + 3);
+            unsigned int c0 = Mesh_Colour(entry[2]);
+            unsigned int c1, c2, c3;
+
+            Mesh_Colours(entry[6], entry[7], entry[8]);
+            c1 = gte_GetDataReg(GTE_RGB0);
+            c2 = gte_GetDataReg(GTE_RGB1);
+            c3 = gte_GetDataReg(GTE_RGB2);
+            if (total <= OBJ_LIMIT_QUAD) {
+                PrimGT4Words *prim = (PrimGT4Words *)scr->view.packetPtr;
+
+                prim->c0 = c0;
+                prim->c1 = c1;
+                prim->c2 = c3;
+                prim->c3 = c2;
+                prim->uv0 = tex->uv0;
+                prim->uv1 = tex->uv1;
+                prim->uv2 = tex->uv2 >> 16;
+                prim->uv3 = tex->uv2;
+                prim->xy0 = sxyA;
+                prim->xy1 = sxyB;
+                prim->xy2 = sxyD;
+                prim->xy3 = sxyC;
+                ((unsigned char *)prim)[3] = 12;
+                ot_AddPrim(slot, prim);
+                if (Mesh_Advance(scr, &scr->view.packetPtr, sizeof(PrimGT4Words))) {
+                    break;
+                }
+            } else {
+                MeshVert *p[4];
+                MeshBatch batch;
+
+                ObjRoot_Set(&root[0], v[0], tex->uv0, sxyA);
+                ObjRoot_Set(&root[1], v[1], tex->uv1, sxyB);
+                ObjRoot_Set(&root[2], v[2], tex->uv2, sxyC);
+                ObjRoot_Set(&root[3], v[3], tex->uv2 >> 16, sxyD);
+                root[0].rgb = c0;
+                root[1].rgb = c1;
+                root[2].rgb = c2;
+                root[3].rgb = c3;
+                p[0] = &root[0];
+                p[1] = &root[1];
+                p[2] = &root[2];
+                p[3] = &root[3];
+                ObjRoot_Check(&root[0]);
+                ObjRoot_Check(&root[1]);
+                ObjRoot_Check(&root[2]);
+                ObjRoot_Check(&root[3]);
+                Mesh_BatchBegin(scr, &batch, slot, c0, tex, OBJ_LIMIT_QUAD, 1);
+                batch.obj = 1;
+                if (!Mesh_BatchEnd(scr, &batch, Mesh_SplitQuad(scr, &batch, p, 0))) {
+                    break;
+                }
+            }
+        }
+    }
+}
+#else
 INCLUDE_ASM("asm/sim/ovl0/nonmatchings/coursedraw", CourseObj_DrawMeshUnclipped);
+#endif
 
 INCLUDE_ASM("asm/sim/ovl0/nonmatchings/coursedraw", CourseObj_DrawMeshClipped);
 
