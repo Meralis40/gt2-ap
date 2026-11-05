@@ -411,20 +411,24 @@ int FUN_80075acc(int a, int b);
 int Fixed_MulShiftTrunc(int a, int b, int shift);
 int Fixed_Mul16Shift(int a, int b, int shift);
 int FUN_80075ba4(int a, int b, int shift);
-// A 64-bit result, but ai.cpp's callers were built taking it as an int.
+// 64-bit results, but the callers in ai.cpp and carphys.cpp were built taking them
+// as an int.
 #ifdef FIXED_MULFLOOR_INT
 int Fixed_MulFloor(int a, int b);
+int Fixed_MulFloor16(int a, int b);
+int Fixed_MulShift(int a, int b, int shift);
+int Fixed_Dot2Shift(int a, int b, int c, int d, int shift);
 #else
 long long Fixed_MulFloor(int a, int b);
-#endif
 long long Fixed_MulFloor16(int a, int b);
-long long FUN_80075c34(int param_1, int param_2);
 long long Fixed_MulShift(int a, int b, int shift);
+long long Fixed_Dot2Shift(int a, int b, int c, int d, int shift);
+#endif
+long long FUN_80075c34(int param_1, int param_2);
 long long FUN_80075c9c(int a, int b, int shift);
 long long FUN_80075ce4(int a, int b, int shift);
 int EngineCurve_TorqueAt(EngineCurve *curve, int rpm);
 int Fixed_Div(int a, int b, int shift);
-long long Fixed_Dot2Shift(int a, int b, int c, int d, int shift);
 short CarParams_GetTyreRadius(CarParams *params, int rear, short *radius, short *width, short *sidewall);
 unsigned char CarParams_GetDriveLayout(CarParams *params, unsigned char *layout, unsigned char *flag, short *front, short *rear);
 void CarSetup_ApplyPartEntry(int table, void *entry, CarSetup *setup);
