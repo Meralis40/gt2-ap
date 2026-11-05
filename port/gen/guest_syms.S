@@ -4,8 +4,6 @@
 #else
 #define SYM(n) n
 #endif
-    .globl SYM(D_8005B740)
-    .set   SYM(D_8005B740), 0x8005b740
     .globl SYM(D_800114CC)
     .set   SYM(D_800114CC), 0x800114cc
     .globl SYM(D_80011D30)
@@ -680,6 +678,8 @@
     .set   SYM(D_8005B700), 0x8005b700
     .globl SYM(D_8005B720)
     .set   SYM(D_8005B720), 0x8005b720
+    .globl SYM(D_8005B740)
+    .set   SYM(D_8005B740), 0x8005b740
     .globl SYM(D_8005B760)
     .set   SYM(D_8005B760), 0x8005b760
     .globl SYM(D_8005B830)
@@ -1070,6 +1070,8 @@
     .set   SYM(D_800A6F34), 0x800a6f34
     .globl SYM(D_800A8CB8)
     .set   SYM(D_800A8CB8), 0x800a8cb8
+    .globl SYM(D_800A8D62)
+    .set   SYM(D_800A8D62), 0x800a8d62
     .globl SYM(D_800A8D68)
     .set   SYM(D_800A8D68), 0x800a8d68
     .globl SYM(D_800A8D7A)
@@ -1224,6 +1226,8 @@
     .set   SYM(D_801C9998), 0x801c9998
     .globl SYM(D_801C9AF5)
     .set   SYM(D_801C9AF5), 0x801c9af5
+    .globl SYM(D_801CD554)
+    .set   SYM(D_801CD554), 0x801cd554
     .globl SYM(D_801D1568)
     .set   SYM(D_801D1568), 0x801d1568
     .globl SYM(D_801D156E)
@@ -2186,14 +2190,6 @@
     .set   SYM(g_Options_TabTitles), 0x8004bfa4
     .globl SYM(g_Options_Tabs)
     .set   SYM(g_Options_Tabs), 0x8004bfb8
-    .globl SYM(g_OverlayArgs)
-    .set   SYM(g_OverlayArgs), 0x801c945c
-    .globl SYM(g_OverlayDefaultEntries)
-    .set   SYM(g_OverlayDefaultEntries), 0x80091174
-    .globl SYM(g_OverlayFile)
-    .set   SYM(g_OverlayFile), 0x801ef610
-    .globl SYM(g_OverlayJmpBuf)
-    .set   SYM(g_OverlayJmpBuf), 0x801c942c
     .globl SYM(g_Ovl3_CarWork)
     .set   SYM(g_Ovl3_CarWork), 0x80171034
     .globl SYM(g_Ovl3_GtData)
@@ -2300,12 +2296,12 @@
     .set   SYM(g_Page_ResultMenu), 0x8005ae54
     .globl SYM(g_Page_ResultRoot)
     .set   SYM(g_Page_ResultRoot), 0x8005ae0c
+    .globl SYM(g_Page_SaveGameCard)
+    .set   SYM(g_Page_SaveGameCard), 0x8004b518
     .globl SYM(g_Page_SaveGame_ovl0)
     .set   SYM(g_Page_SaveGame_ovl0), 0x8005b588
     .globl SYM(g_Page_SaveGame_ovl1)
     .set   SYM(g_Page_SaveGame_ovl1), 0x8004b4c4
-    .globl SYM(g_Page_SaveGameCard)
-    .set   SYM(g_Page_SaveGameCard), 0x8004b518
     .globl SYM(g_Page_SaveGhost)
     .set   SYM(g_Page_SaveGhost), 0x8005b540
     .globl SYM(g_Page_SaveReplay)
