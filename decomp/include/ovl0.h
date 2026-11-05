@@ -127,7 +127,7 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     unsigned char unk650[4];
     short wallNormalX;
     short wallNormalZ;
-    uint unk658;
+    uint dirt; /* in the race scale: RaceSetup.dirt x600000 >> 12 */
     int pos[3]; /* world position x, y, z */
     short fwdDir[3]; /* body forward direction (0x1000 = unit), from the matrix build Matrix_FromAngles(+0x668, +0x670, +0x678) */
     unsigned char unk66e[2];

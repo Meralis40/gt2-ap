@@ -518,9 +518,9 @@ capped:
         }
         wheel->fxSmoke = level;
     }
-    body->unk658 += (unsigned int)(*(int *)0x1f800000 * gravel) >> 16;
-    if (body->unk658 > 0x75300) {
-        body->unk658 = 0x75300;
+    body->dirt += (unsigned int)(*(int *)0x1f800000 * gravel) >> 16;
+    if (body->dirt > 0x75300) {
+        body->dirt = 0x75300;
     }
     a = load + surface;
     if (a < rattle) {
