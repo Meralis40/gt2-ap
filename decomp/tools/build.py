@@ -59,7 +59,7 @@ MASPSX_FLAGS = ["--aspsx-version=2.86"]  # ASPSX of PsyQ 4.6
 # out as div $0 and mflo (mfhi for rem), as GCC 2.95 does. ASPSX would put a nop
 # after the mflo when the next instruction reads it; the game has none (FUN_800835dc in
 # padbuttons.cpp, PowerGraphView_ComputeScale in powergraph.cpp).
-GAS_CXX = {"src/sim/exe/screenviewloop.cpp", "src/sim/exe/format.cpp", "src/sim/exe/cardmenu.cpp",
+GAS_CXX = {"src/sim/ovl0/changeparts.cpp", "src/sim/exe/screenviewloop.cpp", "src/sim/exe/format.cpp", "src/sim/exe/cardmenu.cpp",
            "src/sim/exe/carinfo.cpp", "src/sim/exe/carmodel.cpp", "src/sim/exe/cdaudio.cpp",
            "src/sim/exe/cdstream.cpp", "src/sim/exe/gamedata.cpp", "src/sim/exe/garage.cpp",
            "src/sim/exe/garage2.cpp", "src/sim/exe/padbuttons.cpp",
