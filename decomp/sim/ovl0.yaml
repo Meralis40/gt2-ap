@@ -116,6 +116,8 @@ segments:
       - [0x4a8bc, rodata] # 0x8005a8bc
       - {start: 0x4a928, type: .rodata, name: license}
       - [0x4a94c, rodata] # 0x8005a94c
+      # 0x8005aae4: the jump tables of ChangePartsPage_Update and PartsSettingPage_Update
+      - {start: 0x4aae4, type: .rodata, name: changeparts}
       - {start: 0x4ab24, type: .rodata, name: gtracemenu}
       - [0x4ab48, rodata] # 0x8005ab48
   - [0x4d5f8]
