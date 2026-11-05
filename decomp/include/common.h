@@ -411,7 +411,12 @@ int FUN_80075acc(int a, int b);
 int Fixed_MulShiftTrunc(int a, int b, int shift);
 int Fixed_Mul16Shift(int a, int b, int shift);
 int FUN_80075ba4(int a, int b, int shift);
+// A 64-bit result, but ai.cpp's callers were built taking it as an int.
+#ifdef FIXED_MULFLOOR_INT
+int Fixed_MulFloor(int a, int b);
+#else
 long long Fixed_MulFloor(int a, int b);
+#endif
 long long Fixed_MulFloor16(int a, int b);
 long long FUN_80075c34(int param_1, int param_2);
 long long Fixed_MulShift(int a, int b, int shift);
@@ -936,14 +941,14 @@ void CarPhys_ClearProximity(CarPhys *phys);
 void Cars_MoveAndCollide(RaceVehicle *cars, int count);
 void CarPhys_SaveState(int *snap, CarPhys *phys);
 void Ai_SyncToLine(CarPhys *phys);
-void Ai_SetLine(CarPhys *phys, unsigned char line);
+void Ai_SetLine(CarPhys *phys, int line);
 int AiLine_FindSegmentXZ(int x, int z, int hint);
 int Speed_FactorAbove30Kmh(int speed);
 void Clutch_UpdateShiftState(CarPhys *car);
 void Engine_SetRpmDisplay(CarPhys *car);
 int Math_ApproxDist2(int x, int y);
 void Cars_UpdateTrackPositions(RaceVehicle *cars, int count);
-unsigned char Race_IsEnduranceTimeUp(void);
+int Race_IsEnduranceTimeUp(void);
 void RaceClock_Tick(void);
 void LicenseTest_CheckEnd(CarPhys *car);
 void Cars_UpdateDynamics(RaceVehicle *cars, int count);

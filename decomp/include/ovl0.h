@@ -109,7 +109,11 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     unsigned char unk1e[10];
     short mass; /* CarPhys_EffectiveMass(weight) * 4 */
     short invMass;
-    unsigned char unk2c[52];
+    unsigned char unk2c[4];
+    int cornerGrip; /* cornering speed scale of the car (AiLine_CornerSpeed) */
+    unsigned char unk34[2];
+    short brakeDecel; /* braking distance (Ai_SpeedControl) */
+    unsigned char unk38[40];
     short maxSteer; /* max steering angle */
     short steerSpeed; /* steering rate per frame (0x5c7 on dirt courses) */
     unsigned char unk64[24];
@@ -117,7 +121,8 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     struct SuspAxle susp[2]; /* front, rear */
     struct TyreAxle tyres[2]; /* front, rear */
     int topSpeed; /* CarPhys_ComputeTopSpeed */
-    short surfaceGrip[16]; /* by CarPhysWheel.surface (Tyres_ComputeGripLimit) */
+    short surfaceGrip[8]; /* by CarPhysWheel.surface (Tyres_ComputeGripLimit) */
+    short surfaceBrake[8]; /* by surface (Ai_SpeedControl) */
     short camber[2]; /* front, rear */
     unsigned char unk36c[4];
     byte driveLayout; /* start of the drivetrain block (Drivetrain_Init) */
@@ -133,7 +138,9 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     int gearSpeed[8]; /* speed per rpm of each gear */
     short tyreRadius[2]; /* front, rear */
     short invTyreRadius[2]; /* 0x1000000 / tyreRadius */
-    unsigned char unk3ec[112];
+    unsigned char unk3ec[52];
+    int brakeMin; /* least brake force (Ai_SpeedControl) */
+    unsigned char unk424[56];
     byte carIndex;
     byte control; /* 0 player, 2 CPU (CarPhys_SetControl) */
     byte ghost; /* non-zero: no car-to-car contact */
@@ -147,7 +154,8 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     unsigned char unk60e[2];
     short throttle; /* 0..0x1000 */
     short brake; /* 0..0x1000 */
-    unsigned char unk614[4];
+    short unk614; /* cleared by CarAi_Drive */
+    unsigned char unk616[2];
     byte gear;
     byte clutchIn;
     byte diffLocked[2]; /* front, rear limited slip locked up (RaceCars_UpdateDifferentials) */
@@ -170,7 +178,8 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     short yaw; /* 4096 = turn */
     unsigned char unk64a[2];
     int yawRate;
-    unsigned char unk650[4];
+    short unk650;
+    short unk652;
     short wallNormalX;
     short wallNormalZ;
     uint dirt; /* in the race scale: RaceSetup.dirt x600000 >> 12 */
@@ -245,7 +254,7 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     byte aiCornerPrev;
     byte aiCornerNext; /* 0 straight, 1/2 corner, 3/4 braking */
     byte flags;
-    short pitTimer; /* pit stop countdown (5 s) */
+    ushort pitTimer; /* pit stop countdown (5 s) */
     int aiTargetSpeedPrev;
     int aiTargetSpeedNext;
 };
