@@ -91,7 +91,6 @@ void Overlay_OpenFile(OverlayPack *pack)
 
 void Overlay_Init()
 {
-    Overlay_OpenFile(&g_OverlayFile);
 }
 
 // Resolves a path in GT2.VOL's directory, from the root if it starts with '/', else from

@@ -1,6 +1,7 @@
 // Resident code 8006bcb8-8006c274 (widgets): fading bars and the memory card
 // progress bar.
 #include "common.h"
+#define FadeCounter_Update FadeCounter_Update_8006BDD0
 
 extern "C" {
 

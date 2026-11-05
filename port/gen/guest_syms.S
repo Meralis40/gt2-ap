@@ -1944,6 +1944,10 @@
     .set   SYM(g_LicenseMenu_List), 0x8005b39c
     .globl SYM(g_LicenseMenu_Options)
     .set   SYM(g_LicenseMenu_Options), 0x8005b364
+    .globl SYM(g_LicensePrefixes_ovl0)
+    .set   SYM(g_LicensePrefixes_ovl0), 0x8005b208
+    .globl SYM(g_LicensePrefixes_ovl4)
+    .set   SYM(g_LicensePrefixes_ovl4), 0x80050c34
     .globl SYM(g_LicensePrizeCarCodes)
     .set   SYM(g_LicensePrizeCarCodes), 0x8005b3d4
     .globl SYM(g_LicensePrizeEventFmt)
@@ -2296,6 +2300,10 @@
     .set   SYM(g_Page_ResultMenu), 0x8005ae54
     .globl SYM(g_Page_ResultRoot)
     .set   SYM(g_Page_ResultRoot), 0x8005ae0c
+    .globl SYM(g_Page_SaveGame_ovl0)
+    .set   SYM(g_Page_SaveGame_ovl0), 0x8005b588
+    .globl SYM(g_Page_SaveGame_ovl1)
+    .set   SYM(g_Page_SaveGame_ovl1), 0x8004b4c4
     .globl SYM(g_Page_SaveGameCard)
     .set   SYM(g_Page_SaveGameCard), 0x8004b518
     .globl SYM(g_Page_SaveGhost)

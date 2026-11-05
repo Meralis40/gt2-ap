@@ -3,13 +3,12 @@
 
 extern "C" {
 
-// Boot, then the main menu's overlay.
-int main()
+// Boot, then the main menu's overlay. The runtime's main calls this, and runs the entries
+// Overlay_StartAt asks for.
+void Game_Main(void)
 {
     Boot_Init();
-    Overlay_Dispatch();
     Overlay_Start(1);
-    return 0;
 }
 
 }

@@ -29,7 +29,7 @@ struct PrimF4 {
 extern "C" int g_MeshFrameParity;
 extern "C" RaceWorld g_RaceWorld;
 
-void Gte_LoadRotationOnly(ViewScratch *scr);
+extern "C" void Gte_LoadRotationOnly(ViewScratch *scr);
 extern "C" void Sky_DrawHorizonFill(unsigned int *ot, Camera *cam, SkyMesh *sky);
 
 #define SKY_F3(rgb, ax, ay, bx, by, cx, cy) \

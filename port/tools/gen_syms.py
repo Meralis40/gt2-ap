@@ -8,8 +8,8 @@ writes guest_syms.S. Names of data go there; names of functions are code the
 port has to provide, so they go to the report instead, and so do names no
 symbol file knows.
 
-The two names with different addresses per unit are in the report's conflicts:
-the units that use them need their own names (`-D`).
+A data name with different addresses per unit becomes one name per unit,
+<name>_<unit>; port/CMakeLists.txt maps the name to it for each unit's sources.
 """
 import argparse
 import re
@@ -53,7 +53,8 @@ def main():
         elif any(e[2] for e in entries):
             functions.append(name)
         elif len({e[1] for e in entries}) > 1:
-            conflicts.append(f"{name} " + " ".join(f"{u}:{a:08x}" for u, a, _ in entries))
+            data.extend((f"{name}_{u}", a) for u, a, _ in entries)
+            conflicts.append(name)
         else:
             data.append((name, entries[0][1]))
 
