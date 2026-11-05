@@ -58,7 +58,9 @@ segments:
       - [0x199d8, cpp, racemusic] # 0x800299d8
       - [0x19d58, cpp, racepause] # 0x80029d58
       - [0x1bcf0, cpp, hud] # 0x8002bcf0
-      - [0x1ee98, textbin, text_data_8002ee98] # tables inside .text
+      # 0x8002ee98: RaceCam_SetOnboard's jump table
+      - {start: 0x1ee98, type: .rodata, name: racecam, linker_section_order: .text}
+      - [0x1eebc, textbin, text_data_8002eebc] # tables inside .text
       # 0x8002ef20: RaceMenuLoop::Run's jump table, vtables and type names of RaceMenuLoop and RaceViewLoop
       - {start: 0x1ef20, type: .rodata, name: raceloops, linker_section_order: .text}
       # 0x8002f000: vtable and type name of ArcadeRaceLoop
