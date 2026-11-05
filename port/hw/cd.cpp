@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // The drive, at the level of libcd's CdControlF: commands complete on the next pump and
-// reads deliver their sectors from the disc image. XA audio and CD audio aren't played yet.
+// reads deliver their sectors from the disc image. Data reads run as fast as they're
+// pumped, but XA streams run at drive speed: the game follows them with CdlGetlocL, so its
+// timing depends on it. XA audio and CD audio aren't played yet.
 #include "hw.h"
 #include "rt.h"
 
 #include "gt2ap/discio/disc_image.hpp"
 
+#include <algorithm>
 #include <array>
 #include <cstdint>
 #include <cstring>
@@ -27,12 +30,18 @@ enum Command {
 };
 enum Status { kDataReady = 1, kComplete = 2 };
 enum StatusBits { kStatSpinning = 0x02, kStatReading = 0x20 };
-enum ModeBits { kModeWholeSector = 0x20 };
+enum ModeBits { kModeWholeSector = 0x20, kModeXa = 0x40, kModeDoubleSpeed = 0x80 };
+enum SubmodeBits { kSubmodeAudio = 0x04, kSubmodeRealTime = 0x40 };
 
 constexpr std::size_t kRawSectorSize = 2352;
 constexpr std::size_t kHeaderOffset = 12;
+constexpr std::size_t kSubmodeOffset = 18;
 constexpr std::size_t kDataOffset = 24;
 constexpr int kFirstSectorOffset = 150;  // 2 seconds of pregap
+// Drive speed in quarters of a sector: 75 sectors a second is 1.25 a vblank.
+constexpr int kQuartersPerVblank = 5;
+constexpr int kQuartersPerSector = 4;
+constexpr int kMaxQuarters = 2 * kQuartersPerSector;
 
 std::optional<d::DiscImage> g_Disc;
 Callback g_OnSync, g_OnReady;
@@ -43,6 +52,7 @@ std::array<std::uint8_t, kRawSectorSize> g_Sector;
 std::size_t g_SectorPos;
 std::uint32_t g_ResultWords[2];
 bool g_SyncPending;
+int g_StreamQuarters;
 
 std::uint8_t toBcd(int value)
 {
@@ -65,6 +75,18 @@ void setResult(std::uint8_t a = 0, std::uint8_t b = 0, std::uint8_t c = 0, std::
     const std::uint8_t bytes[8] = {a, b, c, d, e, f, g, h};
 
     std::memcpy(g_ResultWords, bytes, sizeof(bytes));
+}
+
+bool streamingXa()
+{
+    return (g_Mode & kModeXa) != 0;
+}
+
+bool atEndOfDisc()
+{
+    const d::Track &last = g_Disc->tracks().back();
+
+    return g_Location >= last.startLba + last.sectorCount;
 }
 
 void readSector()
@@ -167,6 +189,11 @@ int CdGetSector(void *dst, int words)
     return 1;
 }
 
+void Hw_CdVblank(void)
+{
+    g_StreamQuarters = std::min(g_StreamQuarters + kQuartersPerVblank, kMaxQuarters);
+}
+
 int Hw_CdPump(void)
 {
     if (g_SyncPending) {
@@ -178,8 +205,23 @@ int Hw_CdPump(void)
         return 1;
     }
     if (g_Reading) {
+        if (streamingXa()) {
+            int cost = g_Mode & kModeDoubleSpeed ? kQuartersPerSector / 2 : kQuartersPerSector;
+
+            if (g_StreamQuarters < cost) {
+                return 0;
+            }
+            g_StreamQuarters -= cost;
+            if (g_Disc && atEndOfDisc()) {
+                return 0;  // the stream runs out here: CdlGetlocL stops moving, and the game resets
+            }
+        }
         readSector();
         setResult(stat());
+        // XA audio goes to the decoder: the CPU only sees the position, with CdlGetlocL.
+        if (streamingXa() && (g_Sector[kSubmodeOffset] & (kSubmodeAudio | kSubmodeRealTime)) == (kSubmodeAudio | kSubmodeRealTime)) {
+            return 1;
+        }
         if (g_OnReady != nullptr) {
             std::uint32_t result[2] = {g_ResultWords[0], g_ResultWords[1]};
             g_OnReady(kDataReady, reinterpret_cast<unsigned char *>(result));

@@ -86,6 +86,7 @@ void vblank()
             Hw_PadSetButtons(input.buttons);
         }
     }
+    Hw_CdVblank();
     Hw_PadVblank();
     if (g_VSyncCallback != nullptr) {
         g_InCallback++;
