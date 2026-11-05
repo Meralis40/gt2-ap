@@ -448,8 +448,6 @@ struct QuickMenu {
     int frameCount;
     int updateCount;
 
-    QuickMenu();                // QuickMenu__QuickMenu (quickmenu.cpp)
-    ~QuickMenu();
 };
 
 typedef struct RaceCam RaceCam, *PRaceCam;
@@ -552,8 +550,6 @@ struct PreQuickMenuIO {
     signed char menuTimUploaded;
     signed char mode;
 
-    PreQuickMenuIO();           // PreQuickMenuIO__PreQuickMenuIO (quickmenu.cpp)
-    ~PreQuickMenuIO();
 };
 
 // Base of the race flow state machines (0x10 bytes; raceloops.cpp emits its

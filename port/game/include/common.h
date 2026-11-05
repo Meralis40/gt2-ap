@@ -74,7 +74,6 @@ void Vol_ReadFile(int file, void *dst);
 void Vol_ReadFileAsync(int file, void *dst);
 CarAsset *CarAsset_Find(unsigned int carCode);
 void Overlay_ClearBss(void);
-void Overlay_Dispatch(void);
 void Overlay_Start(int index);
 void Overlay_StartAt(int index, void *entry, ...);
 void Overlay_Load(int index);
@@ -559,8 +558,6 @@ int FUN_8007abf8(void *dst, int lba, int size, void *sectorBuf, int bufSectors, 
 int Cd_ReadInflate(void *dst, int fileOffset, int size, void *sectorBuf, int bufSectors, void *heap, int heapSize);
 void FUN_8007ad1c(void *dst, unsigned int lba, int size);
 void Cd_ReadAtAsync(void *dst, unsigned int byteOffset, int size);
-int setjmp(jmpbuf *__env);
-int longjmp(jmpbuf *env, int value);
 void LodTable_SquareDistances(LodTable *table);
 void FUN_8007ae08(LodTable *table, int i, int dist);
 int Lod_DistanceSq(void *table, int *pos, int depthScale);

@@ -108,7 +108,8 @@ extern InfoBarDesc D_8005B6E0;
 #define g_BestBarFade D_8005B700
 extern FadedBar D_8005B700;
 extern InfoBarDesc D_8005B720;
-extern FadedBar g_LapBarFade asm("D_8005B740");
+#define g_LapBarFade D_8005B740
+extern FadedBar D_8005B740;
 extern short D_8005B760[];
 void QuickMenu_PushPage(QuickMenu *menu, QuickMenuPage *page);
 void QuickMenu_SetupCardUiThen(QuickMenuPage *next, void *work);

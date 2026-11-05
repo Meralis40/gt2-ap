@@ -1,76 +1,57 @@
-// Resident code 8005d9bc-8005db90 (overlay): loads the overlays from their gzip pack and
-// runs their entries from a setjmp point.
+// Resident code 8005d9bc-8005db90 (overlay): starts the overlays. The port loads them through
+// the runtime, which also holds the setjmp point the game has in Overlay_Dispatch.
 #include <stdarg.h>
 #include "common.h"
+#include "rt.h"
 
 extern "C" {
-extern void *g_OverlayDefaultEntries;
 extern char g_MenuContext[];    // start of the overlays' .bss, and the CD read buffer
 extern char g_MainInitialized[]; // end of the overlays' .bss
-extern jmpbuf g_OverlayJmpBuf;
-extern int g_OverlayArgs[4];
-extern int g_OvlLba;
-extern int g_OvlSize;
 
-extern OverlayPack g_OverlayFile;
+void Race_DefaultEntry();
+void MainMenu_Run();
+void ArcadeMode_Run();
+void ArcadeGarageRace_Entry();
+void GTMode_Run();
+void Movie_DefaultEntry();
+
+// g_OverlayDefaultEntries, with host functions.
+static void *const s_OverlayDefaultEntries[6] = {
+    (void *)Race_DefaultEntry, (void *)MainMenu_Run, (void *)ArcadeMode_Run,
+    (void *)ArcadeGarageRace_Entry, (void *)GTMode_Run, (void *)Movie_DefaultEntry,
+};
 
 void Overlay_ClearBss(void)
 {
     memset(g_MenuContext, 0, g_MainInitialized - g_MenuContext);
 }
 
-// Runs each overlay entry Overlay_StartAt jumps back here with.
-void Overlay_Dispatch(void)
-{
-    void (*entry)(int, int, int, int) = (void (*)(int, int, int, int))setjmp(&g_OverlayJmpBuf);
-
-    if (entry != 0) {
-        entry(g_OverlayArgs[0], g_OverlayArgs[1], g_OverlayArgs[2], g_OverlayArgs[3]);
-    }
-}
-
 void Overlay_Start(int index)
 {
-    Overlay_StartAt(index, (&g_OverlayDefaultEntries)[index], 0, 0, 0, 0);
+    Overlay_StartAt(index, s_OverlayDefaultEntries[index], 0, 0, 0, 0);
 }
 
-
-// Loads overlay index and runs entry with the four ints after it, from Overlay_Dispatch.
-// Variadic, as the game stores $a1-$a3 to their home slots and reads the ints from there.
+// Loads overlay index and runs entry with the four ints after it, from the runtime's loop.
 void Overlay_StartAt(int index, void *entry, ...)
 {
     va_list ap;
+    int args[4];
 
     va_start(ap, entry);
-
-    g_OverlayArgs[0] = va_arg(ap, int);
-    g_OverlayArgs[1] = va_arg(ap, int);
-    g_OverlayArgs[2] = va_arg(ap, int);
-    g_OverlayArgs[3] = va_arg(ap, int);
+    args[0] = va_arg(ap, int);
+    args[1] = va_arg(ap, int);
+    args[2] = va_arg(ap, int);
+    args[3] = va_arg(ap, int);
     va_end(ap);
     Overlay_Load(index);
-    longjmp(&g_OverlayJmpBuf, (int)entry);
+    Rt_RunEntry(entry, args[0], args[1], args[2], args[3]);
 }
 
-// Inflates overlay index from the pack, read from the CD first if it isn't in memory.
-// Not matching: the game copies index through $a1 and the pack and entry pointers through
-// $a0 before keeping them in $s0 and $s1, so three moves more, with the index copy and the
-// pack's address ahead of the stack adjustment. Inline helpers, references and other
-// orders didn't give it.
 void Overlay_Load(int index)
 {
-    OverlayPack *pack = &g_OverlayFile;
-    OverlayEntry *e;
-
     Spu_WaitVoicesSilent();
     Sfx_StopAllIfReady();
-    e = &pack->entries[index];
-    if (pack->data != 0) {
-        Gzip_Inflate(pack->data + e->offset, (void *)Overlay_OpenFile);
-    } else {
-        Cd_ReadSync(g_MenuContext, g_OvlLba, g_OvlSize);
-        Gzip_Inflate(g_MenuContext + e->offset, (void *)Overlay_OpenFile);
-    }
+    Rt_LoadOverlay(index);
     FlushCache();
     Overlay_ClearBss();
 }
