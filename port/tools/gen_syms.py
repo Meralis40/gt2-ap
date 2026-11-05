@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SYMBOLS = ROOT / "decomp" / "sim" / "symbols"
 LINE = re.compile(r"^\s*(\S+)\s*=\s*(0x[0-9A-Fa-f]+)\s*;(.*)$")
 ADDRESS_NAME = re.compile(r"^_?(D_([0-9A-F]{8}))$")  # splat's name for a label with no symbol
+UNIT_NAME = re.compile(r"^_?(.+)_(exe|ovl[0-5])$")  # a name per unit, see below
 UNITS = ["exe", "ovl0", "ovl1", "ovl2", "ovl3", "ovl4", "ovl5"]
 
 
@@ -46,8 +47,16 @@ def main():
     for raw in names:
         name = raw[1:] if raw.startswith("_") and raw[1:] in table else raw
         entries = table.get(name)
+        unit_name = UNIT_NAME.match(raw)
         if not entries and (m := ADDRESS_NAME.match(raw)):
             data.append((m.group(1), int(m.group(2), 16)))
+        elif not entries and unit_name and unit_name.group(1) in table:
+            for unit, addr, _ in table[unit_name.group(1)]:
+                if unit == unit_name.group(2):
+                    data.append((f"{unit_name.group(1)}_{unit}", addr))
+                    break
+            else:
+                unknown.append(raw)
         elif not entries:
             unknown.append(raw)
         elif any(e[2] for e in entries):

@@ -298,11 +298,300 @@ void GTMenu_QueueCarPreview(GTMenu *menu, int delay, int baseCarId, int carId, i
     menu->pendingCarDirt = dirt;
 }
 
-// SimMap_Update has no C++ yet (M4).
+// A garage's cars, credits and current car, from D_801CD554.
+extern unsigned char D_801CD554[];
+extern short D_800A8D62;            // the car highlighted in the garage list
+extern unsigned char g_MenuPageAttr;
+extern char g_GtMenu_SelectedEvent[];
+extern FlowMenuState g_Flow_IntroShown;
+
+#define GARAGE_CAR(slot) ((Car *)(D_801CD554 + 4 + (slot) * 0xa4))
+#define GARAGE_CREDITS (*(int *)(D_801CD554 + 0x4014))
+#define GARAGE_CURRENT (*(short *)(D_801CD554 + 0x4018))
+#define WHEEL_MASK 0xffffe0ff       // Car.setup's first word without its wheel colour
+
+static void SimMap_GoToPage(GTMenu *menu, int page, int arg)
+{
+    menu->pendingPageDelay = 3;
+    menu->pendingPage = page;
+    menu->pendingPageArg = arg;
+    menu->inputDelay = 8;
+}
+
+static void SimMap_QueueGarageCar(GTMenu *menu, Car *car, int slot)
+{
+    unsigned int wheel = *(unsigned int *)&car->setup;
+    int color = CarColor_FindIndex(car->baseCarId, car->color);
+
+    GTMenu_QueueCarPreview(menu, 1, car->baseCarId, car->carId, color, slot, (wheel & WHEEL_MASK) != 0, wheel,
+                           car->dirt);
+}
+
+// Remembers the view for when the screen comes back.
+static void SimMap_LeaveMenu(GTMenu *menu, int exit)
+{
+    FlowMenuState *flow = &g_Flow_IntroShown;
+
+    flow->gtMenuExit = exit;
+    flow->page = menu->view.page;
+    flow->bgmTrack = *(short *)((char *)&menu->view + 0x550);
+    menu->quit = 1;
+}
+
+// A confirmed element of the map or of a shop page. Returns 1 when the caller may go on,
+// 0 when the element was a part or a sound has been played. Written by hand from the
+// assembly: this function was never in C++ before the port.
 int SimMap_Update(GTMenu *menu, MenuElement *element, int arg)
 {
-    Rt_Unimplemented("SimMap_Update");
-    return 0;
+    int result = 1;
+    int silent = 1;     // no sound has been played
+    int page = 0;
+    int current = GARAGE_CURRENT;
+    int action = element->flags & 0xffff;
+    int msg;
+
+    if (element->flags & 0x1000000) {
+        Car *car;
+        int slot;
+        unsigned int id;
+
+        switch (action) {
+        case 0x50: // used car lot: opens the list, then picks a car
+            if (menu->listMode == 0) {
+                if (*(short *)&g_UsedCarList > 0) {
+                    menu->listMode = 2;
+                    Sfx_PlayMenu(1);
+                } else {
+                    Sfx_PlayMenu(0);
+                }
+                goto events;
+            }
+            if (menu->listMode == 2) {
+                int price;
+
+                menu->listMode = 0;
+                page = element->target;
+                id = UsedCarList_GetSelectedCarId();
+                GTMenu_QueueCarPreview(menu, 1, id, id, CarColor_FindIndex(id, UsedCarList_GetSelectedColor()), -1, 0,
+                                       0, -1);
+                price = UsedCarList_GetSelectedPrice();
+                Txn_SetBuyNewCar(&g_ShopTxn, id, price);
+            }
+            break;
+        case 9: // garage: opens the list, then picks a car
+            if (menu->listMode == 0) {
+                if (*(short *)&g_GarageList > 0) {
+                    Sfx_PlayMenu(1);
+                    menu->listMode = 1;
+                } else {
+                    Sfx_PlayMenu(0);
+                }
+                goto events;
+            }
+            if (menu->listMode == 1) {
+                menu->listMode = 0;
+                slot = D_800A8D62;
+                page = element->target;
+                SimMap_QueueGarageCar(menu, GARAGE_CAR(slot), slot);
+                ListCarWork_Load(slot);
+            }
+            break;
+        case 0x9c: // racing modification
+            if (current < 0) {
+                page = 0x80000002;
+            } else if (Car_HasPart(GARAGE_CAR(current), 0x22)) {
+                page = 0x8000001a;
+            } else if (!RacingMod_HasVariants()) {
+                page = 0x80000019;
+            } else {
+                page = element->target;
+                id = RacingMod_FirstVariant();
+                GTMenu_QueueCarPreview(menu, 1, id, id, 0, -1, 0, 0, -1);
+            }
+            break;
+        case 0x98: // a tuning shop: only for its manufacturer's cars
+            if (current < 0) {
+                Txn_Clear(&g_ShopTxn);
+                page = 0x80000002;
+            } else if (GARAGE_CAR(current)->setup.manufacturerId == g_MenuPageAttr) {
+                page = element->target;
+            } else {
+                Txn_Clear(&g_ShopTxn);
+                page = 0x8000001d;
+            }
+            break;
+        case 0xad:
+            if (current < 0) {
+                Txn_Clear(&g_ShopTxn);
+                page = 0x80000002;
+            } else {
+                SimMap_QueueGarageCar(menu, GARAGE_CAR(current), current);
+                page = element->target;
+            }
+            break;
+        case 0xae:
+            if (current < 0) {
+                Txn_Clear(&g_ShopTxn);
+                page = 0x80000002;
+            } else if (Car_IsNotExcluded(GARAGE_CAR(current)->carId)) {
+                page = element->target;
+            } else {
+                Txn_Clear(&g_ShopTxn);
+                page = 0x8000001e;
+            }
+            break;
+        case 0xbb:
+            goto events;
+        default:
+            page = element->target;
+            break;
+        }
+        Sfx_PlayMenu(1);
+        silent = 0;
+        SimMap_GoToPage(menu, page, 0);
+    }
+
+events:
+    if ((element->flags & (1 << 27)) && !(element->flags & 0xf00000)) {
+        char *code = (char *)&element->target;
+        int exit = 2;
+
+        if (element->flags & (1 << 30)) {
+            exit = 3;
+        } else {
+            int entry = Event_IsLicense(code) ? License_CheckEntry(code, &msg) : Race_CheckEntry(code, &msg);
+
+            if (entry != 1) {
+                Sfx_PlayMenu(0);
+                silent = 0;
+                SimMap_GoToPage(menu, msg, 0);
+                goto wheels;
+            }
+        }
+        Sfx_PlayMenu(1);
+        strcpy(g_GtMenu_SelectedEvent, code);
+        silent = 0;
+        SimMap_LeaveMenu(menu, exit);
+    }
+
+wheels:
+    if (element->flags & (1 << 28)) {
+        Car *car = GARAGE_CAR(current);
+        unsigned int code = Wheel_ParseCode((signed char *)&element->target);
+        int variant = Wheel_GetVariant(code, car->carId != car->baseCarId);
+
+        silent = 0;
+        Sfx_PlayMenu(1);
+        Txn_SetBuyWheels(&g_ShopTxn, code);
+        menu->previewDelay = 3;
+        menu->inputDelay = 8;
+        menu->previewWheel = code;
+        menu->previewWheelColor = variant;
+    }
+
+    switch (action) {
+    case 2: // yes
+        g_ShopTxn.color = CarPreview_GetColorCode(&menu->view.preview);
+        page = Shop_ExecuteTransaction(&g_ShopTxn);
+        if (page == 0) {
+            menu->canGoBack = 1;
+            page = MenuView_GetBackPage(&menu->view);
+        }
+        SimMap_GoToPage(menu, page, 0);
+        break;
+    case 3: // no
+        Txn_Decline(&g_ShopTxn);
+        menu->canGoBack = 1;
+        SimMap_GoToPage(menu, MenuView_GetBackPage(&menu->view), 0);
+        break;
+    case 4:
+        page = Shop_CheckTransaction(&g_ShopTxn);
+        if (page == 0) {
+            Sfx_PlayMenu(0);
+            return result;
+        }
+        menu->canGoBack = 0;
+        SimMap_GoToPage(menu, page, 0);
+        break;
+    case 5:
+        page = MenuView_GetCarInfoPage(&menu->view);
+        if (page == 0) {
+            Sfx_PlayMenu(0);
+            return result;
+        }
+        SimMap_GoToPage(menu, page, 0);
+        break;
+    case 6: { // a dealer's car tile
+        unsigned int id = element->arg10;
+
+        Txn_SetBuyNewCar(&g_ShopTxn, id, 0);
+        GTMenu_QueueCarPreview(menu, 1, id, id, 0, -1, 0, 0, -1);
+        return result;
+    }
+    case 9:
+    case 0x50:
+        return result;
+    case 11:
+        SimMap_LeaveMenu(menu, 0);
+        return result;
+    case 13: // car wash, 50 credits
+        if (!CarWash_CanAfford() || GARAGE_CAR(current)->dirt == 0) {
+            Sfx_PlayMenu(0);
+            return result;
+        }
+        GARAGE_CREDITS -= 50;
+        menu->listMode = 3;
+        MenuView_StartCarWash(&menu->view);
+        break;
+    case 16:
+        menu->canGoBack = 1;
+        if (Txn_Back(&g_ShopTxn)) {
+            SimMap_GoToPage(menu, MenuView_GetPrevBackPage(&menu->view), 1);
+        } else {
+            SimMap_GoToPage(menu, MenuView_GetBackPage(&menu->view), 0);
+        }
+        break;
+    case 18:
+        SimMap_GoToPage(menu, MenuView_GetBackPage(&menu->view), 1);
+        break;
+    case 19:
+        SimMap_GoToPage(menu, 0x8000002e, 0);
+        break;
+    case 0x95:
+    case 0x96:
+        CarPreview_CycleColor(&menu->view.preview, arg != 0 ? 1 : -1);
+        break;
+    case 0x9d: {
+        unsigned int id = RacingMod_NextVariant();
+
+        GTMenu_QueueCarPreview(menu, 3, id, id, 0, -1, 0, 0, -1);
+        menu->inputDelay = 4;
+        break;
+    }
+    case 0xaa:
+        Txn_SetSellCar(&g_ShopTxn, D_800A8D62);
+        menu->canGoBack = 0;
+        SimMap_GoToPage(menu, Shop_CheckTransaction(&g_ShopTxn), 0);
+        break;
+    case 0xab:
+        Txn_SetSelectCar(&g_ShopTxn, D_800A8D62);
+        menu->canGoBack = 0;
+        SimMap_GoToPage(menu, Shop_CheckTransaction(&g_ShopTxn), 0);
+        break;
+    default:
+        if ((unsigned int)(action - 0x14) < 0x33) {
+            Txn_SetBuyPart(&g_ShopTxn, action - 0x14);
+            menu->canGoBack = 0;
+            SimMap_GoToPage(menu, Shop_CheckTransaction(&g_ShopTxn), 0);
+            break;
+        }
+        if (silent) {
+            Sfx_PlayMenu(0);
+        }
+        return 0;
+    }
+    Sfx_PlayMenu(1);
+    return result;
 }
 }
 
