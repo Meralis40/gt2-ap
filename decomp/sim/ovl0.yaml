@@ -105,6 +105,8 @@ segments:
       - [0x4a88c, rodata] # the padding after resultmenu.cpp's .rodata
       - {start: 0x4a898, type: .rodata, name: timetrialmenu}
       - [0x4a8bc, rodata] # 0x8005a8bc
+      - {start: 0x4a928, type: .rodata, name: license}
+      - [0x4a94c, rodata] # 0x8005a94c
       - {start: 0x4ab24, type: .rodata, name: gtracemenu}
       - [0x4ab48, rodata] # 0x8005ab48
   - [0x4d5f8]
