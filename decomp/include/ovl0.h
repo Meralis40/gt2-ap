@@ -106,7 +106,8 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     short halfTrackR; /* rear track width / 2 */
     byte unk1c; /* CarPhys_SetUnk1c */
     byte driveClass; /* Drivetrain_GetClass of the layout; index into g_AiDriveParams */
-    unsigned char unk1e[10];
+    unsigned char unk1e[6];
+    short unk24[2]; /* per axle (Suspension_InitAxleTravel) */
     short mass; /* CarPhys_EffectiveMass(weight) * 4 */
     short invMass;
     unsigned char unk2c[4];
@@ -130,7 +131,9 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     byte gearCount; /* Disputed: used as the gear count by the gearbox code, but CarPhys_UpdateDrivetrain / RaceCars_UpdateDrivetrain branch on it being 1 or 2 like a transmission mode. */
     unsigned char unk373;
     short centerSplit; /* front share of the wheel speed, layout 6 */
-    unsigned char unk376[30];
+    unsigned char unk376[4];
+    byte unk37a[2]; /* per axle: 0 lets the axle follow its wheels (Cars_UpdateWheelRotation) */
+    unsigned char unk37c[24];
     ushort launchLimit; /* rpm above which the clutch starts slipping (CarPhys_UpdateDrivetrain) */
     ushort launchRpm; /* drivetrain +0x26: min redline rpm (x100 from CarParams) */
     unsigned char unk398[12];
@@ -138,11 +141,19 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     int gearSpeed[8]; /* speed per rpm of each gear */
     short tyreRadius[2]; /* front, rear */
     short invTyreRadius[2]; /* 0x1000000 / tyreRadius */
-    unsigned char unk3ec[52];
+    unsigned char unk3ec[40];
+    int brakeForce[2]; /* front, rear (CarPhys_InitSpeedLimits) */
+    unsigned char unk41c[4];
     int brakeMin; /* least brake force (Ai_SpeedControl) */
-    unsigned char unk424[56];
+    unsigned char unk424[12];
+    int rollResist;
+    int unk434[2]; /* per axle: spring travel at rest (Suspension_InitAxleTravel) */
+    int unk43c;
+    int dragA;
+    int dragB;
+    unsigned char unk448[20];
     byte carIndex;
-    byte control; /* 0 player, 2 CPU (CarPhys_SetControl) */
+    signed char control; /* 0 player, 2 CPU (CarPhys_SetControl) */
     byte ghost; /* non-zero: no car-to-car contact */
     unsigned char unk45f;
     struct CarPhysWheel wheels[4]; /* FL, FR, RL, RR */
@@ -187,7 +198,9 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     short fwdDir[3]; /* body forward direction (0x1000 = unit), from the matrix build Matrix_FromAngles(+0x668, +0x670, +0x678) */
     unsigned char unk66e[2];
     short rightDir[3]; /* body right direction */
-    unsigned char unk676[46];
+    unsigned char unk676[10];
+    short localDirs[13]; /* world to body: [6..8] forward, [10..12] lateral (CarPhys_UpdateLocalVelocity) */
+    unsigned char unk69a[10];
     int speedFwd; /* forward speed (body frame) */
     int speedLat; /* lateral speed */
     short rpm;
@@ -196,8 +209,9 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     byte airborne; /* all wheels unloaded (RaceCars_UpdateSuspension) */
     byte pitBox; /* pit lane segment of this car (AiLine_GetPitBox) */
     byte bufIdx; /* double-buffered contact data index */
-    int footprint[16]; /* 2 buffers (bufIdx) x 4 corners x {x, z} (Body_ComputeFootprint) */
-    unsigned char unk6f4[4];
+    int footprint[2][4][2]; /* 2 buffers (bufIdx) x 4 corners x {x, z} (Body_ComputeFootprint) */
+    short unk6f4;
+    short unk6f6;
     ushort maxSpeedKmh;
     byte hitFeedback; /* set once a hard hit sent feedback */
     unsigned char unk6fb;
@@ -207,7 +221,9 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     unsigned char unk700[4];
     int rateScale; /* frame rate over catchUp (Body_ApplyTimeScale) */
     short throttleTarget;
-    unsigned char unk70a[6];
+    short steerRight; /* steering limits of this frame (Car_ApplyControls) */
+    short steerLeft;
+    unsigned char unk70e[2];
     int engineFriction;
     int engineBraking;
     unsigned char unk718;
@@ -220,10 +236,14 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     short boost;
     short blowOffState;
     short boostDisplay;
-    unsigned char unk748[8];
+    short swayYaw; /* body sway behind the car's angles (CarPhys_ResetOrientationHistory) */
+    short swayYawRate;
+    short swayPitch;
+    short swayPitchRate;
     byte racePos; /* place in the race, from 1 (RaceOrder_Update) */
     byte licenseState; /* 1 passed, 2 failed (LicenseTest_Succeed / LicenseTest_Fail) */
-    unsigned char unk752[4];
+    short unk752;
+    unsigned char unk754[2];
     byte licenseResult; /* 1 cleared; why it failed: 3 overran, 4 hit or moved, 5 hit (LicenseTest_CheckEnd) */
     byte unk757;
     byte unk758;

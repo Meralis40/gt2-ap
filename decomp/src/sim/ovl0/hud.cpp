@@ -824,7 +824,7 @@ void Hud_DrawPedals(uint *ot, RaceVehicle *car, int x, int y)
 
     values[0] = car->phys.throttle;
     values[1] = car->phys.brake;
-    values[2] = *(short *)car->phys.unk614;
+    values[2] = car->phys.unk614;
     i = 0;
     do {
         tile = Prim_AddTile(ot, *rgb);

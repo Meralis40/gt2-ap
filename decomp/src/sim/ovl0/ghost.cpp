@@ -164,8 +164,8 @@ void GhostFrame_Capture(GhostFrame *frame, CarPhys *car)
     for (i = 0; i < 3; i++) {
         frame->angles[i] = (&car->pitch)[i];
     }
-    frame->angleX = *(short *)car->unk6f4;
-    frame->angleZ = *(short *)(car->unk6f4 + 2);
+    frame->angleX = car->unk6f4;
+    frame->angleZ = car->unk6f6;
 }
 
 void GhostFrame_Apply(CarPhys *car, GhostFrame *frame)

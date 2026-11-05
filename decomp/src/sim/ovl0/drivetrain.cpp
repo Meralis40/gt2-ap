@@ -402,7 +402,7 @@ void Tyres_ComputeGripLimit(RaceVehicle *cars, int count)
                 wheel->wearLevel = level;
             }
         }
-        roll = car->roll - *(short *)(car->unk6f4 + 2);
+        roll = car->roll - car->unk6f6;
         camber[2] = -roll;
         camber[0] = -roll;
         camber[3] = roll;

@@ -88,7 +88,7 @@ static inline void CarColl_UpdateCar(RaceVehicle *cars, int count, int i, CarPhy
 
                     for (c = 0; c < 4; c++, pair++) {
                         for (k = 0; k < 2; k++) {
-                            rel[k] = b->footprint[b->bufIdx * 8 + c * 2 + k] - pos[k];
+                            rel[k] = b->footprint[b->bufIdx][c][k] - pos[k];
                         }
                         if (OUT_OF_RANGE(rel[1], -0x10000, 0xffff) || OUT_OF_RANGE(rel[0], -0x10000, 0xffff)) {
                             pair->outcode[buf] = 0xf;
@@ -790,14 +790,14 @@ void Body_ComputeFootprint(CarPhys *body)
     // The footprint buffer, as an offset of the whole body.
     CarPhys *fp = (CarPhys *)((char *)body + buf * 32);
 
-    fp->footprint[0] = body->pos[0] - sideX + frontX;
-    fp->footprint[1] = body->pos[1] - sideZ + frontZ;
-    fp->footprint[2] = body->pos[0] + sideX + frontX;
-    fp->footprint[3] = body->pos[1] + sideZ + frontZ;
-    fp->footprint[4] = body->pos[0] - sideX - rearX;
-    fp->footprint[5] = body->pos[1] - sideZ - rearZ;
-    fp->footprint[6] = body->pos[0] + sideX - rearX;
-    fp->footprint[7] = body->pos[1] + sideZ - rearZ;
+    fp->footprint[0][0][0] = body->pos[0] - sideX + frontX;
+    fp->footprint[0][0][1] = body->pos[1] - sideZ + frontZ;
+    fp->footprint[0][1][0] = body->pos[0] + sideX + frontX;
+    fp->footprint[0][1][1] = body->pos[1] + sideZ + frontZ;
+    fp->footprint[0][2][0] = body->pos[0] - sideX - rearX;
+    fp->footprint[0][2][1] = body->pos[1] - sideZ - rearZ;
+    fp->footprint[0][3][0] = body->pos[0] + sideX - rearX;
+    fp->footprint[0][3][1] = body->pos[1] + sideZ - rearZ;
 }
 
 // Copies the current footprint corners into the other buffer (previous frame).
@@ -810,8 +810,8 @@ void Body_SaveFootprint(CarPhys *body)
     do {
         CarPhys *s = (CarPhys *)((char *)body + src);
         CarPhys *d = (CarPhys *)((char *)body + dst);
-        d->footprint[0] = s->footprint[0];
-        d->footprint[1] = s->footprint[1];
+        d->footprint[0][0][0] = s->footprint[0][0][0];
+        d->footprint[0][0][1] = s->footprint[0][0][1];
         src += 8;
         dst += 8;
         i++;
@@ -841,11 +841,11 @@ unsigned int Body_SweepFootprint(CarPhys *body, int *outFraction, unsigned int *
         WallSweep *s = (WallSweep *)(0x1f800000 + off);
         cur += 8;
         prev += 8;
-        s->from[0] = from->footprint[0] << 4;
-        s->from[1] = from->footprint[1] << 4;
+        s->from[0] = from->footprint[0][0][0] << 4;
+        s->from[1] = from->footprint[0][0][1] << 4;
         s->from[2] = 0;
-        s->to[0] = to->footprint[0] << 4;
-        s->to[1] = to->footprint[1] << 4;
+        s->to[0] = to->footprint[0][0][0] << 4;
+        s->to[1] = to->footprint[0][0][1] << 4;
         s->to[2] = 0;
         off += sizeof(WallSweep);
     }

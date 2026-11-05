@@ -475,7 +475,8 @@ struct CarParams { /* Computed race parameters of a car (0x1c0 bytes, CarParams_
     uchar unk00[19];
     uchar unk13; /* x10 -> EngineCurve.unk8e */
 
-    uchar unk14[20];
+    uchar unk14[4];
+    short customGears[8]; /* Gearbox_ApplyTopSpeedSetting */
     short gear28; /* used by Gearbox_ComputeRatios (/1000) */
 
     uchar gearCount; /* number of forward gears (at least 5 for the ratio table) */
@@ -518,7 +519,9 @@ struct CarParams { /* Computed race parameters of a car (0x1c0 bytes, CarParams_
     uchar turbo2RpmDiv100;
     uchar turbo2Boost;
     uchar turbo2K;
-    uchar unk17e[30];
+    uchar unk17e[6];
+    uchar diffType[2]; /* front, rear */
+    uchar unk186[22];
     uchar turbo1Type; /* boost curve shape 0..2 (EngineCurve.boostType) */
 
     uchar turbo2Type;
