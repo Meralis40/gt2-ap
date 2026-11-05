@@ -11,10 +11,33 @@
 typedef struct CarPhys CarPhys, *PCarPhys;
 typedef struct CarPhysWheel CarPhysWheel, *PCarPhysWheel;
 typedef struct TyreAxle TyreAxle, *PTyreAxle;
+typedef struct SuspAxle SuspAxle, *PSuspAxle;
+
+struct SuspAxle { /* Suspension of one axle (2 at +0x12c of CarPhys). */
+    short bumpStart; /* height below which the bump rubber works */
+    short travelMin;
+    short travelMax;
+    unsigned char unk6[2];
+    short rideHeight;
+    unsigned char unka[2];
+    int springRate;
+    int bumpDead; /* damper, compressing: deadband, base, gain (sqrt of the speed) */
+    int bumpBase;
+    int bumpGain;
+    int reboundDead; /* damper, extending */
+    int reboundBase;
+    int reboundGain;
+    int antiRoll;
+    int bumpRate;
+    unsigned char unk30[2];
+    short preload;
+};
 
 struct TyreAxle { /* Tyre curves of one axle (2 at +0x194 of CarPhys). */
     unsigned char angleCurve[0x2c]; /* TyreCurve_EvalAngle */
-    unsigned char slipCurve[0x40]; /* Tyres_LookupSlipCurve */
+    unsigned char slipCurve[0x3c]; /* Tyres_LookupSlipCurve */
+    short slipLimitUp; /* Gearbox_SelectGear: wheel slip that blocks a shift up */
+    short slipLimitDown; /* and a shift down */
     unsigned char slipCurve2[0x24];
     unsigned char loadCurve[0x2c]; /* an EngineCurve_TorqueAt curve (Tyres_ComputeGripLimit) */
     unsigned char camberCurve[0x1c];
@@ -25,10 +48,12 @@ struct CarPhysWheel { /* Per-wheel state of CarPhys (4 at +0x460: front left, fr
     int groundY16; /* groundY << 4 */
     int suspLength; /* axle travel / 2 + static offset (CarPhys_PlaceOnTrack) */
     ushort heading; /* wheel heading (4096 = turn), used for the wheel velocity */
-    unsigned char unke[6];
+    unsigned char unke[2];
+    short suspPos; /* suspension height, clamped to its travel (Wheel_ComputeSpringForce) */
+    short suspSpeed;
     byte surface; /* surface type from the track collision */
     byte surface2;
-    unsigned char unk16[2];
+    short unk16; /* last acceleration of the wheel or axle (RaceCars_UpdateDrivetrain) */
     int rollSpeed; /* wheel rolling speed */
     byte fxSmoke; /* tyre smoke (Body_UpdateTyreFx) */
     byte fxSqueal;
@@ -49,12 +74,12 @@ struct CarPhysWheel { /* Per-wheel state of CarPhys (4 at +0x460: front left, fr
     short lateralAbs; /* |cornering force before the grip limit| (CarPhys_UpdateDrivetrain) */
     byte wearRate; /* tyre wear of this frame, at most 0xff */
     signed char wearLevel; /* -0x80..0x7f (Tyres_ComputeGripLimit) */
-    short unk40;
-    unsigned char unk42[2];
+    short bumpFade; /* 0..0x1000 with the wheel speed (RaceCars_PrepareWheelProbes) */
+    short bump; /* surface bumps under the wheel (RaceCars_ApplyGroundProbes) */
     short unk44; /* slip ratio (Tyre_ComputeSlipRatio) */
     short unk46; /* second output of the slip curve (Tyres_LookupSlipCurve) */
-    unsigned char unk48[4];
-    int unk4c;
+    int spring; /* spring force (Wheel_ComputeSpringForce) */
+    int damper;
     short unk50; /* slip angle (Tyres_ComputeSlipAngle) */
     short slipFade; /* 0..0x1000, fades the slip angle in with speed */
     int lateral; /* cornering force (CarPhys_UpdateDrivetrain) */
@@ -89,7 +114,7 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     short steerSpeed; /* steering rate per frame (0x5c7 on dirt courses) */
     unsigned char unk64[24];
     struct EngineCurve engine; /* torque curve (EngineCurve_Build); +0x8c redline rpm, +0x8e idle rpm, +0xac turbo */
-    unsigned char unk12c[104];
+    struct SuspAxle susp[2]; /* front, rear */
     struct TyreAxle tyres[2]; /* front, rear */
     int topSpeed; /* CarPhys_ComputeTopSpeed */
     short surfaceGrip[16]; /* by CarPhysWheel.surface (Tyres_ComputeGripLimit) */
@@ -125,7 +150,7 @@ struct CarPhys { /* Vehicle dynamics state of one race car (0x798 bytes, built f
     unsigned char unk614[4];
     byte gear;
     byte clutchIn;
-    unsigned char unk61a[2];
+    byte diffLocked[2]; /* front, rear limited slip locked up (RaceCars_UpdateDifferentials) */
     byte startDelay;
     byte revLimiter; /* set at redline, cleared 500 rpm below */
     short engineLoad; /* throttle after the turbo */
