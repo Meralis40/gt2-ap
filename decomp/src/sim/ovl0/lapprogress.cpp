@@ -457,7 +457,7 @@ INCLUDE_ASM("asm/sim/ovl0/nonmatchings/lapprogress", Cars_UpdateTrackPositions);
 #endif
 
 // Endurance race (g_Race_IsEndurance) and g_RaceClock past 21600000 (2 hours).
-unsigned char Race_IsEnduranceTimeUp(void)
+int Race_IsEnduranceTimeUp(void)
 {
     return g_Race_IsEndurance != '\0' && 21600000 < (unsigned int)g_RaceClock;
 }
