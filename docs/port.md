@@ -61,6 +61,6 @@ Known gaps:
 - `g_HwRegs` is a plain copy of the I/O page, and most stubs do nothing or stop with their name. Writes to GPU, DMA and SPU registers have no effect yet, and GPUSTAT always reads as ready.
 - `SimMap_Update` is a stub. It has no C++ (M4).
 - `RaceMenuLoop`, `RaceViewLoop`, `QuickMenu` and `PreQuickMenuIO` still have to become real classes: `QuickMenu` and `PreQuickMenuIO` have lost their constructors for now.
-- `-O2`, `-malign-double`, `-mno-ms-bitfields` and the full layout check aren't in use yet.
+- The full layout check isn't in place yet, and neither are `-malign-double` and `-mno-ms-bitfields`, which only apply to a GCC-style target.
 - Inflate no longer yields, so a stream decompresses in one frame. Formatted output is still the game's own (`Printf_Format`, which the text code needs).
 - Spin-waits other than `Boot_WaitVSyncs` don't call `Rt_Pump` yet.
