@@ -62,18 +62,22 @@ enum {
 #define gte_Lzc(value) \
     ({ int _gte_v; __asm__ volatile("mtc2 %1, $30\n\tnop\n\tnop\n\tmfc2 %0, $31" : "=r"(_gte_v) : "r"(value)); _gte_v; })
 
-// Links a primitive into an OT entry: the two tags' addresses swap, their top bytes stay.
-#define ot_AddPrim(ot, prim) \
+// Links a primitive, or a chain of them, into an OT entry: the two tags' addresses swap,
+// their top bytes stay.
+#define ot_AddPrims(ot, first, last) \
     do { \
         int _ot_next; \
         __asm__ volatile("lwl %0, 2(%1)\n\tswl %2, 2(%1)\n\tswl %0, 2(%3)" \
-                         : "=&r"(_ot_next) : "r"(ot), "r"((unsigned int)(prim) << 8), "r"(prim)); \
+                         : "=&r"(_ot_next) : "r"(ot), "r"((unsigned int)(first) << 8), "r"(last)); \
     } while (0)
+#define ot_AddPrim(ot, prim) ot_AddPrims(ot, prim, prim)
 
 #define GTE_COMMAND(text) __asm__ volatile("nop\n\tnop\n\t" text)
 #define gte_rtps() GTE_COMMAND("rtps")
 #define gte_rtpt() GTE_COMMAND("rtpt")
 #define gte_nclip() GTE_COMMAND("nclip")
+#define gte_dpcs() GTE_COMMAND("dpcs")
+#define gte_dpct() GTE_COMMAND("dpct")
 #define gte_intpl() GTE_COMMAND("intpl")
 #define GTE_STR(x) #x
 // The arguments must be literal constants (or the GTE_* defines above).
@@ -96,9 +100,12 @@ void gte_LoadDataRegAt(int reg, const void *ptr, int offset);
 void gte_StoreDataReg(int reg, void *ptr);
 int gte_Lzc(int value);
 void ot_AddPrim(unsigned int *ot, void *prim);
+void ot_AddPrims(unsigned int *ot, void *first, void *last);
 void gte_rtps(void);
 void gte_rtpt(void);
 void gte_nclip(void);
+void gte_dpcs(void);
+void gte_dpct(void);
 void gte_intpl(void);
 void gte_mvmva(int sf, int mx, int v, int cv, int lm);
 void gte_sqr(int sf);
