@@ -22,6 +22,8 @@ void Rt_LoadOverlay(int index);
 // Test runs: stops after maxVblanks without waiting for real time, writing a frame to
 // dumpDir every dumpEvery vblanks. 0 for no limit, no frames.
 void Rt_StartWatchdog();
+// Test runs: the buttons held from vblank on (hw/host.cpp lists the bits).
+void Rt_AddInput(unsigned int vblank, unsigned short buttons);
 void Rt_SetRunLimits(unsigned int maxVblanks, unsigned int dumpEvery, const char *dumpDir);
 #endif
 

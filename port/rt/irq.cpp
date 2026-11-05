@@ -23,6 +23,11 @@
 
 namespace {
 
+struct ScriptedInput {
+    unsigned int vblank;
+    unsigned short buttons;
+};
+
 using Clock = std::chrono::steady_clock;
 
 constexpr auto kVblank = std::chrono::nanoseconds(16683350);  // NTSC, 59.94 Hz
@@ -42,6 +47,7 @@ unsigned int g_Field;
 unsigned int g_MaxVblanks;
 unsigned int g_DumpEvery;
 std::filesystem::path g_DumpDir;
+std::vector<ScriptedInput> g_Script;
 
 std::uint16_t &timer(int index)
 {
@@ -74,6 +80,11 @@ void vblank()
     timer(2) = static_cast<std::uint16_t>(timer(2) + kClocksPerVblank);
     if (g_MaxVblanks == 0) {
         Host_Frame();
+    }
+    for (const ScriptedInput &input : g_Script) {
+        if (input.vblank == g_Vblanks) {
+            Hw_PadSetButtons(input.buttons);
+        }
     }
     Hw_PadVblank();
     if (g_VSyncCallback != nullptr) {
@@ -135,6 +146,11 @@ void Rt_StartWatchdog()
                     DUPLICATE_SAME_ACCESS);
     std::thread(watchdog, game).detach();
 #endif
+}
+
+void Rt_AddInput(unsigned int vblank, unsigned short buttons)
+{
+    g_Script.push_back({vblank, buttons});
 }
 
 void Rt_SetRunLimits(unsigned int maxVblanks, unsigned int dumpEvery, const char *dumpDir)

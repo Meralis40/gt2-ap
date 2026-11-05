@@ -2,9 +2,9 @@
 // Starts the game: maps guest memory, loads the executable from the disc and runs
 // its entry point, then each overlay entry it asks for.
 //
-// Usage: gt2ap <disc .cue> [--vblanks <n>] [--dump <every> <dir>]
+// Usage: gt2ap <disc .cue> [--vblanks <n>] [--dump <every> <dir>] [--input <vblank> <buttons>]...
 // --vblanks stops after n vblanks, without waiting for real time; --dump writes a frame
-// every <every> vblanks to <dir>.
+// every <every> vblanks to <dir>; --input holds buttons from a vblank on.
 #include "fixups.h"
 #include "memmap.h"
 #include "rt.h"
@@ -171,6 +171,9 @@ int main(int argc, char **argv)
         for (int i = 1; i < argc; i++) {
             if (std::strcmp(argv[i], "--vblanks") == 0 && i + 1 < argc) {
                 maxVblanks = std::strtoul(argv[++i], nullptr, 0);
+            } else if (std::strcmp(argv[i], "--input") == 0 && i + 2 < argc) {
+                unsigned int vblank = std::strtoul(argv[++i], nullptr, 0);
+                Rt_AddInput(vblank, static_cast<unsigned short>(std::strtoul(argv[++i], nullptr, 0)));
             } else if (std::strcmp(argv[i], "--dump") == 0 && i + 2 < argc) {
                 dumpEvery = std::strtoul(argv[++i], nullptr, 0);
                 dumpDir = argv[++i];
