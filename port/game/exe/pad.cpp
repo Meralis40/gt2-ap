@@ -220,18 +220,7 @@ void Pad_UpdateDevice(PadDevice *dev)
 // Stops the GPU's DMA, enables its channel and resets the GPU, with interrupts masked.
 void Gpu_Reset(void)
 {
-    volatile unsigned int *dma;
-    volatile unsigned int *gpu;
-    int mask;
-
-    GPU_cw(0);
-    mask = SetIntrMask(0);
-    dma = (volatile unsigned int *)HW_REG(0x080);
-    gpu = (volatile unsigned int *)HW_REG(0x810);
-    dma[0x28 / 4] = 0x401;
-    dma[0x70 / 4] |= 0x800;
-    gpu[1] = 0;
-    SetIntrMask(mask);
+    Hw_Gp1(0);
 }
 
 }

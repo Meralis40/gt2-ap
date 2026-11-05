@@ -1,0 +1,187 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// The drive, at the level of libcd's CdControlF: commands complete on the next pump and
+// reads deliver their sectors from the disc image. XA audio and CD audio aren't played yet.
+#include "hw.h"
+#include "rt.h"
+
+#include "gt2ap/discio/disc_image.hpp"
+
+#include <array>
+#include <cstdint>
+#include <cstring>
+#include <memory>
+#include <optional>
+#include <span>
+#include <vector>
+
+namespace {
+
+namespace d = gt2ap::discio;
+
+using Callback = void (*)(unsigned char status, unsigned char *result);
+
+enum Command {
+    kSetloc = 2, kPlay = 3, kReadN = 6, kStandby = 7, kStop = 8, kPause = 9, kSetfilter = 13, kSetmode = 14,
+    kGetlocL = 16, kGetlocP = 17, kGetTN = 19, kGetTD = 20, kReadS = 27,
+};
+enum Status { kDataReady = 1, kComplete = 2 };
+enum StatusBits { kStatSpinning = 0x02, kStatReading = 0x20 };
+enum ModeBits { kModeWholeSector = 0x20 };
+
+constexpr std::size_t kRawSectorSize = 2352;
+constexpr std::size_t kHeaderOffset = 12;
+constexpr std::size_t kDataOffset = 24;
+constexpr int kFirstSectorOffset = 150;  // 2 seconds of pregap
+
+std::optional<d::DiscImage> g_Disc;
+Callback g_OnSync, g_OnReady;
+std::uint8_t g_Mode;
+std::uint32_t g_Location;
+bool g_Reading;
+std::array<std::uint8_t, kRawSectorSize> g_Sector;
+std::size_t g_SectorPos;
+std::uint32_t g_ResultWords[2];
+bool g_SyncPending;
+
+std::uint8_t toBcd(int value)
+{
+    return static_cast<std::uint8_t>((value / 10) << 4 | (value % 10));
+}
+
+int fromBcd(std::uint8_t value)
+{
+    return (value >> 4) * 10 + (value & 0xf);
+}
+
+std::uint8_t stat()
+{
+    return kStatSpinning | (g_Reading ? kStatReading : 0);
+}
+
+void setResult(std::uint8_t a = 0, std::uint8_t b = 0, std::uint8_t c = 0, std::uint8_t d = 0, std::uint8_t e = 0,
+               std::uint8_t f = 0, std::uint8_t g = 0, std::uint8_t h = 0)
+{
+    const std::uint8_t bytes[8] = {a, b, c, d, e, f, g, h};
+
+    std::memcpy(g_ResultWords, bytes, sizeof(bytes));
+}
+
+void readSector()
+{
+    if (!g_Disc) {
+        Rt_Fatal("reading the CD needs a disc image");
+    }
+    if (g_Disc->readStoredSector(g_Location, g_Sector) != kRawSectorSize) {
+        Rt_Fatal("the disc image needs raw 2352-byte sectors");
+    }
+    g_Location++;
+    g_SectorPos = g_Mode & kModeWholeSector ? kHeaderOffset : kDataOffset;
+}
+
+}  // namespace
+
+void Hw_CdOpen(const std::filesystem::path &cue)
+{
+    g_Disc = d::DiscImage::open(cue);
+}
+
+extern "C" {
+
+void *CdSyncCallback(Callback callback)
+{
+    Callback previous = g_OnSync;
+
+    g_OnSync = callback;
+    return reinterpret_cast<void *>(previous);
+}
+
+void *CdReadyCallback(Callback callback)
+{
+    Callback previous = g_OnReady;
+
+    g_OnReady = callback;
+    return reinterpret_cast<void *>(previous);
+}
+
+int CdControlF(unsigned char command, unsigned char *param)
+{
+    setResult(stat());
+    switch (command) {
+    case kSetloc:
+        g_Location = (fromBcd(param[0]) * 60 + fromBcd(param[1])) * 75 + fromBcd(param[2]) - kFirstSectorOffset;
+        break;
+    case kReadN:
+    case kReadS:
+        g_Reading = true;
+        setResult(stat());
+        break;
+    case kPlay:
+        Rt_Log("CD audio isn't played yet");
+        break;
+    case kStandby:
+    case kStop:
+    case kPause:
+        g_Reading = false;
+        setResult(stat());
+        break;
+    case kSetmode:
+        g_Mode = param[0];
+        break;
+    case kGetlocL:
+        std::memcpy(g_ResultWords, g_Sector.data() + kHeaderOffset, sizeof(g_ResultWords));
+        break;
+    case kGetlocP:
+        setResult(1, 1, 0, 0, 0, g_Sector[kHeaderOffset], g_Sector[kHeaderOffset + 1], g_Sector[kHeaderOffset + 2]);
+        break;
+    case kGetTN:
+        setResult(stat(), 1, 1);
+        break;
+    case kGetTD: {
+        const d::Track &last = g_Disc->tracks().back();
+        std::uint64_t sectors = param[0] != 0 ? 0 : last.startLba + last.sectorCount;
+        int seconds = static_cast<int>((sectors + kFirstSectorOffset) / 75);
+        setResult(stat(), toBcd(seconds / 60), toBcd(seconds % 60));
+        break;
+    }
+    default:
+        break;
+    }
+    g_SyncPending = true;
+    return 1;
+}
+
+int CdGetSector(void *dst, int words)
+{
+    std::size_t size = static_cast<std::size_t>(words) * 4;
+
+    if (g_SectorPos + size > g_Sector.size()) {
+        Rt_Fatal("CdGetSector past the end of the sector");
+    }
+    std::memcpy(dst, g_Sector.data() + g_SectorPos, size);
+    g_SectorPos += size;
+    return 1;
+}
+
+int Hw_CdPump(void)
+{
+    if (g_SyncPending) {
+        g_SyncPending = false;
+        if (g_OnSync != nullptr) {
+            std::uint32_t result[2] = {g_ResultWords[0], g_ResultWords[1]};
+            g_OnSync(kComplete, reinterpret_cast<unsigned char *>(result));
+        }
+        return 1;
+    }
+    if (g_Reading) {
+        readSector();
+        setResult(stat());
+        if (g_OnReady != nullptr) {
+            std::uint32_t result[2] = {g_ResultWords[0], g_ResultWords[1]};
+            g_OnReady(kDataReady, reinterpret_cast<unsigned char *>(result));
+        }
+        return 1;
+    }
+    return 0;
+}
+
+}  // extern "C"

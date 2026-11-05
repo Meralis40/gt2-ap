@@ -14,38 +14,29 @@ extern short g_AtanOctantBase[];
 // Waits for the GPU, then starts its DMA down the linked list at list.
 void Gpu_DrawOTag(void *list)
 {
-    volatile unsigned int *dma;
-    volatile unsigned int *gpu;
-
     Gpu_DrawSync();
-    dma = (volatile unsigned int *)HW_REG(0x080);
-    gpu = (volatile unsigned int *)HW_REG(0x810);
-    dma[0x20 / 4] = (unsigned int)list;
-    dma[0x24 / 4] = 0;
-    dma[0x28 / 4] = 0x01000401;
-    gpu[1] = 0x04000002;
+    Hw_Gp1(0x04000002);
+    Hw_GpuDrawList(list);
+    Rt_DmaDone(2);
 }
 
 // Clears an ordering table of n entries by OTC DMA, each linked to the one before.
 void Dma_ClearOTagR(void *ot, int n)
 {
-    volatile unsigned int *dma = (volatile unsigned int *)HW_REG(0x080);
-    unsigned int chcr = 0x11000002;
+    unsigned int *entry = (unsigned int *)ot + n - 1;
 
-    dma[0x70 / 4] |= 0x08000000;
-    dma[0x68 / 4] = 0;
-    dma[0x60 / 4] = (unsigned int)ot + ((n - 1) << 2);
-    dma[0x64 / 4] = n;
-    ((unsigned int *)dma)[0x68 / 4] = chcr;
+    while (--n != 0) {
+        *entry = (unsigned int)(entry - 1) & 0xffffff;
+        entry--;
+    }
+    *entry = 0xffffff;
 }
 
 // Acknowledges the GPU's interrupt and resets its command buffer.
 void Gpu_ResetCommandBuffer()
 {
-    volatile unsigned int *gpu = (volatile unsigned int *)HW_REG(0x810);
-
-    gpu[1] = 0x02000000;
-    ((unsigned int *)gpu)[1] = 0x01000000;
+    Hw_Gp1(0x02000000);
+    Hw_Gp1(0x01000000);
 }
 
 // Shifts a 32-bit vector to fit 13 bits; returns the shift (negative to the left).

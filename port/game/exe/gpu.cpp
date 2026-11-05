@@ -63,9 +63,7 @@ void Gpu_SetDisplayMode(unsigned int mode)
 {
     GfxIrqState *irq = &g_GfxIrq;
 
-    volatile GpuPorts *gpu = (volatile GpuPorts *)HW_REG(0x810);
-
-    gpu->ctrl = mode | 0x8000000;
+    Hw_Gp1(mode | 0x8000000);
     irq->displayMode = mode;
 }
 
@@ -83,8 +81,7 @@ void Gpu_SetHRange(int x0, int x1)
     div = D_80090520[i];
     x0 = (x0 + D_80090528[i]) * div;
     x1 = ((x1 + 3) & ~3) * div;
-    gpu = (volatile GpuPorts *)HW_REG(0x810);
-    gpu->ctrl = (x1 + x0) << 12 | x0 | 0x6000000;
+    Hw_Gp1((x1 + x0) << 12 | x0 | 0x6000000);
 }
 
 // GP1(07): the vertical display range, halved when interlaced.
@@ -101,8 +98,7 @@ void Gpu_SetVRange(int y0, int y1)
     }
     y0 += 0x10;
     if (mode & 8) y0 += 0x15;
-    gpu = (volatile GpuPorts *)HW_REG(0x810);
-    gpu->ctrl = (y1 + y0) << 10 | y0 | 0x7000000;
+    Hw_Gp1((y1 + y0) << 10 | y0 | 0x7000000);
 }
 
 // Waits for GPUSTAT's field bit to differ from the one Irq_WaitVSyncs saw. Returns 1 for
@@ -113,11 +109,11 @@ int Gpu_WaitField(void)
 {
     GfxIrqState *irq = &g_GfxIrq;
     unsigned int stat = irq->gpustatAtWait;
-    volatile unsigned int *status = (volatile unsigned int *)HW_REG(0x814);
     unsigned int field = 0x80000000;
 
     do {
-    } while (!((stat ^ *status) & field));
+        Rt_Pump();
+    } while (!((stat ^ Hw_GpuStat()) & field));
     irq->vblanksSinceFlip = 0;
     return (stat & field) == 0;
 }
@@ -134,8 +130,9 @@ int Irq_WaitVSyncs(int count)
         count = 1;
     }
     if (count > 0) {
-        irq->gpustatAtWait = ((volatile GpuPorts *)HW_REG(0x810))->ctrl;
+        irq->gpustatAtWait = Hw_GpuStat();
         do {
+            Rt_Pump();
         } while (*(volatile int *)&irq->vblanksSinceFlip < count);
         irq->vblanksSinceFlip = 0;
     }

@@ -10,7 +10,6 @@ extern "C" {
 void Rt_Log(const char *format, ...);
 [[noreturn]] void Rt_Fatal(const char *format, ...);
 void Rt_Unimplemented(const char *what);
-void Rt_Pump(void);
 
 // Copies overlay index to its guest address and patches its code pointers.
 void Rt_LoadOverlay(int index);
@@ -19,6 +18,10 @@ void Rt_LoadOverlay(int index);
 
 #ifdef __cplusplus
 }
+
+// Test runs: stops after maxVblanks without waiting for real time, writing a frame to
+// dumpDir every dumpEvery vblanks. 0 for no limit, no frames.
+void Rt_SetRunLimits(unsigned int maxVblanks, unsigned int dumpEvery, const char *dumpDir);
 #endif
 
 #endif

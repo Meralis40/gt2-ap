@@ -30,6 +30,10 @@ target_compile_options(game PRIVATE
 
 add_executable(gt2ap
     $<TARGET_OBJECTS:game>
+    hw/card.cpp
+    hw/cd.cpp
+    hw/gpu.cpp
+    rt/irq.cpp
     rt/main.cpp
     rt/memmap.cpp
     rt/stubs.cpp
@@ -41,7 +45,7 @@ add_executable(gt2ap
     gen/fixups_ovl3.cpp
     gen/fixups_ovl4.cpp
     gen/fixups_ovl5.cpp)
-target_include_directories(gt2ap PRIVATE . rt)
+target_include_directories(gt2ap PRIVATE . hw rt)
 target_link_libraries(gt2ap PRIVATE gt2ap::discio)
 if(WIN32)
     target_link_options(gt2ap PRIVATE

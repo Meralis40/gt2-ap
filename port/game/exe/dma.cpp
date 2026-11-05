@@ -33,6 +33,7 @@ void Spu_DmaTransfer(void *src, int spuAddr, unsigned int size, int dir)
         dma[0x40 / 4] = (unsigned int)src;
         dma[0x44 / 4] = bcr;
         dma[0x48 / 4] = chcr;
+        Rt_DmaDone(4);
     }
 }
 

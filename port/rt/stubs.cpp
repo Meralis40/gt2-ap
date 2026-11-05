@@ -18,20 +18,8 @@
 
 extern "C" {
 
-PENDING(CdControlF)
-PENDING(CdGetSector)
 PENDING(DecDCTin)
 PENDING(DecDCTout)
-PENDING(Krom2RawAdd)
-PENDING(PadGetState)
-PENDING(PadInfoAct)
-PENDING(PadSetAct)
-PENDING(PadSetActAlign)
-PENDING(PadStartCom)
-PENDING(_card_clear)
-PENDING(_card_info)
-PENDING(_card_read)
-PENDING(_card_write)
 
 // Set-up calls with no effect on PC (yet).
 #define NOTHING(name) \
@@ -41,6 +29,12 @@ PENDING(_card_write)
     }
 
 NOTHING(ResetCallback)
+// No pad connected yet: port/hw/pad, for the menus.
+NOTHING(PadGetState)
+NOTHING(PadInfoAct)
+NOTHING(PadSetAct)
+NOTHING(PadSetActAlign)
+NOTHING(PadStartCom)
 NOTHING(SetIntrMask)
 NOTHING(EnterCriticalSection)
 NOTHING(ExitCriticalSection)
@@ -52,37 +46,10 @@ NOTHING(_bu_init)
 NOTHING(PadInitDirect)
 NOTHING(DecDCTReset)
 NOTHING(InitGeom)
-NOTHING(DMACallback)
-NOTHING(CdReadyCallback)
-NOTHING(CdSyncCallback)
 NOTHING(DecDCToutCallback)
-NOTHING(CheckCallback)
-NOTHING(OpenEvent)
 NOTHING(EnableEvent)
 NOTHING(CloseEvent)
 NOTHING(GPU_cw)
-
-// The I/O page. GPUSTAT reads as ready, until the GPU runtime owns it.
-unsigned char g_HwRegs[0x1000];
-
-static void (*s_VSyncCallback)(void);
-
-void *VSyncCallback_Psyq(void (*func)(void))
-{
-    void (*previous)(void) = s_VSyncCallback;
-
-    s_VSyncCallback = func;
-    return (void *)previous;
-}
-
-// One vblank: where the game waits, the host gets its turn.
-void Rt_Pump(void)
-{
-    *(unsigned int *)(g_HwRegs + 0x814) = 0x1c000000;
-    if (s_VSyncCallback != 0) {
-        s_VSyncCallback();
-    }
-}
 
 // GTE: port/hw/gte, for the race.
 PENDING(gte_GetCtrlReg)
@@ -125,6 +92,15 @@ PENDING(psxViewLoop__BeginFrame)
 PENDING(psxViewLoop__Draw)
 PENDING(psxViewLoop__Enter)
 PENDING(psxViewLoop__Update)
+
+// The BIOS Kanji ROM isn't on the disc. Its glyphs read as blank for now; only memory card
+// screens use them. The game indexes from the space's address, in both directions.
+static unsigned short s_BlankKanji[0x80000];
+
+void *Krom2RawAdd(unsigned int)
+{
+    return &s_BlankKanji[0x40000];
+}
 
 // libc names with no equivalent in the host's C library.
 void bcopy(const void *src, void *dst, unsigned int size)
