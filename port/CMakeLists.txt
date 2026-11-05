@@ -6,6 +6,28 @@ endif()
 
 enable_language(C ASM)
 
+include(FetchContent)
+set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+set(SDL_STATIC ON CACHE BOOL "" FORCE)
+set(SDL_TEST_LIBRARY OFF CACHE BOOL "" FORCE)
+FetchContent_Declare(SDL3
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+    GIT_TAG release-3.2.8
+    GIT_SHALLOW TRUE)
+FetchContent_MakeAvailable(SDL3)
+# SDL takes Clang for a Unix compiler and links libm, which Windows doesn't have.
+foreach(sdl_target SDL3-static SDL_uclibc)
+    if(WIN32 AND TARGET ${sdl_target})
+        foreach(property LINK_LIBRARIES INTERFACE_LINK_LIBRARIES)
+            get_target_property(sdl_libraries ${sdl_target} ${property})
+            if(sdl_libraries)
+                list(REMOVE_ITEM sdl_libraries m "$<LINK_ONLY:m>")
+                set_target_properties(${sdl_target} PROPERTIES ${property} "${sdl_libraries}")
+            endif()
+        endforeach()
+    endif()
+endforeach()
+
 file(GLOB GAME_SOURCES CONFIGURE_DEPENDS
     game/exe/*.cpp game/exe/*.c
     game/ovl0/*.cpp game/ovl1/*.cpp game/ovl2/*.cpp game/ovl3/*.cpp game/ovl4/*.cpp game/ovl5/*.cpp)
@@ -33,6 +55,8 @@ add_executable(gt2ap
     hw/card.cpp
     hw/cd.cpp
     hw/gpu.cpp
+    hw/host.cpp
+    hw/pad.cpp
     rt/irq.cpp
     rt/main.cpp
     rt/memmap.cpp
@@ -47,7 +71,7 @@ add_executable(gt2ap
     gen/fixups_ovl5.cpp)
 target_include_directories(gt2ap PRIVATE . hw rt)
 target_compile_options(gt2ap PRIVATE -fno-omit-frame-pointer)
-target_link_libraries(gt2ap PRIVATE gt2ap::discio)
+target_link_libraries(gt2ap PRIVATE gt2ap::discio SDL3::SDL3-static)
 if(WIN32)
     target_link_libraries(gt2ap PRIVATE user32)
 endif()

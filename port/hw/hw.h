@@ -17,6 +17,8 @@ void Hw_GpuFrame(unsigned int *pixels, int *width, int *height);
 // Runs one pending CD event. Returns 0 if there was none.
 int Hw_CdPump(void);
 void Hw_CardPump(void);
+void Hw_PadSetButtons(unsigned short held);
+void Hw_PadVblank(void);
 
 #ifdef __cplusplus
 }

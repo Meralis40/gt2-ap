@@ -264,10 +264,11 @@ void runPolygon()
     s.gouraud = gouraud;
     Vertex color = readColor({}, g_Words[0]);
     for (int i = 0; i < count; i++) {
-        if (gouraud && i > 0) {
-            color = readColor({}, g_Words[word]);
+        if (i == 0) {
+            word = 1;
+        } else if (gouraud) {
+            color = readColor({}, g_Words[word++]);
         }
-        word++;
         v[i] = readPosition(color, g_Words[word++]);
         if (textured) {
             std::uint32_t uv = g_Words[word++];
@@ -332,7 +333,6 @@ void runRect()
         w = g_Words[word] & 0x3ff;
         h = (g_Words[word] >> 16) & 0x1ff;
     } else {
-        w = h = 1 << (size - 1) << 3 >> 3;
         w = h = size == 1 ? 1 : size == 2 ? 8 : 16;
     }
     drawRect(s, v.x, v.y, w, h, v.r, v.g, v.b, v.u, v.v);
@@ -408,7 +408,7 @@ int commandLength(std::uint32_t cmd)
     switch (cmd >> 5) {
     case 1: {
         int count = cmd & 8 ? 4 : 3;
-        return 1 + count * (cmd & 4 ? 2 : 1) + (cmd & 0x10 ? count - 1 + 0 : 0) + (cmd & 0x10 ? 0 : 0);
+        return 1 + count * (cmd & 4 ? 2 : 1) + (cmd & 0x10 ? count - 1 : 0);
     }
     case 2:
         return cmd & 0x10 ? 4 : 3;

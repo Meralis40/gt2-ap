@@ -37,16 +37,17 @@ cmake -S . -B build/port-win -G Ninja -DCMAKE_TOOLCHAIN_FILE=cmake/i686-windows-
 cmake --build build/port-win --target gt2ap
 ```
 
-The toolchain file's `VS_VC`, `WIN_SDK` and `WIN_SDK_VERSION` name the installed versions. The Linux build isn't set up yet.
+The toolchain file's `VS_VC`, `WIN_SDK` and `WIN_SDK_VERSION` name the installed versions. CMake fetches SDL3 3.2.8, which needs git on the PATH. The Linux build isn't set up yet.
 
-Run it with `gt2ap <disc.cue>`, or `gt2ap --baserom decomp/baserom/sim` in development.
+Run it with `gt2ap <disc.cue>`. `--vblanks <n>` stops after n vblanks with no window and no pacing, and `--dump <every> <dir>` writes a frame every so many vblanks as a PPM file.
 
 ## The tree
 
 | Path | What |
 |---|---|
 | `port/game` | The forked sources, edited by hand. `FORK_REPORT.txt` is what `fork.py` left to convert, and is out of date since those edits |
-| `port/rt` | Runtime: guest memory, loading, the setjmp point, stubs (`stubs.cpp`) |
+| `port/rt` | Runtime: guest memory, loading, the setjmp point, the pump (`irq.cpp`), stubs (`stubs.cpp`) |
+| `port/hw` | The hardware: GPU, CD, memory card, pad, and the SDL3 window (`host.cpp`) |
 | `port/gen` | Generated and checked in: `guest_syms.S` binds data names to guest addresses, `fixups_<unit>.cpp` lists the code pointers in guest data |
 | `port/tools` | `fork.py`, `gen_syms.py`, `gen_fixups.py` |
 
@@ -54,13 +55,21 @@ Run it with `gt2ap <disc.cue>`, or `gt2ap --baserom decomp/baserom/sim` in devel
 
 ## Status
 
-**M1 is done, from the baserom files.** The game runs `Sys_Init` and reaches `Game_Main`, then stops at its first `CdControlF`, in `Boot_Init`. Loading from a real disc is written but hasn't run.
+**M2 is done.** From the disc image, the game shows the boot logos and the legal screen, loads overlay 1 and reaches the title screen, then starts its attract demo. That stops at the `RaceMenuLoop` stub.
+
+Checked with test runs (`--vblanks 3000 --dump 3000 <dir>`), by looking at the frames. They haven't been compared with PCSX-Redux yet. A windowed run stayed up for 20 s with SDL3 and the D3D driver in the process, so guest memory coexists with them, but nobody has looked at that window or tried the controls yet.
+
+Controls: arrows, Enter (Start), Backspace (Select), X (Cross), C (Circle), S (Square), D (Triangle), Q and E (L1, R1), 1 and 3 (L2, R2), or the first gamepad. The memory card is `gt2ap.mcd`, in the working directory.
 
 Known gaps:
 
-- `g_HwRegs` is a plain copy of the I/O page, and most stubs do nothing or stop with their name. Writes to GPU, DMA and SPU registers have no effect yet, and GPUSTAT always reads as ready.
+- Audio: the SPU registers are a plain copy, so there's no sound. XA and CD audio sectors aren't handled.
 - `SimMap_Update` is a stub. It has no C++ (M4).
 - `RaceMenuLoop`, `RaceViewLoop`, `QuickMenu` and `PreQuickMenuIO` still have to become real classes: `QuickMenu` and `PreQuickMenuIO` have lost their constructors for now.
-- The full layout check isn't in place yet, and neither are `-malign-double` and `-mno-ms-bitfields`, which only apply to a GCC-style target.
+- The GTE is all stubs (M5), and polylines stop with a message.
+- Test runs take one CD event a vblank, so their vblank numbers differ from a real-time run.
+- The full layout check isn't in place yet.
+- `-fno-strict-return` hides functions that fall off their end. Any of them whose callers use the result got it from `$v0` on the PlayStation, so they need checking: `Tim_LoadClutAndImage` was one.
+- Spin-waits are fixed as they're found; the watchdog reports them after 2 s (Windows only).
+- The Kanji ROM isn't on the disc, so its glyphs are blank. Only memory card screens use them.
 - Inflate no longer yields, so a stream decompresses in one frame. Formatted output is still the game's own (`Printf_Format`, which the text code needs).
-- Spin-waits other than `Boot_WaitVSyncs` don't call `Rt_Pump` yet.
