@@ -29,9 +29,7 @@ LineF2 *Prim_AddLineF2(uint *ot, uint rgb)
 // GP1(03).
 void EnableDisplay(int on)
 {
-    volatile GpuPorts *gpu = (volatile GpuPorts *)HW_REG(0x810);
-
-    gpu->ctrl = on | 0x3000000;
+    Hw_Gp1(on | 0x3000000);
 }
 
 // Enables the SPU's DMA, zeroes every volume and voice mode, and sets SPUCNT.

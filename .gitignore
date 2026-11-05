@@ -35,3 +35,4 @@ __pycache__/
 /decomp/include/include_asm.h
 # Sony PsyQ libraries (docs/psyq-libs.md)
 /decomp/psyq/
+*.mcd

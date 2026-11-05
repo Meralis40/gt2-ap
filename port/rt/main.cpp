@@ -2,11 +2,13 @@
 // Starts the game: maps guest memory, loads the executable from the disc and runs
 // its entry point, then each overlay entry it asks for.
 //
-// Usage: gt2ap <disc .cue>, or gt2ap --baserom <dir> with SCUS_944.88 and ovl0.bin
-// to ovl5.bin in <dir> (development).
+// Usage: gt2ap <disc .cue> [--vblanks <n>] [--dump <every> <dir>]
+// --vblanks stops after n vblanks, without waiting for real time; --dump writes a frame
+// every <every> vblanks to <dir>.
 #include "fixups.h"
 #include "memmap.h"
 #include "rt.h"
+#include "hw.h"
 
 #include "gt2ap/discio/disc_image.hpp"
 #include "gt2ap/discio/error.hpp"
@@ -21,8 +23,6 @@
 #include <cstring>
 #include <exception>
 #include <filesystem>
-#include <fstream>
-#include <iterator>
 #include <string>
 #include <vector>
 
@@ -56,23 +56,6 @@ const rt::Fixup *const g_OverlayFixups[kOverlayCount] = {g_Fixups_ovl0, g_Fixups
 std::jmp_buf g_EntryJump;
 void *g_Entry;
 int g_EntryArgs[4];
-
-Bytes readFile(const std::filesystem::path &path)
-{
-    std::ifstream in(path, std::ios::binary);
-    if (!in) {
-        Rt_Fatal("cannot read %s", path.string().c_str());
-    }
-    return Bytes(std::istreambuf_iterator<char>(in), {});
-}
-
-Bytes loadFromBaserom(const std::filesystem::path &dir)
-{
-    for (int i = 0; i < kOverlayCount; i++) {
-        g_Overlays[i] = readFile(dir / ("ovl" + std::to_string(i) + ".bin"));
-    }
-    return readFile(dir / "SCUS_944.88");
-}
 
 Bytes loadFromDisc(const std::filesystem::path &cue)
 {
@@ -180,14 +163,27 @@ int main(int argc, char **argv)
     try {
         rt::mapGuestMemory();
         rt::installFaultHandler();
-        if (argc == 3 && std::strcmp(argv[1], "--baserom") == 0) {
-            loadExecutable(loadFromBaserom(argv[2]));
-        } else if (argc == 2) {
-            loadExecutable(loadFromDisc(argv[1]));
-        } else {
-            std::fputs("usage: gt2ap <disc.cue> | gt2ap --baserom <dir>\n", stderr);
+        unsigned int maxVblanks = 0;
+        unsigned int dumpEvery = 0;
+        const char *dumpDir = "";
+        const char *cue = nullptr;
+        for (int i = 1; i < argc; i++) {
+            if (std::strcmp(argv[i], "--vblanks") == 0 && i + 1 < argc) {
+                maxVblanks = std::strtoul(argv[++i], nullptr, 0);
+            } else if (std::strcmp(argv[i], "--dump") == 0 && i + 2 < argc) {
+                dumpEvery = std::strtoul(argv[++i], nullptr, 0);
+                dumpDir = argv[++i];
+            } else {
+                cue = argv[i];
+            }
+        }
+        if (cue == nullptr) {
+            std::fputs("usage: gt2ap <disc.cue> [--vblanks <n>] [--dump <every> <dir>]\n", stderr);
             return 2;
         }
+        Rt_SetRunLimits(maxVblanks, dumpEvery, dumpDir);
+        loadExecutable(loadFromDisc(cue));
+        Hw_CdOpen(cue);
     } catch (const std::exception &e) {
         Rt_Fatal("%s", e.what());
     }

@@ -550,17 +550,11 @@ MATRIX *Matrix_Mul(MATRIX *dst, MATRIX *a, MATRIX *b)
 // Copies rect of VRAM from data (store 0) or to it (store 1), the first words (the
 // size mod 16) through GP0 and the 16-word blocks by DMA, which is left running. Returns
 // the number of blocks.
-#define GPU ((volatile unsigned int *)HW_REG(0x810))
-#define DMA ((volatile unsigned int *)HW_REG(0x080))
 // Two registers swapped (the DMA mode and CHCR values) and the w * h multiply one slot
 // later than the game's. Permuter didn't find a form.
 int Gpu_TransferImage(RECT *rect, unsigned int *data, int store)
 {
-    volatile unsigned int *gpu;
-    volatile unsigned int *dma;
     unsigned int cmd;
-    unsigned int mode;
-    unsigned int chcr;
     int x;
     int y;
     int w;
@@ -572,11 +566,7 @@ int Gpu_TransferImage(RECT *rect, unsigned int *data, int store)
 
     f[0] = 1;
     Gpu_DrawSync();
-    dma = (volatile unsigned int *)HW_REG(0x080);
-    gpu = (volatile unsigned int *)HW_REG(0x810);
     cmd = 0xa0000000;
-    mode = 0x4000002;
-    chcr = 0x1000201;
     f[1] = 1;
     x = rect->x;
     y = rect->y;
@@ -584,14 +574,12 @@ int Gpu_TransferImage(RECT *rect, unsigned int *data, int store)
     h = rect->h;
     if (store) {
         cmd = 0xc0000000;
-        mode = 0x4000003;
-        chcr = 0x1000200;
     }
-    gpu[1] = 0x4000000;
-    gpu[0] = 0x1000000;
-    gpu[0] = cmd;
-    gpu[0] = x | y << 16;
-    gpu[0] = w | h << 16;
+    Hw_Gp1(0x4000000);
+    Hw_Gp0(0x1000000);
+    Hw_Gp0(cmd);
+    Hw_Gp0(x | y << 16);
+    Hw_Gp0(w | h << 16);
     blocks = w * h + 1 >> 1;
     n = blocks & 0xf;
     blocks >>= 4;
@@ -599,20 +587,24 @@ int Gpu_TransferImage(RECT *rect, unsigned int *data, int store)
         unsigned int *p = data;
         if (!store) {
             do {
-                *gpu = *p++;
+                Hw_Gp0(*p++);
             } while (--n);
         } else {
             do {
-                *p++ = *gpu;
+                *p++ = Hw_GpuRead();
             } while (--n);
         }
         data = p;
     }
     if (blocks) {
-        gpu[1] = mode;
-        dma[8] = (unsigned int)data;
-        dma[9] = blocks << 16 | 0x10;
-        dma[10] = chcr;
+        for (n = blocks * 16; n != 0; n--) {
+            if (!store) {
+                Hw_Gp0(*data++);
+            } else {
+                *data++ = Hw_GpuRead();
+            }
+        }
+        Rt_DmaDone(2);
     } else {
         g_GfxIrq.imageDmaPending = 0;
     }

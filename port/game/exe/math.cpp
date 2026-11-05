@@ -28,13 +28,10 @@ void func_80081108(unsigned char *prim)
 // Waits for the GPU, resets its command buffer and writes count words to GP0.
 void Gpu_SendDirect(unsigned int *cmds, int count)
 {
-    unsigned int *gpu;
-
     Gpu_DrawSync();
-    gpu = (unsigned int *)HW_REG(0x810);
-    gpu[1] = 0x04000000;
+    Hw_Gp1(0x04000000);
     do {
-        gpu[0] = *cmds++;
+        Hw_Gp0(*cmds++);
         count--;
     } while (count != 0);
 }

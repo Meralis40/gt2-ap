@@ -184,9 +184,7 @@ int FUN_80081efc(void)
 
 void Gpu_SetDisplayStart(int x, int y)
 {
-    volatile int *gpu = (volatile int *)HW_REG(0x810);
-
-    gpu[1] = y << 10 | 0x05000000 | x;
+    Hw_Gp1(y << 10 | 0x05000000 | x);
 }
 
 void CdAudio_StartRead(void)
@@ -195,6 +193,9 @@ void CdAudio_StartRead(void)
 
     do {
         iVar1 = CdAudio_RunScript(7);
+        if (iVar1 == 0) {
+            Rt_Pump();
+        }
     } while (iVar1 == 0);
 }
 
@@ -291,15 +292,6 @@ void CdAudio_SetupStream(void *buf, int bufSectors, int start, unsigned int end)
 // Waits for the GPU to take a command, resetting it after about 3 million polls.
 void Gpu_WaitReady(void)
 {
-    volatile int *gpu = (volatile int *)HW_REG(0x810);
-    int n = 0x2efb44;
-
-    do {
-        if (gpu[1] & 0x04000000) {
-            return;
-        }
-    } while (--n != 0);
-    Gpu_Reset();
 }
 
 // dst = m * v >> 12 + add, with v's components taken as 12-bit parts so that large

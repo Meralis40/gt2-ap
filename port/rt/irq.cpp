@@ -1,0 +1,160 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Stands in for the PlayStation's interrupts. The game runs on one thread: wherever it
+// waits, it calls Rt_Pump, which delivers what's pending as a callback, as an interrupt
+// would have, and gives the host its turn.
+#include "hw.h"
+#include "game/include/hw.h"
+#include "rt.h"
+
+#include <chrono>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <filesystem>
+#include <string>
+#include <thread>
+#include <vector>
+
+namespace {
+
+using Clock = std::chrono::steady_clock;
+
+constexpr auto kVblank = std::chrono::nanoseconds(16683350);  // NTSC, 59.94 Hz
+constexpr int kDmaChannels = 7;
+constexpr unsigned int kHblanksPerVblank = 263;
+constexpr unsigned int kClocksPerVblank = 33868800 / 8 / 60;  // timer 2, at the system clock / 8
+
+void (*g_VSyncCallback)(void);
+void (*g_DmaCallbacks[kDmaChannels])(void);
+bool g_DmaDone[kDmaChannels];
+int g_InCallback;
+Clock::time_point g_NextVblank = Clock::now();
+unsigned int g_Vblanks;
+unsigned int g_Field;
+
+// Options: a run that stops by itself and writes frames, without waiting for real time.
+unsigned int g_MaxVblanks;
+unsigned int g_DumpEvery;
+std::filesystem::path g_DumpDir;
+
+std::uint16_t &timer(int index)
+{
+    return *reinterpret_cast<std::uint16_t *>(g_HwRegs + 0x100 + index * 0x10);
+}
+
+void dumpFrame()
+{
+    static std::vector<unsigned int> pixels(640 * 480);
+    int width, height;
+
+    Hw_GpuFrame(pixels.data(), &width, &height);
+    auto path = g_DumpDir / ("frame" + std::to_string(g_Vblanks) + ".ppm");
+    FILE *out = std::fopen(path.string().c_str(), "wb");
+    if (out == nullptr) {
+        Rt_Fatal("cannot write %s", path.string().c_str());
+    }
+    std::fprintf(out, "P6\n%d %d\n255\n", width, height);
+    for (int i = 0; i < width * height; i++) {
+        std::fwrite(&pixels[i], 3, 1, out);
+    }
+    std::fclose(out);
+}
+
+void vblank()
+{
+    g_Vblanks++;
+    g_Field ^= 1;
+    timer(1) = static_cast<std::uint16_t>(timer(1) + kHblanksPerVblank);
+    timer(2) = static_cast<std::uint16_t>(timer(2) + kClocksPerVblank);
+    if (g_VSyncCallback != nullptr) {
+        g_InCallback++;
+        g_VSyncCallback();
+        g_InCallback--;
+    }
+    if (g_DumpEvery != 0 && g_Vblanks % g_DumpEvery == 0) {
+        dumpFrame();
+    }
+    if (g_MaxVblanks != 0 && g_Vblanks >= g_MaxVblanks) {
+        Rt_Log("stopping after %u vblanks", g_Vblanks);
+        std::exit(0);
+    }
+}
+
+}  // namespace
+
+void Rt_SetRunLimits(unsigned int maxVblanks, unsigned int dumpEvery, const char *dumpDir)
+{
+    g_MaxVblanks = maxVblanks;
+    g_DumpEvery = dumpEvery;
+    g_DumpDir = dumpDir;
+}
+
+extern "C" {
+
+unsigned char g_HwRegs[0x1000];
+
+void *VSyncCallback_Psyq(void (*func)(void))
+{
+    void (*previous)(void) = g_VSyncCallback;
+
+    g_VSyncCallback = func;
+    return reinterpret_cast<void *>(previous);
+}
+
+void *DMACallback(int channel, void (*func)(void))
+{
+    void (*previous)(void) = g_DmaCallbacks[channel];
+
+    g_DmaCallbacks[channel] = func;
+    return reinterpret_cast<void *>(previous);
+}
+
+int CheckCallback(void)
+{
+    return g_InCallback != 0;
+}
+
+void Rt_DmaDone(int channel)
+{
+    g_DmaDone[channel] = true;
+}
+
+unsigned int Hw_GpuStat(void)
+{
+    return 0x1c000000u | g_Field << 31;
+}
+
+void Rt_Pump(void)
+{
+    if (g_InCallback != 0) {
+        return;
+    }
+    g_InCallback++;
+    for (int channel = 0; channel < kDmaChannels; channel++) {
+        if (g_DmaDone[channel]) {
+            g_DmaDone[channel] = false;
+            if (g_DmaCallbacks[channel] != nullptr) {
+                g_DmaCallbacks[channel]();
+            }
+        }
+    }
+    int cdEvent = Hw_CdPump();
+    Hw_CardPump();
+    g_InCallback--;
+
+    Clock::time_point now = Clock::now();
+    if (g_MaxVblanks != 0) {
+        vblank();
+    } else if (now >= g_NextVblank) {
+        g_NextVblank += kVblank;
+        if (now > g_NextVblank + 10 * kVblank) {
+            g_NextVblank = now + kVblank;
+        }
+        vblank();
+    } else if (cdEvent == 0) {
+        std::this_thread::yield();
+    }
+}
+
+}  // extern "C"

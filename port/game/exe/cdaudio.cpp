@@ -111,6 +111,7 @@ void CdAudio_WaitIdle(void)
     CdAudio *cd = &g_CdAudio;
 
     while (*(volatile unsigned char *)&cd->state != 0) {
+        Rt_Pump();
     }
 }
 
