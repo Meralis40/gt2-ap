@@ -31,7 +31,7 @@ void Gpu_SendDirect(unsigned int *cmds, int count)
     unsigned int *gpu;
 
     Gpu_DrawSync();
-    gpu = (unsigned int *)0x1f801810;
+    gpu = (unsigned int *)HW_REG(0x810);
     gpu[1] = 0x04000000;
     do {
         gpu[0] = *cmds++;

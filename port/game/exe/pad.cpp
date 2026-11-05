@@ -226,8 +226,8 @@ void Gpu_Reset(void)
 
     GPU_cw(0);
     mask = SetIntrMask(0);
-    dma = (volatile unsigned int *)0x1f801080;
-    gpu = (volatile unsigned int *)0x1f801810;
+    dma = (volatile unsigned int *)HW_REG(0x080);
+    gpu = (volatile unsigned int *)HW_REG(0x810);
     dma[0x28 / 4] = 0x401;
     dma[0x70 / 4] |= 0x800;
     gpu[1] = 0;

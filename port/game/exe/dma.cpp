@@ -12,11 +12,11 @@ void Spu_DmaTransfer(void *src, int spuAddr, unsigned int size, int dir)
     int blocks = (int)(size + 0x3f) >> 6;
 
     if (blocks != 0) {
-        volatile unsigned int *dma = (volatile unsigned int *)0x1f801080;
-        volatile unsigned short *spu = (volatile unsigned short *)0x1f801c00;
+        volatile unsigned int *dma = (volatile unsigned int *)HW_REG(0x080);
+        volatile unsigned short *spu = (volatile unsigned short *)HW_REG(0xc00);
         int addr = spuAddr >> 3;
         unsigned int chcr = 0x1000201;
-        volatile unsigned int *delay = (volatile unsigned int *)0x1f801014;
+        volatile unsigned int *delay = (volatile unsigned int *)HW_REG(0x014);
         unsigned int cnt = spu[0x1aa / 2] & 0xffcf;
         unsigned int mode = cnt | 0x20;
         unsigned int timing = (*delay & 0xf0ffffff) | 0x20000000;
@@ -73,7 +73,7 @@ void Dma_WaitOtc(void)
 // Waits for the channel's CHCR busy bit to clear, 0x2efb44 polls at most.
 void Dma_WaitChannel(int ch)
 {
-    volatile unsigned int *chan = (volatile unsigned int *)0x1f801080 + ch * 4;
+    volatile unsigned int *chan = (volatile unsigned int *)HW_REG(0x080) + ch * 4;
     int timeout = 0x2efb44;
     unsigned int busy = 0x1000000;
 

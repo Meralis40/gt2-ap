@@ -550,8 +550,8 @@ MATRIX *Matrix_Mul(MATRIX *dst, MATRIX *a, MATRIX *b)
 // Copies rect of VRAM from data (store 0) or to it (store 1), the first words (the
 // size mod 16) through GP0 and the 16-word blocks by DMA, which is left running. Returns
 // the number of blocks.
-#define GPU ((volatile unsigned int *)0x1f801810)
-#define DMA ((volatile unsigned int *)0x1f801080)
+#define GPU ((volatile unsigned int *)HW_REG(0x810))
+#define DMA ((volatile unsigned int *)HW_REG(0x080))
 // Two registers swapped (the DMA mode and CHCR values) and the w * h multiply one slot
 // later than the game's. Permuter didn't find a form.
 int Gpu_TransferImage(RECT *rect, unsigned int *data, int store)
@@ -572,8 +572,8 @@ int Gpu_TransferImage(RECT *rect, unsigned int *data, int store)
 
     f[0] = 1;
     Gpu_DrawSync();
-    dma = (volatile unsigned int *)0x1f801080;
-    gpu = (volatile unsigned int *)0x1f801810;
+    dma = (volatile unsigned int *)HW_REG(0x080);
+    gpu = (volatile unsigned int *)HW_REG(0x810);
     cmd = 0xa0000000;
     mode = 0x4000002;
     chcr = 0x1000201;

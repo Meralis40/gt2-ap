@@ -29,7 +29,7 @@ LineF2 *Prim_AddLineF2(uint *ot, uint rgb)
 // GP1(03).
 void EnableDisplay(int on)
 {
-    volatile GpuPorts *gpu = (volatile GpuPorts *)0x1f801810;
+    volatile GpuPorts *gpu = (volatile GpuPorts *)HW_REG(0x810);
 
     gpu->ctrl = on | 0x3000000;
 }
@@ -42,11 +42,11 @@ void Spu_Reset(void)
     volatile ushort *spu;
     volatile ushort *voice;
 
-    dma = (volatile unsigned int *)0x1f801080;
+    dma = (volatile unsigned int *)HW_REG(0x080);
     dma[0x70 / 4] |= 0xb0000;
     DMACallback(4, Spu_DmaDone);
-    spu = (volatile ushort *)0x1f801c00;
-    voice = (volatile ushort *)0x1f801c00;
+    spu = (volatile ushort *)HW_REG(0xc00);
+    voice = (volatile ushort *)HW_REG(0xc00);
     spu[0x180 / 2] = 0;
     spu[0x182 / 2] = 0;
     spu[0x1ac / 2] = 4;
@@ -58,7 +58,7 @@ void Spu_Reset(void)
         voice[0] = 0;
         voice[1] = 0;
         voice += 8;
-    } while (voice != (volatile ushort *)0x1f801d80);
+    } while (voice != (volatile ushort *)HW_REG(0xd80));
     spu[0x184 / 2] = 0;
     spu[0x186 / 2] = 0;
     spu[0x190 / 2] = 0;
@@ -74,7 +74,7 @@ void Spu_Reset(void)
 // The game loads D_801C93F4's address in $a0 for nothing first.
 void Spu_DmaDone(void)
 {
-    volatile ushort *spu = (volatile ushort *)0x1f801c00;
+    volatile ushort *spu = (volatile ushort *)HW_REG(0xc00);
 
     spu[0x1aa / 2] &= 0xffcf;
 }

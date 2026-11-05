@@ -6,6 +6,7 @@
 #define COMMON_H
 
 #include "mips.h"
+#include "hw.h"
 #include "resident.h"
 #include "ovl1.h"
 #include "ovl2.h"
