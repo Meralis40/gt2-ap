@@ -18,8 +18,8 @@ void Gpu_DrawOTag(void *list)
     volatile unsigned int *gpu;
 
     Gpu_DrawSync();
-    dma = (volatile unsigned int *)0x1f801080;
-    gpu = (volatile unsigned int *)0x1f801810;
+    dma = (volatile unsigned int *)HW_REG(0x080);
+    gpu = (volatile unsigned int *)HW_REG(0x810);
     dma[0x20 / 4] = (unsigned int)list;
     dma[0x24 / 4] = 0;
     dma[0x28 / 4] = 0x01000401;
@@ -29,7 +29,7 @@ void Gpu_DrawOTag(void *list)
 // Clears an ordering table of n entries by OTC DMA, each linked to the one before.
 void Dma_ClearOTagR(void *ot, int n)
 {
-    volatile unsigned int *dma = (volatile unsigned int *)0x1f801080;
+    volatile unsigned int *dma = (volatile unsigned int *)HW_REG(0x080);
     unsigned int chcr = 0x11000002;
 
     dma[0x70 / 4] |= 0x08000000;
@@ -42,7 +42,7 @@ void Dma_ClearOTagR(void *ot, int n)
 // Acknowledges the GPU's interrupt and resets its command buffer.
 void Gpu_ResetCommandBuffer()
 {
-    volatile unsigned int *gpu = (volatile unsigned int *)0x1f801810;
+    volatile unsigned int *gpu = (volatile unsigned int *)HW_REG(0x810);
 
     gpu[1] = 0x02000000;
     ((unsigned int *)gpu)[1] = 0x01000000;

@@ -10,6 +10,7 @@ extern "C" {
 void Rt_Log(const char *format, ...);
 [[noreturn]] void Rt_Fatal(const char *format, ...);
 void Rt_Unimplemented(const char *what);
+void Rt_Pump(void);
 
 // Copies overlay index to its guest address and patches its code pointers.
 void Rt_LoadOverlay(int index);

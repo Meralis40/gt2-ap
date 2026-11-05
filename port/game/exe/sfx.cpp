@@ -3,7 +3,7 @@
 #include "common.h"
 
 extern "C" {
-#define SPU_VOICES ((SpuVoiceRegs *)0x1f801c00)
+#define SPU_VOICES ((SpuVoiceRegs *)HW_REG(0xc00))
 
 extern unsigned int g_SoundDriverReady;
 extern unsigned int g_SpuAllocPtr;

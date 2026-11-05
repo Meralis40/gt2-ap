@@ -176,7 +176,7 @@ void CdAudio_ApplyVolume(CdAudio *cd)
     vol = (cd->masterVol * cd->fade) >> 15;
     left = (cd->volL * vol) >> 15;
     right = (cd->volR * vol) >> 15;
-    spu = (volatile short *)0x1f801c00;
+    spu = (volatile short *)HW_REG(0xc00);
     if (left > 0x7fff) {
         left = 0x7fff;
     }

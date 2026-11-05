@@ -6,7 +6,7 @@ extern "C" {
 extern ushort D_8008FDB8[]; // pitch of each 1/8 semitone in an octave
 extern ushort D_800901B8[128]; // pan volume curve
 extern ushort D_800900B8[128]; // velocity volume curve
-extern ushort g_ReverbPresets[10][32]; // the SPU reverb registers 0x1f801dc0-0x1f801dfe
+extern ushort g_ReverbPresets[10][32]; // the SPU reverb registers HW_REG(0xdc0)-HW_REG(0xdfe)
 extern ushort g_ReverbWorkAddr[10]; // work area start / 8
 extern SeqState g_Seq;
 extern SeqChannel g_SeqChannels[25];
@@ -52,7 +52,7 @@ void SfxVoices_Update(void)
     drv = &g_SoundDriver;
     v = drv->voices;
     bit = 1;
-    voiceRegs = (ushort *)0x1f801c00;
+    voiceRegs = (ushort *)HW_REG(0xc00);
     D_80092E80++;
     for (i = 0; i < 24; i++, v++, bit <<= 1) {
         if (v->lock != 2) {
@@ -97,13 +97,13 @@ void SfxVoices_Update(void)
         }
     }
     if (off != 0) {
-        ushort *spu = (ushort *)0x1f801c00;
+        ushort *spu = (ushort *)HW_REG(0xc00);
 
         spu[0xc7] = off >> 16;
         spu[0xc6] = off;
         D_80092E84 &= ~off;
     }
-    reg = (ushort *)0x1f801c00;
+    reg = (ushort *)HW_REG(0xc00);
     if (dirty != 0) {
         v = drv->voices;
         do {
@@ -134,7 +134,7 @@ void SfxVoices_Update(void)
         } while (dirty != 0);
     }
     if (on != 0) {
-        ushort *spu = (ushort *)0x1f801c00;
+        ushort *spu = (ushort *)HW_REG(0xc00);
 
         spu[0xc4] = on;
         spu[0xc5] = on >> 16;
@@ -149,7 +149,7 @@ void SfxVoices_Update(void)
                 mask |= bit;
             }
         }
-        ushort *spu = (ushort *)0x1f801c00;
+        ushort *spu = (ushort *)HW_REG(0xc00);
 
         spu[0xcc] = mask;
         spu[0xcd] = mask >> 16;
@@ -445,7 +445,7 @@ void Sound_Init(void)
     volatile short *spu;
 
     if (g_SoundDriverReady == 0) {
-        spu = (volatile short *)0x1f801c00;
+        spu = (volatile short *)HW_REG(0xc00);
         spu[0xc0] = 0x3fff;
         spu[0xc1] = 0x3fff;
         memset(&g_SoundDriver, 0, sizeof(SoundDriver));
@@ -500,7 +500,7 @@ void Seq_SetTickRate(unsigned short hz)
 int Spu_SetReverbType(int mode, ...)
 {
     char *ap;
-    volatile ushort *spu = (volatile ushort *)0x1f801c00;
+    volatile ushort *spu = (volatile ushort *)HW_REG(0xc00);
     ushort *preset;
     unsigned int *src;
     volatile ushort *dst;
@@ -558,15 +558,15 @@ int Spu_SetReverbType(int mode, ...)
 
 void Spu_EnableReverb(int on)
 {
-    volatile ushort *spu = (volatile ushort *)0x1f801c00;
+    volatile ushort *spu = (volatile ushort *)HW_REG(0xc00);
 
     spu[0xd5] = (spu[0xd5] & 0xff7f) | ((on & 1) << 7);
 }
 
 void Spu_SetReverbDepth(short left, short right)
 {
-    *(short *)0x1f801d84 = left;
-    *(short *)0x1f801d86 = right;
+    *(short *)HW_REG(0xd84) = left;
+    *(short *)HW_REG(0xd86) = right;
 }
 
 // Turns reverb on or off for the voice *handle, if it still has it.

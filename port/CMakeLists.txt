@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 # The native game. A 32-bit build: guest memory is at its real addresses (docs/port.md).
 if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
-    message(FATAL_ERROR "The port is a 32-bit build: use the windows-i686 or linux-i686 preset")
+    message(FATAL_ERROR "The port is a 32-bit build: see docs/port.md")
 endif()
 
 enable_language(C ASM)

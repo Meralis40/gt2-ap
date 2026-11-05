@@ -63,7 +63,7 @@ void Gpu_SetDisplayMode(unsigned int mode)
 {
     GfxIrqState *irq = &g_GfxIrq;
 
-    volatile GpuPorts *gpu = (volatile GpuPorts *)0x1f801810;
+    volatile GpuPorts *gpu = (volatile GpuPorts *)HW_REG(0x810);
 
     gpu->ctrl = mode | 0x8000000;
     irq->displayMode = mode;
@@ -83,7 +83,7 @@ void Gpu_SetHRange(int x0, int x1)
     div = D_80090520[i];
     x0 = (x0 + D_80090528[i]) * div;
     x1 = ((x1 + 3) & ~3) * div;
-    gpu = (volatile GpuPorts *)0x1f801810;
+    gpu = (volatile GpuPorts *)HW_REG(0x810);
     gpu->ctrl = (x1 + x0) << 12 | x0 | 0x6000000;
 }
 
@@ -101,7 +101,7 @@ void Gpu_SetVRange(int y0, int y1)
     }
     y0 += 0x10;
     if (mode & 8) y0 += 0x15;
-    gpu = (volatile GpuPorts *)0x1f801810;
+    gpu = (volatile GpuPorts *)HW_REG(0x810);
     gpu->ctrl = (y1 + y0) << 10 | y0 | 0x7000000;
 }
 
@@ -113,7 +113,7 @@ int Gpu_WaitField(void)
 {
     GfxIrqState *irq = &g_GfxIrq;
     unsigned int stat = irq->gpustatAtWait;
-    volatile unsigned int *status = (volatile unsigned int *)0x1f801814;
+    volatile unsigned int *status = (volatile unsigned int *)HW_REG(0x814);
     unsigned int field = 0x80000000;
 
     do {
@@ -134,7 +134,7 @@ int Irq_WaitVSyncs(int count)
         count = 1;
     }
     if (count > 0) {
-        irq->gpustatAtWait = ((volatile GpuPorts *)0x1f801810)->ctrl;
+        irq->gpustatAtWait = ((volatile GpuPorts *)HW_REG(0x810))->ctrl;
         do {
         } while (*(volatile int *)&irq->vblanksSinceFlip < count);
         irq->vblanksSinceFlip = 0;

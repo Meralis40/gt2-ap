@@ -100,8 +100,8 @@ int Sys_CriticalSection(int leave)
 int Timer_Sample(void)
 {
     TimerSample *t = &D_801C951C;
-    volatile unsigned short *hblankCounter = (volatile unsigned short *)0x1f801110;
-    volatile unsigned short *clockCounter = (volatile unsigned short *)0x1f801120;
+    volatile unsigned short *hblankCounter = (volatile unsigned short *)HW_REG(0x110);
+    volatile unsigned short *clockCounter = (volatile unsigned short *)HW_REG(0x120);
     unsigned int hblank;
     unsigned int prevHblank;
     unsigned int clock;
@@ -184,7 +184,7 @@ int FUN_80081efc(void)
 
 void Gpu_SetDisplayStart(int x, int y)
 {
-    volatile int *gpu = (volatile int *)0x1f801810;
+    volatile int *gpu = (volatile int *)HW_REG(0x810);
 
     gpu[1] = y << 10 | 0x05000000 | x;
 }
@@ -291,7 +291,7 @@ void CdAudio_SetupStream(void *buf, int bufSectors, int start, unsigned int end)
 // Waits for the GPU to take a command, resetting it after about 3 million polls.
 void Gpu_WaitReady(void)
 {
-    volatile int *gpu = (volatile int *)0x1f801810;
+    volatile int *gpu = (volatile int *)HW_REG(0x810);
     int n = 0x2efb44;
 
     do {

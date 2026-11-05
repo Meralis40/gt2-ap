@@ -3,6 +3,7 @@
 // common.h declares this symbol as the overlays' first function, at the same address.
 #define Overlay_OpenFile Overlay_FirstFunction
 #include "common.h"
+#include "rt.h"
 #undef Overlay_OpenFile
 #include "gamestate.h"
 #include "pad.h"
@@ -317,10 +318,10 @@ void Game_InitData()
 // four counters.
 void Boot_InitRandomSeed(void)
 {
-    volatile unsigned short *timer2 = (volatile unsigned short *)0x1f801120;
-    volatile unsigned short *timer0 = (volatile unsigned short *)0x1f801100;
-    volatile unsigned short *timer1 = (volatile unsigned short *)0x1f801110;
-    volatile unsigned short *timer3 = (volatile unsigned short *)0x1f801130;
+    volatile unsigned short *timer2 = (volatile unsigned short *)HW_REG(0x120);
+    volatile unsigned short *timer0 = (volatile unsigned short *)HW_REG(0x100);
+    volatile unsigned short *timer1 = (volatile unsigned short *)HW_REG(0x110);
+    volatile unsigned short *timer3 = (volatile unsigned short *)HW_REG(0x130);
 
     timer2[2] = 0;
     timer2[4] = 0xffff;
@@ -339,6 +340,7 @@ void Boot_WaitVSyncs(void)
 {
     Psyq_VSyncCallback(Boot_VSyncHandler);
     while (g_BootVSyncCount < 4) {
+        Rt_Pump();
     }
     Psyq_VSyncCallback(0);
 }

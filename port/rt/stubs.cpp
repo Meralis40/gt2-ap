@@ -20,40 +20,69 @@ extern "C" {
 
 PENDING(CdControlF)
 PENDING(CdGetSector)
-PENDING(CdInit)
-PENDING(CdReadyCallback)
-PENDING(CdSyncCallback)
-PENDING(CheckCallback)
-PENDING(CloseEvent)
-PENDING(DMACallback)
-PENDING(DecDCTReset)
 PENDING(DecDCTin)
 PENDING(DecDCTout)
-PENDING(DecDCToutCallback)
-PENDING(EnableEvent)
-PENDING(EnterCriticalSection)
-PENDING(ExitCriticalSection)
-PENDING(FlushCache)
-PENDING(GPU_cw)
-PENDING(InitCARD)
-PENDING(InitGeom)
 PENDING(Krom2RawAdd)
-PENDING(OpenEvent)
 PENDING(PadGetState)
 PENDING(PadInfoAct)
-PENDING(PadInitDirect)
 PENDING(PadSetAct)
 PENDING(PadSetActAlign)
 PENDING(PadStartCom)
-PENDING(ResetCallback)
-PENDING(SetIntrMask)
-PENDING(StartCARD)
-PENDING(VSyncCallback_Psyq)
-PENDING(_bu_init)
 PENDING(_card_clear)
 PENDING(_card_info)
 PENDING(_card_read)
 PENDING(_card_write)
+
+// Set-up calls with no effect on PC (yet).
+#define NOTHING(name) \
+    int name() \
+    { \
+        return 0; \
+    }
+
+NOTHING(ResetCallback)
+NOTHING(SetIntrMask)
+NOTHING(EnterCriticalSection)
+NOTHING(ExitCriticalSection)
+NOTHING(FlushCache)
+NOTHING(CdInit)
+NOTHING(InitCARD)
+NOTHING(StartCARD)
+NOTHING(_bu_init)
+NOTHING(PadInitDirect)
+NOTHING(DecDCTReset)
+NOTHING(InitGeom)
+NOTHING(DMACallback)
+NOTHING(CdReadyCallback)
+NOTHING(CdSyncCallback)
+NOTHING(DecDCToutCallback)
+NOTHING(CheckCallback)
+NOTHING(OpenEvent)
+NOTHING(EnableEvent)
+NOTHING(CloseEvent)
+NOTHING(GPU_cw)
+
+// The I/O page. GPUSTAT reads as ready, until the GPU runtime owns it.
+unsigned char g_HwRegs[0x1000];
+
+static void (*s_VSyncCallback)(void);
+
+void *VSyncCallback_Psyq(void (*func)(void))
+{
+    void (*previous)(void) = s_VSyncCallback;
+
+    s_VSyncCallback = func;
+    return (void *)previous;
+}
+
+// One vblank: where the game waits, the host gets its turn.
+void Rt_Pump(void)
+{
+    *(unsigned int *)(g_HwRegs + 0x814) = 0x1c000000;
+    if (s_VSyncCallback != 0) {
+        s_VSyncCallback();
+    }
+}
 
 // GTE: port/hw/gte, for the race.
 PENDING(gte_GetCtrlReg)
