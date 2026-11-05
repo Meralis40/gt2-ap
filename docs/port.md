@@ -47,29 +47,38 @@ Run it with `gt2ap <disc.cue>`. `--vblanks <n>` stops after n vblanks with no wi
 |---|---|
 | `port/game` | The forked sources, edited by hand. `FORK_REPORT.txt` is what `fork.py` left to convert, and is out of date since those edits |
 | `port/rt` | Runtime: guest memory, loading, the setjmp point, the pump (`irq.cpp`), stubs (`stubs.cpp`) |
-| `port/hw` | The hardware: GPU, CD, memory card, pad, and the SDL3 window (`host.cpp`) |
+| `port/hw` | The hardware: GPU, GTE, CD, memory card, pad, and the SDL3 window (`host.cpp`) |
 | `port/gen` | Generated and checked in: `guest_syms.S` binds data names to guest addresses, `fixups_<unit>.cpp` lists the code pointers in guest data |
-| `port/tools` | `fork.py`, `gen_syms.py`, `gen_fixups.py` |
+| `port/tools` | `fork.py`, `gen_syms.py`, `update_syms.sh`, `gen_fixups.py`, `check_protos.py` |
 
 `gen_syms.py` takes the names the objects leave undefined. It reports function names instead of binding them: those are for the port to define. `gen_fixups.py` found 336 slots, with none pointing at a function the port doesn't define. `Overlay_StartAt`'s default entries aren't among them, because they're overlay addresses in resident data; `overlay.cpp` has them as a table of host functions.
 
 ## Status
 
-**M2 is done.** From the disc image, the game shows the boot logos and the legal screen, loads overlay 1 and reaches the title screen, then starts its attract demo. That stops at the `RaceMenuLoop` stub.
+**The game reaches M5's first goal.** From the disc image, it boots, shows the title screen, runs GT Mode's map and Garage page, and plays the attract race as a 3D replay with HUD, cars and track. All of this was checked in test runs, by looking at dumped frames. Nothing has been compared with PCSX-Redux yet.
 
-Checked with test runs (`--vblanks 3000 --dump 3000 <dir>`), by looking at the frames. They haven't been compared with PCSX-Redux yet. A windowed run stayed up for 20 s with SDL3 and the D3D driver in the process, so guest memory coexists with them, but nobody has looked at that window or tried the controls yet.
+| Milestone | State |
+|---|---|
+| M0-M3 | Done |
+| M4, GT mode | Map and Garage page reached. Shops, dealers, car previews and memory card saves haven't been driven yet |
+| M5, race | The attract replay runs. Physics and car meshes look wrong (below) |
+| M6-M9 | Not started |
+
+Test runs take `--input <vblank> <buttons>`, with the bits in `hw/host.cpp` (`0x4000` is Cross; the title menu confirms with Cross, not Start).
+
+A windowed run stayed up for 20 s with SDL3 and the D3D driver in the process, so guest memory coexists with them, but nobody has looked at that window or tried the controls yet.
 
 Controls: arrows, Enter (Start), Backspace (Select), X (Cross), C (Circle), S (Square), D (Triangle), Q and E (L1, R1), 1 and 3 (L2, R2), or the first gamepad. The memory card is `gt2ap.mcd`, in the working directory.
 
-Known gaps:
+Known problems:
 
-- Audio: the SPU registers are a plain copy, so there's no sound. XA and CD audio sectors aren't handled.
-- `SimMap_Update` is a stub. It has no C++ (M4).
-- `RaceMenuLoop`, `RaceViewLoop`, `QuickMenu` and `PreQuickMenuIO` still have to become real classes: `QuickMenu` and `PreQuickMenuIO` have lost their constructors for now.
-- The GTE is all stubs (M5), and polylines stop with a message.
-- Test runs take one CD event a vblank, so their vblank numbers differ from a real-time run.
-- The full layout check isn't in place yet.
-- `-fno-strict-return` hides functions that fall off their end. Any of them whose callers use the result got it from `$v0` on the PlayStation, so they need checking: `Tim_LoadClutAndImage` was one.
-- Spin-waits are fixed as they're found; the watchdog reports them after 2 s (Windows only).
-- The Kanji ROM isn't on the disc, so its glyphs are blank. Only memory card screens use them.
-- Inflate no longer yields, so a stream decompresses in one frame. Formatted output is still the game's own (`Printf_Format`, which the text code needs).
+- **Race replay.** In the attract demo, the car stays under the same bridge from 0:33 to 0:41 of the race, so the replay may be diverging. Its front also looks stretched in those frames. Both could come from any of the never-tested car physics, the car mesh code or the GTE.
+- **Sound.** The SPU registers are a plain copy, so there's no sound. XA and CD audio sectors aren't handled.
+- **Movies.** MDEC isn't implemented. `DecDCTin` and `DecDCTout` stop with their name.
+- **Not checked.** `-fno-strict-return` hides functions that fall off their end. Any of them whose callers use the result got it from `$v0` on the PlayStation, so they need checking: `Tim_LoadClutAndImage` was one. `tools/check_protos.py` covers argument counts only: it found `Race_LoadEngineBanks`.
+- **Layout.** The full layout check isn't in place yet.
+- **Test runs** take one CD event a vblank, so their vblank numbers differ from a real-time run.
+- **Spin-waits** are fixed as they're found; the watchdog reports them after 2 s (Windows only).
+- **GPU.** Polylines stop with a message.
+- **Kanji ROM.** It isn't on the disc, so its glyphs are blank. Only memory card screens use them.
+- **Inflate** no longer yields, so a stream decompresses in one frame. Formatted output is still the game's own (`Printf_Format`, which the text code needs).
