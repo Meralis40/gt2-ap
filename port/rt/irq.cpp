@@ -2,6 +2,7 @@
 // Stands in for the PlayStation's interrupts. The game runs on one thread: wherever it
 // waits, it calls Rt_Pump, which delivers what's pending as a callback, as an interrupt
 // would have, and gives the host its turn.
+#include "host.h"
 #include "hw.h"
 #include "game/include/hw.h"
 #include "rt.h"
@@ -71,6 +72,10 @@ void vblank()
     g_Field ^= 1;
     timer(1) = static_cast<std::uint16_t>(timer(1) + kHblanksPerVblank);
     timer(2) = static_cast<std::uint16_t>(timer(2) + kClocksPerVblank);
+    if (g_MaxVblanks == 0) {
+        Host_Frame();
+    }
+    Hw_PadVblank();
     if (g_VSyncCallback != nullptr) {
         g_InCallback++;
         g_VSyncCallback();

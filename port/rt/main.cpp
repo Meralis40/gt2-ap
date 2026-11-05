@@ -8,6 +8,7 @@
 #include "fixups.h"
 #include "memmap.h"
 #include "rt.h"
+#include "host.h"
 #include "hw.h"
 
 #include "gt2ap/discio/disc_image.hpp"
@@ -182,6 +183,9 @@ int main(int argc, char **argv)
             return 2;
         }
         Rt_SetRunLimits(maxVblanks, dumpEvery, dumpDir);
+        if (maxVblanks == 0) {
+            Host_Open();
+        }
         Rt_StartWatchdog();
         loadExecutable(loadFromDisc(cue));
         Hw_CdOpen(cue);

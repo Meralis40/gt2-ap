@@ -8,7 +8,6 @@
 
 #include <array>
 #include <cstdint>
-#include <cstdlib>
 #include <cstring>
 #include <exception>
 #include <memory>
@@ -112,7 +111,6 @@ void *CdReadyCallback(Callback callback)
 int CdControlF(unsigned char command, unsigned char *param)
 {
     setResult(stat());
-    if (getenv("GT2_TRACE")) Rt_Log("cd cmd %d %02x %02x %02x loc %u", command, param?param[0]:0, param?param[1]:0, param?param[2]:0, g_Location);
     switch (command) {
     case kSetloc:
         g_Location = (fromBcd(param[0]) * 60 + fromBcd(param[1])) * 75 + fromBcd(param[2]) - kFirstSectorOffset;
