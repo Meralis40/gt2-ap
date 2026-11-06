@@ -403,7 +403,9 @@ void CarPreview_SpecFromDefault(CarSpecSheet *spec, int carId)
     pvVar3 = GameData_GetEntry(5, (unsigned int)(unsigned short)CStack_a0.idx_t05);
     pvVar4 = GameData_GetEntry(6, (unsigned int)(unsigned short)CStack_a0.idx_0c);
     pvVar5 = GameData_GetEntry(0xd, (unsigned int)(unsigned short)CStack_a0.idx_t0d);
-    spec->modelYear = (unsigned short)*(unsigned char *)((int)puVar2 + 0x41);
+    // Most racing modification variants have no table 0x1e entry: the PlayStation reads
+    // addresses 0x41 and 0x44 there. A year of 0 shows as "----".
+    spec->modelYear = puVar2 != 0 ? (unsigned short)*(unsigned char *)((int)puVar2 + 0x41) : 0;
     spec->length = (unsigned int)*(unsigned short *)((int)pvVar1 + 8);
     spec->width = (unsigned int)*(unsigned short *)((int)pvVar1 + 10);
     spec->height = (unsigned int)*(unsigned short *)((int)pvVar3 + 0x1a);
@@ -417,7 +419,7 @@ void CarPreview_SpecFromDefault(CarSpecSheet *spec, int carId)
     spec->powerRpm = (unsigned int)*(unsigned short *)((int)pvVar4 + 0x30) * 10;
     spec->torque = (unsigned int)*(unsigned short *)((int)pvVar4 + 0x32);
     spec->torqueRpmStr = (unsigned int)*(unsigned short *)((int)pvVar4 + 0x34);
-    spec->price = puVar2[0x11];
+    spec->price = puVar2 != 0 ? puVar2[0x11] : 0;
 }
 
 // Fills the spec sheet of a garage car from its setup, its parameters (the weight)
