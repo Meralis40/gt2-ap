@@ -25,6 +25,13 @@ void Rt_StartWatchdog();
 // Test runs: the buttons held from vblank on (hw/host.cpp lists the bits).
 void Rt_AddInput(unsigned int vblank, unsigned short buttons);
 void Rt_SetRunLimits(unsigned int maxVblanks, unsigned int dumpEvery, const char *dumpDir);
+
+// Recordings, in rt/record.cpp. Replaying uses the recording's memory card and leaves the
+// real one alone; at the end the controls come back, or the run stops if stopAtEnd.
+void Rt_ReplayOpen(const char *path, bool stopAtEnd);
+void Rt_RecordOpen(const char *path);
+// Plays and records this vblank's buttons, once the host and scripts have set them.
+void Rt_RecordVblank();
 #endif
 
 #endif

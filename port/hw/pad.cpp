@@ -54,6 +54,11 @@ void Hw_PadSetButtons(unsigned short held)
     g_Held = held;
 }
 
+unsigned short Hw_PadButtons(void)
+{
+    return g_Held;
+}
+
 void Hw_PadVblank(void)
 {
     if (g_Buffers[0] == nullptr) {

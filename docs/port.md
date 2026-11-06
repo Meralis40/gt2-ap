@@ -66,6 +66,10 @@ Run it with `gt2ap <disc.cue>`. `--vblanks <n>` stops after n vblanks with no wi
 
 Test runs take `--input <vblank> <buttons>`, with the bits in `hw/host.cpp` (`0x4000` is Cross; the title menu confirms with Cross, not Start).
 
+A vblank falls on every 32nd pump, in test runs and windowed runs alike, and the host's clock only paces them. So a run depends on nothing but the memory card and the buttons, and a data read gets at most 32 sectors a vblank (3.8 MB/s).
+
+`--record <file>` saves the memory card as it stands at startup and the buttons of every vblank, until the client closes or crashes. `--replay <file>` plays one back, in a window on the real clock, or at full speed with `--vblanks <n>` (with `--dump` for frames), stopping at the end of the file or at n. The replay uses the recording's card and leaves `gt2ap.mcd` alone; in a window, the controls come back when the file ends. The game's random numbers all come from the vblank count and the counters that follow it, so they need no restoring: each vblank stores the random seed only as a check, and a replay logs the first difference. A recording survives a rebuild as long as the changes don't alter what happens on the way, so a physics fix can make the car leave the road where the recording kept it on.
+
 A windowed run stayed up for 20 s with SDL3 and the D3D driver in the process, so guest memory coexists with them, but nobody has looked at that window or tried the controls yet.
 
 Controls: arrows, Enter (Start), Backspace (Select), X (Cross), C (Circle), S (Square), D (Triangle), Q and E (L1, R1), 1 and 3 (L2, R2), or the first gamepad. The memory card is `gt2ap.mcd`, in the working directory.
@@ -78,7 +82,6 @@ Known problems:
 - **Not checked.** `-fno-strict-return` hides functions that fall off their end. Any of them whose callers use the result got it from `$v0` on the PlayStation, so they need checking: `Tim_LoadClutAndImage` was one. `tools/check_protos.py` covers argument counts only: it found `Race_LoadEngineBanks`.
 - **Argument order.** The Microsoft ABI evaluates arguments right to left, so a call must not pass a value next to the call that sets it. `tools/check_argorder.py` lists suspects, and all 50 hits were harmless when it was last read through. Other targets evaluate left to right.
 - **Layout.** The full layout check isn't in place yet.
-- **Test runs** take one CD event a vblank, so their vblank numbers differ from a real-time run.
 - **Spin-waits** are fixed as they're found; the watchdog reports them after 2 s (Windows only).
 - **Kanji ROM.** It isn't on the disc, so its glyphs are blank. Only memory card screens use them.
 - **Inflate** no longer yields, so a stream decompresses in one frame. Formatted output is still the game's own (`Printf_Format`, which the text code needs).

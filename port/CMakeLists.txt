@@ -61,6 +61,7 @@ add_executable(gt2ap
     rt/irq.cpp
     rt/main.cpp
     rt/memmap.cpp
+    rt/record.cpp
     rt/stubs.cpp
     gen/guest_syms.S
     gen/fixups_exe.cpp
