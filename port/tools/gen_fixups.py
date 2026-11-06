@@ -22,6 +22,8 @@ DECOMP = ROOT / "decomp"
 SYMBOLS = DECOMP / "sim" / "symbols"
 UNITS = ["exe", "ovl0", "ovl1", "ovl2", "ovl3", "ovl4", "ovl5"]
 DATA_TYPES = {"data", ".data", "rodata", ".rodata", "rdata"}
+# Data that happens to equal a function's address: a font's glyph for '+', and two flag words.
+NOT_POINTERS = {0x800983b4, 0x800992a0, 0x8009a4b0}
 
 
 def read_functions(unit):
@@ -94,7 +96,7 @@ def main():
                     continue
                 slot = vram + offset - start
                 holder = owner(labels, slot)
-                if "vtable" in holder or "__vt" in holder:
+                if "vtable" in holder or "__vt" in holder or slot in NOT_POINTERS:
                     continue
                 if name in defined:
                     slots.append((slot, name))

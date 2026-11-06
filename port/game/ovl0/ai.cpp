@@ -1343,7 +1343,7 @@ steered:
         Ai_StopCar(phys, steer);
         return;
     }
-    if ((signed char)phys->control == 2 || phys->aiMode == 0) {
+    if ((signed char)phys->control == 2 || phys->aiMode != 0) {
         Ai_SteerTowards(phys, steer);
     }
     phys->throttleTarget = 0;

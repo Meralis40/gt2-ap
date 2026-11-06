@@ -26,6 +26,7 @@ struct State {
     int offsetX = 0, offsetY = 0;
     bool setMask = false, checkMask = false;
     int displayX = 0, displayY = 0;
+    int rangeStart = 0, rangeEnd = 0;  // GP1(06), in GPU clocks
     std::uint32_t displayMode = 0;
     bool displayOn = false;
 } g_State;
@@ -568,6 +569,10 @@ void Hw_Gp1(unsigned int word)
         g.displayX = word & 0x3fe;
         g.displayY = (word >> 10) & 0x1ff;
         break;
+    case 0x06:
+        g.rangeStart = word & 0xfff;
+        g.rangeEnd = (word >> 12) & 0xfff;
+        break;
     case 0x08:
         g.displayMode = word & 0xff;
         break;
@@ -610,8 +615,15 @@ void Hw_GpuDrawList(const void *list)
 void Hw_GpuFrame(unsigned int *pixels, int *width, int *height)
 {
     static const int kWidths[4] = {256, 320, 512, 640};
+    static const int kClocks[4] = {10, 8, 5, 4};
     const State &g = g_State;
     int w = g.displayMode & 0x40 ? 368 : kWidths[g.displayMode & 3];
+    int clocks = g.displayMode & 0x40 ? 7 : kClocks[g.displayMode & 3];
+    // The screen shows the display range, which can be narrower than the mode: the game
+    // draws 352 dots in the 368 dot mode, and what's in VRAM beside them was never visible.
+    if (g.rangeEnd > g.rangeStart) {
+        w = std::min(w, ((g.rangeEnd - g.rangeStart) / clocks + 2) & ~3);
+    }
     int h = g.displayMode & 4 ? 480 : 240;
     bool truecolor = g.displayMode & 0x10;
 
