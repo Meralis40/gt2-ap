@@ -134,7 +134,7 @@ void MainMenu_Run(void)
         goto replayTheater;
     case 3:
     default:
-        Overlay_StartAt(1, MainMenu_StartNextDemo, 0);
+        Overlay_StartAt(1, (void *)MainMenu_StartNextDemo, 0);
     }
     for (;;) {
         {
@@ -232,7 +232,7 @@ void MainMenu_Run(void)
             Irq_WaitVSyncs(1);
             EnableDisplay(1);
             Irq_WaitVSyncs(2);
-            Overlay_StartAt(0, Race_Entry, 1);
+            Overlay_StartAt(0, (void *)Race_Entry, 1);
             EnableDisplay(1);
             break;
         }
@@ -251,6 +251,6 @@ void MainMenu_StartNextDemo(void)
     g_EventDataBuf = GameData_LoadArcade(g_OVL1_DataBuf, 0x30000);
     DemoRace_LoadSetup(flow->demoReplayIndex);
     RaceSetup_InitEvent(1, 0, 0, 0, 0, 0, 0);
-    Overlay_StartAt(0, Race_Entry, 1);
+    Overlay_StartAt(0, (void *)Race_Entry, 1);
 }
 }

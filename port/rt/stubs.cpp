@@ -53,7 +53,7 @@ void *Krom2RawAdd(unsigned int)
 }
 
 // libc names with no equivalent in the host's C library.
-void bcopy(const void *src, void *dst, unsigned int size)
+void Game_bcopy(const void *src, void *dst, unsigned int size)
 {
     std::memmove(dst, src, size);
 }

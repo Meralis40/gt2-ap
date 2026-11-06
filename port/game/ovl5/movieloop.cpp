@@ -2,6 +2,7 @@
 // overlay entries. Its vtable (.rodata), __tf function and typeinfo (.bss) are
 // emitted here.
 #include "common.h"
+#include "rt.h"
 
 // The overlay's buffers, in its .bss after g_Movie, then the typeinfo of
 // psxMovieLoop.
@@ -234,19 +235,23 @@ void Movie_Play19()
     Movie_DisplayOn();
 }
 
+// MDEC isn't written yet, so a movie leaves the screen as one would have and goes on.
+static void Movie_Skip(int movie)
+{
+    Rt_Log("skipping movie %#x: MDEC isn't implemented", movie);
+    Movie_ClearVram();
+    Movie_DisplayOn();
+}
+
 void Movie_DefaultEntry()
 {
-    Movie_Play18();
+    Movie_Skip(0x18);
     Overlay_Start(1);
 }
 
 void Movie_ArcadeEntry(int which)
 {
-    if (which == 0) {
-        Movie_Play1A();
-    } else {
-        Movie_Play19();
-    }
+    Movie_Skip(which == 0 ? 0x1a : 0x19);
     Overlay_Start(1);
 }
 }
