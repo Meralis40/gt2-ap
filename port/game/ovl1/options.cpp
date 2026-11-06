@@ -614,7 +614,7 @@ int OptionsMenu_TabCallback(int event, TabEvent *ev, int tab)
 // Builds the tabs, the two option lists, the key configuration and both analog pages.
 void OptionsMenu_Enter(int back)
 {
-    TabSelector_Init(&g_Options_Tabs, OptionsMenu_TabCallback, 0);
+    TabSelector_Init(&g_Options_Tabs, (void *)OptionsMenu_TabCallback, 0);
     TabSelector_Open(&g_Options_Tabs);
     MenuList_Init(&g_Options_GlobalList.list, OptionList_ItemCallback, g_Options_GlobalItems);
     g_Options_GlobalList.rows = &g_Options_GlobalRows;

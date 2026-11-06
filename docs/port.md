@@ -37,7 +37,15 @@ cmake -S . -B build/port-win -G Ninja -DCMAKE_TOOLCHAIN_FILE=cmake/i686-windows-
 cmake --build build/port-win --target gt2ap
 ```
 
-The toolchain file's `VS_VC`, `WIN_SDK` and `WIN_SDK_VERSION` name the installed versions. CMake fetches SDL3 3.2.8, which needs git on the PATH. The Linux build isn't set up yet.
+The toolchain file's `VS_VC`, `WIN_SDK` and `WIN_SDK_VERSION` name the installed versions. CMake fetches SDL3 3.2.8, which needs git on the PATH. 
+
+On Linux, from a 64-bit Ubuntu with Clang, CMake, Ninja, `gcc-multilib` and `g++-multilib`:
+
+```bash
+cmake -S . -B build/port-linux -G Ninja -DCMAKE_TOOLCHAIN_FILE=cmake/i686-linux-clang.cmake -DGT2AP_BUILD_PORT=ON -DGT2AP_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo
+```
+
+SDL needs the X11, PulseAudio and ALSA headers and loads those libraries when it runs, so the machine that runs the game needs their i386 versions. This has been tried under WSLg only, with X11 and PulseAudio, the headers coming from the amd64 packages and SDL's two X11 checks that link set by hand (`HAVE_XGENERICEVENT`, `SDL_VIDEO_DRIVER_X11_HAS_XKBLOOKUPKEYSYM`), since that WSL has no i386 development packages. Its frames came out the same as the Windows build's, and its sound within 1 of it in value.
 
 Run it with `gt2ap <disc.cue>`, which opens on the Archipelago connection page (below). `--vblanks <n>` stops after n vblanks with no window and no pacing, and `--dump <every> <dir>` writes a frame every so many vblanks as a PPM file. `--audio <file>` saves the sound.
 
@@ -81,7 +89,8 @@ A run on a real server (Archipelago `main`, `MultiServer.py` with a seed from `w
 | M5, race | The attract replay runs. Physics and car meshes look wrong (below) |
 | M6, AP | Works on a local Archipelago server with a generated seed (below). Not yet played through by hand |
 | M7, sound | Written (below). SPU, reverb and XA run; checked by ear, by dumps and with a recorded race |
-| M8-M9 | Not started |
+| M8, movies | Put off: movies are skipped, with a log line |
+| M9 | Not started |
 
 Test runs take `--input <vblank> <buttons>`, with the bits in `hw/host.cpp` (`0x4000` is Cross; the title menu confirms with Cross, not Start).
 
@@ -97,7 +106,7 @@ Known problems:
 
 - **Race replay.** In the attract demo, the car stays under the same bridge from 0:33 to 0:41 of the race, so the replay may be diverging. That could come from the car physics, which nothing has compared with the PlayStation yet.
 - **Sound.** `hw/spu.cpp` reads the SPU registers once a vblank from the plain copy the game writes, so a key on or off takes effect at the next vblank, as the sound driver expects. It runs on the vblank count, and the game reads the envelopes, so sound is part of what a recording repeats. Music is XA on the disc (stereo, 37.8 kHz), played at drive speed. The output is simple where hardware isn't: XA is resampled with a Catmull-Rom curve instead of the real filter, the reverb computes both sides at once, and there's no SPU interrupt, capture or CD audio. `--audio <file>` writes the output as raw 16-bit stereo at 44100 Hz.
-- **Movies.** MDEC isn't implemented. `DecDCTin` and `DecDCTout` stop with their name.
+- **Movies.** MDEC isn't implemented. The movie entries in `game/ovl5/movieloop.cpp` log the movie, skip it and go on to OVL1. The Simulation disc's only one comes at the end of the game. `DecDCTin` and `DecDCTout` still stop with their name, which the Arcade menus' course previews would reach.
 - **Not checked.** `-fno-strict-return` hides functions that fall off their end. Any of them whose callers use the result got it from `$v0` on the PlayStation, so they need checking: `Tim_LoadClutAndImage` was one. `tools/check_protos.py` covers argument counts only: it found `Race_LoadEngineBanks`.
 - **Argument order.** The Microsoft ABI evaluates arguments right to left, so a call must not pass a value next to the call that sets it. `tools/check_argorder.py` lists suspects, and all 50 hits were harmless when it was last read through. Other targets evaluate left to right.
 - **Layout.** The full layout check isn't in place yet.

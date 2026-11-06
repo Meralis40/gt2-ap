@@ -58,13 +58,19 @@ foreach(unit ovl0 ovl1 ovl4)
         g_Page_SaveGame=g_Page_SaveGame_${unit} g_LicensePrefixes=g_LicensePrefixes_${unit})
 endforeach()
 target_include_directories(game PRIVATE game/include rt ap)
-target_compile_definitions(game PRIVATE GTE_C)
+# The game has its own of these, which must not replace the C library's for SDL or libstdc++.
+target_compile_definitions(game PRIVATE GTE_C
+    sprintf=Game_sprintf vsprintf=Game_vsprintf strchr=Game_strchr bcopy=Game_bcopy)
 target_compile_options(game PRIVATE
     -w -fwrapv -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-exceptions -fno-rtti -fno-builtin
     -fno-stack-protector -fno-vectorize -fno-slp-vectorize -fno-omit-frame-pointer -fno-strict-return
     $<$<COMPILE_LANGUAGE:CXX>:-funsigned-char -std=gnu++20>
     $<$<COMPILE_LANGUAGE:C>:-fsigned-char -std=gnu89>
     -nostdlibinc)
+if(NOT WIN32)
+    # Doubles in guest structures sit at the alignment they have on the console.
+    target_compile_options(game PRIVATE -fno-pic -malign-double)
+endif()
 
 add_executable(gt2ap
     $<TARGET_OBJECTS:game>
