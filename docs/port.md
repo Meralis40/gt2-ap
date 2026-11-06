@@ -72,7 +72,7 @@ Controls: arrows, Enter (Start), Backspace (Select), X (Cross), C (Circle), S (S
 
 Known problems:
 
-- **Race replay.** In the attract demo, the car stays under the same bridge from 0:33 to 0:41 of the race, so the replay may be diverging. Its front also looks stretched in those frames. Both could come from any of the never-tested car physics, the car mesh code or the GTE.
+- **Race replay.** In the attract demo, the car stays under the same bridge from 0:33 to 0:41 of the race, so the replay may be diverging. That could come from the car physics, which nothing has compared with the PlayStation yet.
 - **Sound.** The SPU registers are a plain copy, so there's no sound. XA and CD audio sectors aren't handled.
 - **Movies.** MDEC isn't implemented. `DecDCTin` and `DecDCTout` stop with their name.
 - **Not checked.** `-fno-strict-return` hides functions that fall off their end. Any of them whose callers use the result got it from `$v0` on the PlayStation, so they need checking: `Tim_LoadClutAndImage` was one. `tools/check_protos.py` covers argument counts only: it found `Race_LoadEngineBanks`.
