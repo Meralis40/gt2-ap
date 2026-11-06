@@ -19,6 +19,7 @@ int Hw_CdPump(void);
 void Hw_CdVblank(void);
 void Hw_CardPump(void);
 void Hw_PadSetButtons(unsigned short held);
+unsigned short Hw_PadButtons(void);
 void Hw_PadVblank(void);
 
 #ifdef __cplusplus
@@ -26,7 +27,13 @@ void Hw_PadVblank(void);
 
 #include <filesystem>
 
+constexpr int kHwCardSize = 128 * 1024;
+
 void Hw_CdOpen(const std::filesystem::path &cue);
+// The card as it stands.
+const unsigned char *Hw_CardImage();
+// Runs from this card instead of the file, which then stays untouched.
+void Hw_CardUseImage(const unsigned char *image);
 #endif
 
 #endif

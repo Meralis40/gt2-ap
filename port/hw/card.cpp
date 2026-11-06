@@ -18,7 +18,6 @@ constexpr int kSpecTimeout = 0x0100;
 constexpr int kSpecNewCard = 0x2000;
 constexpr int kFrameSize = 128;
 constexpr int kFramesPerBlock = 64;
-constexpr int kCardSize = 128 * 1024;
 constexpr int kDirectoryFrames = 15;
 constexpr int kBrokenFrames = 20;
 
@@ -32,6 +31,7 @@ std::vector<Event> g_Events;
 std::vector<std::uint8_t> g_Card;
 FILE *g_File;
 const char *g_Path = "gt2ap.mcd";
+bool g_FromImage;
 bool g_Announced;
 std::uint32_t g_PendingClass;
 int g_PendingSpec;
@@ -49,7 +49,7 @@ void setChecksum(std::uint8_t *frame)
 // A formatted card: the header frame, a free directory, an empty broken frame list.
 void formatCard()
 {
-    g_Card.assign(kCardSize, 0);
+    g_Card.assign(kHwCardSize, 0);
     g_Card[0] = 'M';
     g_Card[1] = 'C';
     setChecksum(g_Card.data());
@@ -69,13 +69,13 @@ void formatCard()
 
 void openCard()
 {
-    if (g_File != nullptr) {
+    if (g_File != nullptr || g_FromImage) {
         return;
     }
     g_File = std::fopen(g_Path, "r+b");
     if (g_File != nullptr) {
-        g_Card.resize(kCardSize);
-        if (std::fread(g_Card.data(), 1, kCardSize, g_File) != kCardSize) {
+        g_Card.resize(kHwCardSize);
+        if (std::fread(g_Card.data(), 1, kHwCardSize, g_File) != kHwCardSize) {
             Rt_Fatal("%s isn't a 128 KB memory card", g_Path);
         }
         return;
@@ -85,7 +85,7 @@ void openCard()
     if (g_File == nullptr) {
         Rt_Fatal("cannot create %s", g_Path);
     }
-    std::fwrite(g_Card.data(), 1, kCardSize, g_File);
+    std::fwrite(g_Card.data(), 1, kHwCardSize, g_File);
     std::fflush(g_File);
 }
 
@@ -101,6 +101,18 @@ bool isCardPort(int address)
 }
 
 }  // namespace
+
+const unsigned char *Hw_CardImage()
+{
+    openCard();
+    return g_Card.data();
+}
+
+void Hw_CardUseImage(const unsigned char *image)
+{
+    g_Card.assign(image, image + kHwCardSize);
+    g_FromImage = true;
+}
 
 extern "C" {
 
@@ -149,9 +161,11 @@ int _card_write(int address, int sector, const void *buffer)
     }
     openCard();
     std::memcpy(&g_Card[sector * kFrameSize], buffer, kFrameSize);
-    std::fseek(g_File, sector * kFrameSize, SEEK_SET);
-    std::fwrite(buffer, 1, kFrameSize, g_File);
-    std::fflush(g_File);
+    if (g_File != nullptr) {
+        std::fseek(g_File, sector * kFrameSize, SEEK_SET);
+        std::fwrite(buffer, 1, kFrameSize, g_File);
+        std::fflush(g_File);
+    }
     finish(kClassHwCard, kSpecDone);
     return 1;
 }

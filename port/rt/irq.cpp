@@ -34,12 +34,16 @@ constexpr auto kVblank = std::chrono::nanoseconds(16683350);  // NTSC, 59.94 Hz
 constexpr int kDmaChannels = 7;
 constexpr unsigned int kHblanksPerVblank = 263;
 constexpr unsigned int kClocksPerVblank = 33868800 / 8 / 60;  // timer 2, at the system clock / 8
+// A vblank falls on every so many pumps, never on the host's clock, which would make each run
+// differ. The clock only paces them. This is how many CD sectors a vblank can load.
+constexpr unsigned int kPumpsPerVblank = 32;
 
 void (*g_VSyncCallback)(void);
 void (*g_DmaCallbacks[kDmaChannels])(void);
 bool g_DmaDone[kDmaChannels];
 int g_InCallback;
 Clock::time_point g_NextVblank = Clock::now();
+unsigned int g_Pumps;
 unsigned int g_Vblanks;
 unsigned int g_Field;
 
@@ -86,6 +90,7 @@ void vblank()
             Hw_PadSetButtons(input.buttons);
         }
     }
+    Rt_RecordVblank();
     Hw_CdVblank();
     Hw_PadVblank();
     if (g_VSyncCallback != nullptr) {
@@ -99,6 +104,20 @@ void vblank()
     if (g_MaxVblanks != 0 && g_Vblanks >= g_MaxVblanks) {
         Rt_Log("stopping after %u vblanks", g_Vblanks);
         std::exit(0);
+    }
+}
+
+void waitForNextVblank()
+{
+    Clock::time_point now = Clock::now();
+
+    while (now < g_NextVblank) {
+        std::this_thread::yield();
+        now = Clock::now();
+    }
+    g_NextVblank += kVblank;
+    if (now > g_NextVblank + 10 * kVblank) {
+        g_NextVblank = now + kVblank;
     }
 }
 
@@ -213,22 +232,18 @@ void Rt_Pump(void)
             }
         }
     }
-    int cdEvent = Hw_CdPump();
+    Hw_CdPump();
     Hw_CardPump();
     g_InCallback--;
 
-    Clock::time_point now = Clock::now();
-    if (g_MaxVblanks != 0) {
-        vblank();
-    } else if (now >= g_NextVblank) {
-        g_NextVblank += kVblank;
-        if (now > g_NextVblank + 10 * kVblank) {
-            g_NextVblank = now + kVblank;
-        }
-        vblank();
-    } else if (cdEvent == 0) {
-        std::this_thread::yield();
+    if (++g_Pumps < kPumpsPerVblank) {
+        return;
     }
+    g_Pumps = 0;
+    if (g_MaxVblanks == 0) {
+        waitForNextVblank();
+    }
+    vblank();
 }
 
 }  // extern "C"

@@ -3,8 +3,10 @@
 // its entry point, then each overlay entry it asks for.
 //
 // Usage: gt2ap <disc .cue> [--vblanks <n>] [--dump <every> <dir>] [--input <vblank> <buttons>]...
+//              [--record <file>] [--replay <file>]
 // --vblanks stops after n vblanks, without waiting for real time; --dump writes a frame
-// every <every> vblanks to <dir>; --input holds buttons from a vblank on.
+// every <every> vblanks to <dir>; --input holds buttons from a vblank on; --record saves the
+// memory card and every vblank's buttons to a file, and --replay plays one back.
 #include "fixups.h"
 #include "memmap.h"
 #include "rt.h"
@@ -168,6 +170,8 @@ int main(int argc, char **argv)
         unsigned int dumpEvery = 0;
         const char *dumpDir = "";
         const char *cue = nullptr;
+        const char *recordPath = nullptr;
+        const char *replayPath = nullptr;
         for (int i = 1; i < argc; i++) {
             if (std::strcmp(argv[i], "--vblanks") == 0 && i + 1 < argc) {
                 maxVblanks = std::strtoul(argv[++i], nullptr, 0);
@@ -177,15 +181,25 @@ int main(int argc, char **argv)
             } else if (std::strcmp(argv[i], "--dump") == 0 && i + 2 < argc) {
                 dumpEvery = std::strtoul(argv[++i], nullptr, 0);
                 dumpDir = argv[++i];
+            } else if (std::strcmp(argv[i], "--record") == 0 && i + 1 < argc) {
+                recordPath = argv[++i];
+            } else if (std::strcmp(argv[i], "--replay") == 0 && i + 1 < argc) {
+                replayPath = argv[++i];
             } else {
                 cue = argv[i];
             }
         }
         if (cue == nullptr) {
-            std::fputs("usage: gt2ap <disc.cue> [--vblanks <n>] [--dump <every> <dir>]\n", stderr);
+            std::fputs("usage: gt2ap <disc.cue> [--vblanks <n>] [--dump <every> <dir>] [--record <file>] [--replay <file>]\n", stderr);
             return 2;
         }
         Rt_SetRunLimits(maxVblanks, dumpEvery, dumpDir);
+        if (replayPath != nullptr) {
+            Rt_ReplayOpen(replayPath, maxVblanks != 0);
+        }
+        if (recordPath != nullptr) {
+            Rt_RecordOpen(recordPath);
+        }
         if (maxVblanks == 0) {
             Host_Open();
         }
