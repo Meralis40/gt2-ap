@@ -2049,7 +2049,7 @@ void CarModel_DrawWheel(Camera *cam, MATRIX *world, WheelInst *wheel, CarModelHe
     gte_StoreDataReg(GTE_SXY0, &p->xy1);
     gte_StoreDataReg(GTE_SXY1, &p->xy0);
     gte_StoreDataReg(GTE_SXY1, &q->xy0);
-    gte_StoreDataReg(GTE_SXY2, &q->xy2);
+    gte_StoreDataReg(GTE_SXY2, &q->xy1);
     // q3 and the centre; the third point is q2 again.
     gte_SetDataReg(GTE_VXY0, quad[3]);
     gte_SetDataReg(GTE_VXY1, 0);
@@ -2065,7 +2065,7 @@ void CarModel_DrawWheel(Camera *cam, MATRIX *world, WheelInst *wheel, CarModelHe
     gte_StoreDataReg(GTE_SXY0, &p->xy3);
     gte_StoreDataReg(GTE_SXY0, &q->xy3);
     gte_StoreDataReg(GTE_SXY1, &p->xy2);
-    gte_StoreDataReg(GTE_SXY1, &q->xy1);
+    gte_StoreDataReg(GTE_SXY1, &q->xy2);
     flags |= gte_GetCtrlReg(GTE_FLAG);
     if ((int)flags < 0) {
         return;
