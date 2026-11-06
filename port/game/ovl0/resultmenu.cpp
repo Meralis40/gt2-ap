@@ -498,13 +498,13 @@ void ResultMenu_Draw(DrawLayer *layer)
     }
     MenuList_Draw(&g_ResultMenu_List, ot);
     if (page->sel >= 0) {
-        ResultCar_Draw(&g_OVL0_EndFontInfo->car, &menu->layers[0], &menu->layers[1], &g_OVL0_EndFontInfo->view, 0);
+        ResultCar_Draw(&g_OVL0_EndFontInfo->car, &menu->layers[4], &menu->layers[5], &g_OVL0_EndFontInfo->view, 0);
     }
     area.x = 0x7c;
     area.y = 0xa0;
     area.w = 0xc8;
     area.h = 0xc8;
-    DrawLayer_SetArea(&menu->layers[0], &area);
-    DrawLayer_SetArea(&menu->layers[1], &area);
+    DrawLayer_SetArea(&menu->layers[4], &area);
+    DrawLayer_SetArea(&menu->layers[5], &area);
 }
 }

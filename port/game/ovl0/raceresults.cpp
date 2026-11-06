@@ -543,7 +543,7 @@ void RaceResults_Enter(int back)
     page->mode = 0;
     RaceResults_SetupCar(car);
     RaceResults_InitView(&g_OVL0_EndFontInfo->view);
-    TitleBanner_Init(&g_OVL0_EndFontInfo->banner, RaceSetup_Get()->eventName + 0, &menu->text);
+    TitleBanner_Init(&g_OVL0_EndFontInfo->banner, RaceSetup_Get()->courseName, &menu->text);
     work = g_OVL0_EndFontInfo;
     work->banner.bar.t = 0;
     TextItem_Show(&work->banner.text, -1);

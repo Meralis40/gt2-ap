@@ -51,7 +51,7 @@ Run it with `gt2ap <disc.cue>`. `--vblanks <n>` stops after n vblanks with no wi
 | `port/gen` | Generated and checked in: `guest_syms.S` binds data names to guest addresses, `fixups_<unit>.cpp` lists the code pointers in guest data |
 | `port/tools` | `fork.py`, `gen_syms.py`, `update_syms.sh`, `gen_fixups.py`, `check_protos.py`, `check_argorder.py` |
 
-`gen_syms.py` takes the names the objects leave undefined. It reports function names instead of binding them: those are for the port to define. `gen_fixups.py` found 336 slots, with none pointing at a function the port doesn't define. `Overlay_StartAt`'s default entries aren't among them, because they're overlay addresses in resident data; `overlay.cpp` has them as a table of host functions.
+`gen_syms.py` takes the names the objects leave undefined. It reports function names instead of binding them: those are for the port to define. `gen_fixups.py` found 333 slots, with none pointing at a function the port doesn't define. Any word of data can equal a function's address by chance, so slots outside a named table need checking: three such words are listed in `NOT_POINTERS`. `Overlay_StartAt`'s default entries aren't among them, because they're overlay addresses in resident data; `overlay.cpp` has them as a table of host functions.
 
 ## Status
 

@@ -43,12 +43,10 @@ void Card_EvSwError();
 void Card_EvSwIOE();
 void Card_EvSwNewCard();
 void Card_EvSwTimeout();
-void Overlay_OpenFile();
 void Pad_UpdateAnalog();
 void Pad_UpdateDigital();
 void Pad_UpdateNeGcon();
 void Pad_UpdateVibration();
-void ViewDrawContext_SwapOT();
 }
 
 extern const rt::Fixup g_Fixups_exe[] = {
@@ -99,9 +97,6 @@ extern const rt::Fixup g_Fixups_exe[] = {
     {0x80092260u, CardState_ReadGameSave},
     {0x80092264u, CardState_NoGameFile},
     {0x80092268u, CardState_LoadComplete},
-    {0x800983b4u, ViewDrawContext_SwapOT},
-    {0x800992a0u, Overlay_OpenFile},
-    {0x8009a4b0u, Overlay_OpenFile},
     {0x800a6f6cu, Pad_UpdateNeGcon},
     {0x800a6f84u, Pad_UpdateDigital},
     {0x800a6f88u, Pad_UpdateVibration},
