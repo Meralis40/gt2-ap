@@ -639,8 +639,8 @@ void CarColl_SeparateOverlaps(RaceVehicle *cars, int count)
                 for (k = 0; k < 2; k++) {
                     int amount = Fixed_Mul(push[k], best);
 
-                    a->pushVec[k] += amount;
-                    b->pushVec[k] -= amount;
+                    b->pushVec[k] += amount;
+                    a->pushVec[k] -= amount;
                 }
             }
             slot++;
