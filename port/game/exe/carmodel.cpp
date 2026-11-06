@@ -455,6 +455,15 @@ static inline int Body_TriVisible(CarScratch *sp, int flags, int area)
     return area > 0;
 }
 
+// Projects a triangle and tells if it's drawn. The area can't be an argument next to the
+// call that sets it: the order they're evaluated in depends on the target.
+static inline int Body_ProjectVisibleTri(CarScratch *sp, unsigned int *w, BodyVert **v, int *xy, int *sz, int *area)
+{
+    int flags = Body_ProjectTri(sp, w, v, xy, sz, area);
+
+    return Body_TriVisible(sp, flags, *area);
+}
+
 // A quad is drawn when either half faces the camera (in a mirror, when either doesn't),
 // and not when both nclips are 0.
 static inline int Body_QuadVisible(CarScratch *sp, int flags, int n1, int n2)
@@ -831,7 +840,7 @@ void CarBody_DrawUnclipped(CarMesh *mesh, MATRIX *light)
     for (; w != end; w += 4) {
         PolyF3 *p;
 
-        if (!Body_TriVisible(sp, Body_ProjectTri(sp, w, v, xy, sz, &n1), n1)) {
+        if (!Body_ProjectVisibleTri(sp, w, v, xy, sz, &n1)) {
             continue;
         }
         ot = Body_OtEntry(sp, w[BODY_FLAGS], Body_SortZ(w[BODY_FLAGS], sz, 3));
@@ -883,7 +892,7 @@ void CarBody_DrawUnclipped(CarMesh *mesh, MATRIX *light)
     for (; w != end; w += 6) {
         PolyG3 *p;
 
-        if (!Body_TriVisible(sp, Body_ProjectTri(sp, w, v, xy, sz, &n1), n1)) {
+        if (!Body_ProjectVisibleTri(sp, w, v, xy, sz, &n1)) {
             continue;
         }
         ot = Body_OtEntry(sp, w[BODY_FLAGS], Body_SortZ(w[BODY_FLAGS], sz, 3));
@@ -940,7 +949,7 @@ void CarBody_DrawUnclipped(CarMesh *mesh, MATRIX *light)
     for (; w != end; w += 7) {
         unsigned int clut;
 
-        if (!Body_TriVisible(sp, Body_ProjectTri(sp, w, v, xy, sz, &n1), n1)) {
+        if (!Body_ProjectVisibleTri(sp, w, v, xy, sz, &n1)) {
             continue;
         }
         if (sp->mirror < 0) {
@@ -1036,7 +1045,7 @@ void CarBody_DrawUnclipped(CarMesh *mesh, MATRIX *light)
     for (; w != end; w += 9) {
         unsigned int clut;
 
-        if (!Body_TriVisible(sp, Body_ProjectTri(sp, w, v, xy, sz, &n1), n1)) {
+        if (!Body_ProjectVisibleTri(sp, w, v, xy, sz, &n1)) {
             continue;
         }
         if (sp->mirror < 0) {
