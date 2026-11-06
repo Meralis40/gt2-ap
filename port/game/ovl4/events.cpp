@@ -2,6 +2,7 @@
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
 #include "common.h"
+#include "ap.h"
 
 extern "C" {
 extern GameState g_GameState;
@@ -60,6 +61,9 @@ int Events_AllRegionalLeaguesWon(void)
     char *code;
     int i;
 
+    if (Ap_LeagueTrophies()) {
+        return Ap_ProLeagueOpen();
+    }
     for (i = 0; (code = g_RegionalLeagueCodes[i]) != 0; i++) {
         if (PlayerStats_GetEventResult(stats, Event_IndexFromCode(code)) != 1)
             all = 0;
@@ -76,6 +80,9 @@ int Events_AllProLeaguesWon(void)
     char *code;
     int i;
 
+    if (Ap_LeagueTrophies()) {
+        return Ap_WorldLeagueOpen();
+    }
     for (i = 0; (code = g_ProLeagueCodes[i]) != 0; i++) {
         if (PlayerStats_GetEventResult(stats, Event_IndexFromCode(code)) != 1)
             all = 0;
@@ -180,6 +187,14 @@ int Event_IndexFromCode(char *raceCode)
     return 0;
 }
 
+// Event_IndexFromCode, but -1 for a code that isn't an event.
+static int Event_FindIndex(char *raceCode)
+{
+    int index = Event_IndexFromCode(raceCode);
+
+    return strcmp(g_EventCodes[index], raceCode) == 0 ? index : -1;
+}
+
 // The value of the digit c, or 0.
 int Char_DigitValue(int c)
 {
@@ -240,6 +255,8 @@ void ChampRaceList_Build(ChampRaceList *list, char *eventCode)
     int i;
 
     ChampRaceList_Clear(list);
+    // A lone race has no race count in its code, so it never gets to the loop below.
+    Ap_SetRaceEvent(0, Event_FindIndex(eventCode));
     data = g_GtModeRaceDataBuf;
     Rand_Seed(&seed);
     EventCode_GetBase(base, eventCode);
@@ -263,6 +280,7 @@ void ChampRaceList_Build(ChampRaceList *list, char *eventCode)
             list->param45[i] = event->lapCount;
             list->courseHash[i] = Str_Hash(course);
             strcpy(list->raceCode[i], code);
+            Ap_SetRaceEvent(i, Event_FindIndex(code));
             i++;
         } while (i < count);
     }

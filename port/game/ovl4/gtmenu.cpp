@@ -3,6 +3,7 @@
 // classes (.rodata, after SimMap_Update's jump table), their __tf functions and
 // typeinfo (.bss, which build.py's CXX_NAMES places) are emitted here.
 #include "common.h"
+#include "ap.h"
 
 extern "C" {
 // Pointers into g_OVL4_SharedBuffer.
@@ -120,6 +121,14 @@ int GTMenu::Update()
     int result;
 
     psxViewLoop::Update();
+    // Credits go in here, on the map or in a shop: never during a race or a save.
+    {
+        int credits;
+
+        while ((credits = Ap_NextCredits(&g_GameState.apItemsApplied)) >= 0) {
+            Garage_AddCredits(&g_GameState.garages[0], credits);
+        }
+    }
     if (blankFrames > 0) {
         blankFrames--;
     }
@@ -574,6 +583,10 @@ wheels:
         SimMap_GoToPage(menu, Shop_CheckTransaction(&g_ShopTxn), 0);
         break;
     case 0xab:
+        if (Ap_Active() && !Ap_HasManufacturer(GARAGE_CAR(D_800A8D62)->setup.manufacturerId)) {
+            Sfx_PlayMenu(0);
+            return result;
+        }
         Txn_SetSelectCar(&g_ShopTxn, D_800A8D62);
         menu->canGoBack = 0;
         SimMap_GoToPage(menu, Shop_CheckTransaction(&g_ShopTxn), 0);

@@ -1,7 +1,9 @@
 # Gran Turismo 2 Setup Guide
 
-The Gran Turismo 2 client is not available yet. This world can already generate seeds, and the
-[Universal Tracker](https://github.com/FarisTheAncient/Archipelago/tree/tracker) can track them.
+The client is the native port in this repository, which has Archipelago built in. It isn't
+released yet, so for now it has to be built from source (see `docs/port.md`). This world generates
+seeds, and the [Universal Tracker](https://github.com/FarisTheAncient/Archipelago/tree/tracker)
+can track them.
 
 ## Requirements
 
@@ -14,3 +16,10 @@ The Gran Turismo 2 client is not available yet. This world can already generate 
 2. Generate a template YAML with the Archipelago Launcher ("Generate Template Options"), and edit
    the options of `Gran Turismo 2`.
 3. Generate as usual.
+
+## Connecting
+
+1. Run `gt2ap "<your disc>.cue"`. It opens on the Archipelago page.
+2. Type the server (`archipelago.gg:12345`, or `ws://localhost:38281`), your slot name and the
+   password if there is one. Ctrl+V pastes. Up and Down move between the rows.
+3. Choose **Connect**. Each seed and slot gets its own memory card, in the `saves` folder.

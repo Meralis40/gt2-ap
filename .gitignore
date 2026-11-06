@@ -36,3 +36,7 @@ __pycache__/
 # Sony PsyQ libraries (docs/psyq-libs.md)
 /decomp/psyq/
 *.mcd
+
+# The client's own files, when run from here
+/saves/
+/gt2ap.cfg

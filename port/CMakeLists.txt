@@ -28,6 +28,22 @@ foreach(sdl_target SDL3-static SDL_uclibc)
     endif()
 endforeach()
 
+# Archipelago: TLS under mbedTLS's GPL-2.0-or-later option (docs/licensing.md), and JSON.
+# Its own CMake takes this Clang for cl.exe and passes it cl's options, so it's built here.
+FetchContent_Declare(mbedtls
+    URL https://github.com/Mbed-TLS/mbedtls/releases/download/mbedtls-3.6.2/mbedtls-3.6.2.tar.bz2
+    URL_HASH SHA256=8b54fb9bcf4d5a7078028e0520acddefb7900b3e66fec7f7175bb5b7d85ccdca
+    SOURCE_SUBDIR no-cmake)
+FetchContent_MakeAvailable(mbedtls)
+file(GLOB MBEDTLS_SOURCES CONFIGURE_DEPENDS ${mbedtls_SOURCE_DIR}/library/*.c)
+add_library(mbedtls_all STATIC ${MBEDTLS_SOURCES})
+target_include_directories(mbedtls_all PUBLIC ${mbedtls_SOURCE_DIR}/include PRIVATE ${mbedtls_SOURCE_DIR}/library)
+target_compile_options(mbedtls_all PRIVATE -w)
+FetchContent_Declare(nlohmann_json
+    URL https://github.com/nlohmann/json/releases/download/v3.11.3/include.zip
+    URL_HASH SHA256=a22461d13119ac5c78f205d3df1db13403e58ce1bb1794edc9313677313f4a9d)
+FetchContent_MakeAvailable(nlohmann_json)
+
 file(GLOB GAME_SOURCES CONFIGURE_DEPENDS
     game/exe/*.cpp game/exe/*.c
     game/ovl0/*.cpp game/ovl1/*.cpp game/ovl2/*.cpp game/ovl3/*.cpp game/ovl4/*.cpp game/ovl5/*.cpp)
@@ -41,7 +57,7 @@ foreach(unit ovl0 ovl1 ovl4)
     set_property(SOURCE ${unit_sources} APPEND PROPERTY COMPILE_DEFINITIONS
         g_Page_SaveGame=g_Page_SaveGame_${unit} g_LicensePrefixes=g_LicensePrefixes_${unit})
 endforeach()
-target_include_directories(game PRIVATE game/include rt)
+target_include_directories(game PRIVATE game/include rt ap)
 target_compile_definitions(game PRIVATE GTE_C)
 target_compile_options(game PRIVATE
     -w -fwrapv -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-exceptions -fno-rtti -fno-builtin
@@ -52,6 +68,9 @@ target_compile_options(game PRIVATE
 
 add_executable(gt2ap
     $<TARGET_OBJECTS:game>
+    ap/session.cpp
+    ap/state.cpp
+    ap/ws.cpp
     hw/card.cpp
     hw/cd.cpp
     hw/gpu.cpp
@@ -71,11 +90,11 @@ add_executable(gt2ap
     gen/fixups_ovl3.cpp
     gen/fixups_ovl4.cpp
     gen/fixups_ovl5.cpp)
-target_include_directories(gt2ap PRIVATE . hw rt)
+target_include_directories(gt2ap PRIVATE . ap hw rt ${nlohmann_json_SOURCE_DIR}/single_include)
 target_compile_options(gt2ap PRIVATE -fno-omit-frame-pointer)
-target_link_libraries(gt2ap PRIVATE gt2ap::discio SDL3::SDL3-static)
+target_link_libraries(gt2ap PRIVATE gt2ap::discio SDL3::SDL3-static mbedtls_all)
 if(WIN32)
-    target_link_libraries(gt2ap PRIVATE user32)
+    target_link_libraries(gt2ap PRIVATE user32 ws2_32 crypt32 bcrypt)
 endif()
 if(WIN32)
     target_link_options(gt2ap PRIVATE

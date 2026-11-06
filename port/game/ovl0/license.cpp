@@ -2,6 +2,7 @@
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
 #include "common.h"
+#include "ap.h"
 #include "gamestate.h"
 #include "ovl2.h"
 #include "ovl4.h"
@@ -800,7 +801,17 @@ int LicenseRoot_Update(int active)
                 int earned, gold;
 
                 License_AwardMedal();
+                {
+                    int test = setup->licenseTest;
+
+                    if ((signed char)g_GameState.licenses[license][test].medal != MEDAL_NONE) {
+                        Ap_LicenseTestPassed(license, test);
+                    }
+                }
                 earned = License_IsEarned_OVL0(license);
+                if (earned != 0) {
+                    Ap_LicenseEarned(license);
+                }
                 gold = License_IsAllGold(license);
                 if (earned != 0) {
                     WORK->licensed = wasEarned == 0;

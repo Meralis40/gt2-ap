@@ -3,10 +3,14 @@
 // its entry point, then each overlay entry it asks for.
 //
 // Usage: gt2ap <disc .cue> [--vblanks <n>] [--dump <every> <dir>] [--input <vblank> <buttons>]...
-//              [--record <file>] [--replay <file>]
+//              [--record <file>] [--replay <file>] [--connect <server> <slot> [<password>]]
 // --vblanks stops after n vblanks, without waiting for real time; --dump writes a frame
 // every <every> vblanks to <dir>; --input holds buttons from a vblank on; --record saves the
-// memory card and every vblank's buttons to a file, and --replay plays one back.
+// memory card and every vblank's buttons to a file, and --replay plays one back; --connect
+// joins an Archipelago room without the connection page. Test runs, recordings and replays
+// don't show that page, since none of them can type on it.
+#include "ap.h"
+#include "ap_host.h"
 #include "fixups.h"
 #include "memmap.h"
 #include "rt.h"
@@ -172,6 +176,7 @@ int main(int argc, char **argv)
         const char *cue = nullptr;
         const char *recordPath = nullptr;
         const char *replayPath = nullptr;
+        bool connecting = false;
         for (int i = 1; i < argc; i++) {
             if (std::strcmp(argv[i], "--vblanks") == 0 && i + 1 < argc) {
                 maxVblanks = std::strtoul(argv[++i], nullptr, 0);
@@ -185,6 +190,12 @@ int main(int argc, char **argv)
                 recordPath = argv[++i];
             } else if (std::strcmp(argv[i], "--replay") == 0 && i + 1 < argc) {
                 replayPath = argv[++i];
+            } else if (std::strcmp(argv[i], "--connect") == 0 && i + 2 < argc) {
+                const char *server = argv[++i];
+                const char *slot = argv[++i];
+                const char *password = i + 1 < argc && argv[i + 1][0] != '-' ? argv[++i] : "";
+                Ap_SetLogin(server, slot, password);
+                connecting = true;
             } else {
                 cue = argv[i];
             }
@@ -194,11 +205,17 @@ int main(int argc, char **argv)
             return 2;
         }
         Rt_SetRunLimits(maxVblanks, dumpEvery, dumpDir);
+        if (maxVblanks != 0 || replayPath != nullptr || recordPath != nullptr) {
+            Ap_DisablePage();
+        }
         if (replayPath != nullptr) {
             Rt_ReplayOpen(replayPath, maxVblanks != 0);
         }
         if (recordPath != nullptr) {
             Rt_RecordOpen(recordPath);
+        }
+        if (replayPath != nullptr && connecting) {
+            Ap_ConnectNow();
         }
         if (maxVblanks == 0) {
             Host_Open();

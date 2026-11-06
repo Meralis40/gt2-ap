@@ -39,7 +39,7 @@ cmake --build build/port-win --target gt2ap
 
 The toolchain file's `VS_VC`, `WIN_SDK` and `WIN_SDK_VERSION` name the installed versions. CMake fetches SDL3 3.2.8, which needs git on the PATH. The Linux build isn't set up yet.
 
-Run it with `gt2ap <disc.cue>`. `--vblanks <n>` stops after n vblanks with no window and no pacing, and `--dump <every> <dir>` writes a frame every so many vblanks as a PPM file.
+Run it with `gt2ap <disc.cue>`, which opens on the Archipelago connection page (below). `--vblanks <n>` stops after n vblanks with no window and no pacing, and `--dump <every> <dir>` writes a frame every so many vblanks as a PPM file.
 
 ## The tree
 
@@ -49,9 +49,26 @@ Run it with `gt2ap <disc.cue>`. `--vblanks <n>` stops after n vblanks with no wi
 | `port/rt` | Runtime: guest memory, loading, the setjmp point, the pump (`irq.cpp`), stubs (`stubs.cpp`) |
 | `port/hw` | The hardware: GPU, GTE, CD, memory card, pad, and the SDL3 window (`host.cpp`) |
 | `port/gen` | Generated and checked in: `guest_syms.S` binds data names to guest addresses, `fixups_<unit>.cpp` lists the code pointers in guest data |
-| `port/tools` | `fork.py`, `gen_syms.py`, `update_syms.sh`, `gen_fixups.py`, `check_protos.py`, `check_argorder.py` |
+| `port/ap` | The Archipelago client: `ws.cpp` (websocket, mbedTLS), `session.cpp` (protocol, on its own thread), `state.cpp` (items, locations, a seed's files) |
+| `port/tools` | `fork.py`, `gen_syms.py`, `update_syms.sh`, `gen_fixups.py`, `check_protos.py`, `check_argorder.py`, `fake_ap_server.py` |
 
 `gen_syms.py` takes the names the objects leave undefined. It reports function names instead of binding them: those are for the port to define. `gen_fixups.py` found 333 slots, with none pointing at a function the port doesn't define. Any word of data can equal a function's address by chance, so slots outside a named table need checking: three such words are listed in `NOT_POINTERS`. `Overlay_StartAt`'s default entries aren't among them, because they're overlay addresses in resident data; `overlay.cpp` has them as a table of host functions.
+
+## Archipelago
+
+The connection page (`game/ovl1/apconnect.cpp`) comes up before the autoload, because the seed decides which memory card the game reads. On it, the keyboard types instead of being the controller; Ctrl+V pastes. The server and slot are kept in `gt2ap.cfg`, the password isn't. **Play offline** leaves every rule as the game has it, on `gt2ap.mcd`.
+
+A session uses `saves/<seed>_<slot>.mcd` and `saves/<seed>_<slot>.locations`. `ap.h` is all game code sees: the rule functions in `docs/ap-hooks.md` ask it directly, and Ap_Poll applies what the session's thread has received once a vblank.
+
+- **Locations.** A win is reported from `RaceVehicle_OnLapDone`, not from the event results: in a championship the game only keeps the championship's result, and locations are per race. `ChampRaceList_Build` notes each race's event. A check goes to the `.locations` file before the server, and the file is resent on every connection, so one made while the server is away isn't lost. Practice runs and replays don't count.
+- **Items.** The server resends them all on connecting, so what's held is rebuilt from that list. Credits are the exception, since they must apply once per save: `GameState.apItemsApplied`, two bytes the game leaves alone, counts the items applied, and because it's saved with the credits, loading an older save applies the later ones again. `GTMenu::Update` applies them.
+- **Goal.** All 5 GT World League races checked, on either side, sends the goal.
+- **Connection lost.** The session retries every 5 s. The game goes on with what it holds.
+- **Recordings.** A run with a page can't be recorded or replayed, so `--record` and test runs skip it. `--connect <server> <slot> [<password>]` joins without the buttons. With `--replay` it runs beside the replay and the recording's card stays in use, which is how a recorded race can be tried as a check. Items aren't part of a recording, so the session has to grant what the recording needs.
+
+- **Compression.** The protocol deprecates connections without it, so `ws.cpp` negotiates `permessage-deflate`. It asks for `server_no_context_takeover`, so each message inflates alone through `discio`, and it sends uncompressed, which the extension allows. A server that won't drop its context is refused, since that would need a streaming inflate.
+
+A run on a real server (Archipelago `main`, `MultiServer.py` with a seed from `world/gt2`, items given with `/send` on its console) connected, took compressed messages, and got a check and its item back from a replayed race. `wss` reached `archipelago.gg` with its certificate verified, up to the websocket request, since no room was hosted there. `tools/fake_ap_server.py` stands in for a room with no seed and no rules, and covers a wrong password or slot, a dropped connection and the goal; it doesn't compress. Not covered yet: typing on the page, license tests as checks, and the shops' refusals by hand.
 
 ## Status
 
@@ -62,7 +79,8 @@ Run it with `gt2ap <disc.cue>`. `--vblanks <n>` stops after n vblanks with no wi
 | M0-M3 | Done |
 | M4, GT mode | Map and Garage page reached. Shops, dealers, car previews and memory card saves haven't been driven yet |
 | M5, race | The attract replay runs. Physics and car meshes look wrong (below) |
-| M6-M9 | Not started |
+| M6, AP | Works on a local Archipelago server with a generated seed (below). Not yet played through by hand |
+| M7-M9 | Not started |
 
 Test runs take `--input <vblank> <buttons>`, with the bits in `hw/host.cpp` (`0x4000` is Cross; the title menu confirms with Cross, not Start).
 

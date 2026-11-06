@@ -2,6 +2,7 @@
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
 #include "common.h"
+#include "ap.h"
 
 extern "C" {
 extern unsigned int g_License_EntryMsgPages[6];
@@ -49,6 +50,11 @@ int License_IsEarned(LicenseId license)
     int earned = 1;
     int i = 0;
     LicenseTest *test = gs->licenses[license];
+
+    // Progressive Licenses earn them in the game's order, B first.
+    if (Ap_Active()) {
+        return license >= 6 - Ap_Licenses();
+    }
 
 loop:
     if (i < 10) {
@@ -274,6 +280,11 @@ int Race_CheckEntry(char *raceCode, int *msgPage)
     *msgPage = (int)0x80000002;
     if (slot < 0)
         return -1;
+    // The "car not allowed" message: nothing says this one's manufacturer is locked.
+    if (Ap_Active() && !Ap_HasManufacturer(g->cars[slot].setup.manufacturerId)) {
+        *msgPage = (int)0x8000001e;
+        return -8;
+    }
     if (Event_IsProLeague(raceCode)) {
         *msgPage = (int)0x8000002f;
         int won = Events_AllRegionalLeaguesWon() == 1;

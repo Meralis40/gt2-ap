@@ -1,6 +1,6 @@
 # Archipelago hooks
 
-Where the client hooks or patches the Simulation disc (`SCUS_944.88`, NTSC-U 1.2) for the randomizer rules, and where it keeps its own state in RAM. Found statically in Ghidra, then tested in game with PCSX-Redux: the AP state block location, the `License_IsEarned` replacement, and the manufacturer, tuning part and trophy refusals (by setting registers by hand at each hook). The hook code itself isn't written yet. Open points are under [To verify](#to-verify).
+Where the client hooks or patches the Simulation disc (`SCUS_944.88`, NTSC-U 1.2) for the randomizer rules, and where it keeps its own state in RAM. Found statically in Ghidra, then tested in game with PCSX-Redux: the AP state block location, the `License_IsEarned` replacement, and the manufacturer, tuning part and trophy refusals (by setting registers by hand at each hook). The port applies these rules directly in its forked game code ([port.md](port.md#archipelago)), so the addresses and early returns below only describe the original game. Open points are under [To verify](#to-verify).
 
 ## Common notes
 

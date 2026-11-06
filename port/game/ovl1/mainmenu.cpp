@@ -2,6 +2,7 @@
 #include "copies.h"
 #include "common.h"
 #include "gamestate.h"
+#include "ap.h"
 
 extern "C" {
 extern FlowMenuState g_Flow_IntroShown;
@@ -12,6 +13,7 @@ extern unsigned char g_OVL1_DataBuf[];
 extern unsigned char g_OVL1_ReplayBuf[];
 extern short g_MainMenu_TitleTims[];
 extern VolBootId g_MainMenu_TitlePictures[];
+extern BaseMenuPage g_Page_ApConnect;
 extern BaseMenuPage g_Page_AutoLoad;
 extern BaseMenuPage g_Page_MainMenu;
 extern BaseMenuPage g_Page_ReplayTheater;
@@ -97,6 +99,14 @@ void MainMenu_Run(void)
     if (!g_Flow_IntroShown.introShown) {
         MainMenu_LoadStrings();
         g_Flow_IntroShown.introShown = 1;
+        if (Ap_PageWanted()) {
+            BaseMenu menu;
+
+            BaseMenu__SetRootPage(&menu, &g_Page_ApConnect);
+            do {
+                r = menu.Execute();
+            } while (r > 1 ? 1 : r < 0);
+        }
         {
             BaseMenu menu;
 
