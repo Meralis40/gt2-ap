@@ -263,7 +263,7 @@ void Countdown_Update(short *cnt, void *view)
     }
 }
 
-// The digits, then START, which fades out. Both arms of the test name the same text.
+// The digits, then START, which fades out, or another text in a replay.
 void Countdown_Draw(short *cnt, void *ot)
 {
     TextCtx text;
@@ -274,8 +274,6 @@ void Countdown_Draw(short *cnt, void *ot)
     int t;
 
     if (g_RaceWorld.isReplay != 0) {
-        start += 0x17eb;
-    } else {
         start += 0x17eb;
     }
     if (*cnt < 0) {
