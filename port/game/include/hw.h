@@ -14,6 +14,7 @@ void Hw_Gp1(unsigned int word);
 unsigned int Hw_GpuStat(void);
 unsigned int Hw_GpuRead(void);
 void Hw_GpuDrawList(const void *list);
+void Hw_SpuDma(void *guest, unsigned int bytes, int toGuest);
 void Rt_Pump(void);    // a place where the game waits: lets interrupts and the host run
 void Rt_DmaDone(int channel);
 #ifdef __cplusplus

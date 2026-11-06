@@ -19,6 +19,7 @@ namespace {
 constexpr int kFrameWidth = 640;
 constexpr int kFrameHeight = 480;
 constexpr int kWindowScale = 2;
+constexpr int kAudioRate = 44100;
 
 // Active-low bits of a digital controller, in the order the game reads them.
 enum PadBit : std::uint16_t {
@@ -58,6 +59,7 @@ SDL_Window *g_Window;
 SDL_Renderer *g_Renderer;
 SDL_Texture *g_Texture;
 SDL_Gamepad *g_Pad;
+SDL_AudioStream *g_Audio;
 std::vector<unsigned int> g_Pixels(kFrameWidth * kFrameHeight);
 bool g_TextMode;
 
@@ -164,7 +166,7 @@ extern "C" void Host_TextMode(int on)
 
 void Host_Open()
 {
-    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD)) {
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD | SDL_INIT_AUDIO)) {
         Rt_Fatal("SDL_Init: %s", SDL_GetError());
     }
     if (!SDL_CreateWindowAndRenderer("Gran Turismo 2", kFrameWidth * kWindowScale, kFrameHeight * kWindowScale,
@@ -177,6 +179,24 @@ void Host_Open()
         Rt_Fatal("SDL_CreateTexture: %s", SDL_GetError());
     }
     SDL_SetTextureScaleMode(g_Texture, SDL_SCALEMODE_NEAREST);
+
+    const SDL_AudioSpec spec = {SDL_AUDIO_S16LE, 2, kAudioRate};
+    g_Audio = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, nullptr, nullptr);
+    if (g_Audio == nullptr) {
+        Rt_Log("no sound: %s", SDL_GetError());
+    } else {
+        SDL_ResumeAudioStreamDevice(g_Audio);
+    }
+}
+
+void Host_Audio(const short *samples, int count)
+{
+    constexpr int kBytesPerFrame = 2 * sizeof(short);
+    constexpr int kMaxQueued = kAudioRate / 10 * kBytesPerFrame;  // what's more is late: let it catch up
+
+    if (g_Audio != nullptr && SDL_GetAudioStreamQueued(g_Audio) < kMaxQueued) {
+        SDL_PutAudioStreamData(g_Audio, samples, count * kBytesPerFrame);
+    }
 }
 
 void Host_Frame()

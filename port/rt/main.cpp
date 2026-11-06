@@ -186,6 +186,8 @@ int main(int argc, char **argv)
             } else if (std::strcmp(argv[i], "--dump") == 0 && i + 2 < argc) {
                 dumpEvery = std::strtoul(argv[++i], nullptr, 0);
                 dumpDir = argv[++i];
+            } else if (std::strcmp(argv[i], "--audio") == 0 && i + 1 < argc) {
+                Hw_SpuDumpTo(argv[++i]);
             } else if (std::strcmp(argv[i], "--record") == 0 && i + 1 < argc) {
                 recordPath = argv[++i];
             } else if (std::strcmp(argv[i], "--replay") == 0 && i + 1 < argc) {

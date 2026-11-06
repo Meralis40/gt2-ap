@@ -21,6 +21,12 @@ void Hw_GpuFrame(unsigned int *pixels, int *width, int *height);
 int Hw_CdPump(void);
 void Hw_CdVblank(void);
 void Hw_CardPump(void);
+// Runs the sound chip for a vblank's worth of samples.
+void Hw_SpuVblank(void);
+// sector is a raw 2352-byte sector of XA audio.
+void Hw_SpuXaSector(const unsigned char *sector);
+// Drops what's buffered: a new stream begins.
+void Hw_SpuXaClear(void);
 void Hw_PadSetButtons(unsigned short held);
 unsigned short Hw_PadButtons(void);
 void Hw_PadVblank(void);
@@ -34,6 +40,8 @@ void Hw_PadVblank(void);
 constexpr int kHwCardSize = 128 * 1024;
 
 void Hw_CdOpen(const std::filesystem::path &cue);
+// Test runs: also writes the output here, raw 16-bit stereo at 44100 Hz.
+void Hw_SpuDumpTo(const char *path);
 // The card as it stands.
 const unsigned char *Hw_CardImage();
 // Runs from this card instead of the file, which then stays untouched.

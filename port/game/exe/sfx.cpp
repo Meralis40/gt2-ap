@@ -14,7 +14,7 @@ extern uchar D_801C9994; // sound effect volume, 0-255
 extern short g_SinTable[];
 
 // Waits until the envelopes of all 24 SPU voices are at 0, or about 6.8 million
-// tries.
+// tries on the console, which pumps would make minutes: 5 seconds here.
 void Spu_WaitVoicesSilent(void)
 {
     int tries;
@@ -24,7 +24,7 @@ void Spu_WaitVoicesSilent(void)
     tries = 0;
     if (g_SoundDriverReady != 0) {
         busy = 1;
-        while (busy != 0 && tries <= 0x675bff) {
+        while (busy != 0 && tries <= 0x2580) {
             busy = 0;
             for (i = 0; i < 24; i++) {
                 if (SPU_VOICES[i].envx != 0) {
@@ -32,6 +32,7 @@ void Spu_WaitVoicesSilent(void)
                 }
             }
             tries++;
+            Rt_Pump();
         }
     }
 }
