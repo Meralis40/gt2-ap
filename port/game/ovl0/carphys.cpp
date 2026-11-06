@@ -2346,7 +2346,10 @@ int Engine_UpdateTurbo(CarPhys *phys, int throttle)
                     phys->blowOffState = 1;
                 }
             }
-        } else if (phys->blowOffState == -1 && throttle > 0xf00) {
+        } else if (phys->blowOffState != -1) {
+            // It has sounded for a frame: wait for the throttle before arming it again.
+            phys->blowOffState = -1;
+        } else if (throttle > 0xf00) {
             phys->blowOffState = 0;
         }
         phys->engineLoad = load;
