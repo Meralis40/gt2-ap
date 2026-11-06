@@ -479,7 +479,7 @@ void Hud_DrawLapPanel(uint *ot, RaceVehicle *car, int x, int y)
         int width;
 
         Time_FormatMs(buf, Records_GetLapTime(record, lap - 1));
-        width = ((int (*)(TextCtx *, signed char *, int, int, int, int, int, int))Text_DrawDigitsRight)(
+        width = Text_DrawDigitsRight(
             &text, (signed char *)buf, x + 0x46, textY, 7, 5, 0, 2);
         Text_DrawDigitsRight(&text, D_8002F278, x + 0x46 - width, textY, 7, 5, 0, 2);
         Text_DrawString(&text, D_8002F27C, x + 0x46, textY, 0);

@@ -260,7 +260,7 @@ void Text_DrawCenteredMonoDigits(TextCtx *ctx, signed char *s, int x, int y, int
 void Text_DrawStringMonoDigitsRight(TextCtx *ctx, signed char *s, int x, int y, int spacing, int digitShift, int digitExtra);
 int Text_DrawDigits(TextCtx *ctx, signed char *s, int x, int y, int width, int narrowWidth, int signs, int dotX);
 int Text_MeasureDigits(TextCtx *ctx, signed char *s, int width, int narrowWidth, int signs);
-void Text_DrawDigitsRight(TextCtx *ctx, signed char *s, int x, int y, int width, int narrowWidth, int signs, int dotX);
+int Text_DrawDigitsRight(TextCtx *ctx, signed char *s, int x, int y, int width, int narrowWidth, int signs, int dotX);
 void Text_DrawDigitsCentered(TextCtx *ctx, signed char *s, int x, int y, int width, int narrowWidth, int signs, int dotX);
 unsigned int Rgb_Lerp(unsigned char *from, unsigned char *to, int t, int range);
 void Menu_AddGreyBand(uint *ot, GouraudQuad *q);

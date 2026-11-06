@@ -183,11 +183,12 @@ int Text_MeasureDigits(TextCtx *ctx, signed char *s, int width, int narrowWidth,
     return w;
 }
 
-void Text_DrawDigitsRight(TextCtx *ctx, signed char *s, int x, int y, int width, int narrowWidth, int signs,
-                          int dotX)
+// The game declares it void, and its callers use the width Text_DrawDigits left in $v0.
+int Text_DrawDigitsRight(TextCtx *ctx, signed char *s, int x, int y, int width, int narrowWidth, int signs,
+                         int dotX)
 {
     x -= Text_MeasureDigits(ctx, s, width, narrowWidth, signs);
-    Text_DrawDigits(ctx, s, x, y, width, narrowWidth, signs, dotX);
+    return Text_DrawDigits(ctx, s, x, y, width, narrowWidth, signs, dotX);
 }
 
 void Text_DrawDigitsCentered(TextCtx *ctx, signed char *s, int x, int y, int width, int narrowWidth, int signs,
