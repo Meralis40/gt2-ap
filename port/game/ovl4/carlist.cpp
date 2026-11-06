@@ -156,7 +156,8 @@ int GarageList_Update(MenuCarList *list, PadState *pad, int active)
         case -4:
             break;
         case -2:
-            if (pad->pressed & PAD_START) {
+            // GTMenu::Update also runs the list without a pad: the PlayStation reads address 6.
+            if (pad != 0 && (pad->pressed & PAD_START)) {
                 GameState *state = &g_GameState;
 
                 Garage_MoveCar(&state->garages[0], g_GarageList_Menu.selected, 0);
