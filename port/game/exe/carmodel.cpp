@@ -316,7 +316,8 @@ void Mesh_NormalsToEnvUV(CarMesh *mesh, MATRIX *m, unsigned char *out)
 // (bits 1-4), and when the car is lit and flags bit 31 is set an environment map layer
 // goes over it. Large textured faces are subdivided (Body_SubdivTri, Body_SubdivQuad).
 // The words of a body primitive: the vertex indices (a byte each), the flags, the normal
-// indices of the vertices after the first (9 bits each; the first's are flags bits 5-13),
+// indices of the vertices after the first (bits 1-9, 10-18 and 19-27; the first's are
+// flags bits 5-13),
 // then the type's colours and texture words.
 enum {
     BODY_VERTS,
@@ -369,9 +370,10 @@ static inline void Ot_Link(unsigned int *ot, void *prim, int len)
     *ot = (*ot & 0xff000000) | ((unsigned int)prim & 0xffffff);
 }
 
-static inline unsigned short Body_EnvUV(CarScratch *sp, unsigned int normal)
+// A vertex's entry in the table: its normal's field is the byte offset of the entry.
+static inline unsigned short Body_EnvUV(CarScratch *sp, unsigned int field)
 {
-    return ((unsigned short *)sp->normals)[normal & 0x1ff];
+    return *(unsigned short *)(sp->normals + (field & 0x3fe));
 }
 
 // Projects a triangle. The original loads the vertices as V0, V2, V1 (so the nclip's
@@ -475,7 +477,7 @@ static void Body_EnvTri(CarScratch *sp, unsigned int *ot, unsigned int *w, int *
 
     p->rgbc = sp->envFT3;
     p->xy0 = xy[0];
-    p->uv0 = Body_EnvUV(sp, w[BODY_FLAGS] >> 5);
+    p->uv0 = Body_EnvUV(sp, w[BODY_FLAGS] >> 4);
     p->clut = sp->envClut;
     p->xy1 = xy[1];
     p->uv1 = Body_EnvUV(sp, w[BODY_NORMALS]);
@@ -492,7 +494,7 @@ static void Body_EnvQuad(CarScratch *sp, unsigned int *ot, unsigned int *w, int 
 
     p->rgbc = sp->envFT4;
     p->xy0 = xy[0];
-    p->uv0 = Body_EnvUV(sp, w[BODY_FLAGS] >> 5);
+    p->uv0 = Body_EnvUV(sp, w[BODY_FLAGS] >> 4);
     p->clut = sp->envClut;
     p->xy1 = xy[1];
     p->uv1 = Body_EnvUV(sp, w[BODY_NORMALS]);
