@@ -1057,7 +1057,7 @@ void RaceVehicle_UpdateSound(RaceVehicle *v, int slot, RaceCam *cam)
     } else {
         sound->volOneShot = 0;
     }
-    sound->pitchLoop0 = (v->phys.boostDisplay << 12) / 12;
+    sound->pitchLoop0 = (v->phys.boostDisplay << 12) / 6144;
     sound->volLoop[0] = blowOff * v->phys.blowOffVolume >> 7;
     n0 = 0;
     n1 = 0;
