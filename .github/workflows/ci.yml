@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, port]
   pull_request:
 
 permissions:
@@ -39,3 +39,8 @@ jobs:
 
       - name: Test
         run: ctest --preset release
+
+  package:
+    uses: ./.github/workflows/package.yml
+    with:
+      version: dev-${{ github.sha }}

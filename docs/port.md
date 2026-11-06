@@ -33,19 +33,26 @@ The port is a 32-bit x86 build, and guest RAM is mapped at its real address, `0x
 `port/` builds as part of the top-level CMake project with `GT2AP_BUILD_PORT=ON`, on a 32-bit toolchain. On Windows:
 
 ```bash
-cmake -S . -B build/port-win -G Ninja -DCMAKE_TOOLCHAIN_FILE=cmake/i686-windows-clang.cmake -DGT2AP_BUILD_PORT=ON -DGT2AP_BUILD_TESTS=OFF
-cmake --build build/port-win --target gt2ap
+cmake --preset port-windows
+cmake --build --preset port-windows
 ```
 
-The toolchain file's `VS_VC`, `WIN_SDK` and `WIN_SDK_VERSION` name the installed versions. CMake fetches SDL3 3.2.8, which needs git on the PATH. 
+From a Visual Studio x86 developer prompt the toolchain file finds Visual Studio and the Windows SDK by itself; otherwise its `VS_VC`, `WIN_SDK` and `WIN_SDK_VERSION` name the installed versions. The C runtime is linked statically. CMake fetches SDL3 3.2.8, which needs git on the PATH.
 
 On Linux, from a 64-bit Ubuntu with Clang, CMake, Ninja, `gcc-multilib` and `g++-multilib`:
 
 ```bash
-cmake -S . -B build/port-linux -G Ninja -DCMAKE_TOOLCHAIN_FILE=cmake/i686-linux-clang.cmake -DGT2AP_BUILD_PORT=ON -DGT2AP_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake --preset port-linux
+cmake --build --preset port-linux
 ```
 
-SDL needs the X11, PulseAudio and ALSA headers and loads those libraries when it runs, so the machine that runs the game needs their i386 versions. This has been tried under WSLg only, with X11 and PulseAudio, the headers coming from the amd64 packages and SDL's two X11 checks that link set by hand (`HAVE_XGENERICEVENT`, `SDL_VIDEO_DRIVER_X11_HAS_XKBLOOKUPKEYSYM`), since that WSL has no i386 development packages. Its frames came out the same as the Windows build's, and its sound within 1 of it in value.
+`.github/workflows/package.yml` lists the packages. SDL takes the X11, PulseAudio and ALSA headers and library names from the ordinary amd64 development packages and loads those libraries when it runs, so the machine that runs the game needs their i386 versions; the toolchain file sets the two X11 checks that can't link. The C++ runtime is linked statically. Only X11 is built in, so a Wayland desktop needs XWayland. This has been run under WSLg only. Its frames came out the same as the Windows build's, and its sound within 1 of it in value.
+
+## Releases
+
+`.github/workflows/package.yml` builds both clients, runs the world's tests and packs `gt2.apworld` with Archipelago's Build APWorlds tool, from the commit named in `ARCHIPELAGO_COMMIT`. CI runs it on every push to `main` or `port` and on pull requests, and keeps the results as artifacts.
+
+To release, set `world_version` in `world/gt2/archipelago.json` and `VERSION` in `CMakeLists.txt`, then push a tag `v<world_version>`. `release.yml` stops if the tag and `world_version` differ, otherwise it publishes a GitHub release with the three files. A tag with a suffix, like `v0.2.0-rc1`, makes a prerelease.
 
 Run it with `gt2ap <disc.cue>`, which opens on the Archipelago connection page (below). `--vblanks <n>` stops after n vblanks with no window and no pacing, and `--dump <every> <dir>` writes a frame every so many vblanks as a PPM file. `--audio <file>` saves the sound.
 
@@ -90,7 +97,7 @@ A run on a real server (Archipelago `main`, `MultiServer.py` with a seed from `w
 | M6, AP | Works on a local Archipelago server with a generated seed (below). Not yet played through by hand |
 | M7, sound | Written (below). SPU, reverb and XA run; checked by ear, by dumps and with a recorded race |
 | M8, movies | Put off: movies are skipped, with a log line |
-| M9 | Not started |
+| M9, release | CI and release workflows written (below). Not yet run on GitHub |
 
 Test runs take `--input <vblank> <buttons>`, with the bits in `hw/host.cpp` (`0x4000` is Cross; the title menu confirms with Cross, not Start).
 

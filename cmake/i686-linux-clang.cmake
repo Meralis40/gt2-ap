@@ -14,3 +14,10 @@ set(CMAKE_C_FLAGS_INIT -m32)
 set(CMAKE_CXX_FLAGS_INIT -m32)
 set(CMAKE_ASM_FLAGS_INIT -m32)
 set(CMAKE_EXE_LINKER_FLAGS_INIT -m32)
+
+# SDL loads X11 and PulseAudio when it runs and only reads their headers and library names
+# here, which the ordinary amd64 packages give. Its two X11 checks that link can't pass with
+# them, so their results are set.
+list(APPEND CMAKE_LIBRARY_PATH /usr/lib/x86_64-linux-gnu)
+set(HAVE_XGENERICEVENT 1 CACHE INTERNAL "")
+set(SDL_VIDEO_DRIVER_X11_HAS_XKBLOOKUPKEYSYM 1 CACHE INTERNAL "")

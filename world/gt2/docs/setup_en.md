@@ -1,9 +1,8 @@
 # Gran Turismo 2 Setup Guide
 
-The client is the native port in this repository, which has Archipelago built in. It isn't
-released yet, so for now it has to be built from source (see `docs/port.md`). This world generates
-seeds, and the [Universal Tracker](https://github.com/FarisTheAncient/Archipelago/tree/tracker)
-can track them.
+The client is a native program with Archipelago built in. Download it for Windows or Linux with
+`gt2.apworld` from the [releases](https://github.com/Meralis40/gt2-ap/releases). The
+[Universal Tracker](https://github.com/FarisTheAncient/Archipelago/tree/tracker) can track seeds.
 
 ## Requirements
 
