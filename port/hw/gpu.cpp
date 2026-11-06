@@ -291,6 +291,18 @@ void runPolygon()
     }
 }
 
+struct Polyline {
+    Shader shader;
+    Vertex last;
+    std::uint32_t color;
+    bool haveColor;
+    bool gouraud;
+    bool active;
+} g_Polyline;
+
+constexpr std::uint32_t kPolylineEndMask = 0xf000f000;
+constexpr std::uint32_t kPolylineEnd = 0x50005000;
+
 void runLine()
 {
     std::uint32_t cmd = g_Words[0] >> 24;
@@ -304,6 +316,30 @@ void runLine()
     Vertex to = gouraud ? readColor({}, g_Words[word++]) : from;
     to = readPosition(to, g_Words[word++]);
     drawLine(s, from, to);
+    if (cmd & 8) {
+        g_Polyline = {s, to, 0, false, gouraud, true};
+    }
+}
+
+// The further points of a polyline, up to its terminator. In a shaded one, each point
+// starts with its colour, and that's where the terminator goes.
+void continuePolyline(std::uint32_t word)
+{
+    Polyline &line = g_Polyline;
+
+    if (!line.haveColor && (word & kPolylineEndMask) == kPolylineEnd) {
+        line.active = false;
+        return;
+    }
+    if (line.gouraud && !line.haveColor) {
+        line.color = word;
+        line.haveColor = true;
+        return;
+    }
+    Vertex to = readPosition(line.gouraud ? readColor({}, line.color) : line.last, word);
+    drawLine(line.shader, line.last, to);
+    line.last = to;
+    line.haveColor = false;
 }
 
 void runRect()
@@ -434,9 +470,6 @@ void runCommand()
         runPolygon();
         return;
     case 2:
-        if (cmd & 8) {
-            Rt_Unimplemented("GP0 polyline");
-        }
         runLine();
         return;
     case 3:
@@ -498,6 +531,10 @@ void Hw_Gp0(unsigned int word)
         uploadWord(word);
         return;
     }
+    if (g_Polyline.active) {
+        continuePolyline(word);
+        return;
+    }
     if (g_WordCount == 0) {
         g_WordsNeeded = commandLength(word >> 24);
     }
@@ -516,6 +553,7 @@ void Hw_Gp1(unsigned int word)
     case 0x00:
         g = State{};
         g_WordCount = 0;
+        g_Polyline.active = false;
         g_Upload.active = false;
         g_Download.active = false;
         break;

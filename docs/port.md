@@ -79,6 +79,5 @@ Known problems:
 - **Layout.** The full layout check isn't in place yet.
 - **Test runs** take one CD event a vblank, so their vblank numbers differ from a real-time run.
 - **Spin-waits** are fixed as they're found; the watchdog reports them after 2 s (Windows only).
-- **GPU.** Polylines stop with a message.
 - **Kanji ROM.** It isn't on the disc, so its glyphs are blank. Only memory card screens use them.
 - **Inflate** no longer yields, so a stream decompresses in one frame. Formatted output is still the game's own (`Printf_Format`, which the text code needs).
