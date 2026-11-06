@@ -1,0 +1,56 @@
+# A version tag makes a GitHub release with both clients and the .apworld. A tag with a
+# suffix (v0.2.0-rc1) makes a prerelease.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compare the tag with the world's version
+        id: version
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          world=$(python3 -c "import json; print(json.load(open('world/gt2/archipelago.json'))['world_version'])")
+          if [ "${version%%-*}" != "$world" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME doesn't match world_version $world"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+  package:
+    needs: check
+    uses: ./.github/workflows/package.yml
+    with:
+      version: ${{ needs.check.outputs.version }}
+
+  release:
+    needs: package
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          flags=""
+          case "$GITHUB_REF_NAME" in *-*) flags="--prerelease" ;; esac
+          gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --generate-notes $flags

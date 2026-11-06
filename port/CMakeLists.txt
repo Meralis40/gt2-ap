@@ -10,6 +10,13 @@ include(FetchContent)
 set(SDL_SHARED OFF CACHE BOOL "" FORCE)
 set(SDL_STATIC ON CACHE BOOL "" FORCE)
 set(SDL_TEST_LIBRARY OFF CACHE BOOL "" FORCE)
+if(NOT WIN32)
+    # X11 and PulseAudio or ALSA, and the software renderer, are all the game uses.
+    foreach(option SDL_WAYLAND SDL_PIPEWIRE SDL_JACK SDL_SNDIO SDL_KMSDRM SDL_RPI SDL_VIVANTE SDL_OPENGL SDL_OPENGLES
+                   SDL_VULKAN SDL_LIBUDEV SDL_DBUS SDL_IBUS)
+        set(${option} OFF CACHE BOOL "" FORCE)
+    endforeach()
+endif()
 FetchContent_Declare(SDL3
     GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
     GIT_TAG release-3.2.8
@@ -108,5 +115,6 @@ if(WIN32)
         -Wl,/BASE:0x400000,/FIXED,/LARGEADDRESSAWARE,/DYNAMICBASE:NO,/NXCOMPAT,/SAFESEH:NO)
 else()
     target_compile_options(gt2ap PRIVATE -fno-pic)
-    target_link_options(gt2ap PRIVATE -no-pie)
+    # Few systems have the 32-bit C++ runtime.
+    target_link_options(gt2ap PRIVATE -no-pie -static-libstdc++ -static-libgcc)
 endif()

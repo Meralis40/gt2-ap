@@ -1,0 +1,118 @@
+# The clients and the .apworld, as artifacts. CI and releases both run this.
+name: Package
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: Version in the names of the packages
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  # The Archipelago source that tests and packs the world: raise it on purpose.
+  ARCHIPELAGO_COMMIT: fcff008e942dda58e7acbf9b4e97be712faa435e
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up the x86 MSVC environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86
+
+      - name: Configure
+        run: cmake --preset port-windows
+
+      - name: Build
+        run: cmake --build --preset port-windows
+
+      - name: Package
+        run: >
+          python scripts/package_client.py --binary build/port-win/port/gt2ap.exe --build-dir build/port-win
+          --platform windows-x86 --version "${{ inputs.version }}" --out-dir dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: client-windows
+          path: dist/*
+          if-no-files-found: error
+
+  linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install the tools and headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang ninja-build gcc-multilib g++-multilib pkg-config \
+            libx11-dev libxext-dev libxcursor-dev libxi-dev libxfixes-dev libxrandr-dev libxss-dev \
+            libxrender-dev libxtst-dev libxkbcommon-dev libpulse-dev libasound2-dev
+
+      - name: Configure
+        run: cmake --preset port-linux
+
+      - name: Build
+        run: cmake --build --preset port-linux
+
+      - name: Package
+        run: >
+          python3 scripts/package_client.py --binary build/port-linux/port/gt2ap --build-dir build/port-linux
+          --platform linux-i686 --version "${{ inputs.version }}" --out-dir dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: client-linux
+          path: dist/*
+          if-no-files-found: error
+
+  apworld:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: gt2-ap
+
+      - uses: actions/checkout@v4
+        with:
+          repository: ArchipelagoMW/Archipelago
+          ref: ${{ env.ARCHIPELAGO_COMMIT }}
+          path: archipelago
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Copy the world in
+        run: |
+          cp -r gt2-ap/world/gt2 archipelago/worlds/gt2
+          cp gt2-ap/world/LICENSE archipelago/worlds/gt2/LICENSE
+
+      - name: Install Archipelago's requirements
+        working-directory: archipelago
+        run: |
+          python -m pip install "setuptools<81" pytest
+          python ModuleUpdate.py --yes
+
+      - name: Test
+        working-directory: archipelago
+        run: python -m pytest worlds/gt2 -q
+
+      - name: Build the .apworld
+        working-directory: archipelago
+        run: |
+          python Launcher.py "Build APWorlds" -- "Gran Turismo 2" --skip_open_folder
+          test -s build/apworlds/gt2.apworld
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apworld
+          path: archipelago/build/apworlds/gt2.apworld
+          if-no-files-found: error
