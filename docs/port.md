@@ -49,7 +49,7 @@ Run it with `gt2ap <disc.cue>`. `--vblanks <n>` stops after n vblanks with no wi
 | `port/rt` | Runtime: guest memory, loading, the setjmp point, the pump (`irq.cpp`), stubs (`stubs.cpp`) |
 | `port/hw` | The hardware: GPU, GTE, CD, memory card, pad, and the SDL3 window (`host.cpp`) |
 | `port/gen` | Generated and checked in: `guest_syms.S` binds data names to guest addresses, `fixups_<unit>.cpp` lists the code pointers in guest data |
-| `port/tools` | `fork.py`, `gen_syms.py`, `update_syms.sh`, `gen_fixups.py`, `check_protos.py` |
+| `port/tools` | `fork.py`, `gen_syms.py`, `update_syms.sh`, `gen_fixups.py`, `check_protos.py`, `check_argorder.py` |
 
 `gen_syms.py` takes the names the objects leave undefined. It reports function names instead of binding them: those are for the port to define. `gen_fixups.py` found 336 slots, with none pointing at a function the port doesn't define. `Overlay_StartAt`'s default entries aren't among them, because they're overlay addresses in resident data; `overlay.cpp` has them as a table of host functions.
 
@@ -76,6 +76,7 @@ Known problems:
 - **Sound.** The SPU registers are a plain copy, so there's no sound. XA and CD audio sectors aren't handled.
 - **Movies.** MDEC isn't implemented. `DecDCTin` and `DecDCTout` stop with their name.
 - **Not checked.** `-fno-strict-return` hides functions that fall off their end. Any of them whose callers use the result got it from `$v0` on the PlayStation, so they need checking: `Tim_LoadClutAndImage` was one. `tools/check_protos.py` covers argument counts only: it found `Race_LoadEngineBanks`.
+- **Argument order.** The Microsoft ABI evaluates arguments right to left, so a call must not pass a value next to the call that sets it. `tools/check_argorder.py` lists suspects, and all 50 hits were harmless when it was last read through. Other targets evaluate left to right.
 - **Layout.** The full layout check isn't in place yet.
 - **Test runs** take one CD event a vblank, so their vblank numbers differ from a real-time run.
 - **Spin-waits** are fixed as they're found; the watchdog reports them after 2 s (Windows only).
