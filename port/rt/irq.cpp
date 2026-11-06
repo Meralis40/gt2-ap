@@ -95,6 +95,7 @@ void vblank()
     }
     Rt_RecordVblank();
     Hw_CdVblank();
+    Hw_SpuVblank();
     Hw_PadVblank();
     if (g_VSyncCallback != nullptr) {
         g_InCallback++;

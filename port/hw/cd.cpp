@@ -2,7 +2,7 @@
 // The drive, at the level of libcd's CdControlF: commands complete on the next pump and
 // reads deliver their sectors from the disc image. Data reads run as fast as they're
 // pumped, but XA streams run at drive speed: the game follows them with CdlGetlocL, so its
-// timing depends on it. XA audio and CD audio aren't played yet.
+// timing depends on it, and the sound chip plays their audio at that rate. CD audio isn't played.
 #include "hw.h"
 #include "rt.h"
 
@@ -26,22 +26,25 @@ using Callback = void (*)(unsigned char status, unsigned char *result);
 
 enum Command {
     kSetloc = 2, kPlay = 3, kReadN = 6, kStandby = 7, kStop = 8, kPause = 9, kSetfilter = 13, kSetmode = 14,
-    kGetlocL = 16, kGetlocP = 17, kGetTN = 19, kGetTD = 20, kReadS = 27,
+    kMute = 11, kDemute = 12, kGetlocL = 16, kGetlocP = 17, kGetTN = 19, kGetTD = 20, kReadS = 27,
 };
 enum Status { kDataReady = 1, kComplete = 2 };
 enum StatusBits { kStatSpinning = 0x02, kStatReading = 0x20 };
-enum ModeBits { kModeWholeSector = 0x20, kModeXa = 0x40, kModeDoubleSpeed = 0x80 };
+enum ModeBits { kModeXaFilter = 0x08, kModeWholeSector = 0x20, kModeXa = 0x40, kModeDoubleSpeed = 0x80 };
 enum SubmodeBits { kSubmodeAudio = 0x04, kSubmodeRealTime = 0x40 };
 
 constexpr std::size_t kRawSectorSize = 2352;
 constexpr std::size_t kHeaderOffset = 12;
+constexpr std::size_t kFileOffset = 16;
+constexpr std::size_t kChannelOffset = 17;
 constexpr std::size_t kSubmodeOffset = 18;
 constexpr std::size_t kDataOffset = 24;
 constexpr int kFirstSectorOffset = 150;  // 2 seconds of pregap
-// Drive speed in quarters of a sector: 75 sectors a second is 1.25 a vblank.
-constexpr int kQuartersPerVblank = 5;
-constexpr int kQuartersPerSector = 4;
-constexpr int kMaxQuarters = 2 * kQuartersPerSector;
+// Drive speed, in units such that 75 sectors a second at 59.94 vblanks a second is exact: XA
+// plays at this rate, and must neither run out nor pile up.
+constexpr int kUnitsPerVblank = 1001;
+constexpr int kUnitsPerSector = 800;
+constexpr int kMaxUnits = 3 * kUnitsPerSector;
 
 std::optional<d::DiscImage> g_Disc;
 Callback g_OnSync, g_OnReady;
@@ -52,7 +55,9 @@ std::array<std::uint8_t, kRawSectorSize> g_Sector;
 std::size_t g_SectorPos;
 std::uint32_t g_ResultWords[2];
 bool g_SyncPending;
-int g_StreamQuarters;
+int g_StreamUnits;
+std::uint8_t g_FilterFile, g_FilterChannel;
+bool g_Muted;
 
 std::uint8_t toBcd(int value)
 {
@@ -139,6 +144,9 @@ int CdControlF(unsigned char command, unsigned char *param)
         break;
     case kReadN:
     case kReadS:
+        if (!g_Reading) {
+            Hw_SpuXaClear();
+        }
         g_Reading = true;
         setResult(stat());
         break;
@@ -150,6 +158,14 @@ int CdControlF(unsigned char command, unsigned char *param)
     case kPause:
         g_Reading = false;
         setResult(stat());
+        break;
+    case kSetfilter:
+        g_FilterFile = param[0];
+        g_FilterChannel = param[1];
+        break;
+    case kMute:
+    case kDemute:
+        g_Muted = command == kMute;
         break;
     case kSetmode:
         g_Mode = param[0];
@@ -191,7 +207,7 @@ int CdGetSector(void *dst, int words)
 
 void Hw_CdVblank(void)
 {
-    g_StreamQuarters = std::min(g_StreamQuarters + kQuartersPerVblank, kMaxQuarters);
+    g_StreamUnits = std::min(g_StreamUnits + kUnitsPerVblank, kMaxUnits);
 }
 
 int Hw_CdPump(void)
@@ -206,12 +222,12 @@ int Hw_CdPump(void)
     }
     if (g_Reading) {
         if (streamingXa()) {
-            int cost = g_Mode & kModeDoubleSpeed ? kQuartersPerSector / 2 : kQuartersPerSector;
+            int cost = g_Mode & kModeDoubleSpeed ? kUnitsPerSector / 2 : kUnitsPerSector;
 
-            if (g_StreamQuarters < cost) {
+            if (g_StreamUnits < cost) {
                 return 0;
             }
-            g_StreamQuarters -= cost;
+            g_StreamUnits -= cost;
             if (g_Disc && atEndOfDisc()) {
                 return 0;  // the stream runs out here: CdlGetlocL stops moving, and the game resets
             }
@@ -220,6 +236,11 @@ int Hw_CdPump(void)
         setResult(stat());
         // XA audio goes to the decoder: the CPU only sees the position, with CdlGetlocL.
         if (streamingXa() && (g_Sector[kSubmodeOffset] & (kSubmodeAudio | kSubmodeRealTime)) == (kSubmodeAudio | kSubmodeRealTime)) {
+            bool wanted = !(g_Mode & kModeXaFilter) || (g_Sector[kFileOffset] == g_FilterFile &&
+                                                        g_Sector[kChannelOffset] == g_FilterChannel);
+            if (wanted && !g_Muted) {
+                Hw_SpuXaSector(g_Sector.data());
+            }
             return 1;
         }
         if (g_OnReady != nullptr) {

@@ -77,6 +77,7 @@ add_executable(gt2ap
     hw/gte.cpp
     hw/host.cpp
     hw/pad.cpp
+    hw/spu.cpp
     rt/irq.cpp
     rt/main.cpp
     rt/memmap.cpp
