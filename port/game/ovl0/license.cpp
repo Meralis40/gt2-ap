@@ -580,7 +580,7 @@ void License_DrawTestInfo(void *ot, LicenseTestInfo *info, int x, int fade, int 
     Text_DrawString(c, (signed char *)car->name, x + 10, 0xc0, 1);
     // The drivetrains' names are addressed from "%dhp", after them.
     strings = sR_Nhp;
-    sprintf(buf, strings, (short)car->maxPower * 1000 / 1015);
+    sprintf(buf, strings, (short)car->maxPower * 1000 / 1014);
     Text_DrawStringMonoDigits(c, (signed char *)buf, x + 0x64, 0xd6, 1, -3, 0);
     text = strings - 0x17;
     switch ((short)car->drivetrain) {
