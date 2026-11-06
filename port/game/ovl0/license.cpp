@@ -546,8 +546,7 @@ void License_DrawMedalTime(void *ot, unsigned int ms, unsigned int rgb, int x, i
 
     ctx->rgb = Rgb_Lerp(&g_License_RuleRgbFrom, &D_8005B1D4, fade, 0x80);
     Time_FormatMs(buf, ms);
-    w = ((int (*)(TextCtx *, signed char *, int, int, int, int, int, int))Text_DrawDigitsRight)(
-        ctx, (signed char *)buf, x, 0x124, 6, 5, 0, 0);
+    w = Text_DrawDigitsRight(ctx, (signed char *)buf, x, 0x124, 6, 5, 0, 0);
     quad.rect.x = x - w - 10;
     quad.rect.y = 0x116;
     quad.rect.w = 8;
