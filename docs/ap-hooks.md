@@ -135,7 +135,7 @@ Not affected:
 
 ## Refusal messages
 
-The reused message pages (`0x8000001e`, `0x8000002f`, `0x80000030`, `0x80000019`) don't describe the AP reason exactly, but they're good enough for a first version. The client can show the real reason alongside.
+The reused message pages (`0x8000001e`, `0x8000002f`, `0x80000030`, `0x80000019`) don't describe the AP reason exactly. The port also says on screen which manufacturer or part is locked; refused purchases have no page, only the error sound.
 
 ## To verify
 - Whether `DataTransferBuyCar_Update` reacts to a refusal from `UsedCar_CanBuy` (see [Data Transfer](#data-transfer)).

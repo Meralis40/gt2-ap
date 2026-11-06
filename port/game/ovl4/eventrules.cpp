@@ -282,6 +282,7 @@ int Race_CheckEntry(char *raceCode, int *msgPage)
         return -1;
     // The "car not allowed" message: nothing says this one's manufacturer is locked.
     if (Ap_Active() && !Ap_HasManufacturer(g->cars[slot].setup.manufacturerId)) {
+        Ap_SayManufacturerLocked(g->cars[slot].setup.manufacturerId);
         *msgPage = (int)0x8000001e;
         return -8;
     }

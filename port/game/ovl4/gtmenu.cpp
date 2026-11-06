@@ -121,6 +121,7 @@ int GTMenu::Update()
     int result;
 
     psxViewLoop::Update();
+    Ap_GtMenuFrame();
     // Credits go in here, on the map or in a shop: never during a race or a save.
     {
         int credits;
@@ -584,6 +585,7 @@ wheels:
         break;
     case 0xab:
         if (Ap_Active() && !Ap_HasManufacturer(GARAGE_CAR(D_800A8D62)->setup.manufacturerId)) {
+            Ap_SayManufacturerLocked(GARAGE_CAR(D_800A8D62)->setup.manufacturerId);
             Sfx_PlayMenu(0);
             return result;
         }
