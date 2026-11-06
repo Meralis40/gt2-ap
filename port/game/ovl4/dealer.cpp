@@ -101,8 +101,10 @@ int Dealer_CanBuyNewCar(int carId, int price, int garageIdx)
     Garage *g = &gs->garages[garageIdx];
 
     // A used car lot is part of its manufacturer's dealership, so this is set there too.
-    if (Ap_Active() && !Ap_HasManufacturer(g_MenuPageAttr & 0xff))
+    if (Ap_Active() && !Ap_HasManufacturer(g_MenuPageAttr & 0xff)) {
+        Ap_SayManufacturerLocked(g_MenuPageAttr & 0xff);
         return 0;
+    }
     if (g->credits < price)
         return -1;
     if (g->carCount == 100)
@@ -176,8 +178,10 @@ int Tune_CanBuyPart(int carSlot, int partId, int garageIdx)
 
     if (Part_Lookup(partId, car->carId, 0) < 0)
         return -8;
-    if (Ap_Active() && !Ap_HasPart(partId))
+    if (Ap_Active() && !Ap_HasPart(partId)) {
+        Ap_SayPartLocked(partId);
         return -8;
+    }
     if (g->credits < price)
         return -1;
     if (Car_HasPart(car, partId))

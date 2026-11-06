@@ -26,6 +26,16 @@ The **racing modification is the 4th Progressive Weight Reduction**. The game on
 cars with weight reduction stage 3, so it comes after the 3 weight reduction stages. Racing
 versions of one-make events (Civic Race (Racing), and so on) need all 4.
 
+## When do items take effect?
+
+The client shows the manufacturers you can use when you first enter the GT mode menus, and says why
+when it refuses a car or a part.
+
+A race's check is sent as soon as you cross the line in 1st place, and the item it holds arrives
+right away, so you may see it during the finish. Licenses, manufacturers, parts and trophies count
+from then on, but you can only use them back in the GT mode menus. Credits are only added there:
+if the save you reload is older, the credits received since are added again, so none are lost.
+
 ## What is the goal?
 
 Win every race of the Gran Turismo World League.

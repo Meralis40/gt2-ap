@@ -17,6 +17,12 @@ int Ap_LeagueTrophies(void);              // whether trophies replace the league
 int Ap_ProLeagueOpen(void);
 int Ap_WorldLeagueOpen(void);
 
+// Say on screen why something was refused: nothing in the game does.
+void Ap_SayManufacturerLocked(int manufacturer);
+void Ap_SayPartLocked(int part);
+// Each frame of the GT menus: the first one lists the manufacturers held.
+void Ap_GtMenuFrame(void);
+
 // Remembers the event of each race in a championship, then a win of race index.
 void Ap_SetRaceEvent(int race, int eventIndex);
 void Ap_RaceWon(int race);

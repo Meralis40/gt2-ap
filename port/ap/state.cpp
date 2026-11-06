@@ -32,35 +32,45 @@ constexpr int kParts = 64;
 constexpr int kTiers = 6;  // tier 1 is license B, whose LicenseId is 5
 constexpr int kGoalEvents[] = {137, 138, 139, 140, 141};  // the GT World League
 constexpr int kMaxToasts = 4;
+constexpr std::size_t kToastWidth = 60;
 constexpr auto kToastTime = std::chrono::seconds(8);
 
-struct PartStage {
+struct PartItem {
+    const char *name;
     std::vector<std::vector<int>> stages;  // the PartIds each copy unlocks, in order
 };
 
-const std::vector<PartStage> kPartItems = {
-    {{{46}, {47}, {48}, {49}}},  // Progressive Turbo
-    {{{29}, {30}, {31}}},        // Progressive NA Tune
-    {{{26}, {27}, {28}}},        // Progressive Muffler
-    {{{16}, {17}}},              // Progressive Intercooler
-    {{{18}, {19}, {20}, {34}}},  // Progressive Weight Reduction
-    {{{6}}},                     // Performance Chip
-    {{{7}}},                     // Displacement Increase
-    {{{9}}},                     // Engine Balancing
-    {{{32}}},                    // Port & Polish
-    {{{45}}},                    // Dirt Tires
-    {{{3}, {4}, {5}}},           // Progressive Clutch
-    {{{10}, {11}, {12}}},        // Progressive Flywheel
-    {{{13}, {14}, {15}}},        // Progressive Transmission
-    {{{35}, {36}, {37}}},        // Progressive Suspension
-    {{{39}, {40}, {41}, {42}, {43}}},  // Progressive Racing Tires
-    {{{44}}},                    // Simulation Tires
-    {{{21, 22, 23, 24, 25}}},    // Limited-Slip Differential
-    {{{1}}},                     // Sports Brakes
-    {{{2}}},                     // Brake Balance Controller
-    {{{33}}},                    // Carbon Driveshaft
-    {{{0}}},                     // Active Stability Controller
-    {{{38}}},                    // TCS Controller
+const std::vector<PartItem> kPartItems = {
+    {"Progressive Turbo", {{46}, {47}, {48}, {49}}},
+    {"Progressive NA Tune", {{29}, {30}, {31}}},
+    {"Progressive Muffler", {{26}, {27}, {28}}},
+    {"Progressive Intercooler", {{16}, {17}}},
+    {"Progressive Weight Reduction", {{18}, {19}, {20}, {34}}},
+    {"Performance Chip", {{6}}},
+    {"Displacement Increase", {{7}}},
+    {"Engine Balancing", {{9}}},
+    {"Port & Polish", {{32}}},
+    {"Dirt Tires", {{45}}},
+    {"Progressive Clutch", {{3}, {4}, {5}}},
+    {"Progressive Flywheel", {{10}, {11}, {12}}},
+    {"Progressive Transmission", {{13}, {14}, {15}}},
+    {"Progressive Suspension", {{35}, {36}, {37}}},
+    {"Progressive Racing Tires", {{39}, {40}, {41}, {42}, {43}}},
+    {"Simulation Tires", {{44}}},
+    {"Limited-Slip Differential", {{21, 22, 23, 24, 25}}},
+    {"Sports Brakes", {{1}}},
+    {"Brake Balance Controller", {{2}}},
+    {"Carbon Driveshaft", {{33}}},
+    {"Active Stability Controller", {{0}}},
+    {"TCS Controller", {{38}}},
+};
+
+// By manufacturer ID, with nullptr for the IDs no dealership has.
+const char *const kManufacturerNames[] = {
+    "Acura", "Alfa Romeo", "Aston Martin", "Audi", "BMW", "Chevrolet", "Citroen", "Daihatsu", "Dodge", "FIAT",
+    "Ford", "Honda", nullptr, "Jaguar", "Lancia", nullptr, "Lister", "Lotus", "Mazda", "Mercedes-Benz",
+    nullptr, "Mini & MG", "Mitsubishi", "Nissan", "Opel", "Peugeot", "Plymouth", "Renault", "RUF", "Shelby",
+    "Subaru", "Suzuki", "Tommy kaira", "Toyota", "TVR", nullptr, "Vector", "Venturi", "Volkswagen",
 };
 
 struct Toast {
@@ -86,6 +96,7 @@ int g_TrophiesOn, g_ProNeeded, g_WorldNeeded;
 std::set<long long> g_Done;
 std::filesystem::path g_LocationsFile;
 bool g_GoalSent;
+bool g_HeldShown;
 int g_RaceEvents[6];
 std::deque<Toast> g_Toasts;
 
@@ -94,6 +105,10 @@ const std::filesystem::path kSaveDir = "saves";
 
 void toast(const std::string &text)
 {
+    if (!g_Toasts.empty() && g_Toasts.back().text == text) {
+        g_Toasts.back().until = Clock::now() + kToastTime;  // the same refusal, pressed again
+        return;
+    }
     Rt_Log("AP: %s", text.c_str());
     if (g_Toasts.size() == kMaxToasts) {
         g_Toasts.pop_front();
@@ -361,6 +376,59 @@ void Ap_SetRaceEvent(int race, int eventIndex)
     g_RaceEvents[race] = eventIndex;
 }
 
+void Ap_SayManufacturerLocked(int manufacturer)
+{
+    bool known = manufacturer >= 0 && manufacturer < static_cast<int>(std::size(kManufacturerNames)) &&
+                 kManufacturerNames[manufacturer] != nullptr;
+    toast(std::string(known ? kManufacturerNames[manufacturer] : "This manufacturer") + " is locked");
+}
+
+void Ap_SayPartLocked(int part)
+{
+    for (const PartItem &item : kPartItems) {
+        for (std::size_t stage = 0; stage < item.stages.size(); stage++) {
+            const auto &parts = item.stages[stage];
+            if (std::find(parts.begin(), parts.end(), part) != parts.end()) {
+                std::string name = item.name;
+                if (item.stages.size() > 1) {
+                    name += " " + std::to_string(stage + 1);
+                }
+                toast("Locked: " + name);
+                return;
+            }
+        }
+    }
+}
+
+void Ap_GtMenuFrame(void)
+{
+    if (g_HeldShown || !g_Active || g_Received.empty()) {
+        return;
+    }
+    g_HeldShown = true;
+    std::vector<std::string> lines = {""};
+    int count = 0;
+    for (int id = 0; id < static_cast<int>(std::size(kManufacturerNames)); id++) {
+        if (!g_Manufacturers[id] || kManufacturerNames[id] == nullptr) {
+            continue;
+        }
+        count++;
+        std::string name = kManufacturerNames[id];
+        if (lines.back().size() + name.size() + 2 > kToastWidth) {
+            lines.push_back("");
+        }
+        lines.back() += (lines.back().empty() ? "" : ", ") + name;
+    }
+    if (lines.size() >= kMaxToasts) {
+        toast(std::to_string(count) + " manufacturers unlocked");
+        return;
+    }
+    toast("Manufacturers you can use:");
+    for (const std::string &line : lines) {
+        toast(line);
+    }
+}
+
 void Ap_RaceWon(int race)
 {
     if (g_RaceEvents[race] >= 0) {
@@ -385,7 +453,11 @@ int Ap_NextCredits(unsigned short *applied)
     }
     long long item = g_Received[(*applied)++];
     long long tier = item - kItemCredits;
-    return tier >= 0 && tier < static_cast<long long>(std::size(kCredits)) ? kCredits[tier] : 0;
+    if (tier < 0 || tier >= static_cast<long long>(std::size(kCredits))) {
+        return 0;
+    }
+    toast("Added " + std::to_string(kCredits[tier]) + " Cr");
+    return kCredits[tier];
 }
 
 int Ap_PageWanted(void)
