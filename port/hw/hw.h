@@ -7,6 +7,9 @@
 extern "C" {
 #endif
 
+// On or off for the connection page: the keyboard types, and stops being the controller.
+void Host_TextMode(int on);
+
 void Hw_Gp0(unsigned int word);
 void Hw_Gp1(unsigned int word);
 unsigned int Hw_GpuRead(void);
@@ -26,6 +29,7 @@ void Hw_PadVblank(void);
 }
 
 #include <filesystem>
+#include <string>
 
 constexpr int kHwCardSize = 128 * 1024;
 
@@ -34,6 +38,8 @@ void Hw_CdOpen(const std::filesystem::path &cue);
 const unsigned char *Hw_CardImage();
 // Runs from this card instead of the file, which then stays untouched.
 void Hw_CardUseImage(const unsigned char *image);
+// Swaps in the card in this file, as if the player had changed cards.
+void Hw_CardUseFile(const std::string &path);
 #endif
 
 #endif

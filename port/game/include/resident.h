@@ -1337,8 +1337,7 @@ struct GameState { /* Persistent game state. The memory-card save is the first 0
 
     uchar unkB5; /* 1 on a new game */
 
-    undefined field7_0xb6;
-    undefined field8_0xb7;
+    unsigned short apItemsApplied; /* the port's: Archipelago items applied to this save. The game leaves these two bytes alone */
     struct PlayerStats stats;
     struct CourseRecord courseRecords[128]; /* first DAT_801e18e6 entries used */
 

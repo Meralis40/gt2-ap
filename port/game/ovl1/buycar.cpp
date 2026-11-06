@@ -1,6 +1,7 @@
 // OVL1 8001e808-8001f508 (buycar): The data transfer's car purchase page: buying the
 // cars of a GT1 save with the GT2 credits.
 #include "common.h"
+#include "ap.h"
 #include "gamestate.h"
 
 // "%d/%3d cars", after "Cr." in the same strings.
@@ -156,6 +157,9 @@ int UsedCar_CanBuy(int index)
     Garage *garage = gs->garages;
     int r = 1;
 
+    if (Ap_Active() && !Ap_HasManufacturer(list->cars[index].setup.manufacturerId)) {
+        return 2;
+    }
     if (gs->garages[0].carCount < 100) {
         r = (garage->credits < list->cars[index].value) << r;
     }

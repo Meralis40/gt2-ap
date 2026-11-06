@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // The window and the controls, through SDL3. The picture is the PlayStation's 4:3 frame,
 // whatever its resolution; the keyboard and the first gamepad are controller 1.
+#include "ap.h"
+#include "ap_host.h"
 #include "host.h"
 #include "hw.h"
 #include "rt.h"
@@ -9,6 +11,7 @@
 
 #include <cstdint>
 #include <cstdlib>
+#include <string>
 #include <vector>
 
 namespace {
@@ -56,6 +59,7 @@ SDL_Renderer *g_Renderer;
 SDL_Texture *g_Texture;
 SDL_Gamepad *g_Pad;
 std::vector<unsigned int> g_Pixels(kFrameWidth * kFrameHeight);
+bool g_TextMode;
 
 void readControls()
 {
@@ -63,7 +67,10 @@ void readControls()
     std::uint16_t held = 0;
 
     for (const KeyBinding &binding : kKeys) {
-        if (keys[binding.key]) {
+        // The letters are for typing on the connection page.
+        bool typing = binding.key != SDL_SCANCODE_UP && binding.key != SDL_SCANCODE_DOWN &&
+                      binding.key != SDL_SCANCODE_RETURN;
+        if (keys[binding.key] && !(g_TextMode && typing)) {
             held |= binding.button;
         }
     }
@@ -98,7 +105,62 @@ SDL_FRect pictureArea()
     return {(width - w) / 2, (height - h) / 2, w, h};
 }
 
+void onKey(const SDL_KeyboardEvent &key)
+{
+    if (!g_TextMode) {
+        return;
+    }
+    if (key.scancode == SDL_SCANCODE_BACKSPACE) {
+        Ap_PageBackspace();
+    } else if (key.scancode == SDL_SCANCODE_V && (key.mod & SDL_KMOD_CTRL) != 0 && !key.repeat) {
+        char *text = SDL_GetClipboardText();
+        Ap_PageText(text);
+        SDL_free(text);
+    }
+}
+
+// What the session has to say, over the picture, in plain ASCII.
+void drawToasts()
+{
+    constexpr float kScale = 2;
+    constexpr float kLineHeight = 12;
+    int width, height;
+
+    SDL_GetCurrentRenderOutputSize(g_Renderer, &width, &height);
+    SDL_SetRenderScale(g_Renderer, kScale, kScale);
+    for (int i = 0;; i++) {
+        std::string line = Ap_ToastLine(i);
+        if (line.empty()) {
+            break;
+        }
+        for (char &c : line) {
+            if (c < 0x20 || c >= 0x7f) {
+                c = '?';
+            }
+        }
+        float y = kLineHeight * (i + 1);
+        SDL_SetRenderDrawColor(g_Renderer, 0, 0, 0, 255);
+        SDL_RenderDebugText(g_Renderer, 9, y + 1, line.c_str());
+        SDL_SetRenderDrawColor(g_Renderer, 255, 255, 160, 255);
+        SDL_RenderDebugText(g_Renderer, 8, y, line.c_str());
+    }
+    SDL_SetRenderScale(g_Renderer, 1, 1);
+}
+
 }  // namespace
+
+extern "C" void Host_TextMode(int on)
+{
+    if (g_Window == nullptr) {
+        return;
+    }
+    g_TextMode = on != 0;
+    if (on) {
+        SDL_StartTextInput(g_Window);
+    } else {
+        SDL_StopTextInput(g_Window);
+    }
+}
 
 void Host_Open()
 {
@@ -125,6 +187,14 @@ void Host_Frame()
         switch (event.type) {
         case SDL_EVENT_QUIT:
             std::exit(0);
+        case SDL_EVENT_TEXT_INPUT:
+            if (g_TextMode) {
+                Ap_PageText(event.text.text);
+            }
+            break;
+        case SDL_EVENT_KEY_DOWN:
+            onKey(event.key);
+            break;
         case SDL_EVENT_GAMEPAD_ADDED:
             if (g_Pad == nullptr) {
                 g_Pad = SDL_OpenGamepad(event.gdevice.which);
@@ -151,5 +221,6 @@ void Host_Frame()
     SDL_SetRenderDrawColor(g_Renderer, 0, 0, 0, 255);
     SDL_RenderClear(g_Renderer);
     SDL_RenderTexture(g_Renderer, g_Texture, &source, &target);
+    drawToasts();
     SDL_RenderPresent(g_Renderer);
 }

@@ -3,6 +3,7 @@
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
 #include "common.h"
+#include "ap.h"
 
 // Three words, copied as one.
 struct Vec3 {
@@ -559,6 +560,9 @@ void RaceVehicle_OnLapDone(RaceVehicle *v, int lap, unsigned int time, int total
                     short order[6];
                     int i;
 
+                    if (v->controlType == 2 && (signed char)v->phys.racePos == 1) {
+                        Ap_RaceWon(list->unk00);
+                    }
                     for (i = 0; i < 6; i++) {
                         order[i] = -1;
                         list->racePoints[i] = 0;

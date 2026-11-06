@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <string>
 #include <vector>
 
 namespace {
@@ -30,7 +31,7 @@ struct Event {
 std::vector<Event> g_Events;
 std::vector<std::uint8_t> g_Card;
 FILE *g_File;
-const char *g_Path = "gt2ap.mcd";
+std::string g_Path = "gt2ap.mcd";
 bool g_FromImage;
 bool g_Announced;
 std::uint32_t g_PendingClass;
@@ -72,18 +73,18 @@ void openCard()
     if (g_File != nullptr || g_FromImage) {
         return;
     }
-    g_File = std::fopen(g_Path, "r+b");
+    g_File = std::fopen(g_Path.c_str(), "r+b");
     if (g_File != nullptr) {
         g_Card.resize(kHwCardSize);
         if (std::fread(g_Card.data(), 1, kHwCardSize, g_File) != kHwCardSize) {
-            Rt_Fatal("%s isn't a 128 KB memory card", g_Path);
+            Rt_Fatal("%s isn't a 128 KB memory card", g_Path.c_str());
         }
         return;
     }
     formatCard();
-    g_File = std::fopen(g_Path, "w+b");
+    g_File = std::fopen(g_Path.c_str(), "w+b");
     if (g_File == nullptr) {
-        Rt_Fatal("cannot create %s", g_Path);
+        Rt_Fatal("cannot create %s", g_Path.c_str());
     }
     std::fwrite(g_Card.data(), 1, kHwCardSize, g_File);
     std::fflush(g_File);
@@ -106,6 +107,20 @@ const unsigned char *Hw_CardImage()
 {
     openCard();
     return g_Card.data();
+}
+
+void Hw_CardUseFile(const std::string &path)
+{
+    if (g_FromImage) {
+        return;  // a replay keeps the recording's card
+    }
+    if (g_File != nullptr) {
+        std::fclose(g_File);
+        g_File = nullptr;
+    }
+    g_Path = path;
+    g_Card.clear();
+    g_Announced = false;
 }
 
 void Hw_CardUseImage(const unsigned char *image)
