@@ -889,7 +889,9 @@ int CardState_EditTitle(int event, void *arg)
             break;
         }
     }
-        // fall through
+        // The game falls through and draws here too, with the null arg as its ordering
+        // table. That only writes to low memory on the PlayStation, but faults here.
+        break;
     case 2: {
         TextCtx ctx;
         TextCtx *t;
