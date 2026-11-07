@@ -1346,7 +1346,7 @@ int CarPhys_PlaceOnTrack(CarPhys *phys, int section, int x, int z, int dirX, int
 
         wheel->suspLength = length;
         wheel->gripLimit = length;
-        wheel->suspPos = car->susp[axle].rideHeight;
+        wheel->suspPos = *(short *)car->susp[axle].unka;  // the sag, not the ride height
     }
     phys->bufIdx = 1;
     Body_ComputeFootprint(phys);
@@ -2335,8 +2335,7 @@ int Engine_UpdateTurbo(CarPhys *phys, int throttle)
         if (fall < 0x100) {
             fall = 0x100;
         }
-        load += (0x1000 - input) * fall >> 12;
-        phys->boost = (phys->boost + load) / 2;
+        phys->boost = (phys->boost + load + ((0x1000 - input) * fall >> 12)) / 2;
         if (phys->blowOffState == 0) {
             if (throttle < 0xe00) {
                 phys->blowOffState = (phys->engineLoad - 0x1800) / 2;
