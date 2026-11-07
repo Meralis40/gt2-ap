@@ -482,9 +482,6 @@ int ChangeParts_VariantCallback(MenuListEventId event, MenuListEvent *ev, int ro
             if (limit < PowerGraph_GetPower(graph, row + 1)) {
                 result = 0;
             }
-        } else if (limit > 0) {
-        } else {
-            result = 0;
         }
         if ((unsigned int)(slot - 3) < 2) {
             if (Settings_RaceSetup()->flags & 1) {
