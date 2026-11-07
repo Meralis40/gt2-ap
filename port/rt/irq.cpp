@@ -172,6 +172,13 @@ void Rt_StartWatchdog()
 #endif
 }
 
+void Rt_StillAlive()
+{
+#if defined(_WIN32)
+    g_PumpCount = g_PumpCount + 1;
+#endif
+}
+
 void Rt_AddInput(unsigned int vblank, unsigned short buttons)
 {
     g_Script.push_back({vblank, buttons});

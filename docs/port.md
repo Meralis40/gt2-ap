@@ -54,7 +54,7 @@ cmake --build --preset port-linux
 
 To release, set `world_version` in `world/gt2/archipelago.json` and `VERSION` in `CMakeLists.txt`, then push a tag `v<world_version>`. `release.yml` stops if the tag and `world_version` differ, otherwise it publishes a GitHub release with the three files. A tag with a suffix, like `v0.2.0-rc1`, makes a prerelease.
 
-Run it with `gt2ap <disc.cue>`, which opens on the Archipelago connection page (below). `--vblanks <n>` stops after n vblanks with no window and no pacing, and `--dump <every> <dir>` writes a frame every so many vblanks as a PPM file. `--audio <file>` saves the sound.
+Run it with `gt2ap [<disc.cue>]`, which opens on the Archipelago connection page (below). With no disc it uses the `disc` line of `gt2ap.cfg`, or asks for the image with a file dialog and saves it there; the image must hold the NTSC-U 1.2 executable (its SHA-1 is checked). A test run with no disc and none saved stops with the usage. `--vblanks <n>` stops after n vblanks with no window and no pacing, and `--dump <every> <dir>` writes a frame every so many vblanks as a PPM file. `--audio <file>` saves the sound.
 
 ## The tree
 
@@ -72,6 +72,10 @@ Run it with `gt2ap <disc.cue>`, which opens on the Archipelago connection page (
 ## Archipelago
 
 The connection page (`game/ovl1/apconnect.cpp`) comes up before the autoload, because the seed decides which memory card the game reads. On it, the keyboard types instead of being the controller; Ctrl+V pastes. The server and slot are kept in `gt2ap.cfg`, the password isn't. **Play offline** leaves every rule as the game has it, on `gt2ap.mcd`.
+
+With a gamepad connected, controller 1 is a DualShock (`0x73`) instead of a digital controller: the game's own analog handler and its analog key maps apply, so the left stick steers, and Options can put the pedals on the right stick. `host.cpp` starts a stick just past `Pad_ScaleStick`'s dead zone, and makes the d-pad and arrow keys push the left stick, since the analog map doesn't steer with them. Triggers stay digital L2 and R2. Recordings keep the sticks (version 2); version 1 still plays, as a digital controller.
+
+Tab or the right stick's click opens the tracker in a session: manufacturers, tuning parts, trophies, credits and checks. It's drawn by `host.cpp` over the picture rather than in the game's menus, so it opens anywhere, and `Host_Frame` holds the game until it closes: a pause between vblanks, which neither races nor recordings can see.
 
 A session uses `saves/<seed>_<slot>.mcd` and `saves/<seed>_<slot>.locations`. `ap.h` is all game code sees: the rule functions in `docs/ap-hooks.md` ask it directly, and Ap_Poll applies what the session's thread has received once a vblank.
 

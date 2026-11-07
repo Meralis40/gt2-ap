@@ -111,7 +111,13 @@ void onConnected(const json &packet, NameTables &names, const std::string &seed)
     for (const json &id : packet.value("checked_locations", json::array())) {
         checked.numbers.push_back(id.get<long long>());
     }
+    Event locations{Event::kLocations};
+    locations.numbers = checked.numbers;
+    for (const json &id : packet.value("missing_locations", json::array())) {
+        locations.numbers.push_back(id.get<long long>());
+    }
     post(std::move(checked));
+    post(std::move(locations));
 }
 
 void onPrint(const json &packet, const NameTables &names)

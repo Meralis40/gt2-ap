@@ -38,10 +38,16 @@ def readme(version, platform):
 No game data comes with this program. You need your own NTSC-U 1.2 Simulation disc (SCUS-94488),
 as a .cue with raw 2352-byte sectors.
 
+Run gt2ap. The first time, it asks for your disc image and remembers it; you can also give it on
+the command line:
+
   gt2ap "<your disc>.cue"
 
 It opens on the Archipelago page. Choose Play offline to play without a server. The settings,
 the memory card and the saves folder are written to the current folder.
+
+With a gamepad, the left stick steers. In a session, Tab or a click of the right stick pauses and
+shows what you have unlocked.
 
 Setup guide: {REPOSITORY}/blob/{tag}/world/gt2/docs/setup_en.md
 {note}

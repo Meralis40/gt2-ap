@@ -5,6 +5,7 @@
 #include "ap.h"
 #include "ap_host.h"
 
+#include "config.h"
 #include "hw.h"
 #include "rt.h"
 #include "session.h"
@@ -94,13 +95,13 @@ bool g_Parts[kParts];
 int g_TrophiesOn, g_ProNeeded, g_WorldNeeded;
 
 std::set<long long> g_Done;
+std::set<long long> g_SlotLocations;
 std::filesystem::path g_LocationsFile;
 bool g_GoalSent;
 bool g_HeldShown;
 int g_RaceEvents[6];
 std::deque<Toast> g_Toasts;
 
-const std::filesystem::path kConfigFile = "gt2ap.cfg";
 const std::filesystem::path kSaveDir = "saves";
 
 void toast(const std::string &text)
@@ -118,23 +119,15 @@ void toast(const std::string &text)
 
 void loadConfig()
 {
-    std::ifstream in(kConfigFile);
-    std::string line;
-
-    while (std::getline(in, line)) {
-        if (line.rfind("server=", 0) == 0) {
-            g_Fields[0] = line.substr(7);
-        } else if (line.rfind("slot=", 0) == 0) {
-            g_Fields[1] = line.substr(5);
-        }
-    }
+    g_Fields[0] = Cfg_Get("server");
+    g_Fields[1] = Cfg_Get("slot");
 }
 
 // The password isn't kept.
 void saveConfig()
 {
-    std::ofstream out(kConfigFile);
-    out << "server=" << g_Fields[0] << "\nslot=" << g_Fields[1] << "\n";
+    Cfg_Set("server", g_Fields[0]);
+    Cfg_Set("slot", g_Fields[1]);
 }
 
 void rebuildFromItems()
@@ -224,6 +217,7 @@ void onEvent(const ap::Event &event)
             g_WorldNeeded = static_cast<int>(event.numbers[2]);
             g_Active = true;
             g_PageState = AP_PAGE_CONNECTED;
+            toast("Tab or right stick click: what you have unlocked");
         } else {
             toast("connected again");
         }
@@ -259,6 +253,9 @@ void onEvent(const ap::Event &event)
             g_Done.insert(id);
         }
         checkGoal();
+        break;
+    case ap::Event::kLocations:
+        g_SlotLocations.insert(event.numbers.begin(), event.numbers.end());
         break;
     case ap::Event::kMessage:
         toast(event.text);
@@ -332,6 +329,43 @@ void Ap_PageBackspace()
 std::string Ap_ToastLine(int index)
 {
     return index < static_cast<int>(g_Toasts.size()) ? g_Toasts[index].text : std::string();
+}
+
+ApTracker Ap_Tracker()
+{
+    ApTracker tracker{};
+
+    for (int id = 0; id < static_cast<int>(std::size(kManufacturerNames)); id++) {
+        if (kManufacturerNames[id] != nullptr) {
+            tracker.manufacturers.push_back({kManufacturerNames[id], g_Manufacturers[id] ? 1 : 0, 1});
+        }
+    }
+    for (const PartItem &item : kPartItems) {
+        tracker.parts.push_back({item.name, 0, static_cast<int>(item.stages.size())});
+    }
+    for (long long item : g_Received) {
+        long long credits = item - kItemCredits;
+        long long part = item - kItemParts;
+        if (credits >= 0 && credits < static_cast<long long>(std::size(kCredits))) {
+            tracker.credits += kCredits[credits];
+        } else if (part >= 0 && part < static_cast<long long>(kPartItems.size())) {
+            ApTrackerEntry &entry = tracker.parts[static_cast<std::size_t>(part)];
+            entry.have = std::min(entry.have + 1, entry.total);
+        }
+    }
+    tracker.trophyRule = g_TrophiesOn != 0;
+    tracker.trophies = g_Trophies;
+    tracker.proNeeded = g_ProNeeded;
+    tracker.worldNeeded = g_WorldNeeded;
+    tracker.checksTotal = static_cast<int>(g_SlotLocations.size());
+    for (long long id : g_SlotLocations) {
+        tracker.checks += static_cast<int>(g_Done.count(id));
+    }
+    tracker.goalRacesTotal = static_cast<int>(std::size(kGoalEvents));
+    for (int event : kGoalEvents) {
+        tracker.goalRaces += static_cast<int>(g_Done.count(kLocationEvents + event));
+    }
+    return tracker;
 }
 
 extern "C" {

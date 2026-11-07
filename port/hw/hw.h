@@ -29,6 +29,10 @@ void Hw_SpuXaSector(const unsigned char *sector);
 void Hw_SpuXaClear(void);
 void Hw_PadSetButtons(unsigned short held);
 unsigned short Hw_PadButtons(void);
+// analog 0 is a digital controller. Otherwise it's a DualShock with these 4 bytes: right X,
+// right Y, left X, left Y, 0x80 at rest. Left and up are low.
+void Hw_PadSetSticks(int analog, const unsigned char *sticks);
+int Hw_PadSticks(unsigned char *sticks);
 void Hw_PadVblank(void);
 
 #ifdef __cplusplus
