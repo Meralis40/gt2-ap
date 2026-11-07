@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Input recordings. Vblanks fall on a fixed count of pumps (rt/irq.cpp), so a run depends on
-// nothing but the memory card it starts from and the buttons held at each vblank: the
+// nothing but the memory card it starts from and the controls held at each vblank: the
 // game's random numbers all come from the vblank count and the counters that follow it.
 //
 // The file is the header, the card, then one Frame per vblank, flushed as it goes so a crash
-// keeps everything up to it. The random seed in each frame is only a check.
+// keeps everything up to it. The random seed in each frame is only a check. Files of version 1
+// stop each frame before the sticks, and were all played on a digital controller.
 #include "hw.h"
 #include "rt.h"
 
@@ -18,12 +19,17 @@ extern "C" unsigned int g_RandomSeed;
 
 namespace {
 
-constexpr char kMagic[8] = {'G', 'T', '2', 'R', 'E', 'C', 0, 1};
+constexpr char kMagic[8] = {'G', 'T', '2', 'R', 'E', 'C', 0, 2};
+constexpr std::size_t kVersionByte = 7;
+constexpr char kOldVersion = 1;
+constexpr std::size_t kOldFrameSize = 8;
 
 struct Frame {
     std::uint16_t buttons;
-    std::uint16_t reserved;
+    std::uint8_t analog;
+    std::uint8_t reserved;
     std::uint32_t seed;
+    std::uint8_t sticks[4];
 };
 
 FILE *g_Recording;
@@ -45,6 +51,7 @@ void playFrame()
     }
     const Frame &frame = g_Replay[g_ReplayPos++];
     Hw_PadSetButtons(frame.buttons);
+    Hw_PadSetSticks(frame.analog, frame.sticks);
     if (frame.seed != g_RandomSeed && !g_SeedDiffered) {
         g_SeedDiffered = true;
         Rt_Log("replay: at vblank %u the random seed is %08x, it was %08x", static_cast<unsigned int>(g_ReplayPos),
@@ -62,12 +69,14 @@ void Rt_ReplayOpen(const char *path, bool stopAtEnd)
     }
     char magic[sizeof(kMagic)];
     std::vector<std::uint8_t> card(kHwCardSize);
-    if (std::fread(magic, 1, sizeof(magic), in) != sizeof(magic) || std::memcmp(magic, kMagic, sizeof(magic)) != 0 ||
+    if (std::fread(magic, 1, sizeof(magic), in) != sizeof(magic) || std::memcmp(magic, kMagic, kVersionByte) != 0 ||
+        (magic[kVersionByte] != kMagic[kVersionByte] && magic[kVersionByte] != kOldVersion) ||
         std::fread(card.data(), 1, card.size(), in) != card.size()) {
         Rt_Fatal("%s isn't a recording", path);
     }
-    Frame frame;
-    while (std::fread(&frame, sizeof(frame), 1, in) == 1) {
+    std::size_t frameSize = magic[kVersionByte] == kOldVersion ? kOldFrameSize : sizeof(Frame);
+    Frame frame{};
+    while (std::fread(&frame, frameSize, 1, in) == 1) {
         g_Replay.push_back(frame);
     }
     std::fclose(in);
@@ -94,7 +103,8 @@ void Rt_RecordVblank()
         playFrame();
     }
     if (g_Recording != nullptr) {
-        Frame frame{Hw_PadButtons(), 0, g_RandomSeed};
+        Frame frame{Hw_PadButtons(), 0, 0, g_RandomSeed, {}};
+        frame.analog = static_cast<std::uint8_t>(Hw_PadSticks(frame.sticks));
         std::fwrite(&frame, sizeof(frame), 1, g_Recording);
         std::fflush(g_Recording);
     }

@@ -15,6 +15,7 @@ struct Event {
         kLost,          // text: why. The session keeps trying.
         kItems,         // index: first item's index; numbers: item IDs
         kChecked,       // numbers: location IDs the server has
+        kLocations,     // numbers: every location ID of this slot
         kMessage,       // text: for the player
     } kind;
     std::string text;

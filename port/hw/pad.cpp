@@ -1,18 +1,23 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-// libpad: a digital controller in port 1, port 2 empty. The game reads the buffers it gave
-// PadInitDirect each vblank.
+// libpad: a digital controller or a DualShock in port 1, port 2 empty. The game reads the
+// buffers it gave PadInitDirect each vblank.
 #include "hw.h"
 
 #include <cstdint>
+#include <cstring>
 
 namespace {
 
 constexpr int kStateStable = 6;
 constexpr std::uint8_t kDigitalPad = 0x41;
+constexpr std::uint8_t kAnalogPad = 0x73;
+constexpr int kStickBytes = 4;
 constexpr std::uint8_t kNoController = 0xff;
 
 std::uint8_t *g_Buffers[2];
 std::uint16_t g_Held;
+bool g_Analog;
+std::uint8_t g_Sticks[kStickBytes];
 
 }  // namespace
 
@@ -59,6 +64,20 @@ unsigned short Hw_PadButtons(void)
     return g_Held;
 }
 
+void Hw_PadSetSticks(int analog, const unsigned char *sticks)
+{
+    g_Analog = analog != 0;
+    if (g_Analog) {
+        std::memcpy(g_Sticks, sticks, kStickBytes);
+    }
+}
+
+int Hw_PadSticks(unsigned char *sticks)
+{
+    std::memcpy(sticks, g_Sticks, kStickBytes);
+    return g_Analog;
+}
+
 void Hw_PadVblank(void)
 {
     if (g_Buffers[0] == nullptr) {
@@ -67,9 +86,12 @@ void Hw_PadVblank(void)
     std::uint16_t raw = static_cast<std::uint16_t>(~g_Held);
 
     g_Buffers[0][0] = 0;
-    g_Buffers[0][1] = kDigitalPad;
+    g_Buffers[0][1] = g_Analog ? kAnalogPad : kDigitalPad;
     g_Buffers[0][2] = raw & 0xff;
     g_Buffers[0][3] = raw >> 8;
+    if (g_Analog) {
+        std::memcpy(g_Buffers[0] + 4, g_Sticks, kStickBytes);
+    }
     g_Buffers[1][0] = kNoController;
 }
 

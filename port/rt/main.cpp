@@ -2,8 +2,9 @@
 // Starts the game: maps guest memory, loads the executable from the disc and runs
 // its entry point, then each overlay entry it asks for.
 //
-// Usage: gt2ap <disc .cue> [--vblanks <n>] [--dump <every> <dir>] [--input <vblank> <buttons>]...
+// Usage: gt2ap [<disc .cue>] [--vblanks <n>] [--dump <every> <dir>] [--input <vblank> <buttons>]...
 //              [--record <file>] [--replay <file>] [--connect <server> <slot> [<password>]]
+// With no disc it takes the one saved in gt2ap.cfg, or asks for one and saves it.
 // --vblanks stops after n vblanks, without waiting for real time; --dump writes a frame
 // every <every> vblanks to <dir>; --input holds buttons from a vblank on; --record saves the
 // memory card and every vblank's buttons to a file, and --replay plays one back; --connect
@@ -11,6 +12,7 @@
 // don't show that page, since none of them can type on it.
 #include "ap.h"
 #include "ap_host.h"
+#include "config.h"
 #include "fixups.h"
 #include "memmap.h"
 #include "rt.h"
@@ -21,6 +23,7 @@
 #include "gt2ap/discio/error.hpp"
 #include "gt2ap/discio/iso9660.hpp"
 #include "gt2ap/discio/overlay.hpp"
+#include "gt2ap/discio/sha1.hpp"
 
 #include <csetjmp>
 #include <cstdarg>
@@ -54,6 +57,8 @@ constexpr std::uint32_t kBssStart = 0x801c93b0;
 constexpr std::uint32_t kBssEnd = 0x801f0d60;
 constexpr std::size_t kExeHeaderSize = 0x800;
 constexpr int kOverlayCount = 6;
+// The addresses in the port are this executable's, NTSC-U 1.2's.
+constexpr const char *kExeSha1 = "3030aa271c0a4022fc69ce09d76a6bc75e69a32a";
 
 Bytes g_Overlays[kOverlayCount];
 const rt::Fixup *const g_OverlayFixups[kOverlayCount] = {g_Fixups_ovl0, g_Fixups_ovl1, g_Fixups_ovl2,
@@ -64,23 +69,78 @@ std::jmp_buf g_EntryJump;
 void *g_Entry;
 int g_EntryArgs[4];
 
-Bytes loadFromDisc(const std::filesystem::path &cue)
+std::filesystem::path pathFromUtf8(const std::string &text)
+{
+    return std::filesystem::path(std::u8string(text.begin(), text.end()));
+}
+
+std::string pathToUtf8(const std::filesystem::path &path)
+{
+    std::u8string text = path.u8string();
+    return std::string(text.begin(), text.end());
+}
+
+// Reads the executable and the overlays. Returns what's wrong with the image, if anything.
+std::string readDisc(const std::filesystem::path &cue, Bytes &executable)
 {
     namespace d = gt2ap::discio;
 
-    d::DiscImage disc = d::DiscImage::open(cue);
-    d::Iso9660 iso(disc);
-    auto exe = iso.find("/SCUS_944.88");
-    auto ovl = iso.find(d::kOverlayFile);
-    if (!exe || !ovl) {
-        Rt_Fatal("%s isn't the Simulation disc", cue.string().c_str());
+    try {
+        d::DiscImage disc = d::DiscImage::open(cue);
+        d::Iso9660 iso(disc);
+        auto exe = iso.find("/SCUS_944.88");
+        auto ovl = iso.find(d::kOverlayFile);
+        if (!exe || !ovl) {
+            return "This isn't the Gran Turismo 2 Simulation disc.";
+        }
+        executable = iso.readFile(*exe);
+        if (d::Sha1::toHex(d::Sha1::of(executable)) != kExeSha1) {
+            return "This Gran Turismo 2 Simulation disc isn't the NTSC-U 1.2 release.";
+        }
+        Bytes pack = iso.readFile(*ovl);
+        auto entries = d::parseOverlayTable(pack);
+        for (int i = 0; i < kOverlayCount; i++) {
+            g_Overlays[i] = d::extractOverlay(pack, entries.at(i));
+        }
+    } catch (const std::exception &e) {
+        return e.what();
     }
-    Bytes pack = iso.readFile(*ovl);
-    auto entries = d::parseOverlayTable(pack);
-    for (int i = 0; i < kOverlayCount; i++) {
-        g_Overlays[i] = d::extractOverlay(pack, entries.at(i));
+    return {};
+}
+
+// No disc on the command line: last run's, or the player's choice, which is then saved.
+// Without a window there's nobody to ask, and it returns false.
+bool findDisc(bool window, std::filesystem::path &disc, Bytes &exe)
+{
+    std::string problem;
+    std::string saved = Cfg_Get("disc");
+
+    if (!saved.empty()) {
+        disc = pathFromUtf8(saved);
+        problem = readDisc(disc, exe);
+        if (problem.empty()) {
+            return true;
+        }
+        problem = saved + "\n\n" + problem;
     }
-    return iso.readFile(*exe);
+    if (!window) {
+        return false;
+    }
+    for (;;) {
+        if (!problem.empty()) {
+            Host_Alert(problem);
+        }
+        std::string picked = Host_PickDisc();
+        if (picked.empty()) {
+            std::exit(0);
+        }
+        disc = std::filesystem::absolute(pathFromUtf8(picked));
+        problem = readDisc(disc, exe);
+        if (problem.empty()) {
+            Cfg_Set("disc", pathToUtf8(disc));
+            return true;
+        }
+    }
 }
 
 // A PS-X EXE: the text's address and size are at +0x18 and +0x1c of the header.
@@ -202,10 +262,6 @@ int main(int argc, char **argv)
                 cue = argv[i];
             }
         }
-        if (cue == nullptr) {
-            std::fputs("usage: gt2ap <disc.cue> [--vblanks <n>] [--dump <every> <dir>] [--record <file>] [--replay <file>]\n", stderr);
-            return 2;
-        }
         Rt_SetRunLimits(maxVblanks, dumpEvery, dumpDir);
         if (maxVblanks != 0 || replayPath != nullptr || recordPath != nullptr) {
             Ap_DisablePage();
@@ -222,9 +278,21 @@ int main(int argc, char **argv)
         if (maxVblanks == 0) {
             Host_Open();
         }
+        std::filesystem::path disc;
+        Bytes exe;
+        if (cue != nullptr) {
+            disc = cue;
+            std::string problem = readDisc(disc, exe);
+            if (!problem.empty()) {
+                Rt_Fatal("%s: %s", cue, problem.c_str());
+            }
+        } else if (!findDisc(maxVblanks == 0, disc, exe)) {
+            std::fputs("usage: gt2ap [<disc.cue>] [--vblanks <n>] [--dump <every> <dir>] [--record <file>] [--replay <file>]\n", stderr);
+            return 2;
+        }
         Rt_StartWatchdog();
-        loadExecutable(loadFromDisc(cue));
-        Hw_CdOpen(cue);
+        loadExecutable(exe);
+        Hw_CdOpen(disc);
     } catch (const std::exception &e) {
         Rt_Fatal("%s", e.what());
     }

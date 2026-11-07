@@ -3,6 +3,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 // Each vblank: applies what the session has sent.
 void Ap_Poll();
@@ -16,3 +17,20 @@ void Ap_PageText(const char *text);
 void Ap_PageBackspace();
 // Recent messages for the screen, oldest first, one line each.
 std::string Ap_ToastLine(int index);
+
+// What the tracker page shows. An entry has `have` of its `total` copies.
+struct ApTrackerEntry {
+    std::string name;
+    int have, total;
+};
+
+struct ApTracker {
+    std::vector<ApTrackerEntry> manufacturers, parts;
+    bool trophyRule;  // whether trophies open the leagues
+    int trophies, proNeeded, worldNeeded;
+    long long credits;  // received in all
+    int checks, checksTotal;
+    int goalRaces, goalRacesTotal;
+};
+
+ApTracker Ap_Tracker();

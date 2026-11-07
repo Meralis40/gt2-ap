@@ -91,6 +91,7 @@ add_executable(gt2ap
     hw/host.cpp
     hw/pad.cpp
     hw/spu.cpp
+    rt/config.cpp
     rt/irq.cpp
     rt/main.cpp
     rt/memmap.cpp
