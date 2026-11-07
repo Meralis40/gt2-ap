@@ -87,13 +87,13 @@ A run on a real server (Archipelago `main`, `MultiServer.py` with a seed from `w
 
 ## Status
 
-**The game reaches M5's first goal.** From the disc image, it boots, shows the title screen, runs GT Mode's map and Garage page, and plays the attract race as a 3D replay with HUD, cars and track. All of this was checked in test runs, by looking at dumped frames. Nothing has been compared with PCSX-Redux yet.
+**The game reaches M5's first goal.** From the disc image, it boots, shows the title screen, runs GT Mode's map and Garage page, and plays the attract race as a 3D replay with HUD, cars and track. All of this was checked in test runs, by looking at dumped frames. Race physics were compared with PCSX-Redux frame by frame: two rally replays and the attract demo keep every car in step with it to the last frame. Only the car sound state differs, in which SPU voices it took.
 
 | Milestone | State |
 |---|---|
 | M0-M3 | Done |
 | M4, GT mode | Map and Garage page reached. Shops, dealers, car previews and memory card saves haven't been driven yet |
-| M5, race | The attract replay runs. Physics and car meshes look wrong (below) |
+| M5, race | The attract replay runs. Car meshes look wrong |
 | M6, AP | Works on a local Archipelago server with a generated seed (below). Not yet played through by hand |
 | M7, sound | Written (below). SPU, reverb and XA run; checked by ear, by dumps and with a recorded race |
 | M8, movies | Put off: movies are skipped, with a log line |
@@ -111,7 +111,6 @@ Controls: arrows, Enter (Start), Backspace (Select), X (Cross), C (Circle), S (S
 
 Known problems:
 
-- **Race replay.** In the attract demo, the car stays under the same bridge from 0:33 to 0:41 of the race, so the replay may be diverging. That could come from the car physics, which nothing has compared with the PlayStation yet.
 - **Sound.** `hw/spu.cpp` reads the SPU registers once a vblank from the plain copy the game writes, so a key on or off takes effect at the next vblank, as the sound driver expects. It runs on the vblank count, and the game reads the envelopes, so sound is part of what a recording repeats. Music is XA on the disc (stereo, 37.8 kHz), played at drive speed. The output is simple where hardware isn't: XA is resampled with a Catmull-Rom curve instead of the real filter, the reverb computes both sides at once, and there's no SPU interrupt, capture or CD audio. `--audio <file>` writes the output as raw 16-bit stereo at 44100 Hz.
 - **Movies.** MDEC isn't implemented. The movie entries in `game/ovl5/movieloop.cpp` log the movie, skip it and go on to OVL1. The Simulation disc's only one comes at the end of the game. `DecDCTin` and `DecDCTout` still stop with their name, which the Arcade menus' course previews would reach.
 - **Not checked.** `-fno-strict-return` hides functions that fall off their end. Any of them whose callers use the result got it from `$v0` on the PlayStation, so they need checking: `Tim_LoadClutAndImage` was one. `tools/check_protos.py` covers argument counts only: it found `Race_LoadEngineBanks`.

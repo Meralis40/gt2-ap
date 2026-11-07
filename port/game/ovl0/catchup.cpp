@@ -491,6 +491,7 @@ capped:
             if (level >= 0x100) {
                 level = 0xff;
             }
+            gravel = level;
             if ((Course_Get(g_RaceWorld.course)->flags & 4) != 0) {
                 gravel = (unsigned int)level >> 1;
             }
