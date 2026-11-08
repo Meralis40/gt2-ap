@@ -1,6 +1,7 @@
 // OVL0 80057a70-800593f4 (gtracemenu): GT race menu and machine test.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
@@ -62,7 +63,7 @@ struct LoopMenu {
 
 // A row of these menus.
 struct GtMenuOption {
-    char *label;
+    game_pointer<char> label;
     signed char enabled;
     signed char next;
 };
@@ -90,47 +91,47 @@ struct RoundedBox {
 };
 
 extern "C" {
-extern LoopMenu *g_QuickMenu;
-extern GtMenuWork *g_OVL0_EndFontInfo;
-extern GtMenuOption g_GtRaceMenu_Options[];
-extern GtMenuOption g_MachineTestMenu_Options[];
-extern signed char D_8005D27C[];    // the GT race rows' y offsets
-extern signed char D_8005D2E8[];    // the machine test rows' y offsets
-extern MenuList g_GtRaceMenu_List;
-extern MenuList g_MachineTestMenu_List;
-extern signed char g_GtRaceMenu_SettingsUsed;
-extern char *g_GhostTypeNames2[];
-extern QuickMenuPage g_Page_GtRaceMenu;
-extern QuickMenuPage g_Page_MachineTestMenu;
-extern QuickMenuPage g_Page_MachineTestRecords;
-extern QuickMenuPage g_Page_Quit;
-extern QuickMenuPage g_Page_SaveReplay;
-extern QuickMenuPage g_Page_ChangeParts;
-extern char *D_8005D37C;            // g_Page_GtRaceMenu.page.title
-extern TextStyle D_8005D20C;
-extern WipeBar D_8005D228;
-extern CardDialogDesc D_8005AC20;
-extern CardDialogDesc D_8005ACF0;
-extern void *D_800A9F00;
-extern unsigned char D_8005D208[];
-extern unsigned char D_8005D334[];
-extern unsigned char D_8005D338[];
-extern unsigned char D_8005D33C[];
-extern unsigned char D_8005D340[];
-extern unsigned char D_8005D344[];
-extern char D_8005AB48[];           // "%d."
-extern char D_80169897;
-extern Font g_OVL0_FontB;
-extern Font g_OVL0_FontD;
-extern char sR_SINGLERACE[];
-extern char sR_RALLY[];
-extern char sR_SESSIONN[];
-extern char sR_Start[];
-extern char sR_NoRecords[];
-extern char sR_Mph[];
-extern char sB_0400m[];
-extern char sB_01000m[];
-extern char sB_MaxSpeed[];
+extern game_pointer<LoopMenu> (&g_QuickMenu);
+extern game_pointer<GtMenuWork> (&g_OVL0_EndFontInfo);
+extern GtMenuOption (&g_GtRaceMenu_Options)[];
+extern GtMenuOption (&g_MachineTestMenu_Options)[];
+extern signed char (&D_8005D27C)[];    // the GT race rows' y offsets
+extern signed char (&D_8005D2E8)[];    // the machine test rows' y offsets
+extern MenuList (&g_GtRaceMenu_List);
+extern MenuList (&g_MachineTestMenu_List);
+extern signed char (&g_GtRaceMenu_SettingsUsed);
+extern game_pointer<char> (&g_GhostTypeNames2)[];
+extern QuickMenuPage (&g_Page_GtRaceMenu);
+extern QuickMenuPage (&g_Page_MachineTestMenu);
+extern QuickMenuPage (&g_Page_MachineTestRecords);
+extern QuickMenuPage (&g_Page_Quit);
+extern QuickMenuPage (&g_Page_SaveReplay);
+extern QuickMenuPage (&g_Page_ChangeParts);
+extern game_pointer<char> (&D_8005D37C);            // g_Page_GtRaceMenu.page.title
+extern TextStyle (&D_8005D20C);
+extern WipeBar (&D_8005D228);
+extern CardDialogDesc (&D_8005AC20);
+extern CardDialogDesc (&D_8005ACF0);
+extern game_pointer<void> (&D_800A9F00);
+extern unsigned char (&D_8005D208)[];
+extern unsigned char (&D_8005D334)[];
+extern unsigned char (&D_8005D338)[];
+extern unsigned char (&D_8005D33C)[];
+extern unsigned char (&D_8005D340)[];
+extern unsigned char (&D_8005D344)[];
+extern char (&D_8005AB48)[];           // "%d."
+extern char (&D_80169897);
+extern Font (&g_OVL0_FontB);
+extern Font (&g_OVL0_FontD);
+extern char (&sR_SINGLERACE)[];
+extern char (&sR_RALLY)[];
+extern char (&sR_SESSIONN)[];
+extern char (&sR_Start)[];
+extern char (&sR_NoRecords)[];
+extern char (&sR_Mph)[];
+extern char (&sB_0400m)[];
+extern char (&sB_01000m)[];
+extern char (&sB_MaxSpeed)[];
 void QuickMenu_PushPage(LoopMenu *menu, QuickMenuPage *page);
 void TitleBanner_Init(TitleBanner *banner, char *text, TextCtx *ctx);
 void ResultCarView_Init(ResultCarView *view, int w, int h);
@@ -258,7 +259,7 @@ void GtRaceRoot_Enter(int back)
     pQVar2 = g_QuickMenu->menu.activePage;
     pQVar2->sel = (short)back;
     pQVar2->timer = 0x14;
-    pvVar1 = Settings_SetWork((void *)((int)pvVar1 + 0x5ec));
+    pvVar1 = Settings_SetWork((void *)rt::from_guest(((int)rt::to_guest(pvVar1) + 0x5ec)));
     QuickMenu_SetupCardUi(pvVar1);
     QuickMenu_PlayMusic(8);
 }
@@ -985,7 +986,7 @@ void MachineTestRecords_Draw(DrawLayer *layer)
         }
         if (t > 0) {
             MachineTestEntry *entry = &records->entries[i];
-            char *name = CarNameTable_Find((CarNameTable *)((int)&D_80169897 & -4), entry->carId);
+            char *name = CarNameTable_Find((CarNameTable *)rt::from_guest(((int)rt::to_guest(&D_80169897) & -4)), entry->carId);
 
             MachineTestRecord_DrawRow(ot, i, entry, name, x, y, t, isSpeed);
         }

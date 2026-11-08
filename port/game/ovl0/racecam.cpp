@@ -1,6 +1,7 @@
 // OVL0 80010000-80011ec8 (racecam): Race cameras.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gte.h"
 
@@ -71,7 +72,7 @@ struct TrackCamEntry {
 struct TrackCamTable {
     ushort count;
     ushort loop;                // laps of the cycle; 0 for none
-    TrackCamEntry *entries[1];
+    game_pointer<TrackCamEntry> entries[1];
 };
 
 // A car-mounted view.
@@ -89,20 +90,20 @@ struct CarBodyScale {
 };
 
 extern "C" {
-extern GameState g_GameState;
-extern short g_RaceCam_FovTable[4];
-extern RaceMem g_Race_IsDemo;
-extern unsigned char D_800A951C;
-extern unsigned short D_800A9520;
-extern unsigned char D_801C9992;
-extern signed char D_800A9E04;
-extern unsigned char g_RaceCarCount;
-extern int g_TvCam_Progress;
-extern int g_ChaseCam_Height[2];
-extern int g_ChaseCam_Dist[2];
-extern int g_ChaseCam_HeightSplit[2];
-extern int g_ChaseCam_DistSplit[2];
-extern CarViewPreset g_CarViewPresets[];
+extern GameState (&g_GameState);
+extern short (&g_RaceCam_FovTable)[4];
+extern RaceMem (&g_Race_IsDemo);
+extern unsigned char (&D_800A951C);
+extern unsigned short (&D_800A9520);
+extern unsigned char (&D_801C9992);
+extern signed char (&D_800A9E04);
+extern unsigned char (&g_RaceCarCount);
+extern int (&g_TvCam_Progress);
+extern int (&g_ChaseCam_Height)[2];
+extern int (&g_ChaseCam_Dist)[2];
+extern int (&g_ChaseCam_HeightSplit)[2];
+extern int (&g_ChaseCam_DistSplit)[2];
+extern CarViewPreset (&g_CarViewPresets)[];
 void RaceCam_CopyTargetCar(RaceCam *cam);
 void RaceCam_UpdateLive(RaceCam *cam);
 void RaceCam_UpdateIntro(RaceCam *cam);
@@ -754,8 +755,8 @@ void RaceCam_TvFixed(RaceCam *cam, TrackCamEntry *entry)
 // projection +0x12.
 void RaceCam_TvCarView(RaceCam *cam, void *entry)
 {
-    RaceCam_SetProjection(cam, (unsigned int)*(unsigned short *)((int)entry + 0x12), 0, 0);
-    RaceCam_SetCarView(cam, (unsigned int)*(unsigned short *)((int)entry + 0x10));
+    RaceCam_SetProjection(cam, (unsigned int)*(unsigned short *)rt::from_guest(((int)rt::to_guest(entry) + 0x12)), 0, 0);
+    RaceCam_SetCarView(cam, (unsigned int)*(unsigned short *)rt::from_guest(((int)rt::to_guest(entry) + 0x10)));
 }
 
 void RaceCam_SetCarView(RaceCam *cam, int view)
@@ -831,7 +832,7 @@ void RaceCam_TvZoom(RaceCam *cam, TrackCamEntry *entry)
     int shift;
 
     car = RACE_FIRST_CAR(car);
-    body = *(CarBodyScale **)((char *)car->model + 0x870);
+    body = *(game_pointer<CarBodyScale> *)((char *)car->model + 0x870);
     course += offset;
     TrackCam_EvalPath(&entry->zoomed.path, (int *)cam->view.t);
     cam->section = CourseSect_Locate(((CourseData *)course)->sections, entry->section, (int *)cam->view.t);

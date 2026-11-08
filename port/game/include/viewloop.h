@@ -3,6 +3,9 @@
 #ifndef VIEWLOOP_H
 #define VIEWLOOP_H
 
+#include "gptr.h"
+#include "vtable.h"
+
 // PsyQ libgpu rectangle.
 struct RECT {
     short x, y, w, h;
@@ -10,9 +13,9 @@ struct RECT {
 
 // Node of a priority-sorted list of vblank callbacks (VSyncList_Add).
 struct VSyncCallback {
-    VSyncCallback *prev;
-    VSyncCallback *next;
-    void (*func)();
+    game_pointer<VSyncCallback> prev;
+    game_pointer<VSyncCallback> next;
+    game_function<void()> func;
     unsigned int priority;
 
     VSyncCallback(void (*f)(), unsigned int prio) : func(f), priority(prio) {}
@@ -20,21 +23,21 @@ struct VSyncCallback {
 
 // Ordering table and draw layers of a view (ViewDrawContext_*, 0x20 bytes).
 struct ViewDrawContext {
-    struct DrawLayer *layers;
-    void *otBase;
-    void *otHead;               // frame to send at the next Submit, 0 for none
-    void *otStart;
-    void *otEnd;
+    game_pointer<struct DrawLayer> layers;
+    game_pointer<void> otBase;
+    game_pointer<void> otHead;               // frame to send at the next Submit, 0 for none
+    game_pointer<void> otStart;
+    game_pointer<void> otEnd;
     unsigned short otSize;
     unsigned short otHalf;
     unsigned int drawMode;      // texture page bits of the E1 draw-mode packet ViewDrawContext_End appends
-    void *tailPackets;          // terminator packets EndDraw appends (draw mode, cache flush)
+    game_pointer<void> tailPackets;          // terminator packets EndDraw appends (draw mode, cache flush)
 };
 
 // Double-buffered primitive pool (PacketBuffer_Swap); g_PacketPtr allocates
 // from the current half.
 struct PacketBuffer {
-    void *base;
+    game_pointer<void> base;
     unsigned int size;          // words, both halves
     unsigned int half;          // 0 or size/2
 };
@@ -43,8 +46,8 @@ struct PacketBuffer {
 struct GfxIrqState {
     unsigned int vblankTotal;   // every vblank; Irq_WaitVSyncs returns it
     int vblanksSinceFlip;       // reset by Irq_WaitVSyncs and Gpu_WaitField
-    VSyncCallback *vsyncCallbacks;  // priority-sorted list run by Irq_VSyncHandler
-    void (*gpuDmaHook)();       // called after each GPU DMA completion; overlays chain their own
+    game_pointer<VSyncCallback> vsyncCallbacks;  // priority-sorted list run by Irq_VSyncHandler
+    game_function<void()> gpuDmaHook;       // called after each GPU DMA completion; overlays chain their own
     unsigned int displayMode;   // last GP1(08) mode written by Gpu_SetDisplayMode
     int gpuDmaCount;
     int gpuDmaDoneTime;         // Timer_SinceFrameStart at the last GPU DMA completion
@@ -63,19 +66,26 @@ struct GfxIrqState {
 // declared in their vtable order.
 class ScreenViewLoop {
 public:
+    game_vptr vptr;  // the console's vtable pointer: its vtable's address
     ScreenViewLoop();
-    virtual ~ScreenViewLoop();
-    virtual void Run();
-    virtual void Enter();
-    virtual int Step();
-    virtual void Flip();
-    virtual void Leave();
+    ~ScreenViewLoop();
+    void Run();
+    void Enter();
+    int Step();
+    void Flip();
+    void Leave();
     int Execute();
+    // Calls through the vtable word (rt/vtable.h).
+    void v_Run() { return vptr.slot<void(ScreenViewLoop *)>(0)(this); }
+    void v_Enter() { return vptr.slot<void(ScreenViewLoop *)>(1)(this); }
+    int v_Step() { return vptr.slot<int(ScreenViewLoop *)>(2)(this); }
+    void v_Flip() { return vptr.slot<void(ScreenViewLoop *)>(3)(this); }
+    void v_Leave() { return vptr.slot<void(ScreenViewLoop *)>(4)(this); }
 };
 
 class psxViewLoop : public ScreenViewLoop {
 public:
-    psxViewLoop *prevLoop;      // loop below this one (g_CurrentViewLoop)
+    game_pointer<psxViewLoop> prevLoop;      // loop below this one (g_CurrentViewLoop)
     VSyncCallback vsync;        // calls UpdateDisplay
     int vsyncInterval;          // vblanks per frame
     unsigned char videoModeDelay;   // frames until ApplyVideoMode
@@ -95,22 +105,32 @@ public:
     int frameEndTime;
 
     psxViewLoop();
-    virtual ~psxViewLoop();
-    virtual void Enter();
-    virtual int Step();
-    virtual void Flip();
-    virtual void Leave();
-    virtual void BeginFrame();
-    virtual int Update();
-    virtual void BeginDraw();
-    virtual void Draw();
-    virtual void EndDraw();
-    virtual void DrawFrame();
-    virtual void SwapDisplay();
-    virtual void ApplyVideoMode();
-    virtual void UpdateDisplay();
+    ~psxViewLoop();
+    void Enter();
+    int Step();
+    void Flip();
+    void Leave();
+    void BeginFrame();
+    int Update();
+    void BeginDraw();
+    void Draw();
+    void EndDraw();
+    void DrawFrame();
+    void SwapDisplay();
+    void ApplyVideoMode();
+    void UpdateDisplay();
     void SetVideoMode(unsigned int mode);
     static void VSyncHandler();
+    // Calls through the vtable word (rt/vtable.h).
+    void v_BeginFrame() { return vptr.slot<void(ScreenViewLoop *)>(5)(this); }
+    int v_Update() { return vptr.slot<int(ScreenViewLoop *)>(6)(this); }
+    void v_BeginDraw() { return vptr.slot<void(ScreenViewLoop *)>(7)(this); }
+    void v_Draw() { return vptr.slot<void(ScreenViewLoop *)>(8)(this); }
+    void v_EndDraw() { return vptr.slot<void(ScreenViewLoop *)>(9)(this); }
+    void v_DrawFrame() { return vptr.slot<void(ScreenViewLoop *)>(10)(this); }
+    void v_SwapDisplay() { return vptr.slot<void(ScreenViewLoop *)>(11)(this); }
+    void v_ApplyVideoMode() { return vptr.slot<void(ScreenViewLoop *)>(12)(this); }
+    void v_UpdateDisplay() { return vptr.slot<void(ScreenViewLoop *)>(13)(this); }
 };
 
 // A psxViewLoop drawing into two buffers one above the other in VRAM
@@ -121,17 +141,17 @@ public:
     short bufferY[2];           // VRAM y of each buffer: 0 and 240, or 0 and 0 in 480-line modes
 
     psxViewLoopDoubleBuffer();
-    virtual ~psxViewLoopDoubleBuffer();
-    virtual void Leave();
-    virtual void BeginDraw();
-    virtual void SwapDisplay();
+    ~psxViewLoopDoubleBuffer();
+    void Leave();
+    void BeginDraw();
+    void SwapDisplay();
     void SetVideoMode(unsigned int mode);
 };
 
 extern "C" {
-extern GfxIrqState g_GfxIrq;
-extern unsigned char g_LastBufferIndex;
-extern psxViewLoop *g_CurrentViewLoop;
+extern GfxIrqState (&g_GfxIrq);
+extern unsigned char (&g_LastBufferIndex);
+extern game_pointer<psxViewLoop> (&g_CurrentViewLoop);
 }
 
 #endif

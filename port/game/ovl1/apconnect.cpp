@@ -4,10 +4,11 @@
 #include "common.h"
 #include "gamestate.h"
 #include "ap.h"
+#include "gptr.h"
 
 extern "C" {
-extern Font g_OVL1_FontLarge;
-extern BaseMenu *g_CurrentMenu;
+extern Font (&g_OVL1_FontLarge);
+extern game_pointer<BaseMenu> (&g_CurrentMenu);
 
 enum { ROW_SERVER, ROW_SLOT, ROW_PASSWORD, ROW_CONNECT, ROW_OFFLINE, ROW_COUNT };
 
@@ -131,5 +132,19 @@ static void ApConnect_Draw(DrawLayer *layer)
     }
 }
 
-BaseMenuPage g_Page_ApConnect = {ApConnect_Enter, ApConnect_Update, ApConnect_Draw, 0x6e3c10, (char *)"ARCHIPELAGO"};
+// The page is in guest memory, where the menu's guest pointers can reach it.
+BaseMenuPage *ApConnect_Page(void)
+{
+    static BaseMenuPage *page;
+
+    if (!page) {
+        page = static_cast<BaseMenuPage *>(rt::guestAlloc(sizeof(BaseMenuPage)));
+        page->enter = ApConnect_Enter;
+        page->update = ApConnect_Update;
+        page->draw = ApConnect_Draw;
+        page->titleColor = 0x6e3c10;
+        page->title = rt::guestString("ARCHIPELAGO");
+    }
+    return page;
+}
 }

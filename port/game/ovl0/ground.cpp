@@ -1,6 +1,7 @@
 // OVL0 800279e8-80028cc0 (ground): Ground and course sections.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gte.h"
 
@@ -112,9 +113,9 @@ unsigned int *Ground_FindTriangle(short *grid, void *verts, int x, int z)
     unsigned int cellZ = (z - grid[1]) >> grid[3];
     int cell;
     int count;
-    unsigned int **list;
-    unsigned int **end;
-    unsigned int **next;
+    game_pointer<unsigned int> *list;
+    game_pointer<unsigned int> *end;
+    game_pointer<unsigned int> *next;
     unsigned int *found;
     unsigned int *tri;
     unsigned int *following;
@@ -131,7 +132,7 @@ unsigned int *Ground_FindTriangle(short *grid, void *verts, int x, int z)
     }
     cell = cellZ * 4 + cellX;
     count = ((unsigned short *)grid)[cell + 4];
-    list = (unsigned int **)((int *)grid)[cell + 10];
+    list = (game_pointer<unsigned int> *)rt::from_guest(((int *)grid)[cell + 10]);
     if (count == 0) {
         return 0;
     }
@@ -416,8 +417,8 @@ void CourseSection_CollideWalls(CourseSection *section, WallRay *rays)
 // The section nearest pos, by centre, then refined by its planes.
 int CourseSect_FindNearest(CourseSectionTable *table, int *pos)
 {
-    CourseSection **sections = table->sections;
-    CourseSection **end = sections + table->count;
+    game_pointer<CourseSection> *sections = table->sections;
+    game_pointer<CourseSection> *end = sections + table->count;
     unsigned int best = -1;
     int found = -1;
     int i = 0;
@@ -625,7 +626,7 @@ int World_GetGroundHeight(void *world, int x, int z, int y, int *section)
 }
 
 // Clips four corners' moves to the walls of a section and the ones around it, until
-// they're a long way off.
+// they're a int way off.
 void World_CollideWalls(void *world, int sect, int *corners)
 {
     WallRays local = *(WallRays *)corners;

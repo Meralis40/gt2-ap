@@ -1,5 +1,6 @@
 // OVL1 8001e808-8001f508 (buycar): The data transfer's car purchase page: buying the
 // cars of a GT1 save with the GT2 credits.
+#include "gptr.h"
 #include "common.h"
 #include "ap.h"
 #include "gamestate.h"
@@ -12,19 +13,19 @@
 #define PAGE_DELAY(page) (((int *)((page) + 1))[1])
 
 extern "C" {
-extern KanjiFont *g_OVL1_KanjiFont;
-extern char s_Available[];
-extern char s_Cr[];
-extern char s_NotEnoughMoney[];
-extern char s_GarageIsFull[];
-extern BaseMenu *g_CurrentMenu;
-extern WipeBar g_BuyCar_CreditsBar;
-extern WipeBar g_BuyCar_CarsBar;
-extern MenuList g_BuyCar_List;
-extern CardDialog g_BuyCar_Dialog;
-extern unsigned char g_BuyCar_DialogDesc[];
-extern Font g_OVL1_FontMedium;
-extern SpriteDesc g_BuyCar_Sprite;
+extern game_pointer<KanjiFont> (&g_OVL1_KanjiFont);
+extern char (&s_Available)[];
+extern char (&s_Cr)[];
+extern char (&s_NotEnoughMoney)[];
+extern char (&s_GarageIsFull)[];
+extern game_pointer<BaseMenu> (&g_CurrentMenu);
+extern WipeBar (&g_BuyCar_CreditsBar);
+extern WipeBar (&g_BuyCar_CarsBar);
+extern MenuList (&g_BuyCar_List);
+extern CardDialog (&g_BuyCar_Dialog);
+extern unsigned char (&g_BuyCar_DialogDesc)[];
+extern Font (&g_OVL1_FontMedium);
+extern SpriteDesc (&g_BuyCar_Sprite);
 
 // The value with a comma every 3 digits (up to 8 digits), like the resident
 // Credits_FormatCommas.
@@ -352,7 +353,7 @@ int DataTransferBuyCar_Update(int arg)
     int sfx;
 
     if (arg == 0) {
-        pad = (PadState *)next;
+        pad = (PadState *)rt::from_guest(next);
     }
     credits = &g_BuyCar_CreditsBar;
     WipeBar_Update(credits);

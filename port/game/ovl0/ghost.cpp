@@ -1,6 +1,7 @@
 // OVL0 8003ef18-8003fe8c (ghost): Ghost recording and playback.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
@@ -71,9 +72,9 @@ struct GhostLap {
 #define CAR_CLOCK(car) ((car)->raceTime)
 
 extern "C" {
-extern RaceMem g_Race_IsDemo;
-extern unsigned int g_RaceClock;
-extern unsigned char g_RaceCourseId;
+extern RaceMem (&g_Race_IsDemo);
+extern unsigned int (&g_RaceClock);
+extern unsigned char (&g_RaceCourseId);
 void *TimeTrial_GetShownLap(void);
 void TimeTrial_StepGhost(void);
 void CarPhys_RestoreState(CarPhys *car, void *state);
@@ -277,7 +278,7 @@ void GhostRec_StartFree(CarPhys *car)
     *(unsigned short *)(puVar1 + 2) = 0;
     *puVar2 = 0;
     *(unsigned char *)(puVar2 + 1) = 0;
-    *(unsigned char *)((int)puVar2 + 3) = 0;
+    *(unsigned char *)rt::from_guest(((int)rt::to_guest(puVar2) + 3)) = 0;
 }
 
 // Starts the shown lap's ghost, or holds it for the next lap if it is longer.
@@ -421,14 +422,14 @@ void GhostRecState_Clear(void *state)
 {
     memset(state, 0, 0x342);
     *(unsigned char *)state = 0;
-    *(unsigned char *)((int)state + 1) = 0;
+    *(unsigned char *)rt::from_guest(((int)rt::to_guest(state) + 1)) = 0;
 }
 
 // Clears a ghost record header (0xe0 bytes) and sets its time to 359999999.
 void GhostRecord_Clear(void *record)
 {
     memset(record, 0, 0xe0);
-    *(unsigned int *)((int)record + 4) = 359999999;
+    *(unsigned int *)rt::from_guest(((int)rt::to_guest(record) + 4)) = 359999999;
 }
 
 // Clears the ghost player (two 0x5c-byte frames, frame index, pending restart, weight
@@ -436,9 +437,9 @@ void GhostRecord_Clear(void *record)
 void GhostPlayer_Clear(void *player)
 {
     memset(player, 0, 0xb8);
-    *(unsigned short *)((int)player + 0xb8) = 0;
-    *(unsigned short *)((int)player + 0xbe) = 0x800;
-    *(unsigned short *)((int)player + 0xba) = 0;
-    *(unsigned int *)((int)player + 0xc0) = 0;
+    *(unsigned short *)rt::from_guest(((int)rt::to_guest(player) + 0xb8)) = 0;
+    *(unsigned short *)rt::from_guest(((int)rt::to_guest(player) + 0xbe)) = 0x800;
+    *(unsigned short *)rt::from_guest(((int)rt::to_guest(player) + 0xba)) = 0;
+    *(unsigned int *)rt::from_guest(((int)rt::to_guest(player) + 0xc0)) = 0;
 }
 }

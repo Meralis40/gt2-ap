@@ -143,11 +143,15 @@ void watchdog(HANDLE game)
         CONTEXT context{};
         context.ContextFlags = CONTEXT_CONTROL;
         GetThreadContext(game, &context);
-        std::fprintf(stderr, "stuck: no pump for 2 s, at %08lx\n", context.Eip);
-        auto frame = static_cast<std::uintptr_t>(context.Ebp);
+#if defined(_WIN64)
+        std::uintptr_t ip = context.Rip, frame = context.Rbp;
+#else
+        std::uintptr_t ip = context.Eip, frame = context.Ebp;
+#endif
+        std::fprintf(stderr, "stuck: no pump for 2 s, at %p\n", reinterpret_cast<void *>(ip));
         for (int i = 0; i < 16 && frame > 0x10000; i++) {
             auto *words = reinterpret_cast<std::uintptr_t *>(frame);
-            std::fprintf(stderr, "  %08lx\n", static_cast<unsigned long>(words[1]));
+            std::fprintf(stderr, "  %p\n", reinterpret_cast<void *>(words[1]));
             if (words[0] <= frame) {
                 break;
             }

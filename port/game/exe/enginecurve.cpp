@@ -4,8 +4,8 @@
 
 extern "C" {
 
-extern char D_8008FB3C[];
-extern unsigned char D_800923E2[][6]; // gear spacing per gear count: 3 pairs of 0xc8000 / value at 150 and 400 km/h
+extern char (&D_8008FB3C)[];
+extern unsigned char (&D_800923E2)[][6]; // gear spacing per gear count: 3 pairs of 0xc8000 / value at 150 and 400 km/h
 
 // Resamples an engine curve to 80 points every 250 rpm (-1 past its end).
 // The game keeps the three arrays' addresses on the stack (a 0x350-byte frame) and

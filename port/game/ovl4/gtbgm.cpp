@@ -2,11 +2,11 @@
 #include "common.h"
 
 extern "C" {
-extern unsigned int g_SpuAllocPtr;
-extern MenuBgmBank g_MenuBgmBank;
-extern unsigned char g_MenuBgm_SpuWork;
-extern int g_MenuBgm_Loaded;
-extern VolBootId g_MenuBgm_Files;
+extern unsigned int (&g_SpuAllocPtr);
+extern MenuBgmBank (&g_MenuBgmBank);
+extern unsigned char (&g_MenuBgm_SpuWork);
+extern int (&g_MenuBgm_Loaded);
+extern VolBootId (&g_MenuBgm_Files);
 
 // Loads sound bank volume file 0xec into SPU RAM for g_MenuBgmBank (work buffer
 // 0x7800 bytes), then restores the SPU allocation pointer.

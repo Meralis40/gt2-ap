@@ -1,6 +1,7 @@
 // OVL1 80013230-80016254 (replaycopy): Replay copy between memory cards.
 // The resident card menu (exe/cardmenu.cpp) with its own states. The functions that
 // don't match yet are the original assembly, with their C++ under NON_MATCHING.
+#include "gptr.h"
 #include "common.h"
 #include "prim.h"
 #include "mccard.h"
@@ -18,17 +19,17 @@ struct ReplayCopyRow {
 struct ReplayCopyWork {
     short state;
     short pad02;
-    ReplayCopyStateFn *handler;
-    KanjiFont *kanjiFont;
-    short *slotStatus;
+    game_function<ReplayCopyStateFn> handler;
+    game_pointer<KanjiFont> kanjiFont;
+    game_pointer<short> slotStatus;
     short listDelay;
     short pad12;
     PadButton pressed;
     PadButton held;
     PadButton repeat;
-    char *errorMsg;
-    char *line1;
-    char *line2;
+    game_pointer<char> errorMsg;
+    game_pointer<char> line1;
+    game_pointer<char> line2;
     short textPri;
     short timer;
     WipeBar slotBar;
@@ -71,61 +72,61 @@ struct ReplayCopyWork {
 #define blockResult dlgComplete.pad96
 
 extern "C" {
-extern GameState g_GameState;
-extern GameSaveFile g_SaveFileBuf;
-extern ReplayCopyWork *g_ReplayCopy;
-extern Font g_ReplayCopy_Fonts; // medium
-extern Font g_ReplayCopy_FontLarge;
-extern Font g_ReplayCopy_FontSmall;
-extern NumberPicker g_ReplayCopy_BlockSpinner;
-extern MenuList g_ReplayCopy_List;
-extern ReplayCopyStateFn *g_ReplayCopy_States[];
-extern ReplayEntryStyle D_8004B7C0;
-extern int g_McOp_Remaining;
-extern char D_800210E4[]; // an empty string
-extern WipeBar D_8004B614;
-extern GrowBar D_8004B630;
-extern CardDialogDesc D_8004B644;
-extern CardDialogDesc D_8004B674;
-extern CardDialogDesc D_8004B6A4;
-extern CardDialogDesc D_8004B6D4;
-extern CardDialogDesc D_8004B758;
-extern CardProgressBar D_8004B788;
-extern char sB_DataIsTooLarge[];
-extern char sB_DoYouWantToFormat[];
-extern char sB_Max32Files[];
-extern char sB_MemoryCard1[];
-extern char sB_PleaseDoNotRemoveMemoryCard[];
-extern char sB_TotalNReplay[];
-extern char s_CannotDetectMemoryCard1[];
-extern char s_CannotDetectMemoryCard2[];
-extern char s_CannotFindReplayDataOnMemoryCard1[];
-extern char s_CannotFindReplayFileToCopy[];
-extern char s_CheckingSlot1[];
-extern char s_CheckingSlot2[];
-extern char s_Copy[];
-extern char s_CopyComplete[];
-extern char s_CopyNReplay[];
-extern char s_CopyToMemoryCard2[];
-extern char s_Copy_2[];
-extern char s_CreatingReplayFileOnMemoryCard2[];
-extern char s_FailedToCreateReplayFileOnMemoryCard2[];
-extern char s_FailedToFormatMemoryCard2[];
-extern char s_FailedToLoadMemoryCard1[];
-extern char s_FailedToLoadMemoryCard2[];
-extern char s_FailedToSaveOnMemoryCard2[];
-extern char s_FormattingMemoryCard2[];
-extern char s_LoadingFromMemoryCard1[];
-extern char s_MemoryCard1IsCorrupt[];
-extern char s_MemoryCard2IsCorrupt[];
-extern char s_MemoryCard2IsNotFormatted[];
-extern char s_MemoryCard2IsNotFormatted_2[];
-extern char s_NotEnoughEmptyBlocksOnMemoryCard2[];
-extern char s_ReplayFileOnMemoryCard1IsCorrupt[];
-extern char s_ReplayFileOnMemoryCard2IsCorrupt[];
-extern char s_SavingOnMemoryCard2[];
-extern char s_SelectNoOfBlocksOnMemoryCard2[];
-extern char s_WhileCopyingData[];
+extern GameState (&g_GameState);
+extern GameSaveFile (&g_SaveFileBuf);
+extern game_pointer<ReplayCopyWork> (&g_ReplayCopy);
+extern Font (&g_ReplayCopy_Fonts); // medium
+extern Font (&g_ReplayCopy_FontLarge);
+extern Font (&g_ReplayCopy_FontSmall);
+extern NumberPicker (&g_ReplayCopy_BlockSpinner);
+extern MenuList (&g_ReplayCopy_List);
+extern game_function<ReplayCopyStateFn> (&g_ReplayCopy_States)[];
+extern ReplayEntryStyle (&D_8004B7C0);
+extern int (&g_McOp_Remaining);
+extern char (&D_800210E4)[]; // an empty string
+extern WipeBar (&D_8004B614);
+extern GrowBar (&D_8004B630);
+extern CardDialogDesc (&D_8004B644);
+extern CardDialogDesc (&D_8004B674);
+extern CardDialogDesc (&D_8004B6A4);
+extern CardDialogDesc (&D_8004B6D4);
+extern CardDialogDesc (&D_8004B758);
+extern CardProgressBar (&D_8004B788);
+extern char (&sB_DataIsTooLarge)[];
+extern char (&sB_DoYouWantToFormat)[];
+extern char (&sB_Max32Files)[];
+extern char (&sB_MemoryCard1)[];
+extern char (&sB_PleaseDoNotRemoveMemoryCard)[];
+extern char (&sB_TotalNReplay)[];
+extern char (&s_CannotDetectMemoryCard1)[];
+extern char (&s_CannotDetectMemoryCard2)[];
+extern char (&s_CannotFindReplayDataOnMemoryCard1)[];
+extern char (&s_CannotFindReplayFileToCopy)[];
+extern char (&s_CheckingSlot1)[];
+extern char (&s_CheckingSlot2)[];
+extern char (&s_Copy)[];
+extern char (&s_CopyComplete)[];
+extern char (&s_CopyNReplay)[];
+extern char (&s_CopyToMemoryCard2)[];
+extern char (&s_Copy_2)[];
+extern char (&s_CreatingReplayFileOnMemoryCard2)[];
+extern char (&s_FailedToCreateReplayFileOnMemoryCard2)[];
+extern char (&s_FailedToFormatMemoryCard2)[];
+extern char (&s_FailedToLoadMemoryCard1)[];
+extern char (&s_FailedToLoadMemoryCard2)[];
+extern char (&s_FailedToSaveOnMemoryCard2)[];
+extern char (&s_FormattingMemoryCard2)[];
+extern char (&s_LoadingFromMemoryCard1)[];
+extern char (&s_MemoryCard1IsCorrupt)[];
+extern char (&s_MemoryCard2IsCorrupt)[];
+extern char (&s_MemoryCard2IsNotFormatted)[];
+extern char (&s_MemoryCard2IsNotFormatted_2)[];
+extern char (&s_NotEnoughEmptyBlocksOnMemoryCard2)[];
+extern char (&s_ReplayFileOnMemoryCard1IsCorrupt)[];
+extern char (&s_ReplayFileOnMemoryCard2IsCorrupt)[];
+extern char (&s_SavingOnMemoryCard2)[];
+extern char (&s_SelectNoOfBlocksOnMemoryCard2)[];
+extern char (&s_WhileCopyingData)[];
 int sprintf(char *buf, const char *format, ...);
 void ReplayCopy_DrawKanji(uint *ot, char *sjis, int x, int y, uint rgb);
 int ReplayCopy_ListCallback(MenuListEventId event, MenuListEvent *ev, int row);
@@ -212,8 +213,8 @@ void ReplayCopy_CacheMessages(void)
     pvVar1 = g_ReplayCopy;
     if (g_GameState.language == '\0') {
         ReplayCopy_CacheKanjiCommon();
-        ReplayCopy_CacheKanji(*(char **)((int)pvVar1 + 0x24));
-        ReplayCopy_CacheKanji(*(char **)((int)pvVar1 + 0x28));
+        ReplayCopy_CacheKanji(*(game_pointer<char> *)rt::from_guest(((int)rt::to_guest(pvVar1) + 0x24)));
+        ReplayCopy_CacheKanji(*(game_pointer<char> *)rt::from_guest(((int)rt::to_guest(pvVar1) + 0x28)));
     }
 }
 
@@ -225,7 +226,7 @@ void ReplayCopy_CacheErrorText(void)
     pvVar1 = g_ReplayCopy;
     if (g_GameState.language == '\0') {
         ReplayCopy_CacheKanjiCommon();
-        ReplayCopy_CacheKanji(*(char **)((int)pvVar1 + 0x20));
+        ReplayCopy_CacheKanji(*(game_pointer<char> *)rt::from_guest(((int)rt::to_guest(pvVar1) + 0x20)));
     }
 }
 
@@ -282,7 +283,7 @@ int ReplayCopy_GetFreeAfterCopy(void)
 // Capacity of the card 2 replay file.
 int ReplayCopy_GetCapacity(void)
 {
-    return (int)*(short *)((int)g_ReplayCopy + 0x68e);
+    return (int)*(short *)rt::from_guest(((int)g_ReplayCopy + 0x68e));
 }
 
 // Whether row i can be selected; why is 1 when the data is too large, 2 when card 2 would
@@ -329,7 +330,7 @@ void ReplayCopy_ClearSelection(void)
     iVar2 = 0x20;
     iVar1 = (int)g_ReplayCopy + 0x20;
     do {
-        *(unsigned char *)(iVar1 + 0x2fa8) = 0;
+        *(unsigned char *)rt::from_guest((iVar1 + 0x2fa8)) = 0;
         iVar2 = iVar2 + -1;
         iVar1 = iVar1 + -1;
     } while (-1 < iVar2);
@@ -1676,7 +1677,7 @@ void ReplayCopy_InitWidgets(void)
 // Sets up the copy in config's work area; returns the end of the area.
 void *ReplayCopy_Setup(ReplayCopyConfig *config)
 {
-    ReplayCopyWork *m = (ReplayCopyWork *)config->heap;
+    ReplayCopyWork *m = (ReplayCopyWork *)rt::from_guest(config->heap);
 
     g_ReplayCopy_FontSmall = *config->fontSmall;
     g_ReplayCopy_Fonts = *config->fontMedium;

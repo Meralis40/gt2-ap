@@ -16,13 +16,13 @@ struct MapDot {
 };
 
 extern "C" {
-extern RaceText sR_Lap;             // the race text of the current language (its first string is "Lap")
-extern RaceWorld g_RaceWorld;
-extern RaceSetup g_RaceSetup;
-extern RaceMem g_Race_IsDemo;
-extern unsigned char g_HudTexFile[];
-void *memcpy(void *dst, const void *src, unsigned int n);
-void *memset(void *p, int c, unsigned int n);
+extern RaceText (&sR_Lap);             // the race text of the current language (its first string is "Lap")
+extern RaceWorld (&g_RaceWorld);
+extern RaceSetup (&g_RaceSetup);
+extern RaceMem (&g_Race_IsDemo);
+extern unsigned char (&g_HudTexFile)[];
+void *memcpy(void *dst, const void *src, size_t n);
+void *memset(void *p, int c, size_t n);
 
 // Reads TEXT_DATA_RACE_TXD and copies the block of g_GameState.language to the race
 // text. Called first by Race_Entry.

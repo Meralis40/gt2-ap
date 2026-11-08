@@ -3,7 +3,7 @@
 #include "common.h"
 
 extern "C" {
-extern NeGconCalib g_NeGconCalib[2];
+extern NeGconCalib (&g_NeGconCalib)[2];
 
 // Copies both ports' neGcon calibration from the options to g_NeGconCalib.
 void Options_ApplyNeGconCalib(GameState *state)

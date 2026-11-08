@@ -1,10 +1,11 @@
 // Resident code 8007306c-80073ce4 (textentry): the on-screen keyboard: a grid of
 // characters drawn by a MenuList, with the entered text and its cursor above it.
+#include "gptr.h"
 #include "common.h"
 
 // The part of a TextEntry its template sets.
 struct TextEntryDesc {
-    Font *font;
+    game_pointer<Font> font;
     char cellWidth;
     char cellHeight;
     char cellGap;
@@ -44,13 +45,13 @@ struct TextCtxBlend {
 
 extern "C" {
 
-extern char g_TextEntry_Charset[]; // 16 per row, 12 rows
-extern unsigned char D_8009232C[4];
-extern unsigned char D_80092330[4];
-extern unsigned char D_80092334[4];
-extern WipeBar D_80092338;
-extern TextEntryGrid D_80092354;
-extern signed char sB_Cancel[]; // the text for OK is 3 bytes before it
+extern char (&g_TextEntry_Charset)[]; // 16 per row, 12 rows
+extern unsigned char (&D_8009232C)[4];
+extern unsigned char (&D_80092330)[4];
+extern unsigned char (&D_80092334)[4];
+extern WipeBar (&D_80092338);
+extern TextEntryGrid (&D_80092354);
+extern signed char (&sB_Cancel)[]; // the text for OK is 3 bytes before it
 
 
 // Callback of the grid: draws a row of 16 characters (row 12: Cancel and OK) with the

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 """Packs a built client for a release: the executable, its licenses and a short README.
 
-  package_client.py --binary <gt2ap> --build-dir <cmake build dir> --platform windows-x86
+  package_client.py --binary <gt2ap> --build-dir <cmake build dir> --platform windows-x64
                     --version <version> --out-dir <dir>
 
 Prints the archive's path. Windows gets a .zip, the rest a .tar.gz, which keeps the mode bits.
@@ -21,12 +21,8 @@ THIRD_PARTY = {
 }
 
 LINUX_NOTE = """
-This is a 32-bit program. It needs the 32-bit X11 and PulseAudio libraries, which on Ubuntu are:
-
-  sudo dpkg --add-architecture i386
-  sudo apt update
-  sudo apt install libx11-6:i386 libxext6:i386 libxcursor1:i386 libxi6:i386 libxfixes3:i386 \\
-      libxrandr2:i386 libxss1:i386 libxrender1:i386 libxkbcommon0:i386 libpulse0:i386
+It needs X11 (XWayland on a Wayland desktop) and PulseAudio or ALSA, which desktop
+distributions install already.
 """
 
 

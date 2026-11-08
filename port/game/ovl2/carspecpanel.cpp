@@ -5,12 +5,12 @@
 
 extern "C" {
 
-extern unsigned char D_8004F634[]; // name text template
-extern unsigned char D_8004F650[]; // icon template
-extern unsigned char D_8004F65C[]; // power graph template
-extern char D_80027108[];
-extern unsigned char D_800454E0[]; // icon sprite
-extern unsigned char D_800F8634[]; // stat bar templates (at 0, 0x13 and 0x1e)
+extern unsigned char (&D_8004F634)[]; // name text template
+extern unsigned char (&D_8004F650)[]; // icon template
+extern unsigned char (&D_8004F65C)[]; // power graph template
+extern char (&D_80027108)[];
+extern unsigned char (&D_800454E0)[]; // icon sprite
+extern unsigned char (&D_800F8634)[]; // stat bar templates (at 0, 0x13 and 0x1e)
 
 static inline void TextItem_Reset(ArcTextItem *item)
 {

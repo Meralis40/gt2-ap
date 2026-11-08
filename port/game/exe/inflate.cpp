@@ -1,14 +1,15 @@
 // Resident code 80083b0c-80085858 (inflate). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern ushort g_InflateLenBase[];
-extern ushort g_InflateLenExtra[];
-extern ushort g_InflateDistBase[];
-extern ushort g_InflateDistExtra[];
-extern byte g_InflateCodeLenOrder[];
-extern int g_GzipChunkSize;
+extern ushort (&g_InflateLenBase)[];
+extern ushort (&g_InflateLenExtra)[];
+extern ushort (&g_InflateDistBase)[];
+extern ushort (&g_InflateDistExtra)[];
+extern byte (&g_InflateCodeLenOrder)[];
+extern int (&g_GzipChunkSize);
 
 // The game inflates as a coroutine, a chunk per frame, on its own stack. A PC does the whole
 // stream at once, so these only keep the game's interface.
@@ -27,7 +28,7 @@ int GzipStream_Begin(void *src, void *dst, int chunkSize, GzipStream *stream)
     stream->state.refill = 0;
     stream->state.inEnd = (ushort *)((byte *)src - 1);
     stream->state.flush = GzipStream_NoYield;
-    stream->state.outEnd = (byte *)-1;
+    stream->state.outEnd = (byte *)rt::from_guest(-1);
     stream->state.outBase = (byte *)dst;
     stream->state.out = (byte *)dst;
     stream->state.heapBase = stream->heap;
@@ -116,7 +117,7 @@ unsigned char *Lz_Decompress(unsigned char *dst, unsigned char *src, int size)
 // in its argument slot and has fp for &c[k]; this keeps state in fp. 20 minutes of permuter
 // didn't get close. The do-while entered at its test is the game's loop shape; a plain while
 // loop tests at the top.
-int Inflate_BuildHuft(InflateState *state, uint *b, uint n, uint s, ushort *d, ushort *e, Huft **t,
+int Inflate_BuildHuft(InflateState *state, uint *b, uint n, uint s, ushort *d, ushort *e, game_pointer<Huft> *t,
                       uint *m, uint lookupBits)
 {
     uint a;
@@ -460,7 +461,7 @@ void Inflate_Run(InflateState *state)
     inEnd = state->inEnd;
     bits = 0;
     count = -16;
-    if ((uint)in & 1) {
+    if ((uint)rt::to_guest(in) & 1) {
         bits = *(byte *)in;
         count = -8;
         in = (ushort *)((byte *)in + 1);

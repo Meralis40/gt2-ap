@@ -15,7 +15,7 @@
 #include <cstring>
 #include <vector>
 
-extern "C" unsigned int g_RandomSeed;
+extern "C" unsigned int (&g_RandomSeed);
 
 namespace {
 

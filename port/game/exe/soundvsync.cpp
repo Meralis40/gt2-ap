@@ -2,8 +2,8 @@
 #include "common.h"
 
 extern "C" {
-extern GfxIrqState g_GfxIrq;
-extern VSyncCallback g_SoundVSync;
+extern GfxIrqState (&g_GfxIrq);
+extern VSyncCallback (&g_SoundVSync);
 
 void Sound_VSyncTick(void)
 {

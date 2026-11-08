@@ -2,11 +2,13 @@
 #ifndef MCCARD_H
 #define MCCARD_H
 
+#include "gptr.h"
+
 #include "resident.h"
 
 // A memory card port of the card driver (g_Card.ports, 0x264 bytes).
 struct McPort {
-    int (*op)(int event, int *sector, void **buf); // the running operation, 0 when idle
+    game_function<int(int, int *, game_pointer<void> *)> op; // the running operation, 0 when idle
     unsigned char unk004[8];
     McDirEntry dir[15];
     int badSectors[20]; // the bad sectors remapped to frames 36-55, -1 for none
@@ -29,13 +31,13 @@ struct CardSystem {
 
 // The running operation's state (g_McOp_Port and the g_McOp_ variables after it).
 struct McOpState {
-    McPort *port;
+    game_pointer<McPort> port;
     signed char cmd;           // the transfer command the port runs (6 read, 7 write)
     signed char blocks[15];    // the file's block chain
-    unsigned short *sectorMap; // file sectors in order, or 0 for 0, 1, 2...
+    game_pointer<unsigned short> sectorMap; // file sectors in order, or 0 for 0, 1, 2...
     short index;
     unsigned short cardSector;
-    unsigned char *buffer;
+    game_pointer<unsigned char> buffer;
     unsigned int offset;
     int size;
     unsigned int remaining;
@@ -45,9 +47,9 @@ struct McOpState {
 };
 
 extern "C" {
-extern McOpState g_McOp_Port;
-extern CardSystem g_Card;
-extern unsigned char g_McFrame[];
+extern McOpState (&g_McOp_Port);
+extern CardSystem (&g_Card);
+extern unsigned char (&g_McFrame)[];
 }
 
 // The card driver state, through an accessor: with &g_Card written directly

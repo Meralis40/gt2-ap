@@ -4,7 +4,7 @@
 #include "common.h"
 
 extern "C" {
-extern unsigned int g_VolLba;
+extern unsigned int (&g_VolLba);
 unsigned char FUN_OVL2__80017a14(void *cm, int a1, int a2);
 
 

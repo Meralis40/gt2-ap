@@ -5,16 +5,16 @@
 
 extern "C" {
 void QuickMenu_PushPage(QuickMenu *menu, QuickMenuPage *page);
-extern QuickMenu *g_QuickMenu;
-extern short g_Ending_Fade;
-extern QuickMenuPage g_Page_Ending;
-extern QuickMenuPage g_Page_Quit;
-extern Font g_OVL0_FontC;
-extern Font g_OVL0_FontD;
-extern unsigned char D_8005D5A4[];
-extern unsigned char D_8005D5A8[];
-extern unsigned char D_8005D5AC[];
-extern signed char sR_CONGRATULATIONS[];
+extern game_pointer<QuickMenu> (&g_QuickMenu);
+extern short (&g_Ending_Fade);
+extern QuickMenuPage (&g_Page_Ending);
+extern QuickMenuPage (&g_Page_Quit);
+extern Font (&g_OVL0_FontC);
+extern Font (&g_OVL0_FontD);
+extern unsigned char (&D_8005D5A4)[];
+extern unsigned char (&D_8005D5A8)[];
+extern unsigned char (&D_8005D5AC)[];
+extern signed char (&sR_CONGRATULATIONS)[];
 
 // Root page after winning the GT World League: 16-frame delay, music 0.
 void EndingRoot_Enter(int back)

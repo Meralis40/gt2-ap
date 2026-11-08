@@ -1,6 +1,7 @@
 // OVL1 8001aad4-8001d4b0 (analogsettings): Analog controller settings and calibration.
 // The functions that don't match yet are the original assembly, with their C++ under
 // NON_MATCHING.
+#include "gptr.h"
 #include "common.h"
 #include "pad.h"
 
@@ -9,61 +10,61 @@
 struct AnalogStep {
     short kind;
     short sub;
-    char *prompt;
+    game_pointer<char> prompt;
 };
 
 extern "C" {
-extern GameState g_GameState;
-extern char *g_AnalogSettings_Prompt;
-extern BaseMenu *g_CurrentMenu;
-extern KanjiFont *g_OVL1_KanjiFont;
-extern Font g_OVL1_FontLarge;
-extern Font g_OVL1_FontMedium;
-extern AnalogStep g_AnalogSettings_Steps[];
-extern int g_AnalogSettings_StepCount;
-extern int g_AnalogSettings_SteerAnalog;
-extern int g_AnalogSettings_AccelAnalog;
-extern int g_AnalogSettings_BrakeAnalog;
-extern short g_AnalogSettings_RawSteer;
-extern short g_AnalogSettings_RawAccel;
-extern short g_AnalogSettings_RawBrake;
-extern unsigned char D_8004C31C[];
-extern unsigned char D_8004C34C[];
-extern int g_AnalogSettings_LockRight;
-extern int g_AnalogSettings_LockLeft;
-extern char s_TurnWheelToFarLeftAndPressR[];
-extern char s_PressROrStartToSetPosition[];
-extern char s_Steering[];
-extern char s_Acceleration[];
-extern char s_Brake[];
-extern char s_Exit[];
+extern GameState (&g_GameState);
+extern game_pointer<char> (&g_AnalogSettings_Prompt);
+extern game_pointer<BaseMenu> (&g_CurrentMenu);
+extern game_pointer<KanjiFont> (&g_OVL1_KanjiFont);
+extern Font (&g_OVL1_FontLarge);
+extern Font (&g_OVL1_FontMedium);
+extern AnalogStep (&g_AnalogSettings_Steps)[];
+extern int (&g_AnalogSettings_StepCount);
+extern int (&g_AnalogSettings_SteerAnalog);
+extern int (&g_AnalogSettings_AccelAnalog);
+extern int (&g_AnalogSettings_BrakeAnalog);
+extern short (&g_AnalogSettings_RawSteer);
+extern short (&g_AnalogSettings_RawAccel);
+extern short (&g_AnalogSettings_RawBrake);
+extern unsigned char (&D_8004C31C)[];
+extern unsigned char (&D_8004C34C)[];
+extern int (&g_AnalogSettings_LockRight);
+extern int (&g_AnalogSettings_LockLeft);
+extern char (&s_TurnWheelToFarLeftAndPressR)[];
+extern char (&s_PressROrStartToSetPosition)[];
+extern char (&s_Steering)[];
+extern char (&s_Acceleration)[];
+extern char (&s_Brake)[];
+extern char (&s_Exit)[];
 void Options_KanjiDraw(uint *ot, char *sjis, int x, int y, int center, uint rgb);
 SpriteDesc *KeyConfig_GetNeGconIcon(int code);
 void SteerCalib_Save(NeGconCalib *calib, SteerCalib *c, int axis);
 void PedalCalib_Save(NeGconCalib *calib, PedalCalib *c, int axis);
-extern unsigned char D_8004C320[];
-extern unsigned char D_8004C324[];
-extern unsigned char D_8004C328[];
-extern unsigned char D_8004C32C[];
-extern unsigned char D_8004C330[];
-extern unsigned char D_8004C334[];
-extern unsigned char D_8004C338[];
-extern unsigned char D_8004C33C[];
-extern unsigned char D_8004C340[];
-extern unsigned char D_8004C344[];
-extern unsigned char D_8004C348[];
-extern WipeBar D_8004C350;
-extern WipeBar D_8004C36C;
-extern WipeBar D_8004C388;
-extern char D_80022D7C[]; // "%d"
-extern char s_NA[];
-extern char s_Center[];
-extern char s_Max[];
-extern char s_Exit_2[];
-extern char s_SetTheCenterOfSteering[];
-extern char s_SetTheLockPositionOfAcceleration[];
-extern char s_SetTheLockPositionOfBraking[];
-extern char s_TurnWheelToFarRightAndPressR[];
+extern unsigned char (&D_8004C320)[];
+extern unsigned char (&D_8004C324)[];
+extern unsigned char (&D_8004C328)[];
+extern unsigned char (&D_8004C32C)[];
+extern unsigned char (&D_8004C330)[];
+extern unsigned char (&D_8004C334)[];
+extern unsigned char (&D_8004C338)[];
+extern unsigned char (&D_8004C33C)[];
+extern unsigned char (&D_8004C340)[];
+extern unsigned char (&D_8004C344)[];
+extern unsigned char (&D_8004C348)[];
+extern WipeBar (&D_8004C350);
+extern WipeBar (&D_8004C36C);
+extern WipeBar (&D_8004C388);
+extern char (&D_80022D7C)[]; // "%d"
+extern char (&s_NA)[];
+extern char (&s_Center)[];
+extern char (&s_Max)[];
+extern char (&s_Exit_2)[];
+extern char (&s_SetTheCenterOfSteering)[];
+extern char (&s_SetTheLockPositionOfAcceleration)[];
+extern char (&s_SetTheLockPositionOfBraking)[];
+extern char (&s_TurnWheelToFarRightAndPressR)[];
 int sprintf(char *buf, const char *format, ...);
 void SteerCalib_SetLimits(SteerCalib *c, int upper, int lower);
 void SteerCalib_Load(NeGconCalib *calib, SteerCalib *c, int axis);

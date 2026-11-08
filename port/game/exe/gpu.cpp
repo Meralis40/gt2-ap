@@ -1,11 +1,12 @@
 // Resident code 8007d024-8007d32c (gpu): two primitive allocators, the interrupt handlers
 // and the GP1 display registers.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern void *g_PacketPtr;
-extern unsigned char D_80090520[]; // dot clock divider of each horizontal mode
-extern unsigned char D_80090528[]; // first dot of each horizontal mode
+extern game_pointer<void> (&g_PacketPtr);
+extern unsigned char (&D_80090520)[]; // dot clock divider of each horizontal mode
+extern unsigned char (&D_80090528)[]; // first dot of each horizontal mode
 
 // The GPU's two ports.
 struct GpuPorts {
@@ -23,7 +24,7 @@ RECT *Prim_AddTile(void *ot, unsigned int rgb)
     p = (unsigned int *)g_PacketPtr;
     ((unsigned char *)p)[3] = 3;
     Mips_Swl2(link, p);
-    Mips_Swl2((unsigned int)p << 8, ot);
+    Mips_Swl2((unsigned int)rt::to_guest(p) << 8, ot);
     p[1] = rgb ^ 0x60000000;
     g_PacketPtr = (char *)(p + 4);
     return (RECT *)(p + 2);
@@ -39,7 +40,7 @@ unsigned int *Prim_AddPolyF4(void *ot, unsigned int rgb)
     p = (unsigned int *)g_PacketPtr;
     ((unsigned char *)p)[3] = 5;
     Mips_Swl2(link, p);
-    Mips_Swl2((unsigned int)p << 8, ot);
+    Mips_Swl2((unsigned int)rt::to_guest(p) << 8, ot);
     p[1] = rgb ^ 0x28000000;
     g_PacketPtr = (char *)(p + 6);
     return p + 1;

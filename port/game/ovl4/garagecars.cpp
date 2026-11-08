@@ -1,4 +1,5 @@
 // OVL4 8001ec0c-8001f210 (garagecars): Garage cars and the machine test car list.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
@@ -11,8 +12,8 @@ extern "C" {
 void Car_Init(Car *car, unsigned int carId, unsigned int baseCarId, int color, CarSetup *setup, unsigned int value,
               int racingMod, int flag14, unsigned char *tires)
 {
-    CarParams *params = (CarParams *)0x1f800000;
-    EnginePerf *perf = (EnginePerf *)0x1f8001c0;
+    CarParams *params = (CarParams *)rt::from_guest(0x1f800000);
+    EnginePerf *perf = (EnginePerf *)rt::from_guest(0x1f8001c0);
     unsigned short kept;
     int weight;
     int i;

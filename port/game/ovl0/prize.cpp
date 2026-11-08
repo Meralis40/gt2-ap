@@ -1,6 +1,7 @@
 // OVL0 800593f4-8005a474 (prize): Prize pages and money.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 #include "ovl4.h"
@@ -70,28 +71,28 @@ static inline RaceSetup *RaceSetup_Get(void)
 }
 
 extern "C" {
-extern QuickMenu *g_QuickMenu;
-extern PrizeWork *g_OVL0_EndFontInfo;
-extern RaceMem g_Race_IsDemo;
-extern QuickMenuPage g_Page_Quit;
-extern QuickMenuPage g_Page_SaveGame;
-extern QuickMenuPage g_Page_ChampRacePrize;
-extern QuickMenuPage g_Page_ChampWonPrize;
-extern QuickMenuPage g_Page_EventPrize;
-extern uint D_801D1568;
-extern InfoBarDesc D_8005D3D8;
-extern TextStyle D_8005D3F8;
-extern InfoBarDesc D_8005D414;
-extern InfoBarDesc D_8005D434;
-extern WipeBar D_8005D454;
-extern CardDialogDesc D_8005D470;
-extern ButtonPromptDesc D_8005D4A0;
-extern char *g_PlaceTexts[];
-extern uint g_PlaceColors[];
-extern signed char D_8005AB50[];
-extern Font g_OVL0_FontC;
-extern Font g_OVL0_FontD;
-extern char sR_NewCarAcquired[];
+extern game_pointer<QuickMenu> (&g_QuickMenu);
+extern game_pointer<PrizeWork> (&g_OVL0_EndFontInfo);
+extern RaceMem (&g_Race_IsDemo);
+extern QuickMenuPage (&g_Page_Quit);
+extern QuickMenuPage (&g_Page_SaveGame);
+extern QuickMenuPage (&g_Page_ChampRacePrize);
+extern QuickMenuPage (&g_Page_ChampWonPrize);
+extern QuickMenuPage (&g_Page_EventPrize);
+extern uint (&D_801D1568);
+extern InfoBarDesc (&D_8005D3D8);
+extern TextStyle (&D_8005D3F8);
+extern InfoBarDesc (&D_8005D414);
+extern InfoBarDesc (&D_8005D434);
+extern WipeBar (&D_8005D454);
+extern CardDialogDesc (&D_8005D470);
+extern ButtonPromptDesc (&D_8005D4A0);
+extern game_pointer<char> (&g_PlaceTexts)[];
+extern uint (&g_PlaceColors)[];
+extern signed char (&D_8005AB50)[];
+extern Font (&g_OVL0_FontC);
+extern Font (&g_OVL0_FontD);
+extern char (&sR_NewCarAcquired)[];
 void QuickMenu_PushPage(QuickMenu *menu, QuickMenuPage *page);
 void QuickMenu_SetupCardUiThen(QuickMenuPage *page, void *arg);
 void InfoBar_Init(InfoBar *bar, InfoBarDesc *desc);
@@ -279,7 +280,7 @@ void Race_AwardChampionshipPrize(void)
     offset = 0xbb397;
     base = (char *)&g_Race_IsDemo;
     mask = -4;
-    buf = (uint *)(((int)base + offset) & mask);
+    buf = (uint *)rt::from_guest((((int)rt::to_guest(base) + offset) & mask));
     VolId_ReadFile((VolBootId)0x20, buf);
     image = buf + 2;
     if ((buf[1] >> 3) & 1) {
@@ -295,7 +296,7 @@ void Race_AwardChampionshipPrize(void)
     {
         int modelOffset = 0xb6397;
 
-        model = (char *)(((int)base + modelOffset) & mask);
+        model = (char *)rt::from_guest((((int)rt::to_guest(base) + modelOffset) & mask));
     }
     Vol_ReadFileAsync(asset->file, model);
     Vol_ReadFileAsync(asset->file + 1, buf);

@@ -1,16 +1,17 @@
 // OVL0 800299d8-80029d58 (racemusic): Race music.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
 extern "C" {
-extern RaceSetup g_RaceSetup;
-extern RaceWorld g_RaceWorld;
-extern RaceMem g_Race_IsDemo;
-extern CdAudio g_CdAudio;
-extern GameState g_GameState;
-extern char D_8002F20C[];
+extern RaceSetup (&g_RaceSetup);
+extern RaceWorld (&g_RaceWorld);
+extern RaceMem (&g_Race_IsDemo);
+extern CdAudio (&g_CdAudio);
+extern GameState (&g_GameState);
+extern char (&D_8002F20C)[];
 int strcmp(const char *a, const char *b);
 
 // g_RaceSetup, as the game reaches it: g_GameState plus 0xbf7c, added at run time.
@@ -122,14 +123,14 @@ void RaceMusic_Update(RaceViewLoop *view)
 
 void RaceMusic_Request(void *view, int track, int loop)
 {
-    *(char *)((int)view + 0x2ee) = (char)track;
-    *(char *)((int)view + 0x2ed) = (char)loop;
+    *(char *)rt::from_guest(((int)rt::to_guest(view) + 0x2ee)) = (char)track;
+    *(char *)rt::from_guest(((int)rt::to_guest(view) + 0x2ed)) = (char)loop;
 }
 
 // Requests the random race track (+0x2ef), looped. Called at the start signal.
 void RaceMusic_PlayRaceTrack(void *view)
 {
-    RaceMusic_Request(view, (unsigned int)*(unsigned char *)((int)view + 0x2ef), 1);
+    RaceMusic_Request(view, (unsigned int)*(unsigned char *)rt::from_guest(((int)rt::to_guest(view) + 0x2ef)), 1);
 }
 
 // At the finish, plays the track for what was raced.

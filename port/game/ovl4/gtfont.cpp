@@ -2,12 +2,12 @@
 #include "common.h"
 
 extern "C" {
-extern GTFontGlyph g_GTFont_Glyphs[0x10b];
-extern SpriteDesc g_GTFont_Sprites[0x10b];
-extern GTFontGlyph g_GTFontB_Glyphs[0x18];
-extern SpriteDesc g_GTNumFont_Glyphs[0x18];
-extern short g_GTFont_Index[0x100];
-extern short g_GTFontB_Index[0x100];
+extern GTFontGlyph (&g_GTFont_Glyphs)[0x10b];
+extern SpriteDesc (&g_GTFont_Sprites)[0x10b];
+extern GTFontGlyph (&g_GTFontB_Glyphs)[0x18];
+extern SpriteDesc (&g_GTNumFont_Glyphs)[0x18];
+extern short (&g_GTFont_Index)[0x100];
+extern short (&g_GTFontB_Index)[0x100];
 
 // Fills the glyph index of the codes below 0x100, for both fonts.
 void GTFont_BuildIndex(void)

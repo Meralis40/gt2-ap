@@ -2,10 +2,10 @@
 #include "common.h"
 
 extern "C" {
-extern CdAudio g_CdAudio;
-extern SpuFileLoad g_SpuFileLoad;
-extern unsigned short g_VolBootIds[248];
-extern unsigned int g_VolLba;
+extern CdAudio (&g_CdAudio);
+extern SpuFileLoad (&g_SpuFileLoad);
+extern unsigned short (&g_VolBootIds)[248];
+extern unsigned int (&g_VolLba);
 
 // One sector of a sound file: the header goes to RAM (relocated once it is all
 // there), the rest to SPU RAM in multiples of 16 bytes, with the remainder carried
@@ -137,7 +137,7 @@ int SpuFile_Load(int id, uchar *ram, int spu, int isEngine)
     l->phase = 0;
     l->isEngine = isEngine;
     CdAudio_SetupRead(0, start, size, 0);
-    g_CdAudio.onSector = (void *)SpuFile_OnSector;
+    g_CdAudio.onSector = (CdSectorFn *)SpuFile_OnSector;
     CdAudio_WaitRead(SpuFile_OnRetry);
     return l->headerSize;
 }

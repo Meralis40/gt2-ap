@@ -1,6 +1,7 @@
 // OVL0 800122c4-80012cd4 (timetrial): Time trial ghosts and lap logs.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
@@ -69,10 +70,10 @@ struct TTInputLog {
 #define CARPHYS_FIELD(car, type, off) (*(type *)((char *)(car) + (off)))
 
 extern "C" {
-extern RaceMem g_Race_IsDemo;
-extern int g_TT_BuffersInit;
-extern unsigned char g_TT_HasBestLap;
-extern unsigned char g_TT_GhostReady;
+extern RaceMem (&g_Race_IsDemo);
+extern int (&g_TT_BuffersInit);
+extern unsigned char (&g_TT_HasBestLap);
+extern unsigned char (&g_TT_GhostReady);
 void CarPhys_LinkTables(CarPhys *car);
 void InputLog_Close(InputLog *log, int unused);
 void GhostPlay_RestartLap(CarPhys *car, short lap, short section);
@@ -85,10 +86,10 @@ static inline RaceMem *Race_Get(void)
 {
     return &g_Race_IsDemo;
 }
-extern unsigned char g_TT_GhostState;
-extern unsigned char g_TT_BestLapLog;
-extern unsigned char g_TT_LapLog;
-extern RaceWorld g_RaceWorld;
+extern unsigned char (&g_TT_GhostState);
+extern unsigned char (&g_TT_BestLapLog);
+extern unsigned char (&g_TT_LapLog);
+extern RaceWorld (&g_RaceWorld);
 
 // &g_TT_GhostState (0xc4 bytes, cleared by GhostPlayer_Clear).
 void *TimeTrial_GetGhostState(void)
@@ -176,7 +177,7 @@ void TimeTrial_RestartGhost(void)
 
     InputLog_Reset(g_RaceWorld.vehicles[1].inputLog, 1, 0x1000);
     pvVar1 = TimeTrial_GetBestLapLog();
-    *(unsigned short *)((int)pvVar1 + 2) = 0;
+    *(unsigned short *)rt::from_guest(((int)rt::to_guest(pvVar1) + 2)) = 0;
 }
 
 void TimeTrial_StepGhost(void)

@@ -4,9 +4,9 @@
 #include "common.h"
 
 extern "C" {
-extern unsigned char D_8004F67C[];
-extern Font D_80129840;
-extern char D_800F8661[]; // shown for no value
+extern unsigned char (&D_8004F67C)[];
+extern Font (&D_80129840);
+extern char (&D_800F8661)[]; // shown for no value
 
 
 // Hidden, with the label text.

@@ -1,26 +1,27 @@
 // OVL1 80011178-800117b4 (mainmenu): The main menu's assets, its run loop and the demos.
+#include "gptr.h"
 #include "copies.h"
 #include "common.h"
 #include "gamestate.h"
 #include "ap.h"
 
 extern "C" {
-extern FlowMenuState g_Flow_IntroShown;
-extern void *g_EventDataBuf;
-extern unsigned char g_OVL1_FontInfo[];
-extern CarInfoA g_OVL1_storageCarInfoA;
-extern unsigned char g_OVL1_DataBuf[];
-extern unsigned char g_OVL1_ReplayBuf[];
-extern short g_MainMenu_TitleTims[];
-extern VolBootId g_MainMenu_TitlePictures[];
-extern BaseMenuPage g_Page_ApConnect;
-extern BaseMenuPage g_Page_AutoLoad;
-extern BaseMenuPage g_Page_MainMenu;
-extern BaseMenuPage g_Page_ReplayTheater;
-extern BaseMenuPage g_Page_Options;
-extern BaseMenuPage g_Page_SaveGame;
-extern BaseMenuPage g_Page_LoadGame;
-extern BaseMenuPage g_Page_DataTransfer;
+extern FlowMenuState (&g_Flow_IntroShown);
+extern game_pointer<void> (&g_EventDataBuf);
+extern unsigned char (&g_OVL1_FontInfo)[];
+extern CarInfoA (&g_OVL1_storageCarInfoA);
+extern unsigned char (&g_OVL1_DataBuf)[];
+extern unsigned char (&g_OVL1_ReplayBuf)[];
+extern short (&g_MainMenu_TitleTims)[];
+extern VolBootId (&g_MainMenu_TitlePictures)[];
+BaseMenuPage *ApConnect_Page(void);
+extern BaseMenuPage (&g_Page_AutoLoad);
+extern BaseMenuPage (&g_Page_MainMenu);
+extern BaseMenuPage (&g_Page_ReplayTheater);
+extern BaseMenuPage (&g_Page_Options);
+extern BaseMenuPage (&g_Page_SaveGame);
+extern BaseMenuPage (&g_Page_LoadGame);
+extern BaseMenuPage (&g_Page_DataTransfer);
 
 // Loads arc_key_config.tim and arc_font.tim, and the car info.
 void MainMenu_LoadCommonAssets(void)
@@ -54,7 +55,7 @@ void MainMenu_LoadTitleAssets(void)
     Gpu_LoadImageBlock(block, &rect);
     rect.x = 0x180;
     rect.y = 0;
-    image = (int *)((int)block + *(int *)(g_OVL1_FontInfo + 8));
+    image = (int *)rt::from_guest(((int)rt::to_guest(block) + *(int *)(g_OVL1_FontInfo + 8)));
     rect.w = ((short *)image)[4];
     rect.h = ((short *)image)[5];
     Gpu_LoadImageBlock(image, &rect);
@@ -77,7 +78,7 @@ void FUN_OVL1__800112d0(void)
     Gpu_LoadImageBlock(block, &rect);
     rect.x = 0x180;
     rect.y = 0;
-    image = (int *)((int)block + *(int *)(g_OVL1_FontInfo + 8));
+    image = (int *)rt::from_guest(((int)rt::to_guest(block) + *(int *)(g_OVL1_FontInfo + 8)));
     rect.w = ((short *)image)[4];
     rect.h = ((short *)image)[5];
     Gpu_LoadImageBlock(image, &rect);
@@ -102,7 +103,7 @@ void MainMenu_Run(void)
         if (Ap_PageWanted()) {
             BaseMenu menu;
 
-            BaseMenu__SetRootPage(&menu, &g_Page_ApConnect);
+            BaseMenu__SetRootPage(&menu, ApConnect_Page());
             do {
                 r = menu.Execute();
             } while (r > 1 ? 1 : r < 0);

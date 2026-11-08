@@ -5,28 +5,28 @@
 #include "ap.h"
 
 extern "C" {
-extern GameState g_GameState;
-extern char *g_EventCodes[];
-extern int g_EventCount;
-extern short g_EventLetterIndex[256];
-extern char *g_RegionalLeagueCodes[];
-extern char *g_ProLeagueCodes[];
-extern char g_EventCodeFmt[];
-extern char *g_LicensePrizeEventFmt[6];
-extern char *g_LicensePrefixes[6];
-extern void *g_GtModeRaceDataBuf;
-extern char D_80022E64[];   // "PFL"
-extern char D_80022E68[];   // "EPL"
-extern char D_80022F1C[];   // "GTW"
-extern char D_80022F20[];   // "G400"
-extern char D_80022F28[];   // "G1000"
-extern char D_80022F30[];   // "GMAX"
-extern char D_80022F38[];   // "FREERACE"
-extern char D_80022F44[];   // "FREECHAMP"
-extern char D_80022F50[];   // "FREERACE01"
-extern char D_80022F5C[];   // "FREERACE02"
-extern char D_80022F68[];   // "FREERACE03"
-extern char D_80022F74[];   // "none"
+extern GameState (&g_GameState);
+extern game_pointer<char> (&g_EventCodes)[];
+extern int (&g_EventCount);
+extern short (&g_EventLetterIndex)[256];
+extern game_pointer<char> (&g_RegionalLeagueCodes)[];
+extern game_pointer<char> (&g_ProLeagueCodes)[];
+extern char (&g_EventCodeFmt)[];
+extern game_pointer<char> (&g_LicensePrizeEventFmt)[6];
+extern game_pointer<char> (&g_LicensePrefixes)[6];
+extern game_pointer<void> (&g_GtModeRaceDataBuf);
+extern char (&D_80022E64)[];   // "PFL"
+extern char (&D_80022E68)[];   // "EPL"
+extern char (&D_80022F1C)[];   // "GTW"
+extern char (&D_80022F20)[];   // "G400"
+extern char (&D_80022F28)[];   // "G1000"
+extern char (&D_80022F30)[];   // "GMAX"
+extern char (&D_80022F38)[];   // "FREERACE"
+extern char (&D_80022F44)[];   // "FREECHAMP"
+extern char (&D_80022F50)[];   // "FREERACE01"
+extern char (&D_80022F5C)[];   // "FREERACE02"
+extern char (&D_80022F68)[];   // "FREERACE03"
+extern char (&D_80022F74)[];   // "none"
 
 // Seeds *seed from the vblank count. Taking the address here gives seed the
 // first stack slot in Event_LoadPrizeInfo, before the colour pointers.

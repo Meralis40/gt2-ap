@@ -2,9 +2,9 @@
 #include "common.h"
 
 extern "C" {
-extern int g_CarColorIsLatin;
-extern char *g_CarColor;
-extern char *g_CarColorNames;
+extern int (&g_CarColorIsLatin);
+extern game_pointer<char> (&g_CarColor);
+extern game_pointer<char> (&g_CarColorNames);
 
 // Reads the car colour file (VolId 0) to buf and the colour names after it, the
 // Latin ones (VolId 5) or the others (VolId 4). Returns buf.

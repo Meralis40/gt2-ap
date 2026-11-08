@@ -5,12 +5,12 @@
 #include "common.h"
 
 extern "C" {
-extern unsigned short D_80053508[];
+extern unsigned short (&D_80053508)[];
 // Sets up the player of movie in work: the ring of 2 frames from +8, the VLC buffer
 // and the two slice buffers.
 void Movie_InitRing_OVL2(ArcStrPlayer *p, int movie, void *buffer)
 {
-    unsigned char **work = (unsigned char **)buffer;
+    game_pointer<unsigned char> *work = (game_pointer<unsigned char> *)buffer;
 
     p->work = buffer;
     p->movie = D_80053508[movie];
@@ -23,8 +23,8 @@ void Movie_InitRing_OVL2(ArcStrPlayer *p, int movie, void *buffer)
     Movie_Init(p, 0);
     Movie_SetRing(p, 2, work);
     Movie_SetVlcBuffers(p, (unsigned char *)work + 0x4ec8, (unsigned char *)work + 0x4ec8);
-    Movie_SetSliceBuffers(p, (unsigned long *)((unsigned char *)work + 0xcec8),
-                          (unsigned long *)((unsigned char *)work + 0xe0c8));
+    Movie_SetSliceBuffers(p, (unsigned int *)((unsigned char *)work + 0xcec8),
+                          (unsigned int *)((unsigned char *)work + 0xe0c8));
 }
 
 // One frame of the player: starts it, restarts it after its end, and decodes the next

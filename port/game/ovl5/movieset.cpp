@@ -22,7 +22,7 @@ void Movie_Shutdown(MoviePlayer *mp)
     g_GfxIrq.gpuDmaHook = mp->savedGpuDmaHook;
 }
 
-void Movie_SetRing(MoviePlayer *mp, short count, unsigned char **ring)
+void Movie_SetRing(MoviePlayer *mp, short count, game_pointer<unsigned char> *ring)
 {
     MovieStream *s = &mp->stream;
 
@@ -36,7 +36,7 @@ void Movie_SetVlcBuffers(MoviePlayer *mp, void *a, void *b)
     mp->vlcOther = b;
 }
 
-void Movie_SetSliceBuffers(MoviePlayer *mp, unsigned long *a, unsigned long *b)
+void Movie_SetSliceBuffers(MoviePlayer *mp, unsigned int *a, unsigned int *b)
 {
     MdecOut *m = &mp->mdec;
 
@@ -68,6 +68,6 @@ void Movie_SetCdRange(MoviePlayer *mp, unsigned int lba, int sectors)
     g_CdAudio.reqStart = lba;
     g_CdAudio.reqEnd = end;
     CdReq_SetFilter(1, 7, (CdReq *)&g_CdAudio.reqFlag);
-    g_CdAudio.onSector = (void *)Movie_CdSectorCb;
+    g_CdAudio.onSector = (CdSectorFn *)Movie_CdSectorCb;
 }
 }

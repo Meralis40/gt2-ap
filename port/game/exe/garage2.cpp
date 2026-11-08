@@ -2,12 +2,13 @@
 // for its .rodata, CarWork_ResetSetting's jump table, which comes after the tables of
 // garage.cpp's CarWork_ApplySetting and CarWork_GetSettingRange. Ghidra's
 // decompilation; the functions that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern SpuBank g_CommonSoundBank;
-extern unsigned char D_8009160C[][2]; // the two samples of each menu sound
-extern char D_80091620[];
+extern SpuBank (&g_CommonSoundBank);
+extern unsigned char (&D_8009160C)[][2]; // the two samples of each menu sound
+extern char (&D_80091620)[];
 
 // Sets setting back to the fitted parts' defaults.
 void CarWork_ResetSetting(CarWork *work, int setting)
@@ -160,11 +161,11 @@ int FUN_800608e8(unsigned int param_1, int param_2)
     do {
         uVar1 = param_1 & 0x3f;
         param_1 = param_1 >> 6;
-        pcVar2 = (char *)(param_2 + iVar3);
+        pcVar2 = (char *)rt::from_guest((param_2 + iVar3));
         iVar3 = iVar3 + -1;
         *pcVar2 = D_80091620[uVar1];
     } while (iVar3 != -1);
-    *(unsigned char *)(param_2 + 5) = 0;
+    *(unsigned char *)rt::from_guest((param_2 + 5)) = 0;
     return param_2;
 }
 }

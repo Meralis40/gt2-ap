@@ -1,17 +1,18 @@
 // Resident code 80078370-80079140 (sfx): sound effects on the SPU voices (one-shot
 // samples, loops and the cars' engine sounds), and loading sound banks into SPU RAM.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
 #define SPU_VOICES ((SpuVoiceRegs *)HW_REG(0xc00))
 
-extern unsigned int g_SoundDriverReady;
-extern unsigned int g_SpuAllocPtr;
-extern void *g_SpuBankPoolPtr;
-extern int g_SpuBankPoolSize;
-extern SfxVoice g_SfxVoices[24];
-extern uchar D_801C9994; // sound effect volume, 0-255
-extern short g_SinTable[];
+extern unsigned int (&g_SoundDriverReady);
+extern unsigned int (&g_SpuAllocPtr);
+extern game_pointer<void> (&g_SpuBankPoolPtr);
+extern int (&g_SpuBankPoolSize);
+extern SfxVoice (&g_SfxVoices)[24];
+extern uchar (&D_801C9994); // sound effect volume, 0-255
+extern short (&g_SinTable)[];
 
 // Waits until the envelopes of all 24 SPU voices are at 0, or about 6.8 million
 // tries on the console, which pumps would make minutes: 5 seconds here.
@@ -236,8 +237,8 @@ SeqBank *Inst_Relocate(SeqBank *bank, int spu)
         return 0;
     }
     i = 0;
-    delta = (int)bank - bank->base;
-    bank->base = (int)bank;
+    delta = (int)rt::to_guest(bank) - bank->base;
+    bank->base = (int)rt::to_guest(bank);
     *(int *)&bank->unk14 += delta;
     *(int *)&bank->regions += delta;
     *(int *)&bank->programs += delta;
@@ -448,12 +449,12 @@ EngnFile *Engn_Relocate(EngnFile *file, int spu)
     if (file->magic != 0x4e474e45) {
         return 0;
     }
-    delta = (int)file - file->base;
-    file->base = (int)file;
+    delta = (int)rt::to_guest(file) - file->base;
+    file->base = (int)rt::to_guest(file);
     *(int *)&file->unk14 += delta;
     for (i = 0; i < 2; i++) {
         if (file->sets[i].ranges != 0) {
-            file->sets[i].ranges = (EngnRange *)((int)file->sets[i].ranges + delta);
+            file->sets[i].ranges = (EngnRange *)rt::from_guest(((int)file->sets[i].ranges + delta));
         }
     }
     if (spu != 0) {

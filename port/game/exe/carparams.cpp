@@ -1,57 +1,58 @@
 // Resident code 80075fac-80077d5c (carparams). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern CarParamsPartDesc g_CarParamsPartDescs[];
-extern unsigned char D_800AF230;
-extern unsigned char D_80092888;
-extern unsigned char D_80092890;
-extern unsigned char D_80092898;
-extern unsigned char D_800928A0;
-extern unsigned char D_800928CC;
-extern unsigned char D_800928D8;
-extern unsigned char D_800928E4;
-extern unsigned char D_80092900;
-extern unsigned char D_8009294C;
-extern unsigned char D_80092BB4;
-extern unsigned char D_80092E24;
-extern unsigned char D_80092968;
-extern unsigned char D_80092970;
-extern unsigned char D_80092978;
-extern unsigned char D_80092980;
-extern unsigned char D_800929AC;
-extern unsigned char D_800929B8;
-extern unsigned char D_800929C4;
-extern unsigned char D_800929E0;
-extern unsigned char D_80092A2C;
-extern unsigned char D_80092820;
-extern unsigned char D_80092D6C;
-extern unsigned char D_80092D7C;
-extern unsigned char D_80092D8C;
-extern unsigned char D_80092DBC;
-extern unsigned char D_80092DEC;
-extern unsigned char D_80092DF4;
-extern unsigned char D_80092DFC;
-extern unsigned char D_80092C24;
-extern unsigned char D_80092E08;
-extern unsigned char D_80092E50;
-extern unsigned int D_801C94E4;
-extern unsigned char g_ArcadeDataEntrySizes;
-extern unsigned char g_CarSpecFromSetupDesc;
-extern CarSpecPartLink g_CarSpecPartLinks[];
-extern unsigned int g_DataLanguage;
-extern unsigned int g_GameDataBase;
-extern int g_GameDataMode;
-extern GameState g_GameState;
-extern unsigned int g_GtModeData;
-extern unsigned char g_GtModeDataEntrySizes;
-extern void *g_GtModeRaceData;
-extern unsigned char g_GtModeRaceEntrySizes;
-extern LangCarParamFiles g_LangCarParamFiles[7];
-extern unsigned char g_LicenseDataEntrySizes;
-extern void *g_RaceGameData;
-extern void *g_UniStrDb;
+extern CarParamsPartDesc (&g_CarParamsPartDescs)[];
+extern unsigned char (&D_800AF230);
+extern unsigned char (&D_80092888);
+extern unsigned char (&D_80092890);
+extern unsigned char (&D_80092898);
+extern unsigned char (&D_800928A0);
+extern unsigned char (&D_800928CC);
+extern unsigned char (&D_800928D8);
+extern unsigned char (&D_800928E4);
+extern unsigned char (&D_80092900);
+extern unsigned char (&D_8009294C);
+extern unsigned char (&D_80092BB4);
+extern unsigned char (&D_80092E24);
+extern unsigned char (&D_80092968);
+extern unsigned char (&D_80092970);
+extern unsigned char (&D_80092978);
+extern unsigned char (&D_80092980);
+extern unsigned char (&D_800929AC);
+extern unsigned char (&D_800929B8);
+extern unsigned char (&D_800929C4);
+extern unsigned char (&D_800929E0);
+extern unsigned char (&D_80092A2C);
+extern unsigned char (&D_80092820);
+extern unsigned char (&D_80092D6C);
+extern unsigned char (&D_80092D7C);
+extern unsigned char (&D_80092D8C);
+extern unsigned char (&D_80092DBC);
+extern unsigned char (&D_80092DEC);
+extern unsigned char (&D_80092DF4);
+extern unsigned char (&D_80092DFC);
+extern unsigned char (&D_80092C24);
+extern unsigned char (&D_80092E08);
+extern unsigned char (&D_80092E50);
+extern unsigned int (&D_801C94E4);
+extern unsigned char (&g_ArcadeDataEntrySizes);
+extern unsigned char (&g_CarSpecFromSetupDesc);
+extern CarSpecPartLink (&g_CarSpecPartLinks)[];
+extern unsigned int (&g_DataLanguage);
+extern unsigned int (&g_GameDataBase);
+extern int (&g_GameDataMode);
+extern GameState (&g_GameState);
+extern unsigned int (&g_GtModeData);
+extern unsigned char (&g_GtModeDataEntrySizes);
+extern game_pointer<void> (&g_GtModeRaceData);
+extern unsigned char (&g_GtModeRaceEntrySizes);
+extern LangCarParamFiles (&g_LangCarParamFiles)[7];
+extern unsigned char (&g_LicenseDataEntrySizes);
+extern game_pointer<void> (&g_RaceGameData);
+extern game_pointer<void> (&g_UniStrDb);
 
 short CarParams_GetTyreRadius(CarParams *params, int rear, short *radius, short *width, short *sidewall)
 {
@@ -102,7 +103,7 @@ unsigned char CarParams_GetDriveLayout(CarParams *params, unsigned char *layout,
         mode = ((unsigned char *)params)[0x51];
         *front = (params->awdFrontPct << 12) / 100;
         *flag = 1;
-        if (*(unsigned short *)((int)Course_Get(D_800AF230) + 8) & 4) {
+        if (*(unsigned short *)rt::from_guest(((int)rt::to_guest(Course_Get(D_800AF230)) + 8)) & 4) {
             switch (mode) {
             case 2:
                 break;
@@ -208,8 +209,8 @@ void CarSpec_ApplyPartEntry(int table, void *entry, CarSpec *spec)
         break;
     case 18:
         desc = (unsigned int *)&D_800929E0;
-        *(unsigned char *)((int)spec + 0x9e) = 0x80;
-        *(unsigned char *)((int)spec + 0x9f) = 0x80;
+        *(unsigned char *)rt::from_guest(((int)rt::to_guest(spec) + 0x9e)) = 0x80;
+        *(unsigned char *)rt::from_guest(((int)rt::to_guest(spec) + 0x9f)) = 0x80;
         break;
     case 1:
         desc = (unsigned int *)&D_800929AC;
@@ -238,8 +239,8 @@ void CarSpec_Resolve(CarSpec *spec, CarSetup *setup)
     CarSpec_Clear(spec);
     CarSetup_ApplyDescriptors((unsigned int *)&g_CarSpecFromSetupDesc, setup, (CarSetup *)spec);
     for (link = g_CarSpecPartLinks; link->specOffset != -1; link++) {
-        *(void **)((int)spec + link->specOffset) =
-            GameData_GetEntry(link->table, *(unsigned short *)((int)setup + link->setupOffset));
+        *(game_pointer<void> *)rt::from_guest(((int)rt::to_guest(spec) + link->specOffset)) =
+            GameData_GetEntry(link->table, *(unsigned short *)rt::from_guest(((int)rt::to_guest(setup) + link->setupOffset)));
     }
     tyre = (unsigned short *)GameData_GetEntry(0x16, (unsigned short)setup->idx_t16_front);
     spec->frontTyre18 = GameData_GetEntry(0x18, tyre[5]);
@@ -262,7 +263,7 @@ int Part_LookupRacingModStage(unsigned int carCode, char stage, int *outPrice)
         }
         else {
             pvVar1 = GameData_GetEntry(5, index);
-            *outPrice = *(int *)((int)pvVar1 + 4);
+            *outPrice = *(int *)rt::from_guest(((int)rt::to_guest(pvVar1) + 4));
         }
     }
     return index;
@@ -414,7 +415,7 @@ int Part_Lookup(int part, unsigned int carCode, int *outPrice)
         if (index == -1) {
             *outPrice = 0;
         } else {
-            *outPrice = *(int *)((int)GameData_GetEntry(table, index) + 4);
+            *outPrice = *(int *)rt::from_guest(((int)rt::to_guest(GameData_GetEntry(table, index)) + 4));
         }
     }
     return index;
@@ -427,7 +428,7 @@ int GameData_FindPart(int table, char stage, int stageOffset, unsigned int carCo
     int i;
     int k;
 
-    data = (void *)g_GtModeData;
+    data = (void *)rt::from_guest(g_GtModeData);
     i = GameData_FindFirstForCar(table, carCode);
     if (i != -1) {
         for (k = 4;; i++) {
@@ -448,7 +449,7 @@ int GameData_FindFirstForCar(int table, unsigned int carCode)
     void *data;
     int i;
 
-    data = (void *)g_GtModeData;
+    data = (void *)rt::from_guest(g_GtModeData);
     i = GameData_BinarySearch((GameData *)data, table, carCode);
     if (i == -1) {
         return i;
@@ -490,7 +491,7 @@ int Car_GetDefaultSetup(unsigned int carId, CarSetup *setup)
     found = 1;
     switch ((unsigned int)g_GameDataMode) {
     case 2:
-        data = (char *)g_GtModeData;
+        data = (char *)rt::from_guest(g_GtModeData);
         table = (GameDataTable *)(data + 0xf8);
         break;
     case 1:
@@ -556,13 +557,13 @@ unsigned int GameData_RelocateTable(char *data, int table, unsigned int entrySiz
     t = (unsigned int *)(data + table * 8);
     bytes = t[3];
     ((unsigned short *)t)[6] = entrySize;
-    t[2] += (unsigned int)data;
+    t[2] += (unsigned int)rt::to_guest(data);
     ((unsigned short *)t)[7] = bytes / entrySize;
     table += *(unsigned short *)(data + 6) >> 1;
     s = (unsigned int *)(data + table * 8 + 8);
     extra = 0;
     if (*s != 0) {
-        *s += (unsigned int)data;
+        *s += (unsigned int)rt::to_guest(data);
         extra = *(unsigned int *)(data + table * 8 + 0xc);
     }
     return bytes + extra;
@@ -626,7 +627,7 @@ void *GameData_LoadGtModeRace(void *buffer, int size)
     VolId_ReadFileAsync((unsigned int)g_LangCarParamFiles[g_DataLanguage].gtmodeRace, buffer);
     g_GtModeRaceData = buffer;
     GameData_Relocate(buffer, (unsigned int *)&g_GtModeRaceEntrySizes);
-    D_801C94E4 = (unsigned int)*(unsigned short *)((int)buffer + 4);
+    D_801C94E4 = (unsigned int)*(unsigned short *)rt::from_guest(((int)rt::to_guest(buffer) + 4));
     return buffer;
 }
 
@@ -635,10 +636,10 @@ void *GameData_LoadGtMode(void *buffer, int size)
     g_GameDataMode = 2;
     g_DataLanguage = (unsigned int)g_GameState.language;
     VolId_ReadFileAsync((unsigned int)g_LangCarParamFiles[g_DataLanguage].gtmodeData, buffer);
-    g_GtModeData = (unsigned int)buffer;
-    g_GameDataBase = (unsigned int)buffer;
+    g_GtModeData = (unsigned int)rt::to_guest(buffer);
+    g_GameDataBase = (unsigned int)rt::to_guest(buffer);
     GameData_Relocate(buffer, (unsigned int *)&g_GtModeDataEntrySizes);
-    D_801C94E4 = (unsigned int)*(unsigned short *)((int)buffer + 4);
+    D_801C94E4 = (unsigned int)*(unsigned short *)rt::from_guest(((int)rt::to_guest(buffer) + 4));
     return buffer;
 }
 
@@ -648,7 +649,7 @@ void *GameData_LoadArcade(void *buffer, int size)
     g_DataLanguage = (unsigned int)g_GameState.language;
     VolId_ReadFileAsync((unsigned int)g_LangCarParamFiles[g_DataLanguage].arcadeData, buffer);
     g_RaceGameData = buffer;
-    g_GameDataBase = (unsigned int)buffer;
+    g_GameDataBase = (unsigned int)rt::to_guest(buffer);
     GameData_Relocate(buffer, (unsigned int *)&g_ArcadeDataEntrySizes);
     return buffer;
 }
@@ -659,14 +660,14 @@ void *GameData_LoadLicense(void *buffer, int size)
     g_DataLanguage = (unsigned int)g_GameState.language;
     VolId_ReadFileAsync((unsigned int)g_LangCarParamFiles[g_DataLanguage].licenseData, buffer);
     g_RaceGameData = buffer;
-    g_GameDataBase = (unsigned int)buffer;
+    g_GameDataBase = (unsigned int)rt::to_guest(buffer);
     GameData_Relocate(buffer, (unsigned int *)&g_LicenseDataEntrySizes);
     return buffer;
 }
 
 void *GameData_GetGtMode(void)
 {
-    return (void *)g_GtModeData;
+    return (void *)rt::from_guest(g_GtModeData);
 }
 
 void *FUN_80076f1c(void)
@@ -678,7 +679,7 @@ void *GameData_GetEntry(int table, int index)
 {
     void *pvVar1;
 
-    pvVar1 = GameData_GetEntryIn((GameData *)g_GameDataBase, table, index);
+    pvVar1 = GameData_GetEntryIn((GameData *)rt::from_guest(g_GameDataBase), table, index);
     return pvVar1;
 }
 
@@ -697,7 +698,7 @@ void CarSetup_FromCarEntry(void *carEntry, CarSetup *setup)
     CarSetup_Clear(setup);
     if (g_GameDataMode == 2) {
         setup->flags_7a = setup->flags_7a | 0x40;
-        setup->manufacturerId = *(unsigned char *)((int)carEntry + 0x3a);
+        setup->manufacturerId = *(unsigned char *)rt::from_guest(((int)rt::to_guest(carEntry) + 0x3a));
     }
     CarSetup_ApplyDescriptors((unsigned int *)&D_80092BB4, carEntry, setup);
     CarSetup_ApplyDescriptors((unsigned int *)&D_800928A0, GameData_GetEntry(0x11, (unsigned short)setup->idx_t11), setup);
@@ -737,8 +738,8 @@ int CarParams_BuildFromSetup(CarSetup *setup, void *params)
 
 // The game keeps the entry in $s0 and the factor percentage in $s1 (swapped here), and
 // allocates the constants of the final stores differently.
-#define P8(off) *(unsigned char *)((int)params + (off))
-#define P16(off) *(unsigned short *)((int)params + (off))
+#define P8(off) *(unsigned char *)((char *)params + (off))
+#define P16(off) *(unsigned short *)((char *)params + (off))
 
 int CarParams_Build(CarSpec *spec, void *params)
 {
@@ -751,7 +752,7 @@ int CarParams_Build(CarSpec *spec, void *params)
     s = (char *)spec;
     memset(params, 0, 0x1c0);
     for (; d->desc != 0; d++) {
-        unsigned char *e = *(unsigned char **)(s + d->specOffset);
+        unsigned char *e = *(game_pointer<unsigned char> *)(s + d->specOffset);
         int pct;
 
         CarSetup_ApplyDescriptors(d->desc, e, (CarSetup *)params);
@@ -790,9 +791,9 @@ int CarParams_Build(CarSpec *spec, void *params)
         int w;
 
         w = P8(0x57);
-        P8(0x57) = w * *(unsigned short *)((int)spec->weightReduction + 8) / 1000;
-        w = *(short *)((int)params + 0x5a);
-        *(short *)((int)params + 0x5a) = w * *(unsigned char *)((int)spec->racingMod + 0xc) / 100;
+        P8(0x57) = w * *(unsigned short *)rt::from_guest(((int)spec->weightReduction + 8)) / 1000;
+        w = *(short *)rt::from_guest(((int)rt::to_guest(params) + 0x5a));
+        *(short *)rt::from_guest(((int)rt::to_guest(params) + 0x5a)) = w * *(unsigned char *)rt::from_guest(((int)spec->racingMod + 0xc)) / 100;
     }
     CarSetup_ApplyDescriptors((unsigned int *)&D_80092D6C, spec->frontTyre18, (CarSetup *)params);
     CarSetup_ApplyDescriptors((unsigned int *)&D_80092D8C, spec->frontTyre19, (CarSetup *)params);
@@ -811,9 +812,9 @@ int CarParams_Build(CarSpec *spec, void *params)
     if (spec->flags & 1) {
         P16(0x1ae) = spec->unk7a;
     }
-    spec->outB6 = *(unsigned short *)((int)spec->t06 + 0xa);
-    spec->outB8 = *(unsigned char *)((int)spec->muffler + 8);
-    if (*(unsigned char *)((int)spec->turbo + 9) != 0) {
+    spec->outB6 = *(unsigned short *)rt::from_guest(((int)spec->t06 + 0xa));
+    spec->outB8 = *(unsigned char *)rt::from_guest(((int)spec->muffler + 8));
+    if (*(unsigned char *)rt::from_guest(((int)spec->turbo + 9)) != 0) {
         spec->flags |= 2;
         spec->outB8 += 4;
     }
@@ -877,8 +878,8 @@ void CarSetup_ApplyDescriptors(unsigned int *desc, void *entry, CarSetup *setup)
     count = 0;
     while (*desc != 0) {
         d = *desc;
-        src = (void *)((int)entry + (d >> 10 & 0x3ff));
-        dst = (void *)((int)setup + (d & 0x3ff));
+        src = (void *)rt::from_guest(((int)rt::to_guest(entry) + (d >> 10 & 0x3ff)));
+        dst = (void *)rt::from_guest(((int)rt::to_guest(setup) + (d & 0x3ff)));
         switch (d >> 20 & 0xf) {
         case 0:
             elemSize = 1;
@@ -957,7 +958,7 @@ void Desc_AddFieldRepeated(int elemSize, int count, void *src, void *dst)
 {
     for (; count != 0; count = count + -1) {
         Desc_AddField(elemSize, src, dst);
-        dst = (void *)((int)dst + elemSize);
+        dst = (void *)rt::from_guest(((int)rt::to_guest(dst) + elemSize));
     }
 }
 
@@ -976,8 +977,8 @@ void Desc_ScaleFields(int divisor, int elemSize, int count, void *src, void *dst
             *(int *)dst = *(int *)dst * *(int *)src / divisor;
             break;
         }
-        src = (void *)((int)src + elemSize);
-        dst = (void *)((int)dst + elemSize);
+        src = (void *)rt::from_guest(((int)rt::to_guest(src) + elemSize));
+        dst = (void *)rt::from_guest(((int)rt::to_guest(dst) + elemSize));
     }
 }
 
@@ -997,8 +998,8 @@ void CarParams_ApplyBrakeBalance(CarSpec *spec, void *params)
     unsigned char *b = (unsigned char *)spec->brakeBalance;
     unsigned int rear = spec->t01_50[1];
 
-    *(char *)((int)params + 0x2e) = Setting_Interpolate(b[0xa], b[0xb], b[9], spec->t01_50[0]);
-    *(char *)((int)params + 0x2f) = Setting_Interpolate(b[0xe], b[0xf], b[0xd], rear);
+    *(char *)rt::from_guest(((int)rt::to_guest(params) + 0x2e)) = Setting_Interpolate(b[0xa], b[0xb], b[9], spec->t01_50[0]);
+    *(char *)rt::from_guest(((int)rt::to_guest(params) + 0x2f)) = Setting_Interpolate(b[0xe], b[0xf], b[0xd], rear);
 }
 
 void CarParams_CopyT11(CarSpec *spec, void *params)
@@ -1006,16 +1007,16 @@ void CarParams_CopyT11(CarSpec *spec, void *params)
     int i;
 
     for (i = 0; i < 8; i++) {
-        ((short *)((int)params + 0x18))[i] = spec->t11_values[i];
+        ((short *)rt::from_guest(((int)rt::to_guest(params) + 0x18)))[i] = spec->t11_values[i];
     }
-    *(short *)((int)params + 0x28) = spec->t11_4c;
-    *(unsigned char *)((int)params + 0x1ab) = spec->t11_4e;
+    *(short *)rt::from_guest(((int)rt::to_guest(params) + 0x28)) = spec->t11_4c;
+    *(unsigned char *)rt::from_guest(((int)rt::to_guest(params) + 0x1ab)) = spec->t11_4e;
 }
 
 void CarParams_CopyT05(CarSpec *spec, void *params)
 {
-    *(unsigned char *)((int)params + 0x88) = spec->t05_52;
-    *(unsigned char *)((int)params + 0x89) = spec->t05_53;
+    *(unsigned char *)rt::from_guest(((int)rt::to_guest(params) + 0x88)) = spec->t05_52;
+    *(unsigned char *)rt::from_guest(((int)rt::to_guest(params) + 0x89)) = spec->t05_53;
 }
 
 void CarParams_ApplyDesc8e08(CarSpec *spec, void *params)
@@ -1047,19 +1048,19 @@ void CarParams_ApplySuspension(CarSpec *spec, void *params)
     s6 = spec->settings[6];
     s7 = spec->settings[7];
     steps = s[0x27];
-    *(char *)((int)params + 0x73) = Setting_Interpolate(s[0x28], s[0x29], steps, s0);
-    *(char *)((int)params + 0x75) = Setting_Interpolate(s[0x2b], s[0x2c], steps, s1);
+    *(char *)rt::from_guest(((int)rt::to_guest(params) + 0x73)) = Setting_Interpolate(s[0x28], s[0x29], steps, s0);
+    *(char *)rt::from_guest(((int)rt::to_guest(params) + 0x75)) = Setting_Interpolate(s[0x2b], s[0x2c], steps, s1);
     steps = s[0x2e];
-    *(char *)((int)params + 0x77) = Setting_Interpolate(s[0x2f], s[0x30], steps, s2);
-    *(char *)((int)params + 0x79) = Setting_Interpolate(s[0x32], s[0x33], steps, s3);
+    *(char *)rt::from_guest(((int)rt::to_guest(params) + 0x77)) = Setting_Interpolate(s[0x2f], s[0x30], steps, s2);
+    *(char *)rt::from_guest(((int)rt::to_guest(params) + 0x79)) = Setting_Interpolate(s[0x32], s[0x33], steps, s3);
     steps = s[0x35];
-    *(char *)((int)params + 0x7f) = Setting_Interpolate(s[0x36], s[0x37], steps, s4);
-    *(char *)((int)params + 0x81) = Setting_Interpolate(s[0x39], s[0x3a], steps, s5);
+    *(char *)rt::from_guest(((int)rt::to_guest(params) + 0x7f)) = Setting_Interpolate(s[0x36], s[0x37], steps, s4);
+    *(char *)rt::from_guest(((int)rt::to_guest(params) + 0x81)) = Setting_Interpolate(s[0x39], s[0x3a], steps, s5);
     steps = s[0x3c];
-    *(char *)((int)params + 0x83) = Setting_Interpolate(s[0x3d], s[0x3e], steps, s6);
-    *(char *)((int)params + 0x85) = Setting_Interpolate(s[0x40], s[0x41], steps, s7);
-    *(char *)((int)params + 0x6f) = Setting_Interpolate(s[0x44], s[0x45], s[0x43], spec->settings[8]);
-    *(char *)((int)params + 0x7b) = Setting_Interpolate(s[0x48], s[0x49], s[0x47], spec->settings[9]);
+    *(char *)rt::from_guest(((int)rt::to_guest(params) + 0x83)) = Setting_Interpolate(s[0x3d], s[0x3e], steps, s6);
+    *(char *)rt::from_guest(((int)rt::to_guest(params) + 0x85)) = Setting_Interpolate(s[0x40], s[0x41], steps, s7);
+    *(char *)rt::from_guest(((int)rt::to_guest(params) + 0x6f)) = Setting_Interpolate(s[0x44], s[0x45], s[0x43], spec->settings[8]);
+    *(char *)rt::from_guest(((int)rt::to_guest(params) + 0x7b)) = Setting_Interpolate(s[0x48], s[0x49], s[0x47], spec->settings[9]);
 }
 
 void CarParams_Nop(CarSpec *spec, void *params)
@@ -1072,9 +1073,9 @@ void CarParams_ApplySettingB4(CarSpec *spec, void *params)
     void *pvVar2;
 
     pvVar2 = spec->asc;
-    iVar1 = Setting_Interpolate((unsigned int)*(unsigned char *)((int)pvVar2 + 0xc), (unsigned int)*(unsigned char *)((int)pvVar2 + 0xd),
-                                                            (unsigned int)*(unsigned char *)((int)pvVar2 + 9), (unsigned int)spec->settingB4);
-    *(char *)((int)params + 0x1a6) = (char)iVar1;
+    iVar1 = Setting_Interpolate((unsigned int)*(unsigned char *)rt::from_guest(((int)rt::to_guest(pvVar2) + 0xc)), (unsigned int)*(unsigned char *)rt::from_guest(((int)rt::to_guest(pvVar2) + 0xd)),
+                                                            (unsigned int)*(unsigned char *)rt::from_guest(((int)rt::to_guest(pvVar2) + 9)), (unsigned int)spec->settingB4);
+    *(char *)rt::from_guest(((int)rt::to_guest(params) + 0x1a6)) = (char)iVar1;
 }
 
 void CarParams_ApplySettingB5(CarSpec *spec, void *params)
@@ -1083,9 +1084,9 @@ void CarParams_ApplySettingB5(CarSpec *spec, void *params)
     void *pvVar2;
 
     pvVar2 = spec->tcs;
-    iVar1 = Setting_Interpolate((unsigned int)*(unsigned char *)((int)pvVar2 + 0xd), (unsigned int)*(unsigned char *)((int)pvVar2 + 0xe),
-                                                            (unsigned int)*(unsigned char *)((int)pvVar2 + 10), (unsigned int)spec->settingB5);
-    *(char *)((int)params + 0x1a2) = (char)iVar1;
+    iVar1 = Setting_Interpolate((unsigned int)*(unsigned char *)rt::from_guest(((int)rt::to_guest(pvVar2) + 0xd)), (unsigned int)*(unsigned char *)rt::from_guest(((int)rt::to_guest(pvVar2) + 0xe)),
+                                                            (unsigned int)*(unsigned char *)rt::from_guest(((int)rt::to_guest(pvVar2) + 10)), (unsigned int)spec->settingB5);
+    *(char *)rt::from_guest(((int)rt::to_guest(params) + 0x1a2)) = (char)iVar1;
 }
 
 void CarParams_ApplyDesc8e50(CarSpec *spec, void *params)

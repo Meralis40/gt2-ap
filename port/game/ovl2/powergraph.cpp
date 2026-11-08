@@ -6,9 +6,9 @@
 #include "common.h"
 
 extern "C" {
-extern char D_800F85A3[]; // hp
-extern char D_800F85A6[]; // lb-ft
-extern char D_800F85AC[]; // x1000 rpm
+extern char (&D_800F85A3)[]; // hp
+extern char (&D_800F85A6)[]; // lb-ft
+extern char (&D_800F85AC)[]; // x1000 rpm
 
 
 // Copies the template, and hides the graph.

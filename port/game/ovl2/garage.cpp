@@ -4,11 +4,11 @@
 #include "common.h"
 
 extern "C" {
-extern GameState g_GameState;
-extern void *g_EventDataBuf;
-extern int g_GameDataMode;
-extern void *g_GtModeRaceData;
-extern unsigned char g_OVL2_CarGzBuf;
+extern GameState (&g_GameState);
+extern game_pointer<void> (&g_EventDataBuf);
+extern int (&g_GameDataMode);
+extern game_pointer<void> (&g_GtModeRaceData);
+extern unsigned char (&g_OVL2_CarGzBuf);
 
 // order: the cars of garage sorted by name, by binary insertion.
 void Garage_SortByName(Garage *garage, short *order)

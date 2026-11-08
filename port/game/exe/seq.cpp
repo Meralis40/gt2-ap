@@ -1,22 +1,23 @@
 // Resident code 80079140-8007ab14 (seq). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern ushort D_8008FDB8[]; // pitch of each 1/8 semitone in an octave
-extern ushort D_800901B8[128]; // pan volume curve
-extern ushort D_800900B8[128]; // velocity volume curve
-extern ushort g_ReverbPresets[10][32]; // the SPU reverb registers HW_REG(0xdc0)-HW_REG(0xdfe)
-extern ushort g_ReverbWorkAddr[10]; // work area start / 8
-extern SeqState g_Seq;
-extern SeqChannel g_SeqChannels[25];
-extern unsigned short g_SeqMasterVolume;
-extern unsigned short g_SeqTickRate;
-extern int g_SeqReady;
-extern SoundDriver g_SoundDriver;
-extern int D_80092E80; // SfxVoices_Update count
-extern unsigned int D_80092E84; // voices keyed on
-extern unsigned int g_SoundDriverReady;
+extern ushort (&D_8008FDB8)[]; // pitch of each 1/8 semitone in an octave
+extern ushort (&D_800901B8)[128]; // pan volume curve
+extern ushort (&D_800900B8)[128]; // velocity volume curve
+extern ushort (&g_ReverbPresets)[10][32]; // the SPU reverb registers HW_REG(0xdc0)-HW_REG(0xdfe)
+extern ushort (&g_ReverbWorkAddr)[10]; // work area start / 8
+extern SeqState (&g_Seq);
+extern SeqChannel (&g_SeqChannels)[25];
+extern unsigned short (&g_SeqMasterVolume);
+extern unsigned short (&g_SeqTickRate);
+extern int (&g_SeqReady);
+extern SoundDriver (&g_SoundDriver);
+extern int (&D_80092E80); // SfxVoices_Update count
+extern unsigned int (&D_80092E84); // voices keyed on
+extern unsigned int (&g_SoundDriverReady);
 
 void Sound_Tick(void)
 {
@@ -612,8 +613,8 @@ SeqFile *SeqFile_Relocate(SeqFile *file)
     if (file->magic != 0x47514553) {
         return 0;
     }
-    delta = (int)file - file->base;
-    file->base = (int)file;
+    delta = (int)rt::to_guest(file) - file->base;
+    file->base = (int)rt::to_guest(file);
     for (i = 0; i < file->count; i++) {
         for (j = 0; j < 16; j++) {
             if (file->songs[i].tracks[j] != 0) {
@@ -950,8 +951,8 @@ int SeqFade_Step(SeqFade *f)
 
 void FUN_8007a8cc(int param_1, unsigned short param_2, unsigned int param_3)
 {
-    *(unsigned short *)(param_1 + 0x1c) = 0;
-    FUN_8007a7cc((SeqFade *)(param_1 + 0x1c), *(unsigned short *)(param_1 + 4), param_2, param_3);
+    *(unsigned short *)rt::from_guest((param_1 + 0x1c)) = 0;
+    FUN_8007a7cc((SeqFade *)rt::from_guest((param_1 + 0x1c)), *(unsigned short *)rt::from_guest((param_1 + 4)), param_2, param_3);
 }
 
 // Fades the master volume to vol over ms milliseconds.

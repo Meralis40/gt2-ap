@@ -4,7 +4,7 @@
 extern "C" {
 
 // The wheel brands' two-letter codes ("bb", "br", "du"...), 0-terminated.
-extern unsigned short D_80050904[];
+extern unsigned short (&D_80050904)[];
 
 // Packs a wheel code (a two-letter brand, a three-digit size, the type digit
 // at 6 and a variant byte at 7) as brand << 28 | size << 16 | type << 13 |

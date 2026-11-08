@@ -1,13 +1,14 @@
 // Resident code 80081c5c-8008264c (cdstream): the CD sector ring that streamed reads
 // fill, the critical section and frame timers, and a few GPU and matrix helpers.
+#include "gptr.h"
 #include "common.h"
 #include "gte.h"
 
 extern "C" {
-extern CdAudio g_CdAudio;
-extern int g_CriticalDepth;
-extern void *g_PacketPtr;
-extern unsigned long g_HeapSize;
+extern CdAudio (&g_CdAudio);
+extern int (&g_CriticalDepth);
+extern game_pointer<void> (&g_PacketPtr);
+extern unsigned int g_HeapSize;
 extern char D_80090894[];
 extern char D_800908B0[];
 extern char D_800908C4[];
@@ -15,11 +16,11 @@ extern char D_800908D8[];
 
 void func_80082EE4(void);
 
-extern TimerSample D_801C951C;
-extern unsigned short D_801C9520;
-extern int D_801C9524;
-extern int D_801C9528;
-extern int D_801C952C;
+extern TimerSample (&D_801C951C);
+extern unsigned short (&D_801C9520);
+extern int (&D_801C9524);
+extern int (&D_801C9528);
+extern int (&D_801C952C);
 
 static inline void CdRing_Reset(void *req)
 {
@@ -63,7 +64,7 @@ void *FUN_80081cc8(OtTag *ot)
     p = (unsigned int *)g_PacketPtr;
     ((unsigned char *)p)[3] = 12;
     Mips_Swl2(link, p);
-    Mips_Swl2((unsigned int)p << 8, ot);
+    Mips_Swl2((unsigned int)rt::to_guest(p) << 8, ot);
     g_PacketPtr = (unsigned char *)p + 0x34;
     return p + 1;
 }
@@ -225,7 +226,7 @@ unsigned char *FUN_80081ff8(void)
 
 unsigned char *CdStream_GetReadPtr(CdAudio *cd)
 {
-    return (unsigned char *)((int)cd->dst + (unsigned int)cd->ringRead * 0x800);
+    return (unsigned char *)rt::from_guest(((int)cd->dst + (unsigned int)cd->ringRead * 0x800));
 }
 
 // The game loads &g_CdAudio into $a0 before the prologue; GCC loads it after.
@@ -284,7 +285,7 @@ void CdAudio_SetupStream(void *buf, int bufSectors, int start, unsigned int end)
     g_CdAudio.reqMode = mode;
     g_CdAudio.reqStart = start;
     g_CdAudio.reqEnd = end;
-    g_CdAudio.onSector = (void *)func_80082EE4;
+    g_CdAudio.onSector = (CdSectorFn *)func_80082EE4;
     g_CdAudio.reqDst = buf;
     g_CdAudio.reqSize = bufSectors;
     CdRing_Reset(&g_CdAudio.reqFlag);

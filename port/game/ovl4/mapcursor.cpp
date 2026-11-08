@@ -3,7 +3,7 @@
 
 extern "C" {
 // g_MapCursor_Sprite, then g_MapCursor_SpriteActive (over a hotspot).
-extern SpriteDesc g_MapCursor_Sprite[2];
+extern SpriteDesc (&g_MapCursor_Sprite)[2];
 
 // Centres the cursor at (0x100, 0xfc) with no hotspot.
 void MapCursor_Init(MapCursor *cursor)

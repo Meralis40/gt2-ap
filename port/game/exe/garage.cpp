@@ -1,11 +1,12 @@
 // Resident code 8005e7b0-80060410 (garage). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern int D_800915A0[];     // CarSetup offset of each LSD setting
-extern int D_800915B8[][3];  // LSD entry offsets of each LSD setting's minimum ([1]) and maximum ([2])
-extern short D_80091600[];   // id of each LSD setting
+extern int (&D_800915A0)[];     // CarSetup offset of each LSD setting
+extern int (&D_800915B8)[][3];  // LSD entry offsets of each LSD setting's minimum ([1]) and maximum ([2])
+extern short (&D_80091600)[];   // id of each LSD setting
 
 // Recomputes a full-custom transmission's ratios and keeps what they were computed
 // with.
@@ -490,15 +491,15 @@ int CarWork_SuspHasSetting0(CarWork *work)
 void CarWork_ComputeStats(CarWork *work, unsigned short *out)
 {
     CarSpec spec;
-    EnginePerf *perf = (EnginePerf *)0x1f8001c0;
+    EnginePerf *perf = (EnginePerf *)rt::from_guest(0x1f8001c0);
 
     CarSpec_FromCarWork(work, &spec);
-    CarParams_Build(&spec, (CarParams *)0x1f800000);
-    CarParams_GetPerformance((CarParams *)0x1f800000, (EnginePerf *)0x1f8001c0);
+    CarParams_Build(&spec, (CarParams *)rt::from_guest(0x1f800000));
+    CarParams_GetPerformance((CarParams *)rt::from_guest(0x1f800000), (EnginePerf *)rt::from_guest(0x1f8001c0));
     out[1] = perf->maxPower;
     out[2] = perf->maxTorque;
-    out[0] = ((CarParams *)0x1f800000)->weight;
-    ((unsigned char *)out)[6] = ((CarParams *)0x1f800000)->drivetrain;
+    out[0] = ((CarParams *)rt::from_guest(0x1f800000))->weight;
+    ((unsigned char *)out)[6] = ((CarParams *)rt::from_guest(0x1f800000))->drivetrain;
 }
 
 // Sets setting from count values (CarWork_GetSettingRange's records).

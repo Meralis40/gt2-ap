@@ -22,21 +22,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up the x86 MSVC environment
+      - name: Set up the x64 MSVC environment
         uses: ilammy/msvc-dev-cmd@v1
         with:
-          arch: x86
+          arch: x64
 
       - name: Configure
-        run: cmake --preset port-windows
+        run: cmake --preset port-windows64
 
       - name: Build
-        run: cmake --build --preset port-windows
+        run: cmake --build --preset port-windows64
 
       - name: Package
         run: >
-          python scripts/package_client.py --binary build/port-win/port/gt2ap.exe --build-dir build/port-win
-          --platform windows-x86 --version "${{ inputs.version }}" --out-dir dist
+          python scripts/package_client.py --binary build/port-win64/port/gt2ap.exe --build-dir build/port-win64
+          --platform windows-x64 --version "${{ inputs.version }}" --out-dir dist
 
       - uses: actions/upload-artifact@v4
         with:
@@ -52,20 +52,20 @@ jobs:
       - name: Install the tools and headers
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang ninja-build gcc-multilib g++-multilib pkg-config \
+          sudo apt-get install -y clang ninja-build pkg-config \
             libx11-dev libxext-dev libxcursor-dev libxi-dev libxfixes-dev libxrandr-dev libxss-dev \
             libxrender-dev libxtst-dev libxkbcommon-dev libpulse-dev libasound2-dev
 
       - name: Configure
-        run: cmake --preset port-linux
+        run: cmake --preset port-linux64
 
       - name: Build
-        run: cmake --build --preset port-linux
+        run: cmake --build --preset port-linux64
 
       - name: Package
         run: >
-          python3 scripts/package_client.py --binary build/port-linux/port/gt2ap --build-dir build/port-linux
-          --platform linux-i686 --version "${{ inputs.version }}" --out-dir dist
+          python3 scripts/package_client.py --binary build/port-linux64/port/gt2ap --build-dir build/port-linux64
+          --platform linux-x86_64 --version "${{ inputs.version }}" --out-dir dist
 
       - uses: actions/upload-artifact@v4
         with:

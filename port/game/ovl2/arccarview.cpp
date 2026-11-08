@@ -3,7 +3,7 @@
 // assembly.
 #include "common.h"
 
-extern "C" unsigned int g_VolLba;
+extern "C" unsigned int (&g_VolLba);
 
 static inline void Translate(MATRIX *m, int x, int y, int z)
 {
@@ -29,10 +29,10 @@ static inline Car *Garage_Car(Garage *garage, int slot)
 }
 
 extern "C" {
-extern int g_ArcCarView_ModelStep;
-extern int g_ArcCarView_TexStep;
-extern GameState g_GameState;
-extern short g_WheelOffsetTable[];
+extern int (&g_ArcCarView_ModelStep);
+extern int (&g_ArcCarView_TexStep);
+extern GameState (&g_GameState);
+extern short (&g_WheelOffsetTable)[];
 void GroundDisc_Init_OVL2(GroundDisc *disc, int unused);
 void GroundDisc_Draw_OVL2(GroundDisc *disc, void *ot, Camera *camera, int blend, unsigned int rgb);
 void ArcCarView_SetColor(ArcCarView *view, int color);

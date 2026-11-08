@@ -1,17 +1,18 @@
 // OVL0 80048528-800489d8 (resultcar): Result car drawing.
 // The functions that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern char *g_PacketPtr;
-extern char *g_PacketEnd;
+extern game_pointer<char> (&g_PacketPtr);
+extern game_pointer<char> (&g_PacketEnd);
 
 // Cut-down CarModel_Draw: LOD 0 body only (always the clipped path), no wheels and no
 // shadow, lit by the car's rotation scaled down by 8. Used for the prize car shown on
 // the license and championship prize pages.
 void CarModel_DrawBodyOnly(Camera *cam, CarModelInst *inst)
 {
-    CarScratch *sp = (CarScratch *)0x1f800000;
+    CarScratch *sp = (CarScratch *)rt::from_guest(0x1f800000);
     short light[12];            // the rotation part of a MATRIX: Matrix_Mul writes no translation
     MATRIX *world;
     CarModelHeader *model;

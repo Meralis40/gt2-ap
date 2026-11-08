@@ -1,6 +1,7 @@
 // Resident code 8006dcb8-8006e1cc (buttonprompt): a box with one message,
 // confirmed or cancelled with a button (used instead of the save dialog when
 // saving is not offered). It opens as a fade and closes as a horizontal wipe.
+#include "gptr.h"
 #include "common.h"
 
 // Pad bits of PadState.pressed.
@@ -8,8 +9,8 @@
 #define PAD_CANCEL 0x500
 
 extern "C" {
-extern TextStyle D_80091EA8;    // the message's style
-extern uint D_80091EC4;         // the colour boxes fade from and to
+extern TextStyle (&D_80091EA8);    // the message's style
+extern uint (&D_80091EC4);         // the colour boxes fade from and to
 
 void ButtonPrompt_Init(ButtonPrompt *p, ButtonPromptDesc *desc)
 {
@@ -58,21 +59,21 @@ void ButtonPrompt_Init(ButtonPrompt *p, ButtonPromptDesc *desc)
 
 void ButtonPrompt_Open(void *p)
 {
-    TextItem_Show((TextItem *)((int)p + 4), -1);
-    *(unsigned short *)((int)p + 0x32) = 0;
-    *(unsigned short *)((int)p + 0x2c) = *(unsigned short *)((int)p + 0x2c) | 0x80;
+    TextItem_Show((TextItem *)rt::from_guest(((int)rt::to_guest(p) + 4)), -1);
+    *(unsigned short *)rt::from_guest(((int)rt::to_guest(p) + 0x32)) = 0;
+    *(unsigned short *)rt::from_guest(((int)rt::to_guest(p) + 0x2c)) = *(unsigned short *)rt::from_guest(((int)rt::to_guest(p) + 0x2c)) | 0x80;
 }
 
 void FUN_8006de0c(int param_1)
 {
-    *(short *)(param_1 + 0x32) = 0xffff;
-    *(short *)(param_1 + 0x26) = 0xffff;
+    *(short *)rt::from_guest((param_1 + 0x32)) = 0xffff;
+    *(short *)rt::from_guest((param_1 + 0x26)) = 0xffff;
 }
 
 void ButtonPrompt_Close(void *p)
 {
-    *(short *)((int)p + 0x32) = 0xfff3;
-    TextItem_Hide((TextItem *)((int)p + 4));
+    *(short *)rt::from_guest(((int)rt::to_guest(p) + 0x32)) = 0xfff3;
+    TextItem_Hide((TextItem *)rt::from_guest(((int)rt::to_guest(p) + 4)));
 }
 
 // Returns 0 when confirmed, -1 when cancelled, -2 otherwise (and while

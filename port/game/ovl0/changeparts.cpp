@@ -1,21 +1,22 @@
 // OVL0 80052838-80057628 (changeparts): Parts change and settings pages.
 // The functions that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
 // A choice of a part (a row of the variant list).
 struct PartsVariant {
-    char *name;
-    char *help;
+    game_pointer<char> name;
+    game_pointer<char> help;
     short part;
     short pad;
 };
 
 // A part of a group.
 struct PartsItem {
-    char *name;
-    char *help;
-    PartsVariant *variants;
+    game_pointer<char> name;
+    game_pointer<char> help;
+    game_pointer<PartsVariant> variants;
     short slot; /* CarWork.partSlots */
     signed char icon;
     unsigned char flags; /* 0x80 the power is limited; 0x40 greyed, follows the event's turbo rule */
@@ -23,8 +24,8 @@ struct PartsItem {
 
 // A page of Change Parts.
 struct PartsGroup {
-    char *name;
-    char *help;
+    game_pointer<char> name;
+    game_pointer<char> help;
     unsigned char rgb[4];
     signed char icon;
     unsigned char pad[3];
@@ -64,8 +65,8 @@ struct PartsSprite {
 
 // A row of the value list of Parts Setting.
 struct SettingRow {
-    char *label;
-    char *unit;
+    game_pointer<char> label;
+    game_pointer<char> unit;
     unsigned char format;
     unsigned char pad9;
     SettingRange range;
@@ -76,23 +77,23 @@ struct SettingRow {
 
 // A setting.
 struct SettingItem {
-    char *name;
-    char *help;
-    char *unit;
+    game_pointer<char> name;
+    game_pointer<char> help;
+    game_pointer<char> unit;
     signed char kind;
     unsigned char format; /* low bits Setting_Format's; 0x80: has a front and a rear value */
 };
 
 struct SettingEntry {
-    SettingItem *item;
+    game_pointer<SettingItem> item;
     short id;
     short pad;
 };
 
 // A page of Parts Setting.
 struct SettingsGroup {
-    char *name;
-    char *help;
+    game_pointer<char> name;
+    game_pointer<char> help;
     unsigned char rgb[4];
     signed char icon;
     unsigned char pad[3];
@@ -125,99 +126,99 @@ struct PartsSettingMenu {
 #define CAR_FROM_GARAGE(garage, index) ((char *)(garage) + (index) * 0xa4 + 4)
 
 extern "C" {
-extern void *g_Settings_Work;
-extern GameState g_GameState;
-extern RaceSetup g_RaceSetup;
-extern char g_Race_IsDemo;
-extern QuickMenu *g_QuickMenu;
-extern void *g_OVL0_KanjiFont;
-extern Font g_OVL0_FontA;
-extern Font g_OVL0_FontB;
-extern Font g_OVL0_FontD;
-extern short g_ChangeParts_Group;
-extern short g_ChangeParts_Item;
-extern signed char g_ChangeParts_PowerLimited;
-extern int g_ChangeParts_ShowHelp;
-extern char *g_ChangeParts_HelpTitle;
-extern char *g_ChangeParts_HelpText;
-extern PartsGroup *g_ChangeParts_GroupsAll[];
-extern PartsGroup *g_ChangeParts_GroupsTurbo[];
-extern PartsGroup *g_ChangeParts_GroupsNa[];
-extern MenuList g_ChangeParts_VariantList;
-extern WipeBar g_ChangeParts_HelpBar;
-extern PowerGraphView g_ChangeParts_PowerGraph;
-extern short g_PartsSetting_Group;
-extern short g_PartsSetting_Item;
-extern short g_PartsSetting_ValueCount;
-extern int g_PartsSetting_ShowHelp;
-extern char *g_PartsSetting_HelpTitle;
-extern char *g_PartsSetting_HelpText;
-extern SettingsGroup *g_PartsSetting_Groups[];
-extern MenuList g_PartsSetting_ValueList;
-extern WipeBar g_PartsSetting_HelpBar;
-extern QuickMenuPage g_Page_ChangeParts;
-extern QuickMenuPage g_Page_PartsSetting;
-extern WipeBar D_8005C3C0;
-extern WipeBar D_8005D1A4;
-extern short D_8005C428;
-extern short D_8005D1A0;
-extern PartsSprite D_8005B830[];
-extern PartsSprite D_8005B89C;
-extern PartsSprite D_8005B8A8;
-extern PartsSprite D_8005B8B4[];
-extern unsigned char D_8005B95C[];
-extern unsigned char D_8005B960[];
-extern unsigned int D_8005B964;
-extern unsigned int D_8005B968;
-extern unsigned char D_8005B96C[];
-extern unsigned char D_8005B970[];
-extern unsigned int D_8005B974;
-extern unsigned char D_8005B978[];
-extern unsigned char D_8005B97C[];
-extern unsigned char D_8005C46C[];
-extern unsigned char D_8005C470[];
-extern unsigned int D_8005C474;
-extern unsigned char D_8005C478[];
-extern unsigned char D_8005C47C[];
-extern unsigned char D_8005C480[];
-extern unsigned char D_8005C484[];
-extern unsigned char D_8005C488[];
-extern unsigned char D_8005C48C[];
-extern unsigned char D_8005C490[];
-extern unsigned int D_8005C494;
-extern unsigned int D_8005C498;
-extern unsigned char D_8005C49C[];
-extern unsigned int D_8005C4A0;
-extern char *D_8005C4A4[];
-extern SettingItem D_8005C5F0;
-extern SettingItem D_8005C600;
-extern SettingItem D_8005C610;
-extern SettingItem D_8005C620;
-extern SettingItem D_8005C630;
-extern SettingItem D_8005C640;
-extern SettingsGroup D_8005C650;
-extern SettingsGroup D_8005C6E0;
-extern SettingsGroup D_8005C770;
-extern SettingsGroup D_8005CFE0;
-extern SettingsGroup D_8005D070;
-extern SettingsGroup *D_8005D100[];
-extern SettingsGroup *D_8005D120[];
-extern char D_8005A9A8[];
-extern char D_8005A9AC[];
-extern char D_8005A9B0[];
-extern char D_8005A9B8[];
-extern char D_8005A9C0[];
-extern char D_8005A9E0[];
-extern char sR_L1PARTSSETTING[];
-extern char sR_R1CHANGEPARTS[];
-extern char sR_NhpNrpm[];
-extern char sR_PowerRestrictedToNhp[];
-extern char sR_Sports_71ee[];
-extern char sR_Soft[];
-extern char sR_Hard[];
-extern char sR_Front[];
-extern char sR_Rear[];
-extern char sR_Final[];
+extern game_pointer<void> (&g_Settings_Work);
+extern GameState (&g_GameState);
+extern RaceSetup (&g_RaceSetup);
+extern char (&g_Race_IsDemo);
+extern game_pointer<QuickMenu> (&g_QuickMenu);
+extern game_pointer<void> (&g_OVL0_KanjiFont);
+extern Font (&g_OVL0_FontA);
+extern Font (&g_OVL0_FontB);
+extern Font (&g_OVL0_FontD);
+extern short (&g_ChangeParts_Group);
+extern short (&g_ChangeParts_Item);
+extern signed char (&g_ChangeParts_PowerLimited);
+extern int (&g_ChangeParts_ShowHelp);
+extern game_pointer<char> (&g_ChangeParts_HelpTitle);
+extern game_pointer<char> (&g_ChangeParts_HelpText);
+extern game_pointer<PartsGroup> (&g_ChangeParts_GroupsAll)[];
+extern game_pointer<PartsGroup> (&g_ChangeParts_GroupsTurbo)[];
+extern game_pointer<PartsGroup> (&g_ChangeParts_GroupsNa)[];
+extern MenuList (&g_ChangeParts_VariantList);
+extern WipeBar (&g_ChangeParts_HelpBar);
+extern PowerGraphView (&g_ChangeParts_PowerGraph);
+extern short (&g_PartsSetting_Group);
+extern short (&g_PartsSetting_Item);
+extern short (&g_PartsSetting_ValueCount);
+extern int (&g_PartsSetting_ShowHelp);
+extern game_pointer<char> (&g_PartsSetting_HelpTitle);
+extern game_pointer<char> (&g_PartsSetting_HelpText);
+extern game_pointer<SettingsGroup> (&g_PartsSetting_Groups)[];
+extern MenuList (&g_PartsSetting_ValueList);
+extern WipeBar (&g_PartsSetting_HelpBar);
+extern QuickMenuPage (&g_Page_ChangeParts);
+extern QuickMenuPage (&g_Page_PartsSetting);
+extern WipeBar (&D_8005C3C0);
+extern WipeBar (&D_8005D1A4);
+extern short (&D_8005C428);
+extern short (&D_8005D1A0);
+extern PartsSprite (&D_8005B830)[];
+extern PartsSprite (&D_8005B89C);
+extern PartsSprite (&D_8005B8A8);
+extern PartsSprite (&D_8005B8B4)[];
+extern unsigned char (&D_8005B95C)[];
+extern unsigned char (&D_8005B960)[];
+extern unsigned int (&D_8005B964);
+extern unsigned int (&D_8005B968);
+extern unsigned char (&D_8005B96C)[];
+extern unsigned char (&D_8005B970)[];
+extern unsigned int (&D_8005B974);
+extern unsigned char (&D_8005B978)[];
+extern unsigned char (&D_8005B97C)[];
+extern unsigned char (&D_8005C46C)[];
+extern unsigned char (&D_8005C470)[];
+extern unsigned int (&D_8005C474);
+extern unsigned char (&D_8005C478)[];
+extern unsigned char (&D_8005C47C)[];
+extern unsigned char (&D_8005C480)[];
+extern unsigned char (&D_8005C484)[];
+extern unsigned char (&D_8005C488)[];
+extern unsigned char (&D_8005C48C)[];
+extern unsigned char (&D_8005C490)[];
+extern unsigned int (&D_8005C494);
+extern unsigned int (&D_8005C498);
+extern unsigned char (&D_8005C49C)[];
+extern unsigned int (&D_8005C4A0);
+extern game_pointer<char> (&D_8005C4A4)[];
+extern SettingItem (&D_8005C5F0);
+extern SettingItem (&D_8005C600);
+extern SettingItem (&D_8005C610);
+extern SettingItem (&D_8005C620);
+extern SettingItem (&D_8005C630);
+extern SettingItem (&D_8005C640);
+extern SettingsGroup (&D_8005C650);
+extern SettingsGroup (&D_8005C6E0);
+extern SettingsGroup (&D_8005C770);
+extern SettingsGroup (&D_8005CFE0);
+extern SettingsGroup (&D_8005D070);
+extern game_pointer<SettingsGroup> (&D_8005D100)[];
+extern game_pointer<SettingsGroup> (&D_8005D120)[];
+extern char (&D_8005A9A8)[];
+extern char (&D_8005A9AC)[];
+extern char (&D_8005A9B0)[];
+extern char (&D_8005A9B8)[];
+extern char (&D_8005A9C0)[];
+extern char (&D_8005A9E0)[];
+extern char (&sR_L1PARTSSETTING)[];
+extern char (&sR_R1CHANGEPARTS)[];
+extern char (&sR_NhpNrpm)[];
+extern char (&sR_PowerRestrictedToNhp)[];
+extern char (&sR_Sports_71ee)[];
+extern char (&sR_Soft)[];
+extern char (&sR_Hard)[];
+extern char (&sR_Front)[];
+extern char (&sR_Rear)[];
+extern char (&sR_Final)[];
 
 int PowerGraph_Step(void *g);
 void PowerGraph_GetMax(void *g, int *out);
@@ -244,7 +245,7 @@ static inline CarWork *Settings_CarWork(void)
     int offset = 0xc5397;
     char *base = &g_Race_IsDemo;
 
-    return (CarWork *)((int)(base + offset) & -4);
+    return (CarWork *)rt::from_guest(((int)rt::to_guest((base + offset)) & -4));
 }
 
 // g_RaceSetup, as the game reaches it: g_GameState plus 0xbf7c, added at run time.
@@ -387,7 +388,7 @@ void ChangeParts_DrawItems(PartsGroup *group, uint *ot, int selected, int x, int
 void *ChangeParts_GetGroup(int index)
 {
     CarWork *work = Settings_CarWork();
-    PartsGroup **groups;
+    game_pointer<PartsGroup> *groups;
 
     if (CarWork_HasTurboKits(work) != 0) {
         if (CarWork_HasNaTune(work) != 0) {
@@ -593,11 +594,11 @@ void ChangeParts_SelectGroup(void *menu, int group)
     unsigned int uVar2;
 
     pvVar1 = ChangeParts_GetGroup(group);
-    *(unsigned int *)((int)menu + 0x30) = *(unsigned int *)((int)menu + 0x34);
-    uVar2 = *(unsigned int *)((int)pvVar1 + 8);
-    *(char *)((int)menu + 5) = (char)group;
-    *(unsigned int *)((int)menu + 0x34) = uVar2;
-    ChangeParts_SetHelpTitle(*(char **)((int)pvVar1 + 4));
+    *(unsigned int *)rt::from_guest(((int)rt::to_guest(menu) + 0x30)) = *(unsigned int *)rt::from_guest(((int)rt::to_guest(menu) + 0x34));
+    uVar2 = *(unsigned int *)rt::from_guest(((int)rt::to_guest(pvVar1) + 8));
+    *(char *)rt::from_guest(((int)rt::to_guest(menu) + 5)) = (char)group;
+    *(unsigned int *)rt::from_guest(((int)rt::to_guest(menu) + 0x34)) = uVar2;
+    ChangeParts_SetHelpTitle(*(game_pointer<char> *)rt::from_guest(((int)rt::to_guest(pvVar1) + 4)));
 }
 
 void ChangeParts_SelectItem(ChangePartsMenu *menu, int item)
@@ -638,9 +639,9 @@ void ChangeParts_Init(ChangePartsMenu *menu, int x, int y)
 // Starts the open animation.
 void ChangeParts_Open(void *menu)
 {
-    *(unsigned short *)((int)menu + 10) = 0;
-    *(unsigned short *)((int)menu + 0x2c) = 0;
-    *(unsigned short *)((int)menu + 0xe) = 0;
+    *(unsigned short *)rt::from_guest(((int)rt::to_guest(menu) + 10)) = 0;
+    *(unsigned short *)rt::from_guest(((int)rt::to_guest(menu) + 0x2c)) = 0;
+    *(unsigned short *)rt::from_guest(((int)rt::to_guest(menu) + 0xe)) = 0;
 }
 
 void ChangeParts_Close(ChangePartsMenu *menu)
@@ -1550,7 +1551,7 @@ int PartsSetting_BuildGroups(void)
     int gears = CarWork_GetGearCount(work);
     int count;
     int n;
-    SettingsGroup **slot;
+    game_pointer<SettingsGroup> *slot;
 
     g_PartsSetting_Groups[0] = &D_8005C6E0;
     if (CarWork_HasFullSuspension(work) != 0) {
@@ -1686,9 +1687,9 @@ void PartsSetting_Init(PartsSettingMenu *menu, int x, int y)
 // Starts the open animation.
 void PartsSetting_Open(void *menu)
 {
-    *(unsigned short *)((int)menu + 0xc) = 0;
-    *(unsigned short *)((int)menu + 0x23c) = 0;
-    *(unsigned short *)((int)menu + 10) = 0;
+    *(unsigned short *)rt::from_guest(((int)rt::to_guest(menu) + 0xc)) = 0;
+    *(unsigned short *)rt::from_guest(((int)rt::to_guest(menu) + 0x23c)) = 0;
+    *(unsigned short *)rt::from_guest(((int)rt::to_guest(menu) + 10)) = 0;
 }
 
 void PartsSetting_Close(PartsSettingMenu *menu)
@@ -2122,7 +2123,7 @@ void PartsSetting_Draw(void *self, unsigned int *ot)
 void *Settings_SetWork(void *work)
 {
     g_Settings_Work = work;
-    return (void *)((int)work + 0x2cc4);
+    return (void *)rt::from_guest(((int)rt::to_guest(work) + 0x2cc4));
 }
 
 // Rebuilds the car's parameters after a change, and stores its setup in the race and
@@ -2169,7 +2170,7 @@ void Settings_Apply(void)
     }
     }
     if (setup->raceType == 1) {
-        *(CarWork *)(((int)&g_GameState + 0x10bd8) & -4) = *work;
+        *(CarWork *)rt::from_guest((((int)rt::to_guest(&g_GameState) + 0x10bd8) & -4)) = *work;
     }
 }
 
@@ -2234,7 +2235,7 @@ int ChangePartsPage_Update(int active)
 // ChangeParts_Draw.
 void ChangePartsPage_Draw(DrawLayer *layer)
 {
-    ChangeParts_Draw(g_Settings_Work, (unsigned int *)((int)layer->ot + 0x10));
+    ChangeParts_Draw(g_Settings_Work, (unsigned int *)rt::from_guest(((int)layer->ot + 0x10)));
 }
 
 void PartsSettingPage_Enter(void)
@@ -2293,6 +2294,6 @@ int PartsSettingPage_Update(int active)
 // PartsSetting_Draw.
 void PartsSettingPage_Draw(DrawLayer *layer)
 {
-    PartsSetting_Draw((void *)((int)g_Settings_Work + 0x2a7c), (unsigned int *)((int)layer->ot + 0x10));
+    PartsSetting_Draw((void *)rt::from_guest(((int)g_Settings_Work + 0x2a7c)), (unsigned int *)rt::from_guest(((int)layer->ot + 0x10)));
 }
 }

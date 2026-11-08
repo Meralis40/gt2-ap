@@ -4,8 +4,8 @@
 #include "common.h"
 
 extern "C" {
-extern unsigned char g_OVL2_FileBuf[];
-extern unsigned int g_VolLba;
+extern unsigned char (&g_OVL2_FileBuf)[];
+extern unsigned int (&g_VolLba);
 
 
 // state = 0.

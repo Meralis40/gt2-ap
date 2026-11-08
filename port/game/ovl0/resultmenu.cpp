@@ -1,6 +1,7 @@
 // OVL0 80049a14-8004a718 (resultmenu): Result menu pages.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
@@ -20,7 +21,7 @@ static inline int RaceSetup_Type(void)
 
 // A row of the result menu.
 struct ResultOption {
-    char *label;
+    game_pointer<char> label;
     signed char enabled;
     signed char next;
 };
@@ -41,7 +42,7 @@ struct ResultWork {
 struct InfoBarDesc {
     uint unk00;
     uint unk04;
-    char *label;
+    game_pointer<char> label;
     uint labelRgb;
     uint value;
     uint valueRgb;
@@ -58,31 +59,31 @@ struct ChampProgress {
 };
 
 extern "C" {
-extern QuickMenu *g_QuickMenu;
-extern ResultWork *g_OVL0_EndFontInfo;
-extern ResultOption *g_ResultMenu_Options;
-extern ResultOption g_ResultMenu_OptionsSingle[];
-extern ResultOption g_ResultMenu_OptionsChamp[];
-extern ResultOption g_ResultMenu_OptionsChampLast[];
-extern ResultOption g_ResultMenu_OptionsRally[];
-extern MenuList g_ResultMenu_List;
-extern char *g_ResultMenu_PlaceTexts[];
-extern QuickMenuPage g_Page_ResultMenu;
-extern QuickMenuPage g_Page_Quit;
-extern QuickMenuPage g_Page_SaveReplay;
-extern TextStyle D_8005AD20;
-extern WipeBar D_8005AD3C;
-extern InfoBarDesc D_8005AC50;
-extern InfoBarDesc D_8005AC70;
-extern InfoBarDesc D_8005AC90;
-extern InfoBarDesc D_8005ACB0;
-extern InfoBarDesc D_8005ACD0;
-extern CardDialogDesc D_8005ACF0;
-extern void *D_800A9F00;
-extern char sR_CHAMPIONSHIP[];
-extern char sR_SINGLERACE[];
-extern char sR_WinN[];
-extern char sR_Retire[];
+extern game_pointer<QuickMenu> (&g_QuickMenu);
+extern game_pointer<ResultWork> (&g_OVL0_EndFontInfo);
+extern game_pointer<ResultOption> (&g_ResultMenu_Options);
+extern ResultOption (&g_ResultMenu_OptionsSingle)[];
+extern ResultOption (&g_ResultMenu_OptionsChamp)[];
+extern ResultOption (&g_ResultMenu_OptionsChampLast)[];
+extern ResultOption (&g_ResultMenu_OptionsRally)[];
+extern MenuList (&g_ResultMenu_List);
+extern game_pointer<char> (&g_ResultMenu_PlaceTexts)[];
+extern QuickMenuPage (&g_Page_ResultMenu);
+extern QuickMenuPage (&g_Page_Quit);
+extern QuickMenuPage (&g_Page_SaveReplay);
+extern TextStyle (&D_8005AD20);
+extern WipeBar (&D_8005AD3C);
+extern InfoBarDesc (&D_8005AC50);
+extern InfoBarDesc (&D_8005AC70);
+extern InfoBarDesc (&D_8005AC90);
+extern InfoBarDesc (&D_8005ACB0);
+extern InfoBarDesc (&D_8005ACD0);
+extern CardDialogDesc (&D_8005ACF0);
+extern game_pointer<void> (&D_800A9F00);
+extern char (&sR_CHAMPIONSHIP)[];
+extern char (&sR_SINGLERACE)[];
+extern char (&sR_WinN)[];
+extern char (&sR_Retire)[];
 void QuickMenu_PushPage(QuickMenu *menu, QuickMenuPage *page);
 void InfoBar_Init(InfoBar *bar, InfoBarDesc *desc);
 void InfoBar_Draw(InfoBar *bar, uint *ot, int x, int y, TextCtx *ctx);
@@ -190,7 +191,7 @@ void ResultRoot_Enter(int back)
     pQVar2 = g_QuickMenu->activePage;
     pQVar2->sel = (short)back;
     pQVar2->timer = 0x14;
-    QuickMenu_SetupCardUi((void *)((int)pvVar1 + 0x6e8));
+    QuickMenu_SetupCardUi((void *)rt::from_guest(((int)rt::to_guest(pvVar1) + 0x6e8)));
     QuickMenu_PlayMusic(8);
 }
 
@@ -322,10 +323,10 @@ void ResultMenu_Enter(int back)
             unsigned short *wins = (unsigned short *)(base + 0xb8);
 
             sprintf(g_OVL0_EndFontInfo->wins[0], format, wins[0x22]);
-            D_8005ACB0.value = (uint)g_OVL0_EndFontInfo->wins[0];
+            D_8005ACB0.value = (uint)rt::to_guest(g_OVL0_EndFontInfo->wins[0]);
             InfoBar_Init(&g_OVL0_EndFontInfo->info[3], &D_8005ACB0);
             sprintf(g_OVL0_EndFontInfo->wins[1], format, wins[0x23]);
-            D_8005ACD0.value = (uint)g_OVL0_EndFontInfo->wins[1];
+            D_8005ACD0.value = (uint)rt::to_guest(g_OVL0_EndFontInfo->wins[1]);
             InfoBar_Init(&g_OVL0_EndFontInfo->info[4], &D_8005ACD0);
         } else {
             RaceRecord *record = (RaceRecord *)(base + 0xc5a8);
@@ -333,7 +334,7 @@ void ResultMenu_Enter(int back)
             InfoBarDesc *total = &D_8005AC70;
             InfoBarDesc *best = &D_8005AC90;
 
-            place->value = (uint)sR_Retire;
+            place->value = (uint)rt::to_guest(sR_Retire);
             total->value = record->unkf8;
             best->value = *(uint *)&record->best;
             if (record->unk00 > 0) {

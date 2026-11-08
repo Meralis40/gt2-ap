@@ -4,12 +4,13 @@
 #include "common.h"
 
 extern "C" {
-extern RECT g_DrawArea;
+extern RECT (&g_DrawArea);
 
 }
 
 psxViewLoopDoubleBuffer::psxViewLoopDoubleBuffer()
 {
+    vptr.address = 0x80090630;  // psxViewLoopDoubleBuffer's vtable
     bufferCount = 2;
 }
 
@@ -21,9 +22,9 @@ psxViewLoopDoubleBuffer::~psxViewLoopDoubleBuffer()
 // leaves.
 void psxViewLoopDoubleBuffer::Leave()
 {
-    Flip();
-    DrawFrame();
-    DrawFrame();
+    v_Flip();
+    v_DrawFrame();
+    v_DrawFrame();
     ViewDrawContext_Submit(&draw);
     Gpu_DrawSync();
     psxViewLoop::Leave();

@@ -2,21 +2,22 @@
 // loading screen, with its car placement and body drawing. Its vtable and type
 // name (.rodata), its __tf function and typeinfo (.bss, which build.py's
 // CXX_NAMES places) are emitted here.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern ArcadeLoadInfo g_ArcadeLoadInfo;
-extern char *g_PacketPtr;
-extern char *g_PacketEnd;
-extern char g_OVL2_Strings[];           // the arcade strings, inflated by ArcadeMode_Run
-extern unsigned char g_OVL2_FileBuf[];
-extern unsigned char g_ArcadeT002nModel[];
-extern unsigned short D_800454D4[];     // [1] clut y and [4] texture page of the car views
-extern unsigned char D_800274D4[];      // the car views' models
-extern unsigned char D_800F8800[];
-extern unsigned short D_8019C1E0[];     // the car texture, uploaded to 0x140, 0
-extern Font D_80093130;                 // the resident font of the car list
-extern Font D_80129820;
+extern ArcadeLoadInfo (&g_ArcadeLoadInfo);
+extern game_pointer<char> (&g_PacketPtr);
+extern game_pointer<char> (&g_PacketEnd);
+extern char (&g_OVL2_Strings)[];           // the arcade strings, inflated by ArcadeMode_Run
+extern unsigned char (&g_OVL2_FileBuf)[];
+extern unsigned char (&g_ArcadeT002nModel)[];
+extern unsigned short (&D_800454D4)[];     // [1] clut y and [4] texture page of the car views
+extern unsigned char (&D_800274D4)[];      // the car views' models
+extern unsigned char (&D_800F8800)[];
+extern unsigned short (&D_8019C1E0)[];     // the car texture, uploaded to 0x140, 0
+extern Font (&D_80093130);                 // the resident font of the car list
+extern Font (&D_80129820);
 }
 
 // A rounded box for Prim_AddRoundedBox: its colour and code, then its rectangle.
@@ -30,7 +31,7 @@ struct RoundedBox {
 // t002n model of the loading screen.
 void ArcadeRacingMenu_DrawBody(Camera *cam, CarModelInst *inst)
 {
-    CarScratch *sp = (CarScratch *)0x1f800000;
+    CarScratch *sp = (CarScratch *)rt::from_guest(0x1f800000);
     int light[6];               // the rotation part of a MATRIX: Matrix_Mul writes no translation
     MATRIX *world;
     CarModelHeader *model;
@@ -81,6 +82,7 @@ void ArcadeRacingMenu_DrawBody(Camera *cam, CarModelInst *inst)
 
 ArcadeRacingMenu::ArcadeRacingMenu()
 {
+    vptr.address = 0x80027010;  // ArcadeRacingMenu's vtable
 }
 
 ArcadeRacingMenu::~ArcadeRacingMenu()

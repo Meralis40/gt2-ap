@@ -4,7 +4,7 @@
 #include "common.h"
 
 extern "C" {
-extern CdAudio g_CdAudio;
+extern CdAudio (&g_CdAudio);
 
 // Restarts the read until the drive reports no error, calling onRetry (if any)
 // between attempts.

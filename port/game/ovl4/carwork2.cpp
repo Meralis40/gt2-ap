@@ -1,14 +1,15 @@
 // OVL4 80016fec-80017750 (carwork2): CarWork helpers: setup export, part slots,
 // loading garage cars, the installed parts summary, racing modification variants.
 // Assembled by GNU as (GAS_CXX), for FUN_OVL4__8001719c's loop label.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern CarWork g_CarWork;
-extern GameState g_GameState;
-extern char g_RaceRecords[];
-extern TuneSummaryRow g_TuneSummaryRows[];
-extern short g_RacingMod_Variant;
+extern CarWork (&g_CarWork);
+extern GameState (&g_GameState);
+extern char (&g_RaceRecords)[];
+extern TuneSummaryRow (&g_TuneSummaryRows)[];
+extern short (&g_RacingMod_Variant);
 
 // Refits the transmission stage, marks the setup and copies it to out.
 void CarWork_ExportSetup(CarWork *work, CarSetup *out)
@@ -174,7 +175,7 @@ void ListCarWork_Load(int slot)
     GameState *gs = &g_GameState;
     char *base = (char *)gs;
     int offset = 0xc6c0;
-    CarWork *work = (CarWork *)((int)(base + offset) & ~3);
+    CarWork *work = (CarWork *)rt::from_guest(((int)rt::to_guest((base + offset)) & ~3));
     Garage *g = &gs->garages[0];
     Car *car;
 
@@ -190,7 +191,7 @@ void Tune_DrawInstalledParts(void *ot, int x, int y)
 {
     char *base = g_RaceRecords;
     int offset = 0x118;
-    CarWork *work = (CarWork *)((int)(base + offset) & ~3);
+    CarWork *work = (CarWork *)rt::from_guest(((int)rt::to_guest((base + offset)) & ~3));
     TuneSummaryRow *row;
 
     row = g_TuneSummaryRows;

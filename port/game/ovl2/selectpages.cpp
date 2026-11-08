@@ -6,32 +6,32 @@
 extern "C" {
 void ArcCourseList_InitAll(void);
 void ArcCarList_UpdateUnlocks(void);
-extern GameState g_GameState;
-extern ArcGarageInfo g_Arc_HomeGarageInfo;
-extern ArcadeRaceSel g_ArcSel_Level;
-extern short g_Arc_CourseSet;
-extern int g_Arc_RallyMode;
-extern ArcMenuList g_ArcMenu_Mode;
-extern ArcMenuList g_ArcMenu_Game1P;
-extern ArcMenuList g_ArcMenu_Game2P;
-extern ArcMenuList g_ArcMenu_Level;
-extern ArcMenuList g_ArcMenu_Class;
-extern ArcMenuList g_ArcMenu_RallyClass;
-extern MenuPage *g_ArcModePages[];
-extern unsigned char g_Arc1PRaceTypes[];
-extern unsigned int g_ArcClassColors[];
-extern MenuPage g_ArcPage_Mode;
-extern MenuPage g_ArcPage_Level;
-extern MenuPage g_ArcPage_Class;
-extern MenuPage g_ArcPage_RallyClass;
-extern MenuPage g_ArcPage_CarSelect;
-extern MenuPage g_ArcPage_Garage;
-extern MenuPage g_ArcPage_Battle2P;
-extern ArcMenuItem D_8004FBFC[]; // the class rows with class S
-extern ArcMenuItem D_8004FC10[]; // without
-extern ArcMenuItem D_8004FC4C[2]; // the garage rows
-extern ArcMenuItem D_8004FD08[2]; // the rally page's
-extern char *D_8004FDDC[]; // the garages' titles
+extern GameState (&g_GameState);
+extern ArcGarageInfo (&g_Arc_HomeGarageInfo);
+extern ArcadeRaceSel (&g_ArcSel_Level);
+extern short (&g_Arc_CourseSet);
+extern int (&g_Arc_RallyMode);
+extern ArcMenuList (&g_ArcMenu_Mode);
+extern ArcMenuList (&g_ArcMenu_Game1P);
+extern ArcMenuList (&g_ArcMenu_Game2P);
+extern ArcMenuList (&g_ArcMenu_Level);
+extern ArcMenuList (&g_ArcMenu_Class);
+extern ArcMenuList (&g_ArcMenu_RallyClass);
+extern game_pointer<MenuPage> (&g_ArcModePages)[];
+extern unsigned char (&g_Arc1PRaceTypes)[];
+extern unsigned int (&g_ArcClassColors)[];
+extern MenuPage (&g_ArcPage_Mode);
+extern MenuPage (&g_ArcPage_Level);
+extern MenuPage (&g_ArcPage_Class);
+extern MenuPage (&g_ArcPage_RallyClass);
+extern MenuPage (&g_ArcPage_CarSelect);
+extern MenuPage (&g_ArcPage_Garage);
+extern MenuPage (&g_ArcPage_Battle2P);
+extern ArcMenuItem (&D_8004FBFC)[]; // the class rows with class S
+extern ArcMenuItem (&D_8004FC10)[]; // without
+extern ArcMenuItem (&D_8004FC4C)[2]; // the garage rows
+extern ArcMenuItem (&D_8004FD08)[2]; // the rally page's
+extern game_pointer<char> (&D_8004FDDC)[]; // the garages' titles
 
 static inline ArcSavedSel *ArcSavedOf(GameState *state)
 {

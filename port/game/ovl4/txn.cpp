@@ -2,7 +2,7 @@
 #include "common.h"
 
 extern "C" {
-extern GameState g_GameState;
+extern GameState (&g_GameState);
 
 // Type 0, price 0.
 void Txn_Init(ShopTxn *txn)

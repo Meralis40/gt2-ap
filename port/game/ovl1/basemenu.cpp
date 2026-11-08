@@ -3,24 +3,25 @@
 // function are emitted here; build.py's CXX_NAMES places its typeinfo.
 // The functions that don't match yet are the original assembly, with their C++
 // under NON_MATCHING.
+#include "gptr.h"
 #include "copies.h"
 #include "common.h"
 
 extern "C" {
-extern TextCtx g_OVL1_TitleText;
-extern Font g_OVL1_FontTitle;
-extern Font g_OVL1_FontLarge;
-extern Font g_OVL1_FontMedium;
-extern Font g_OVL1_FontSmall;
-extern unsigned char D_801A95C0[];
-extern unsigned char D_8003A6C4[];
-extern int g_OVL1_FontInfo[];
-extern unsigned int g_OVL1_EndFontInfo;
-extern BaseMenu *g_CurrentMenu;
-extern short g_CardSlotStatus[];
-extern unsigned int D_801F0698;
-extern KanjiFont *g_OVL1_KanjiFont;
-extern unsigned char g_OVL1_KanjiFontData[];
+extern TextCtx (&g_OVL1_TitleText);
+extern Font (&g_OVL1_FontTitle);
+extern Font (&g_OVL1_FontLarge);
+extern Font (&g_OVL1_FontMedium);
+extern Font (&g_OVL1_FontSmall);
+extern unsigned char (&D_801A95C0)[];
+extern unsigned char (&D_8003A6C4)[];
+extern int (&g_OVL1_FontInfo)[];
+extern unsigned int (&g_OVL1_EndFontInfo);
+extern game_pointer<BaseMenu> (&g_CurrentMenu);
+extern short (&g_CardSlotStatus)[];
+extern unsigned int (&D_801F0698);
+extern game_pointer<KanjiFont> (&g_OVL1_KanjiFont);
+extern unsigned char (&g_OVL1_KanjiFontData)[];
 int VolId_ReadFileAndGetSize2(void *dst, int file);
 void BaseMenu__DrawPage(BaseMenu *menu, BaseMenuPage *page, DrawLayer *layer, int fade);
 void BaseMenu__GetTransitionRects(BaseMenu *menu, RECT *active, RECT *leaving);
@@ -87,6 +88,7 @@ void BaseMenu__DrawPage(BaseMenu *menu, BaseMenuPage *page, DrawLayer *layer, in
 
 BaseMenu::BaseMenu()
 {
+    vptr.address = 0x8002106c;  // BaseMenu's vtable
 }
 
 BaseMenu::~BaseMenu()
@@ -137,7 +139,7 @@ void BaseMenu::Enter()
     fontInfo = g_OVL1_FontInfo;
     hookActive = 0;
     size = VolId_ReadFileAndGetSize2(fontInfo, 0xe);
-    g_OVL1_EndFontInfo = ((size + 3) & ~3) + (unsigned int)fontInfo;
+    g_OVL1_EndFontInfo = ((size + 3) & ~3) + (unsigned int)rt::to_guest(fontInfo);
     g_CurrentMenu = this;
     Text_Init(&g_OVL1_TitleText, 0x1e);
     g_OVL1_TitleText.unk1c = 1;

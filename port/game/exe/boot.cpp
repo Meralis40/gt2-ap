@@ -36,28 +36,28 @@ struct FlowState {
 };
 
 extern "C" {
-extern char D_80011D30[];       // "gt2.ovl"
-extern unsigned int g_VolLba;
-extern int g_OvlLba;
-extern int g_OvlSize;
+extern char (&D_80011D30)[];       // "gt2.ovl"
+extern unsigned int (&g_VolLba);
+extern int (&g_OvlLba);
+extern int (&g_OvlSize);
 extern OverlayPack g_OverlayFile;
-extern VolDirEntry g_VolDir[];
-extern char *g_VolBootNames[];
-extern unsigned short g_VolBootIds[248];
-extern VolHeader g_VolHeader;
-extern int g_DemoRaceCount;
-extern ButtonMap D_80091570;
-extern ButtonMap D_8009157C;
-extern ButtonMap D_80091588;
-extern ButtonMap D_80091594;
-extern NeGconCalib D_800A6ED8;
-extern CourseInfo g_CourseInfo;
-extern unsigned char g_RaceEventParams[];
-extern short g_InitRange[2];
-extern unsigned char g_Unk801c93c3;
-extern FlowState g_Flow_IntroShown;
-extern unsigned int g_RandomSeed;
-extern volatile int g_BootVSyncCount;
+extern VolDirEntry (&g_VolDir)[];
+extern game_pointer<char> (&g_VolBootNames)[];
+extern unsigned short (&g_VolBootIds)[248];
+extern VolHeader (&g_VolHeader);
+extern int (&g_DemoRaceCount);
+extern ButtonMap (&D_80091570);
+extern ButtonMap (&D_8009157C);
+extern ButtonMap (&D_80091588);
+extern ButtonMap (&D_80091594);
+extern NeGconCalib (&D_800A6ED8);
+extern CourseInfo (&g_CourseInfo);
+extern unsigned char (&g_RaceEventParams)[];
+extern short (&g_InitRange)[2];
+extern unsigned char (&g_Unk801c93c3);
+extern FlowState (&g_Flow_IntroShown);
+extern unsigned int (&g_RandomSeed);
+extern volatile int (&g_BootVSyncCount);
 
 void Overlay_OpenFile(OverlayPack *pack);
 
@@ -163,7 +163,7 @@ int func_800101FC(VolDirEntry *entry)
 // a directory, that of its first file.
 void Vol_ResolveBootFiles(void)
 {
-    char **names = g_VolBootNames;
+    game_pointer<char> *names = g_VolBootNames;
     unsigned short *ids = g_VolBootIds;
 
     while (*names != 0) {

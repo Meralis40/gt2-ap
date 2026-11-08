@@ -2,6 +2,7 @@
 // conversion.
 // The functions that don't match yet are the original assembly, with their C++
 // under NON_MATCHING.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
@@ -18,20 +19,20 @@ struct Gt1Save {
 };
 
 extern "C" {
-extern BaseMenu *g_CurrentMenu;
-extern unsigned char D_80022D80[];
-extern char sB_LbFt[];
-extern MenuSprite g_DataTransfer_Items[];
-extern MenuSpriteStyle g_DataTransfer_ItemStyle;
-extern SpriteDesc g_DataTransfer_Sprites[];
-extern MenuList g_DataTransfer_List;
-extern BaseMenuPage *g_DataTransferMenu_Pages[];
-extern DataXferConfig g_OVL1_DataXferConfig;
-extern unsigned int g_OVL1_EndFontInfo;
-extern KanjiFont *g_OVL1_KanjiFont;
-extern short g_CardSlotStatus[];
-extern BaseMenuPage g_Page_DataTransferMenu;
-extern BaseMenuPage g_Page_DataTransferBuyCar;
+extern game_pointer<BaseMenu> (&g_CurrentMenu);
+extern unsigned char (&D_80022D80)[];
+extern char (&sB_LbFt)[];
+extern MenuSprite (&g_DataTransfer_Items)[];
+extern MenuSpriteStyle (&g_DataTransfer_ItemStyle);
+extern SpriteDesc (&g_DataTransfer_Sprites)[];
+extern MenuList (&g_DataTransfer_List);
+extern game_pointer<BaseMenuPage> (&g_DataTransferMenu_Pages)[];
+extern DataXferConfig (&g_OVL1_DataXferConfig);
+extern unsigned int (&g_OVL1_EndFontInfo);
+extern game_pointer<KanjiFont> (&g_OVL1_KanjiFont);
+extern short (&g_CardSlotStatus)[];
+extern BaseMenuPage (&g_Page_DataTransferMenu);
+extern BaseMenuPage (&g_Page_DataTransferBuyCar);
 void PushPage(BaseMenu *menu, BaseMenuPage *page);
 int DataTransferMenu_ItemCallback(MenuListEventId event, MenuListEvent *ev, int index);
 void Mix_MergeCourseRecords(void);
@@ -57,8 +58,8 @@ void DataTransferRoot_Enter(int back)
     BaseMenuPage *pMVar1;
 
     pMVar1 = g_CurrentMenu->activePage;
-    pMVar1[1].update = (MenuPageUpdateFn *)back;
-    pMVar1[1].enter = (MenuPageEnterFn *)0x14;
+    pMVar1[1].update = (MenuPageUpdateFn *)rt::from_guest(back);
+    pMVar1[1].enter = (MenuPageEnterFn *)rt::from_guest(0x14);
     MainMenu_PlayMusic(7);
 }
 
@@ -89,7 +90,7 @@ void DataTransferRoot_Draw(DrawLayer *layer)
 // Unreferenced page: 20-frame delay, MainMenu_StopMusic.
 void DataTransferUnusedWait_Enter(int back)
 {
-    g_CurrentMenu->activePage[1].enter = (MenuPageEnterFn *)0x14;
+    g_CurrentMenu->activePage[1].enter = (MenuPageEnterFn *)rt::from_guest(0x14);
     MainMenu_StopMusic();
 }
 
@@ -261,7 +262,7 @@ int DataTransferCarList_Update(int arg)
 // DataXfer_Draw.
 void DataTransferCarList_Draw(DrawLayer *layer)
 {
-    DataXfer_Draw((unsigned int *)((int)layer->ot + 0x10));
+    DataXfer_Draw((unsigned int *)rt::from_guest(((int)layer->ot + 0x10)));
 }
 
 // Takes each of the other save's course records that beats this save's, or fills an
@@ -453,7 +454,7 @@ int DataTransferMix_Update(int arg)
 // DataXfer_Draw.
 void DataTransferMix_Draw(DrawLayer *layer)
 {
-    DataXfer_Draw((unsigned int *)((int)layer->ot + 0x10));
+    DataXfer_Draw((unsigned int *)rt::from_guest(((int)layer->ot + 0x10)));
 }
 
 // With all eight flags of a GT1 license set, every test of the matching license here
@@ -535,6 +536,6 @@ int DataTransferConvert_Update(int arg)
 // DataXfer_Draw.
 void DataTransferConvert_Draw(DrawLayer *layer)
 {
-    DataXfer_Draw((unsigned int *)((int)layer->ot + 0x10));
+    DataXfer_Draw((unsigned int *)rt::from_guest(((int)layer->ot + 0x10)));
 }
 }

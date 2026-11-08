@@ -5,7 +5,7 @@
 
 extern "C" {
 
-extern int g_OVL2_Pow10[8];
+extern int (&g_OVL2_Pow10)[8];
 
 // The decimal digits of a value from 0 to 99999999.
 void IntToStr_OVL2(char *out, int value)

@@ -1,20 +1,21 @@
 // OVL4 80012c6c-80013a28 (gtmode): Machine tests, event races and the GT mode loop.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern GameState g_GameState;
-extern void *g_EventDataBuf;
-extern int g_GameDataMode;
-extern char *g_GtModeRaceData;
-extern char *g_GtModeRaceDataBuf;
-extern RaceEventParams g_RaceEventParams;
-extern char g_OVL4_storageCarColor[];
-extern char g_OVL4_storageCarInfoA[];
-extern char g_OVL4_someStorage[];
-extern char g_OVL4_SharedBuffer[];
-extern char g_GtMenu_SelectedEvent[];
-extern short g_FreeRacePoolParams[][2];
-extern FlowMenuState g_Flow_IntroShown;
+extern GameState (&g_GameState);
+extern game_pointer<void> (&g_EventDataBuf);
+extern int (&g_GameDataMode);
+extern game_pointer<char> (&g_GtModeRaceData);
+extern game_pointer<char> (&g_GtModeRaceDataBuf);
+extern RaceEventParams (&g_RaceEventParams);
+extern char (&g_OVL4_storageCarColor)[];
+extern char (&g_OVL4_storageCarInfoA)[];
+extern char (&g_OVL4_someStorage)[];
+extern char (&g_OVL4_SharedBuffer)[];
+extern char (&g_GtMenu_SelectedEvent)[];
+extern short (&g_FreeRacePoolParams)[][2];
+extern FlowMenuState (&g_Flow_IntroShown);
 
 // Fills g_RaceSetup for the machine test raceCode (raceType 7 to 9, from
 // Event_GetMachineTestType): one lap with the current car of garage 0, against
@@ -63,7 +64,7 @@ void RaceSetup_InitMachineTest(char *raceCode, int raceType)
         GameState *gs2 = &g_GameState;
         char *base2 = (char *)gs2;
         int offset2 = 0xc6c0;
-        MachineTestCarList *list = (MachineTestCarList *)((int)(base2 + offset2) & ~3);
+        MachineTestCarList *list = (MachineTestCarList *)rt::from_guest(((int)rt::to_guest((base2 + offset2)) & ~3));
 
         switch (raceType) {
         case 7:
@@ -83,7 +84,7 @@ void RaceSetup_InitMachineTest(char *raceCode, int raceType)
         GameState *gs3 = &g_GameState;
         char *base3 = (char *)gs3;
         int offset3 = 0x10bd8;
-        CarWork *work = (CarWork *)((int)(base3 + offset3) & ~3);
+        CarWork *work = (CarWork *)rt::from_guest(((int)rt::to_guest((base3 + offset3)) & ~3));
 
         RaceStart_CarWorkClear(work);
         RaceStart_CarWorkLoadParts(work, car->carId);
@@ -161,7 +162,7 @@ static inline void GTMode_LoadEventParams(RaceSetup *setup, RaceEvent *event)
     for (; i < setup->carCount; i++) {
         CarSetup *cs = &setup->cars[i].setup;
 
-        CarParams_BuildFromSetup(cs, (void *)(offset + (int)base)); // offset first, as the game adds them;
+        CarParams_BuildFromSetup(cs, (void *)rt::from_guest((offset + (int)rt::to_guest(base)))); // offset first, as the game adds them;
         offset += 0x1c0;
     }
 }
@@ -229,10 +230,10 @@ void GTMode_SetupEventRace(char *raceCode, int noPlayerCar, unsigned int battleF
     }
     {
         char *base = (char *)&g_GameState;
-        CarWork *work = (CarWork *)((int)(base + 0x10bd8) & ~3);
+        CarWork *work = (CarWork *)rt::from_guest(((int)rt::to_guest((base + 0x10bd8)) & ~3));
 
         if (dirtRace) {
-            work = (CarWork *)((int)(base + 0xc6c0) & ~3);
+            work = (CarWork *)rt::from_guest(((int)rt::to_guest((base + 0xc6c0)) & ~3));
         }
         RaceStart_CarWorkClear(work);
         if (!noPlayerCar) {

@@ -4,7 +4,7 @@
 #include "common.h"
 
 extern "C" {
-extern ArcStrPlayer g_Arc_PreviewPlayer;
+extern ArcStrPlayer (&g_Arc_PreviewPlayer);
 
 
 // Course preview movie (g_ArcCoursePreviewMovie at 0x80129850): sets the decode

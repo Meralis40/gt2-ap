@@ -5,6 +5,6 @@
 
 #include "resident.h"
 
-extern "C" GameState g_GameState;
+extern "C" GameState (&g_GameState);
 
 #endif

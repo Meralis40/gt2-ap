@@ -1,16 +1,17 @@
 // OVL4 80021c38-800222e4 (background): Display lists and the page background.
 // A display list is a chain of chunks of up to 16 words, each starting with an OT
 // tag (length, 24-bit link to the next chunk).
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern unsigned int *g_DisplayList_Chunk;
-extern unsigned char g_DisplayList_ChunkLen;
-extern unsigned int g_DisplayList_DrawMode;
-extern unsigned int g_MenuPageAttr;
-extern unsigned int *g_MenuTileMap;
-extern unsigned int *g_MenuOverlayTiles;
-extern int *g_MenuSpriteGroups;
+extern game_pointer<unsigned int> (&g_DisplayList_Chunk);
+extern unsigned char (&g_DisplayList_ChunkLen);
+extern unsigned int (&g_DisplayList_DrawMode);
+extern unsigned int (&g_MenuPageAttr);
+extern game_pointer<unsigned int> (&g_MenuTileMap);
+extern game_pointer<unsigned int> (&g_MenuOverlayTiles);
+extern game_pointer<int> (&g_MenuSpriteGroups);
 }
 
 // The tile lists are read through a cursor, which the game keeps in memory (the
@@ -39,7 +40,7 @@ void *DisplayList_Begin(void *buf)
     g_DisplayList_Chunk = (unsigned int *)buf;
     g_DisplayList_ChunkLen = '\0';
     g_DisplayList_DrawMode = 0xffffffff;
-    return (void *)((int)buf + 4);
+    return (void *)rt::from_guest(((int)rt::to_guest(buf) + 4));
 }
 
 // Reserves words in the current chunk; when it would exceed 16 words, closes the
@@ -53,7 +54,7 @@ unsigned int *DisplayList_Reserve(unsigned int *p, int words)
     unsigned int *a0 = p;
     
     if ((int)(len + words) > 16) {
-        link = (unsigned int)a0 << 8;
+        link = (unsigned int)rt::to_guest(a0) << 8;
         ((unsigned char*)g_DisplayList_Chunk)[3] = len;
         temp = g_DisplayList_Chunk;
         Mips_Swl2(link, temp);

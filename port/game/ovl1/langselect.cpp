@@ -5,16 +5,16 @@
 #include "gamestate.h"
 
 extern "C" {
-extern short g_LangSelect_Fade;
-extern short g_LangSelect_Languages[];
-extern short g_LangSelect_DefaultRow[];
-extern MenuList g_LangSelect_List;
-extern BaseMenuPage g_Page_LangSelectFadeOut;
-extern SpriteDesc g_LangSelect_RowSprites[];
-extern short g_LangSelect_RowSprite[];
-extern short g_LangSelect_Done;
-extern short g_LangSelectFadeOut_Timer;
-extern BaseMenu *g_CurrentMenu;
+extern short (&g_LangSelect_Fade);
+extern short (&g_LangSelect_Languages)[];
+extern short (&g_LangSelect_DefaultRow)[];
+extern MenuList (&g_LangSelect_List);
+extern BaseMenuPage (&g_Page_LangSelectFadeOut);
+extern SpriteDesc (&g_LangSelect_RowSprites)[];
+extern short (&g_LangSelect_RowSprite)[];
+extern short (&g_LangSelect_Done);
+extern short (&g_LangSelectFadeOut_Timer);
+extern game_pointer<BaseMenu> (&g_CurrentMenu);
 void PushPage(BaseMenu *menu, BaseMenuPage *page);
 
 // Draws a row's sprite, at half brightness when it isn't selected.

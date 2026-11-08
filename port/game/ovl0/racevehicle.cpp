@@ -2,6 +2,7 @@
 // sounds.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "ap.h"
 
@@ -74,34 +75,34 @@ struct VehicleHud {
     short refTimeTimer;
     short messageTimer;
     int lapTimeShown;
-    void *lapLabel;
+    game_pointer<void> lapLabel;
     int refTime;
     int refTime2;
 };
 
 extern "C" {
-extern GameState g_GameState;
-extern RaceSetup g_RaceSetup;
-extern RaceMem g_Race_IsDemo;
-extern RaceWorld g_RaceWorld;
-extern RaceViewLoop *g_RaceView;
-extern unsigned char D_800A951C;
-extern unsigned short D_800A9522;
-extern void *D_800A9524;
-extern unsigned char D_800AF232;
-extern unsigned char D_801C9995;
-extern RaceVehicle *D_800ADA08;
-extern char D_8017DDA0[];
-extern char D_8017DDB8[];
-extern unsigned char g_TT_HasBestLap;
-extern int g_TT_GhostResync;
-extern unsigned char g_Race_EndRequest;
-extern void *g_LapLabels[];
-extern char sR_LapTime[];
-extern short g_PedalCurve[];
-extern signed char g_ChampPoints[];
-extern short g_SinTable[];
-extern int g_FrameRate;
+extern GameState (&g_GameState);
+extern RaceSetup (&g_RaceSetup);
+extern RaceMem (&g_Race_IsDemo);
+extern RaceWorld (&g_RaceWorld);
+extern game_pointer<RaceViewLoop> (&g_RaceView);
+extern unsigned char (&D_800A951C);
+extern unsigned short (&D_800A9522);
+extern game_pointer<void> (&D_800A9524);
+extern unsigned char (&D_800AF232);
+extern unsigned char (&D_801C9995);
+extern game_pointer<RaceVehicle> (&D_800ADA08);
+extern char (&D_8017DDA0)[];
+extern char (&D_8017DDB8)[];
+extern unsigned char (&g_TT_HasBestLap);
+extern int (&g_TT_GhostResync);
+extern unsigned char (&g_Race_EndRequest);
+extern game_pointer<void> (&g_LapLabels)[];
+extern char (&sR_LapTime)[];
+extern short (&g_PedalCurve)[];
+extern signed char (&g_ChampPoints)[];
+extern short (&g_SinTable)[];
+extern int (&g_FrameRate);
 void RaceVehicle_SetupModelDims(RaceVehicle *v, CarDims *dims);
 void RaceVehicle_SetupWheels(RaceVehicle *v);
 void RaceVehicle_InitLapGhosts(RaceVehicle *v);
@@ -329,7 +330,7 @@ int RaceVehicle_SelectGhostLap(RaceVehicle *v, int lap)
     int result;
 
     if (lap < slot->lapLogs) {
-        InputLog *log = (InputLog *)(lap * 0x10fc + (int)slot + 0x1e0);
+        InputLog *log = (InputLog *)rt::from_guest((lap * 0x10fc + (int)rt::to_guest(slot) + 0x1e0));
 
         v->ghostLap = lap;
         v->inputLog = log;
@@ -460,7 +461,7 @@ void RaceVehicle_OnLap(RaceVehicle *v, int index, int time)
         record = state + 0x10ac0;
     case 2:
         if (D_800A951C == 0) {
-            *(int *)((int)record + index * 4 + 0xe8) = time;
+            *(int *)rt::from_guest(((int)rt::to_guest(record) + index * 4 + 0xe8)) = time;
         }
         break;
     }
@@ -475,7 +476,7 @@ void RaceVehicle_OnLap(RaceVehicle *v, int index, int time)
 
         hud->refTime = -1;
         if (~best[0] != 0) {
-            hud->refTime = *(int *)((int)best + index * 4 + 4);
+            hud->refTime = *(int *)rt::from_guest(((int)rt::to_guest(best) + index * 4 + 4));
         }
         hud->refTimeTimer = frames;
         hud->refTime2 = time;

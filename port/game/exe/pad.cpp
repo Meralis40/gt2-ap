@@ -73,7 +73,7 @@ void Pad_PollState(PadSystem *pads, int port)
 // Sets the device of a port and returns the one it replaces.
 PadDevice *PadSystem_SetDevice(PadSystem *pads, unsigned int port, PadDevice *dev)
 {
-    PadDevice **slot = &pads->devices[port];
+    game_pointer<PadDevice> *slot = &pads->devices[port];
     PadDevice *old;
 
     if (port >= 2) return 0;

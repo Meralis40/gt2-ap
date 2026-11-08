@@ -1,11 +1,12 @@
 // Resident code 8007adc8-8007c268 (gte). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gte.h"
 
 extern "C" {
-extern short g_SinTable[];
-extern GfxIrqState g_GfxIrq;
+extern short (&g_SinTable)[];
+extern GfxIrqState (&g_GfxIrq);
 
 // Squares each LOD distance (in 14-bit units), for comparing with Lod_DistanceSq.
 // The game keeps the pointer in $a0 and the end in $v1; GCC 2.8 swaps them. Permuter
@@ -619,30 +620,30 @@ void *Gpu_LoadImageBlock(int *block, RECT *rect)
     }
     Gpu_TransferImage(rect, (unsigned int *)(block + 3), 0);
     Gpu_DrawSync();
-    return (void *)((int)block + *block);
+    return (void *)rt::from_guest(((int)rt::to_guest(block) + *block));
 }
 
 // Loads tim's CLUT block, if it has one (flag bit 3), to rect or its own rectangle.
 // Returns the block after it: the image block.
 void *Tim_LoadClut(void *tim, RECT *rect)
 {
-    int has = *(unsigned int *)((int)tim + 4) >> 3 & 1;
+    int has = *(unsigned int *)rt::from_guest(((int)rt::to_guest(tim) + 4)) >> 3 & 1;
     // The test as the game's xori: !has gives sltiu.
     int none = has ^ 1;
 
     if (none) {
-        return (int *)((int)tim + 8);
+        return (int *)rt::from_guest(((int)rt::to_guest(tim) + 8));
     }
-    return Gpu_LoadImageBlock((int *)((int)tim + 8), rect);
+    return Gpu_LoadImageBlock((int *)rt::from_guest(((int)rt::to_guest(tim) + 8)), rect);
 }
 
 void Tim_LoadImage(void *tim, RECT *rect)
 {
     int *block;
 
-    block = (int *)((int)tim + 8);
-    if ((*(unsigned int *)((int)tim + 4) >> 3 & 1) != 0) {
-        block = (int *)((int)block + *(int *)((int)tim + 8));
+    block = (int *)rt::from_guest(((int)rt::to_guest(tim) + 8));
+    if ((*(unsigned int *)rt::from_guest(((int)rt::to_guest(tim) + 4)) >> 3 & 1) != 0) {
+        block = (int *)rt::from_guest(((int)rt::to_guest(block) + *(int *)rt::from_guest(((int)rt::to_guest(tim) + 8))));
     }
     Gpu_LoadImageBlock(block, rect);
 }
@@ -914,7 +915,7 @@ void Poly_Clip(ViewScratch *sp, int count)
             } else {
                 PolyG4 *g = (PolyG4 *)pkt;
 
-                g->tag = 0x08000000 | ((unsigned int)(pkt + sizeof(PolyG4)) & 0xffffff);
+                g->tag = 0x08000000 | ((unsigned int)rt::to_guest((pkt + sizeof(PolyG4))) & 0xffffff);
                 g->xy0 = a->sxy;
                 g->xy1 = z->sxy;
                 g->xy2 = b->sxy;
@@ -933,7 +934,7 @@ void Poly_Clip(ViewScratch *sp, int count)
         }
         sp->packetPtr = pkt;
         *last = (*last & 0xff000000) | (*in->ot & 0xffffff);
-        *in->ot = (*in->ot & 0xff000000) | ((unsigned int)first & 0xffffff);
+        *in->ot = (*in->ot & 0xff000000) | ((unsigned int)rt::to_guest(first) & 0xffffff);
     }
 }
 }

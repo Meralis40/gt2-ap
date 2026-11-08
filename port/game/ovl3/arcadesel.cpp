@@ -3,7 +3,7 @@
 #include "gamestate.h"
 
 extern "C" {
-extern CarWork g_Ovl3_CarWork;
+extern CarWork (&g_Ovl3_CarWork);
 }
 
 // Loads g_GameState.garages[garage].cars[slot] into g_Ovl3_CarWork, fits dirt

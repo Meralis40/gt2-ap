@@ -1,9 +1,10 @@
 // Resident code 8005db90-8005e7b0 (records). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern GameStateRace g_GameState;
+extern GameStateRace (&g_GameState);
 
 // The best finish of an event: a nibble of eventResults, the low one for even events.
 int PlayerStats_GetEventResult(PlayerStats *stats, int eventIdx)
@@ -57,15 +58,15 @@ void Stats_AddWinnings(void *stats, int amount)
     unsigned int uVar1;
     int iVar2;
 
-    uVar1 = *(int *)((int)stats + 0x5c) + amount;
-    *(unsigned int *)((int)stats + 0x5c) = uVar1;
+    uVar1 = *(int *)rt::from_guest(((int)rt::to_guest(stats) + 0x5c)) + amount;
+    *(unsigned int *)rt::from_guest(((int)rt::to_guest(stats) + 0x5c)) = uVar1;
     if (100000000 < uVar1) {
-        iVar2 = *(int *)((int)stats + 0x58) + 1;
-        *(int *)((int)stats + 0x58) = iVar2;
+        iVar2 = *(int *)rt::from_guest(((int)rt::to_guest(stats) + 0x58)) + 1;
+        *(int *)rt::from_guest(((int)rt::to_guest(stats) + 0x58)) = iVar2;
         if (iVar2 < 0) {
-            *(unsigned int *)((int)stats + 0x58) = 0x7fffffff;
+            *(unsigned int *)rt::from_guest(((int)rt::to_guest(stats) + 0x58)) = 0x7fffffff;
         }
-        *(int *)((int)stats + 0x5c) = *(int *)((int)stats + 0x5c) + -100000000;
+        *(int *)rt::from_guest(((int)rt::to_guest(stats) + 0x5c)) = *(int *)rt::from_guest(((int)rt::to_guest(stats) + 0x5c)) + -100000000;
     }
 }
 
@@ -350,7 +351,7 @@ void RaceSetup_SetCourse(RaceSetup *setup, unsigned int hash)
     index = Course_FindByHash(hash);
     puVar1 = (unsigned int *)Course_Get(index);
     memset(setup->courseName, 0, 0x20);
-    strcpy(setup->courseName, (char *)*puVar1);
+    strcpy(setup->courseName, (char *)rt::from_guest(*puVar1));
 }
 
 void RaceSetup_SetCourseByName(RaceSetup *setup, char *name)
@@ -364,7 +365,7 @@ void RaceSetup_SetCourseByName(RaceSetup *setup, char *name)
 void RaceResult_Init(void *res)
 {
     memset(res, 0, 0xc);
-    *(unsigned int *)((int)res + 4) = 0xffffffff;
+    *(unsigned int *)rt::from_guest(((int)rt::to_guest(res) + 4)) = 0xffffffff;
 }
 
 void ChampRaceList_Clear(ChampRaceList *list)

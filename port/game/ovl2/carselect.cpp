@@ -1,6 +1,7 @@
 // OVL2 8001e53c-8001f238 (carselect): Car selection page.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "syslib.h"
 
@@ -28,28 +29,28 @@ static inline int Half(unsigned short v)
 
 extern "C" {
 int ArcCarList_FirstAvailable(int cls);
-extern signed char g_ArcSel_Class;
-extern signed char g_ArcSel_Trans;
-extern signed char g_ArcSel_Setting;
-extern ArcadeRaceSel g_ArcSel_Level;
-extern ArcCarSpecPanel g_ArcCarSpecPanel;
-extern ArcSprite D_8004F7C4[]; // the makers
-extern char D_80027224[];      // the two cars without a maker sprite
-extern char D_8002723C[];
-extern ArcGridPickerTmpl D_8004FD50;
-extern ArcDialogDesc D_8004FD74;
-extern ArcDialogDesc D_8004FD8C;
-extern signed char *g_ArcCarList_Avail[];
-extern short g_ArcCarList_Count[];
-extern unsigned char *g_ArcCarList_Spec3[];
-extern ArcCarRating *g_ArcCarList_Ratings[];
-extern unsigned char g_ArcPickerValues[];
-extern MenuPage g_ArcPage_Course;
-extern ArcGridPicker g_Arc_CarCarousel;
-extern GrowBar g_Arc_CarGrowBar;
-extern ArcDialog g_Arc_TransPicker;
-extern ArcDialog g_Arc_SettingPicker;
-extern ResultCarView g_Arc_CarView;
+extern signed char (&g_ArcSel_Class);
+extern signed char (&g_ArcSel_Trans);
+extern signed char (&g_ArcSel_Setting);
+extern ArcadeRaceSel (&g_ArcSel_Level);
+extern ArcCarSpecPanel (&g_ArcCarSpecPanel);
+extern ArcSprite (&D_8004F7C4)[]; // the makers
+extern char (&D_80027224)[];      // the two cars without a maker sprite
+extern char (&D_8002723C)[];
+extern ArcGridPickerTmpl (&D_8004FD50);
+extern ArcDialogDesc (&D_8004FD74);
+extern ArcDialogDesc (&D_8004FD8C);
+extern game_pointer<signed char> (&g_ArcCarList_Avail)[];
+extern short (&g_ArcCarList_Count)[];
+extern game_pointer<unsigned char> (&g_ArcCarList_Spec3)[];
+extern game_pointer<ArcCarRating> (&g_ArcCarList_Ratings)[];
+extern unsigned char (&g_ArcPickerValues)[];
+extern MenuPage (&g_ArcPage_Course);
+extern ArcGridPicker (&g_Arc_CarCarousel);
+extern GrowBar (&g_Arc_CarGrowBar);
+extern ArcDialog (&g_Arc_TransPicker);
+extern ArcDialog (&g_Arc_SettingPicker);
+extern ResultCarView (&g_Arc_CarView);
 
 // Same as ResultCarView_Init (OVL0) with the 1P car selection camera: distance
 // 0x94ccc, pitch 0x5e, yaw 0x1500, ground disc on (colour 0xa2a2a2).
@@ -403,21 +404,21 @@ void CarSelect_Draw(void *menu, DrawLayer *layer)
     RECT local_20;
 
     ot = layer->ot;
-    iVar1 = *(int *)((int)menu + 0x1c8);
-    ctx = *(TextCtx **)((int)menu + 0x1c4);
-    GridPicker_Draw(&g_Arc_CarCarousel, (unsigned int *)((int)ot + 8));
-    GrowBar_Draw((GrowBar *)&g_Arc_CarGrowBar, (unsigned int *)((int)ot + 8));
+    iVar1 = *(int *)rt::from_guest(((int)rt::to_guest(menu) + 0x1c8));
+    ctx = *(game_pointer<TextCtx> *)rt::from_guest(((int)rt::to_guest(menu) + 0x1c4));
+    GridPicker_Draw(&g_Arc_CarCarousel, (unsigned int *)rt::from_guest(((int)rt::to_guest(ot) + 8)));
+    GrowBar_Draw((GrowBar *)&g_Arc_CarGrowBar, (unsigned int *)rt::from_guest(((int)rt::to_guest(ot) + 8)));
     Dialog_Draw_OVL2(&g_Arc_TransPicker, ot, ctx);
     Dialog_Draw_OVL2(&g_Arc_SettingPicker, ot, ctx);
-    if (*(int *)(iVar1 + 0x24) == 0) {
-        ArcCarView_Draw(*(ArcCarView **)((int)menu + 0x228), (DrawLayer *)((int)menu + 0xbc),
-                                        (DrawLayer *)((int)menu + 0xcc), &g_Arc_CarView);
+    if (*(int *)rt::from_guest((iVar1 + 0x24)) == 0) {
+        ArcCarView_Draw(*(game_pointer<ArcCarView> *)rt::from_guest(((int)rt::to_guest(menu) + 0x228)), (DrawLayer *)rt::from_guest(((int)rt::to_guest(menu) + 0xbc)),
+                                        (DrawLayer *)rt::from_guest(((int)rt::to_guest(menu) + 0xcc)), &g_Arc_CarView);
     }
     local_20.x = 0x30;
     local_20.y = 0xb4;
     local_20.w = 0x100;
     local_20.h = 200;
-    DrawLayer_SetArea((DrawLayer *)((int)menu + 0xbc), &local_20);
-    DrawLayer_SetArea((DrawLayer *)((int)menu + 0xcc), &local_20);
+    DrawLayer_SetArea((DrawLayer *)rt::from_guest(((int)rt::to_guest(menu) + 0xbc)), &local_20);
+    DrawLayer_SetArea((DrawLayer *)rt::from_guest(((int)rt::to_guest(menu) + 0xcc)), &local_20);
 }
 }

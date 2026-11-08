@@ -1,16 +1,17 @@
 // OVL4 8001d090-8001da24 (menuview): Menu view: car camera, pages and hotspots.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern FlowMenuState g_Flow_IntroShown;
-extern int g_MenuElementCount;
-extern int g_MenuPageBackPage;
-extern unsigned int g_MenuPageAttr;
-extern unsigned char D_800A8D7A; // g_MenuPageAttr's third byte: the page's music track
-extern ShopTxn g_ShopTxn;
-extern MenuCarList g_GarageList;
-extern MenuCarList g_UsedCarList;
-extern DirVector g_MapCursor_DirVectors[];
+extern FlowMenuState (&g_Flow_IntroShown);
+extern int (&g_MenuElementCount);
+extern int (&g_MenuPageBackPage);
+extern unsigned int (&g_MenuPageAttr);
+extern unsigned char (&D_800A8D7A); // g_MenuPageAttr's third byte: the page's music track
+extern ShopTxn (&g_ShopTxn);
+extern MenuCarList (&g_GarageList);
+extern MenuCarList (&g_UsedCarList);
+extern DirVector (&g_MapCursor_DirVectors)[];
 
 // The element count through a pointer: the loop pass then hoists its address out of
 // loops it would otherwise leave it in (MenuPage_Enter, MenuView_HotspotAt).
@@ -53,7 +54,7 @@ void MenuView_StartCarWash(GTMenuView *view)
 
 // Takes the three buffers, loads the menu data into them and enters the page (and
 // music) the flow state says to come back to.
-void MenuView_Init(GTMenuView *view, void **assets, void *previewConfig)
+void MenuView_Init(GTMenuView *view, game_pointer<void> *assets, void *previewConfig)
 {
     *(ViewAssets *)&view->assets0 = *(ViewAssets *)assets;
     view->backPage = -1;
@@ -77,7 +78,7 @@ void MenuView_Init(GTMenuView *view, void **assets, void *previewConfig)
 }
 
 // Links the background display list into the OT and applies a pending colour change.
-void MenuView_BeginFrame(GTMenuView *view, void **ot)
+void MenuView_BeginFrame(GTMenuView *view, unsigned int *ot)
 {
     CarPreview *preview;
 
@@ -222,7 +223,7 @@ void MenuView_ShowCar(GTMenuView *view, int baseCarId, int carId, int colorIdx, 
 
 void FUN_OVL4__8001d660(GTMenuView *view)
 {
-    FUN_OVL4__8001ab64((int)&view->preview);
+    FUN_OVL4__8001ab64((int)rt::to_guest(&view->preview));
 }
 
 // prevBackPage.

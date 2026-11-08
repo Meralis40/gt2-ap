@@ -2,6 +2,8 @@
 #ifndef PAD_H
 #define PAD_H
 
+#include "gptr.h"
+
 #include "resident.h"
 
 // Raw buffer of a controller port (PsyQ PadInitDirect, 34 bytes).
@@ -22,13 +24,13 @@ struct PadPort {
 
 struct PadSystem {
     VSyncCallback vsync;
-    struct PadDevice *devices[2];
+    game_pointer<struct PadDevice> devices[2];
     PadPort ports[2];
     volatile PadRawBuffer raw[2];   // written by the pad interrupt
 };
 
 extern "C" {
-extern PadSystem g_PadSystem;
+extern PadSystem (&g_PadSystem);
 }
 
 // exe/padbuttons.cpp

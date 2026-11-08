@@ -3,8 +3,8 @@
 #include "common.h"
 
 extern "C" {
-extern char D_80091AAC[]; // shown for a missing time
-extern char D_8008FA68[];
+extern char (&D_80091AAC)[]; // shown for a missing time
+extern char (&D_8008FA68)[];
 
 // Writes ms as m:ss.mmm, or h:mm:ss.t from an hour on; returns the text length.
 int Time_FormatMs(char *buf, unsigned int ms)

@@ -1,18 +1,19 @@
 // OVL0 80016b78-80017098 (arcaderace): the ArcadeRaceLoop screen loop and
 // ArcadeRace_Run. Its vtable and type name (.rodata), its __tf function and
 // typeinfo (.bss, which build.py's CXX_NAMES places) are emitted here.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
 extern "C" {
-extern unsigned char g_Race_IsDemo;     // the race's memory (raceloops.cpp's RaceMem)
-extern void *g_EventDataBuf;
-extern signed char g_Flow_HomeOverlay;
-extern signed char g_Flow_GameMode;
-extern QuickMenuPage g_Page_ResultRoot;         // the post-race menu
-extern QuickMenuPage g_Page_TimeTrialRoot;
-extern QuickMenuPage g_Page_LicenseRoot;        // the license test results
-extern QuickMenuPage g_Page_RaceResultsRoot;
+extern unsigned char (&g_Race_IsDemo);     // the race's memory (raceloops.cpp's RaceMem)
+extern game_pointer<void> (&g_EventDataBuf);
+extern signed char (&g_Flow_HomeOverlay);
+extern signed char (&g_Flow_GameMode);
+extern QuickMenuPage (&g_Page_ResultRoot);         // the post-race menu
+extern QuickMenuPage (&g_Page_TimeTrialRoot);
+extern QuickMenuPage (&g_Page_LicenseRoot);        // the license test results
+extern QuickMenuPage (&g_Page_RaceResultsRoot);
 
 }
 
@@ -65,6 +66,7 @@ static inline void RaceCar_SetDriver(RaceCar *car, int active, int gridSlot, int
 
 ArcadeRaceLoop::ArcadeRaceLoop(int arg) : RaceMenuLoop(&raceView, arg)
 {
+    vptr.address = 0x8002f000;  // ArcadeRaceLoop's vtable
 }
 
 ArcadeRaceLoop::~ArcadeRaceLoop()
@@ -79,8 +81,8 @@ int ArcadeRaceLoop::State4()
     ghostKept = 0;
     if (RaceSetup_Get()->raceType == 3) {
         race = (char *)&g_Race_IsDemo;
-        VolId_ReadFile(VOLID_ARCADE_LICENSE_INFO_JP, (void *)((int)(race + RACE_LICENSE_INFO + 3) & ~3));
-        g_EventDataBuf = GameData_LoadLicense((void *)((int)(race + RACE_EVENT_BUF + 3) & ~3), 0x9ff0);
+        VolId_ReadFile(VOLID_ARCADE_LICENSE_INFO_JP, (void *)rt::from_guest(((int)rt::to_guest((race + RACE_LICENSE_INFO + 3)) & ~3)));
+        g_EventDataBuf = GameData_LoadLicense((void *)rt::from_guest(((int)rt::to_guest((race + RACE_EVENT_BUF + 3)) & ~3)), 0x9ff0);
     }
     return 5;
 }

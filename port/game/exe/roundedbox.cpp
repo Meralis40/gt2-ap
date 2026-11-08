@@ -15,7 +15,7 @@ struct CirclePoint {
     short x, y;
 };
 
-extern CirclePoint D_80091A78[];
+extern CirclePoint (&D_80091A78)[];
 
 // A tile, with a fan of POLY_F4s (three rim points and the end's centre) at each end.
 // The game keeps box and ot on the stack, with nine saved registers for the rest, and

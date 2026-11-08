@@ -1,10 +1,11 @@
 // OVL4 80019f5c-8001a454 (battletable): Battle opponent table. GTBattleMenu
 // evaluates every GT race data car (one per frame), sorts them by score, then
 // picks the opponent pool around the player's car.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern void *g_GtModeRaceData;
+extern game_pointer<void> (&g_GtModeRaceData);
 
 // weight * 300000 / power^2 (0x88b9 when power is 0). Lower is faster.
 int Battle_WeightPowerScore(int power, int weight)
@@ -42,7 +43,7 @@ void BattleTable_Init(BattleCarTable *t)
 
     pvVar1 = g_GtModeRaceData;
     t->loaded = 0;
-    t->count = *(short *)((int)pvVar1 + 0x16);
+    t->count = *(short *)rt::from_guest(((int)rt::to_guest(pvVar1) + 0x16));
 }
 
 // Evaluates the next car with its default setup: power / 10, the score and the

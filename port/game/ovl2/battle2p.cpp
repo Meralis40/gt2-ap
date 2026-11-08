@@ -38,59 +38,59 @@ struct ArcGarageList {
     int unk30;
 };
 
-extern GameState g_GameState;
-extern Arc2PPlayer g_Arc_2PPlayers[2];
-extern short g_Arc_2PGarageOrder[2][100];
-extern ArcGarageInfo g_Arc_HomeGarageInfo;
-extern ArcGarageInfo g_Arc_GuestGarageInfo;
-extern short D_8005002C[]; // the item layouts of the carousels
-extern short D_80050040[];
-extern GrowBar D_8004FDE4; // the grow bar behind the class lists
-extern ArcMenuList g_ArcMenu_2PClass[2];
-extern ArcGarageList g_ArcList_2PGarage[2][2]; // per player, home and guest
-extern ArcGridPicker g_Arc_2PCarousel[2];
-extern unsigned char g_Arc_2PCarView[2][0xdc];
-extern ArcTextItem D_800F1778[2]; // the players' titles
-extern short D_800F1740[2][0xe]; // the gradient bars behind them
-extern ArcTextItem D_800F1980[2]; // what each player picks
-extern ArcCarSpecPanel D_800F1BE8[2];
-extern ArcDialog g_Arc_2PTransPicker[2];
-extern ArcDialog g_Arc_2PSettingPicker[2];
-extern ArcadeRaceSel g_ArcSel_Level;
-extern MenuPage g_ArcPage_Course;
-extern char D_80027224[];
-extern char D_8002723C[];
-extern ArcSprite D_8004F7C4[]; // the makers
-extern unsigned char D_8004FE20[];
-extern char D_800F86CD[];
-extern short D_8004FDF8[];
-extern short D_8004FE0C[];
-extern unsigned char D_8004FFF0[];
-extern short g_Arc_CourseSet;
-extern ArcMenuItem D_8004FE48[];
-extern ArcMenuItem D_8004FE5C[];
-extern ArcMenuItem D_8004FE98[];
-extern ArcMenuItem D_8004FEC0[];
-extern ArcMenuItem D_8004FEFC[];
-extern ArcMenuItem D_8004FF10[];
-extern ArcMenuItem D_8004FF4C[];
-extern ArcMenuItem D_8004FF74[];
-extern ArcGridPickerTmpl D_8005000C;
-extern ArcGridPickerTmpl D_8005001C;
-extern ArcDialogDesc D_8004FD74;
-extern ArcDialogDesc D_8004FD8C;
-extern ArcDialogDesc D_80050054;
-extern ArcDialogDesc D_80050074;
-extern ArcDialogDesc *D_8005006C[2];
-extern ArcDialogDesc *D_8005008C[2];
-extern unsigned char D_80052190[];
-extern unsigned char *g_ArcCarList_Spec3[];
-extern ArcCarRating *g_ArcCarList_Ratings[];
-extern signed char *g_ArcCarList_Avail[];
-extern short g_ArcCarList_Count[];
-extern unsigned char g_ArcPickerValues[];
-extern unsigned int g_ArcClassColors[];
-extern char *D_8004FCCC[]; // the class names
+extern GameState (&g_GameState);
+extern Arc2PPlayer (&g_Arc_2PPlayers)[2];
+extern short (&g_Arc_2PGarageOrder)[2][100];
+extern ArcGarageInfo (&g_Arc_HomeGarageInfo);
+extern ArcGarageInfo (&g_Arc_GuestGarageInfo);
+extern short (&D_8005002C)[]; // the item layouts of the carousels
+extern short (&D_80050040)[];
+extern GrowBar (&D_8004FDE4); // the grow bar behind the class lists
+extern ArcMenuList (&g_ArcMenu_2PClass)[2];
+extern ArcGarageList (&g_ArcList_2PGarage)[2][2]; // per player, home and guest
+extern ArcGridPicker (&g_Arc_2PCarousel)[2];
+extern unsigned char (&g_Arc_2PCarView)[2][0xdc];
+extern ArcTextItem (&D_800F1778)[2]; // the players' titles
+extern short (&D_800F1740)[2][0xe]; // the gradient bars behind them
+extern ArcTextItem (&D_800F1980)[2]; // what each player picks
+extern ArcCarSpecPanel (&D_800F1BE8)[2];
+extern ArcDialog (&g_Arc_2PTransPicker)[2];
+extern ArcDialog (&g_Arc_2PSettingPicker)[2];
+extern ArcadeRaceSel (&g_ArcSel_Level);
+extern MenuPage (&g_ArcPage_Course);
+extern char (&D_80027224)[];
+extern char (&D_8002723C)[];
+extern ArcSprite (&D_8004F7C4)[]; // the makers
+extern unsigned char (&D_8004FE20)[];
+extern char (&D_800F86CD)[];
+extern short (&D_8004FDF8)[];
+extern short (&D_8004FE0C)[];
+extern unsigned char (&D_8004FFF0)[];
+extern short (&g_Arc_CourseSet);
+extern ArcMenuItem (&D_8004FE48)[];
+extern ArcMenuItem (&D_8004FE5C)[];
+extern ArcMenuItem (&D_8004FE98)[];
+extern ArcMenuItem (&D_8004FEC0)[];
+extern ArcMenuItem (&D_8004FEFC)[];
+extern ArcMenuItem (&D_8004FF10)[];
+extern ArcMenuItem (&D_8004FF4C)[];
+extern ArcMenuItem (&D_8004FF74)[];
+extern ArcGridPickerTmpl (&D_8005000C);
+extern ArcGridPickerTmpl (&D_8005001C);
+extern ArcDialogDesc (&D_8004FD74);
+extern ArcDialogDesc (&D_8004FD8C);
+extern ArcDialogDesc (&D_80050054);
+extern ArcDialogDesc (&D_80050074);
+extern game_pointer<ArcDialogDesc> (&D_8005006C)[2];
+extern game_pointer<ArcDialogDesc> (&D_8005008C)[2];
+extern unsigned char (&D_80052190)[];
+extern game_pointer<unsigned char> (&g_ArcCarList_Spec3)[];
+extern game_pointer<ArcCarRating> (&g_ArcCarList_Ratings)[];
+extern game_pointer<signed char> (&g_ArcCarList_Avail)[];
+extern short (&g_ArcCarList_Count)[];
+extern unsigned char (&g_ArcPickerValues)[];
+extern unsigned int (&g_ArcClassColors)[];
+extern game_pointer<char> (&D_8004FCCC)[]; // the class names
 int ArcCarList_FirstAvailable(int cls);
 int strcmp(const char *a, const char *b);
 void Battle2P_DrawPlayerItem(ArcGridPickerDraw *ctx, int item, int player, int cls, short *layout);

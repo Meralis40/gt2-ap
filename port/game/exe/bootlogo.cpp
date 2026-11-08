@@ -6,17 +6,18 @@
 #include "common.h"
 
 extern "C" {
-extern SplashScreen g_SplashScreens[];
-extern RECT D_80033DB8;         // the tile under the image
-extern RECT D_80033DC0;         // CLUT position
-extern RECT D_80033DC8;         // image position
-extern unsigned char g_VolDir[];
-extern unsigned char g_MenuContext[];
+extern SplashScreen (&g_SplashScreens)[];
+extern RECT (&D_80033DB8);         // the tile under the image
+extern RECT (&D_80033DC0);         // CLUT position
+extern RECT (&D_80033DC8);         // image position
+extern unsigned char (&g_VolDir)[];
+extern unsigned char (&g_MenuContext)[];
 
 }
 
 VendorBootLogo::VendorBootLogo()
 {
+    vptr.address = 0x80011d40;  // VendorBootLogo's vtable
     yOffset = 16;
 }
 

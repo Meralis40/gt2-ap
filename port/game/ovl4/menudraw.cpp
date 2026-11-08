@@ -2,25 +2,26 @@
 // MenuPage_DrawElements is still the original assembly, with its C++ under
 // NON_MATCHING. Assembled by GNU as (GAS_CXX): a branch in GTMenu::BeginFrame
 // lands after the load delay nop.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern MenuCarList g_GarageList;
-extern MenuCarList g_UsedCarList;
-extern int g_MenuElementCount;
-extern unsigned int g_MenuPageAttr;
-extern GameState g_GameState;
-extern ShopTxn g_ShopTxn;
-extern CarSpecStrings g_CarSpecStrings;
-extern SpriteDesc g_GTIcon_Drivetrain[];
-extern SpriteDesc g_GTIcon_Medal[];
-extern SpriteDesc g_GTIcon_LicenseBadge[];
-extern SpriteDesc g_GTIcon_RequiredLicense[];
-extern SpriteDesc g_GTIcon_LicenseEarned;
-extern SpriteDesc g_GTIcon_EventWon;
-extern char *g_DrivetrainNames[];
-extern char sB_Nlb[];
-extern char sB_Nhp[];
+extern MenuCarList (&g_GarageList);
+extern MenuCarList (&g_UsedCarList);
+extern int (&g_MenuElementCount);
+extern unsigned int (&g_MenuPageAttr);
+extern GameState (&g_GameState);
+extern ShopTxn (&g_ShopTxn);
+extern CarSpecStrings (&g_CarSpecStrings);
+extern SpriteDesc (&g_GTIcon_Drivetrain)[];
+extern SpriteDesc (&g_GTIcon_Medal)[];
+extern SpriteDesc (&g_GTIcon_LicenseBadge)[];
+extern SpriteDesc (&g_GTIcon_RequiredLicense)[];
+extern SpriteDesc (&g_GTIcon_LicenseEarned);
+extern SpriteDesc (&g_GTIcon_EventWon);
+extern game_pointer<char> (&g_DrivetrainNames)[];
+extern char (&sB_Nlb)[];
+extern char (&sB_Nhp)[];
 }
 
 // Runs the hook, then what Update queued for this frame: the wheel on the
@@ -37,7 +38,7 @@ void GTMenu::BeginFrame()
     if (hookActive) {
         hookActive = hook(hookArg, 1, shown);
     }
-    MenuView_BeginFrame(&view, (void **)layers[1].ot);
+    MenuView_BeginFrame(&view, (unsigned int *)layers[1].ot);
     if (previewDelay == 1) {
         CarPreview_SetWheel(&view.preview, previewWheel, previewWheelColor);
         shown = 1;
@@ -254,7 +255,7 @@ void Car_DrawName(void *ot, unsigned int carId, int x, int y, int numFont, int r
 // A garage's car, with the index's offset added to the base, as the game does.
 static inline Car *Garage_Car(Garage *garage, int i)
 {
-    return (Car *)(i * (int)sizeof(Car) + (int)garage->cars);
+    return (Car *)rt::from_guest((i * (int)sizeof(Car) + (int)rt::to_guest(garage->cars)));
 }
 
 // A coordinate stored through an int, which the game loads with lh where a

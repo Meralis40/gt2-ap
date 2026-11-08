@@ -4,7 +4,7 @@
 
 extern "C" {
 
-extern unsigned int D_800A6ACC[256]; // the CRC-32 table
+extern unsigned int (&D_800A6ACC)[256]; // the CRC-32 table
 
 // Inflates a whole gzip file from src to dst in one go. The state and a 12 KB Huft heap
 // live on the stack; no input or output limits, no callbacks.
@@ -46,7 +46,7 @@ unsigned int Str_Hash(char *s)
 }
 
 // Inserts node by ascending priority, after the nodes of the same priority.
-void VSyncList_Add(VSyncCallback **list, VSyncCallback *node)
+void VSyncList_Add(game_pointer<VSyncCallback> *list, VSyncCallback *node)
 {
     int leave = Sys_CriticalSection(0);
     VSyncCallback *prev = 0;
@@ -76,7 +76,7 @@ void VSyncList_Add(VSyncCallback **list, VSyncCallback *node)
 
 // The game copies prev and next once more ($a1, $a3) and doesn't reuse node's register;
 // GCC drops the copies, whatever the form tried (locals, inline helpers).
-void VSyncList_Remove(VSyncCallback **list, VSyncCallback *node)
+void VSyncList_Remove(game_pointer<VSyncCallback> *list, VSyncCallback *node)
 {
     int leave = Sys_CriticalSection(0);
     VSyncCallback *prev = node->prev;
@@ -94,7 +94,7 @@ void VSyncList_Remove(VSyncCallback **list, VSyncCallback *node)
 }
 
 // Calls each callback; a callback can remove itself.
-void VSyncList_Run(VSyncCallback **list)
+void VSyncList_Run(game_pointer<VSyncCallback> *list)
 {
     VSyncCallback *next = *list;
 

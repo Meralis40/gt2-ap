@@ -6,6 +6,9 @@
 #ifndef GTMENU_H
 #define GTMENU_H
 
+#include "gptr.h"
+#include "vtable.h"
+
 #include "ovl4.h"
 
 // GT mode main menu loop (0x864 bytes). Constructed on GTMode_Run's stack.
@@ -16,8 +19,8 @@ public:
     short blankFrames;          // draw.otHead is cleared (the next BeginDraw sends nothing) while > 0; 2 on Enter, 4 after a page change
     signed char hookActive;     // hook runs in BeginFrame and Update while it returns non-zero
     unsigned char pad75[3];
-    unsigned char (*hook)(void *, int, int);
-    void *hookArg;
+    game_function<unsigned char(void *, int, int)> hook;
+    game_pointer<void> hookArg;
     DrawLayer layers[3];        // priorities 1, 4, 3
     PadDevice pads[2];          // ports 0 and 1
     PadState padState[2];
@@ -51,12 +54,12 @@ public:
     int drawEndTime;
 
     GTMenu();
-    virtual ~GTMenu();
-    virtual void Enter();
-    virtual void Leave();
-    virtual void BeginFrame();  // menudraw.cpp
-    virtual int Update();
-    virtual void Draw();
+    ~GTMenu();
+    void Enter();
+    void Leave();
+    void BeginFrame();  // menudraw.cpp
+    int Update();
+    void Draw();
 };
 
 // A dark grey screen for 12 frames (0x84 bytes).
@@ -66,10 +69,10 @@ public:
     short frames;               // Update leaves once it goes below 0
 
     GTLoadingMenu();
-    virtual ~GTLoadingMenu();
-    virtual void Enter();
-    virtual int Update();
-    virtual void Draw();
+    ~GTLoadingMenu();
+    void Enter();
+    int Update();
+    void Draw();
 };
 
 // Picks the battle opponents (0x84 bytes): not interactive, a progress bar while
@@ -81,14 +84,14 @@ public:
     DrawLayer layer;
 
     GTBattleMenu();
-    virtual ~GTBattleMenu();
-    virtual void Enter();
-    virtual int Update();
-    virtual void Draw();
+    ~GTBattleMenu();
+    void Enter();
+    int Update();
+    void Draw();
 };
 
 extern "C" {
-extern GTMenu *g_GTMenu;
+extern game_pointer<GTMenu> (&g_GTMenu);
 }
 
 #endif

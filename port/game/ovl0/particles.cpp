@@ -4,7 +4,7 @@
 #include "gamestate.h"
 
 extern "C" {
-extern short g_ParticleFadeTable[16];
+extern short (&g_ParticleFadeTable)[16];
 
 // g_RaceSetup, from g_GameState and an offset local (the offset is too big for an addiu).
 static inline RaceSetup *RaceSetup_Get()
@@ -83,7 +83,7 @@ void Particles_Update(ParticlePool *pool)
     int index = pool->activeHead;
 
     while (index >= 0) {
-        // The pool header is as long as a particle: particles[index] is entry[1].
+        // The pool header is as int as a particle: particles[index] is entry[1].
         Particle *entry = (Particle *)pool + index;
         int next = entry[1].next;
         Particle *p = &entry[1];

@@ -5,7 +5,7 @@ extern "C" {
 // Feeds the run-length codes to the MDEC and starts the output of the first
 // column at (x, y). In 24-bit mode, x is in pixels and the VRAM rect in
 // 16-bit units, so x is scaled by 1.5.
-void MdecOut_Start(MdecOut *m, int x, short y, unsigned long *vlc)
+void MdecOut_Start(MdecOut *m, int x, short y, unsigned int *vlc)
 {
     int mode = m->rgb24;
     unsigned short count = m->sliceCount;

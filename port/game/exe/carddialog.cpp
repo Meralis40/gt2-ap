@@ -3,6 +3,7 @@
 // sliding the boxes in and close as a wipe of the chosen box. Also the card
 // slot status and a scaled sprite helper. CardSlots_Update's jump table is
 // this file's .rodata (0x8008fab0).
+#include "gptr.h"
 #include "common.h"
 
 // Pad bits of PadState.pressed.
@@ -12,9 +13,9 @@
 #define PAD_CANCEL 0x500
 
 extern "C" {
-extern TextStyle D_80091EC8;    // the dialog's text style
-extern uint D_80091EE4;         // the colour boxes fade from and to
-extern CardSystem g_Card;
+extern TextStyle (&D_80091EC8);    // the dialog's text style
+extern uint (&D_80091EE4);         // the colour boxes fade from and to
+extern CardSystem (&g_Card);
 
 void CardDialog_Init(CardDialog *dlg, CardDialogDesc *desc, int choice)
 {
@@ -93,11 +94,11 @@ void CardDialog_Open(CardDialog *dlg)
 
 void FUN_8006e3e0(int param_1)
 {
-    *(short *)(param_1 + 0x82) = 0xffff;
-    *(short *)(param_1 + 0x84) = 0;
-    *(short *)(param_1 + 0x26) = 0xffff;
-    *(short *)(param_1 + 0x4e) = 0xffff;
-    *(short *)(param_1 + 0x76) = 0xffff;
+    *(short *)rt::from_guest((param_1 + 0x82)) = 0xffff;
+    *(short *)rt::from_guest((param_1 + 0x84)) = 0;
+    *(short *)rt::from_guest((param_1 + 0x26)) = 0xffff;
+    *(short *)rt::from_guest((param_1 + 0x4e)) = 0xffff;
+    *(short *)rt::from_guest((param_1 + 0x76)) = 0xffff;
 }
 
 void CardDialog_Close(CardDialog *dlg)

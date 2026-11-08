@@ -5,6 +5,7 @@
 #ifndef OVL4_H
 #define OVL4_H
 
+#include "gptr.h"
 #include "resident.h"
 
 typedef struct CarSpecStrings CarSpecStrings, *PCarSpecStrings;
@@ -84,9 +85,9 @@ struct BattleCarTable { /* Work table of GTBattleMenu (in g_RaceCarWorkAlt): sta
 typedef struct BgPicStream BgPicStream, *PBgPicStream;
 
 struct BgPicStream {
-    void *sectorBuf;
-    void *header;
-    void *lineBuf;
+    game_pointer<void> sectorBuf;
+    game_pointer<void> header;
+    game_pointer<void> lineBuf;
     uint bytesDone;
     uint startOffset;
     uint size;
@@ -163,9 +164,9 @@ struct CarPreview {
     signed char loaded;
     signed char isCurrentCar;
     uchar pad1e[2];
-    void *modelBuf;
-    void *texBuf;
-    void *wheelBuf;
+    game_pointer<void> modelBuf;
+    game_pointer<void> texBuf;
+    game_pointer<void> wheelBuf;
     uchar model2c[312];
     signed char colorDirty;
     uchar pad165;
@@ -188,10 +189,10 @@ struct EventPrizeInfo { /* Prizes of the event about to be run (Event_LoadPrizeI
 typedef struct MenuBgmBank MenuBgmBank, *PMenuBgmBank;
 
 struct MenuBgmBank {
-    void *buffer;
+    game_pointer<void> buffer;
     uchar pad04[8];
     struct SeqPlayer seq;
-    void *seqData;
+    game_pointer<void> seqData;
     uchar playing;
     uchar pad2b9[3];
 };
@@ -257,7 +258,7 @@ struct MapCursor { /* GT mode map cursor (tentative); init FUN_OVL4__8001e22c */
     undefined field15_0x21;
     undefined field16_0x22;
     undefined field17_0x23;
-    struct MenuElement *hotspot; /* element under the cursor (target of the current move) */
+    game_pointer<struct MenuElement> hotspot; /* element under the cursor (target of the current move) */
 };
 
 struct GTMenuView { /* GT mode menu pages and widgets (tentative); init FUN_OVL4__8001d118. Sub-objects at +0x28 (FUN_OVL4__8001aaf4) and +0x478 (FUN_OVL4__8001d090) */
@@ -270,10 +271,10 @@ struct GTMenuView { /* GT mode menu pages and widgets (tentative); init FUN_OVL4
     int prevBackPage; /* previous backPage (MenuView_GetPrevBackPage) */
     int carBaseId; /* car shown by MenuView_ShowCar (model) */
     int carId; /* car shown by MenuView_ShowCar (specs; key of MenuView_GetCarInfoPage) */
-    void *bgListTail; /* last packet of the background display list (MenuPage_BuildBackground), linked into the OT each frame */
-    pointer assets0;
-    pointer assets1;
-    pointer assets2;
+    game_pointer<void> bgListTail; /* last packet of the background display list (MenuPage_BuildBackground), linked into the OT each frame */
+    game_pointer<void> assets0;
+    game_pointer<void> assets1;
+    game_pointer<void> assets2;
     struct CarPreview preview;
     struct CarCamera camera;
     short bgmTrack; /* menu music track of the current page (MenuBgm_Request), saved in 0x801ef5fc on exit */
@@ -305,7 +306,7 @@ typedef struct MenuCarList MenuCarList, *PMenuCarList;
 struct MenuCarList { /* garage or used car list widget (g_GarageList, g_UsedCarList) */
     short count;
     short selected;
-    struct MenuElement *element;
+    game_pointer<struct MenuElement> element;
 };
 
 // Types declared with the decompiled OVL4 code, by the file that first
@@ -325,9 +326,9 @@ struct BattlePlayer {
 
 // The buffers and position of the preview (CarPreview_Init).
 struct PreviewBuffers {
-    void *modelBuf;
-    void *texBuf;
-    void *wheelBuf;
+    game_pointer<void> modelBuf;
+    game_pointer<void> texBuf;
+    game_pointer<void> wheelBuf;
 };
 
 struct CarPreviewConfig {
@@ -389,7 +390,7 @@ struct EventRules {
 
 // A replay file of an event's ghost.
 struct GhostEventFile {
-    char *eventCode;
+    game_pointer<char> eventCode;
     VolBootId fileId;
 };
 
@@ -416,9 +417,9 @@ struct SpriteDesc {
 
 // Car preview setup that Enter passes to MenuView_Init.
 struct GTMenuPreviewConfig {
-    void *buf;
-    unsigned char *work;
-    void *buf2;
+    game_pointer<void> buf;
+    game_pointer<unsigned char> work;
+    game_pointer<void> buf2;
     short unk0c;
     short unk0e;
     short unk10;
@@ -464,7 +465,7 @@ struct CarPage {
 
 // The three menu buffers (GTMenuView.assets0..2), copied as one.
 struct ViewAssets {
-    void *buf[3];
+    game_pointer<void> buf[3];
 };
 
 // The flow state at 0x801ef5f0: the menu page and music track to come back to.

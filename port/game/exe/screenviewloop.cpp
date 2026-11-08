@@ -5,6 +5,7 @@
 
 ScreenViewLoop::ScreenViewLoop()
 {
+    vptr.address = 0x800908ec;  // ScreenViewLoop's vtable
 }
 
 ScreenViewLoop::~ScreenViewLoop()
@@ -13,17 +14,17 @@ ScreenViewLoop::~ScreenViewLoop()
 
 int ScreenViewLoop::Execute()
 {
-    Run();
+    v_Run();
     return 0;
 }
 
 void ScreenViewLoop::Run()
 {
-    Enter();
-    while (Step()) {
-        Flip();
+    v_Enter();
+    while (v_Step()) {
+        v_Flip();
     }
-    Leave();
+    v_Leave();
 }
 
 void ScreenViewLoop::Enter()

@@ -1,13 +1,14 @@
 // Resident code 80068e2c-80069890 (replaydir). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern char D_8008FA70[];
-extern char D_80091AB8[];
-extern char D_80091ACC[];
-extern unsigned char D_80091AEC[];
-extern unsigned char D_80091B0C[];
+extern char (&D_8008FA70)[];
+extern char (&D_80091AB8)[];
+extern char (&D_80091ACC)[];
+extern unsigned char (&D_80091AEC)[];
+extern unsigned char (&D_80091B0C)[];
 
 #define SECTOR_FREE 0x3c0
 
@@ -147,11 +148,11 @@ void ReplayEntry_SetCarName(void *entry, char *name)
 
     sVar1 = strlen(name);
     if ((int)sVar1 < 0x20) {
-        strcpy((char *)((int)entry + 0x20), name);
+        strcpy((char *)rt::from_guest(((int)rt::to_guest(entry) + 0x20)), name);
     }
     else {
-        strncpy((char *)((int)entry + 0x20), name, 0x1f);
-        *(unsigned char *)((int)entry + 0x3f) = 0x3f;
+        strncpy((char *)rt::from_guest(((int)rt::to_guest(entry) + 0x20)), name, 0x1f);
+        *(unsigned char *)rt::from_guest(((int)rt::to_guest(entry) + 0x3f)) = 0x3f;
     }
 }
 

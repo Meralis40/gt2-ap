@@ -3,7 +3,7 @@
 #include "common.h"
 
 extern "C" {
-extern KanjiFont *g_ArcKanjiFont;
+extern game_pointer<KanjiFont> (&g_ArcKanjiFont);
 }
 
 // Runs the hook (step 0), uploads the kanji glyphs, re-applies the car views'

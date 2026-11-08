@@ -4,6 +4,8 @@
 #ifndef OVL1_H
 #define OVL1_H
 
+#include "gptr.h"
+#include "vtable.h"
 #include "resident.h"
 #include "viewloop.h"
 
@@ -15,11 +17,11 @@ typedef int MenuPageUpdateFn(int arg);
 typedef void MenuPageDrawFn(DrawLayer *layer);
 
 struct BaseMenuPage {
-    MenuPageEnterFn *enter; // 1 when returning from a child page
-    MenuPageUpdateFn *update; // returns 1 push, 2 back, 3/4 leave the menu
-    MenuPageDrawFn *draw;
+    game_function<MenuPageEnterFn> enter; // 1 when returning from a child page
+    game_function<MenuPageUpdateFn> update; // returns 1 push, 2 back, 3/4 leave the menu
+    game_function<MenuPageDrawFn> draw;
     unsigned int titleColor; // RGB of the title bar
-    char *title; // NULL = no title bar
+    game_pointer<char> title; // NULL = no title bar
 };
 
 // A root or list page: BaseMenuPage, then its delay and back flag.
@@ -35,14 +37,14 @@ class BaseMenu : public psxViewLoopDoubleBuffer {
 public:
     signed char hookActive; // hook runs each frame while it returns non-zero
     unsigned char pad71[3];
-    unsigned char (*hook)(void *, int, int);
-    void *hookArg;
+    game_function<unsigned char(void *, int, int)> hook;
+    game_pointer<void> hookArg;
     DrawLayer layers[6]; // priorities 0,5,1,2,3,4
     PadDevice pads[2]; // tentative: ports 0 and 1
     PadState padState[2]; // copied from pads each Update
-    BaseMenuPage *activePage;
-    BaseMenuPage *leavingPage; // drawn fading out during a back transition
-    BaseMenuPage *pageStack[16];
+    game_pointer<BaseMenuPage> activePage;
+    game_pointer<BaseMenuPage> leavingPage; // drawn fading out during a back transition
+    game_pointer<BaseMenuPage> pageStack[16];
     signed char pageDepth;
     signed char transitionBack;
     short transitionTimer; // 16 down to 0
@@ -53,12 +55,12 @@ public:
     unsigned char pad21d[3];
 
     BaseMenu();
-    virtual ~BaseMenu();
-    virtual void Enter();
-    virtual void Leave();
-    virtual void BeginFrame();
-    virtual int Update();
-    virtual void Draw();
+    ~BaseMenu();
+    void Enter();
+    void Leave();
+    void BeginFrame();
+    int Update();
+    void Draw();
 };
 
 struct KeyConfig {
@@ -112,15 +114,15 @@ struct TabSelector {
     signed char active;
     signed char skipInput;
     unsigned char pad12[2];
-    void *callback;
-    void *userData;
+    game_function<void(int, struct TabEvent *, int)> callback;
+    game_pointer<void> userData;
 };
 
 // What TabSelector_Update and TabSelector_Draw pass to the callback.
 struct TabEvent {
-    TabSelector *tabs;
-    PadState *pad;
-    uint *ot;
+    game_pointer<TabSelector> tabs;
+    game_pointer<PadState> pad;
+    game_pointer<uint> ot;
     short x;
     short y;
     short brightness;
@@ -132,11 +134,11 @@ struct TabEvent {
 // What ReplayCopy_Setup takes.
 struct ReplayCopyConfig {
     unsigned int heap; // the work area
-    KanjiFont *font;
-    short *cardSlots;
-    Font *fontSmall;
-    Font *fontMedium;
-    Font *fontLarge;
+    game_pointer<KanjiFont> font;
+    game_pointer<short> cardSlots;
+    game_pointer<Font> fontSmall;
+    game_pointer<Font> fontMedium;
+    game_pointer<Font> fontLarge;
     short textPri;
 };
 
@@ -145,11 +147,11 @@ struct ReplayCopyConfig {
 // What DataXfer_Setup takes.
 struct DataXferConfig {
     unsigned int heap; // the work area (g_OVL1_EndFontInfo)
-    KanjiFont *font;
-    short *cardSlots;
-    Font *fontSmall;
-    Font *fontMedium;
-    Font *fontLarge;
+    game_pointer<KanjiFont> font;
+    game_pointer<short> cardSlots;
+    game_pointer<Font> fontSmall;
+    game_pointer<Font> fontMedium;
+    game_pointer<Font> fontLarge;
     short textPri;
 };
 
@@ -164,7 +166,7 @@ struct MenuSprite {
     short y;
     unsigned char maxBrightness;
     unsigned char pad09[3];
-    struct SpriteDesc *sprite; // ovl4.h
+    game_pointer<struct SpriteDesc> sprite; // ovl4.h
     short anim; // 0 to 12 opening, -1 hidden, below -1 closing
     short brightness;
 };

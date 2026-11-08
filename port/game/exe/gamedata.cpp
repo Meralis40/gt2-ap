@@ -1,5 +1,6 @@
 // Resident code 80077d5c-80078370 (gamedata). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 
 // The table of race events, in the base data and the GT mode race data.
@@ -7,8 +8,8 @@
 
 extern "C" {
 
-extern int g_GameDataMode;
-extern GameData *g_GtModeRaceData;
+extern int (&g_GameDataMode);
+extern game_pointer<GameData> (&g_GtModeRaceData);
 
 // Entry index of table.
 void *GameData_GetEntryIn(GameData *data, int table, int index)
@@ -66,7 +67,7 @@ int GameData_BinarySearch(GameData *data, int table, unsigned int id)
 
 void *GameDataTable_GetEntry(GameDataTable *table, int index)
 {
-    return (void *)((int)table->entries + (unsigned int)table->entrySize * index);
+    return (void *)rt::from_guest(((int)table->entries + (unsigned int)table->entrySize * index));
 }
 
 // GameData_FindEntryById for a table on its own.
@@ -102,7 +103,7 @@ void FUN_80078018(void *param_1, CarSetup *param_2)
 
 void *GameDataTable_At(GameDataTable *table, int index)
 {
-    return (void *)((int)table->entries + (unsigned int)table->entrySize * index);
+    return (void *)rt::from_guest(((int)table->entries + (unsigned int)table->entrySize * index));
 }
 
 // The index of the entry whose first word is id, or -1. Like GameData_BinarySearch,

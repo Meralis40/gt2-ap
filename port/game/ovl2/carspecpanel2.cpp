@@ -1,6 +1,7 @@
 // OVL2 80019518-80019e60 (carspecpanel2): Car spec panel.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 
 static inline int Half(unsigned short v)
@@ -9,9 +10,9 @@ static inline int Half(unsigned short v)
 }
 
 extern "C" {
-extern GameState g_GameState;
-extern char D_800F85A3[];
-extern ArcSprite *D_8004F618[];
+extern GameState (&g_GameState);
+extern char (&D_800F85A3)[];
+extern game_pointer<ArcSprite> (&D_8004F618)[];
 int Lerp_Clamped_OVL2(int x, int x0, int x1, int y0, int y1);
 void ColorChips_Set(ArcColorChips *c, int count, unsigned short *colors);
 void ColorChips_Draw(ArcColorChips *c, void *ot, int x, int y);
@@ -117,14 +118,14 @@ void CarSpecPanel_Update(void *panel)
     item = (ArcTextItem *)panel;
     do {
         TextItem_Update_OVL2(item);
-        IconItem_Update((ArcIconItem *)((int)panel + iVar1));
-        PowerGraphView_Update_OVL2((ArcPowerGraph *)((int)panel + iVar2));
-        b = (ArcStatBar *)((int)panel + iVar3);
+        IconItem_Update((ArcIconItem *)rt::from_guest(((int)rt::to_guest(panel) + iVar1)));
+        PowerGraphView_Update_OVL2((ArcPowerGraph *)rt::from_guest(((int)rt::to_guest(panel) + iVar2)));
+        b = (ArcStatBar *)rt::from_guest(((int)rt::to_guest(panel) + iVar3));
         StatBar_Update(b);
         StatBar_Update(b + 1);
         StatBar_Update(b + 2);
-        ColorChips_Update((ArcColorChips *)((int)panel + iVar4));
-        SpecTable_Update((ArcSpecTable *)((int)panel + iVar5));
+        ColorChips_Update((ArcColorChips *)rt::from_guest(((int)rt::to_guest(panel) + iVar4)));
+        SpecTable_Update((ArcSpecTable *)rt::from_guest(((int)rt::to_guest(panel) + iVar5)));
         iVar5 = iVar5 + 0x250;
         iVar4 = iVar4 + 0x86;
         iVar3 = iVar3 + 0x9c;

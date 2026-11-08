@@ -1,6 +1,7 @@
 // OVL2 8001f238-80020224 (garageselect): Garage car selection page.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "syslib.h"
 
@@ -26,31 +27,31 @@ static inline int Half(unsigned short v)
 }
 
 extern "C" {
-extern GameState g_GameState;
-extern ArcadeRaceSel g_ArcSel_Level;
-extern signed char g_ArcSel_Class;
-extern signed char g_ArcSel_Trans;
-extern short g_ArcSel_Garage;
-extern unsigned int g_ArcSel_CarCode;
-extern int g_Arc_RallyMode;
-extern short g_Arc_GarageOrder[100];
-extern ArcGarageInfo g_Arc_HomeGarageInfo;
-extern ArcGarageInfo g_Arc_GuestGarageInfo;
-extern ArcCarSpecPanel g_ArcCarSpecPanel;
-extern ArcGridPickerTmpl D_8004FD50;
-extern ArcDialogDesc D_8004FD74;
-extern unsigned char g_ArcPickerValues[];
-extern unsigned char D_80052190[];
-extern MenuPage g_ArcPage_Course;
-extern Font D_80123810;
-extern ArcSprite D_800455D0; // the row's arrow
-extern char *D_8004FCB0[];   // the classes' names
-extern char D_800F859E[];    // the power's format
-extern MenuList g_ArcList_Garage;
-extern ArcGridPicker g_Arc_CarCarousel;
-extern GrowBar g_Arc_CarGrowBar;
-extern ArcDialog g_Arc_TransPicker;
-extern ResultCarView g_Arc_CarView;
+extern GameState (&g_GameState);
+extern ArcadeRaceSel (&g_ArcSel_Level);
+extern signed char (&g_ArcSel_Class);
+extern signed char (&g_ArcSel_Trans);
+extern short (&g_ArcSel_Garage);
+extern unsigned int (&g_ArcSel_CarCode);
+extern int (&g_Arc_RallyMode);
+extern short (&g_Arc_GarageOrder)[100];
+extern ArcGarageInfo (&g_Arc_HomeGarageInfo);
+extern ArcGarageInfo (&g_Arc_GuestGarageInfo);
+extern ArcCarSpecPanel (&g_ArcCarSpecPanel);
+extern ArcGridPickerTmpl (&D_8004FD50);
+extern ArcDialogDesc (&D_8004FD74);
+extern unsigned char (&g_ArcPickerValues)[];
+extern unsigned char (&D_80052190)[];
+extern MenuPage (&g_ArcPage_Course);
+extern Font (&D_80123810);
+extern ArcSprite (&D_800455D0); // the row's arrow
+extern game_pointer<char> (&D_8004FCB0)[];   // the classes' names
+extern char (&D_800F859E)[];    // the power's format
+extern MenuList (&g_ArcList_Garage);
+extern ArcGridPicker (&g_Arc_CarCarousel);
+extern GrowBar (&g_Arc_CarGrowBar);
+extern ArcDialog (&g_Arc_TransPicker);
+extern ResultCarView (&g_Arc_CarView);
 
 // A garage car's name, colour swatch, power, class and arrow.
 void GarageList_DrawRow(void *ot, Garage *garage, int slot, ArcCarRating *rating, int x, int y,
@@ -446,23 +447,23 @@ void GarageSelect_Draw(void *menu, DrawLayer *layer)
     RECT local_20;
 
     ot_00 = layer->ot;
-    iVar1 = *(int *)((int)menu + 0x1c8);
-    ctx = *(TextCtx **)((int)menu + 0x1c4);
-    ot = (unsigned int *)((int)ot_00 + 8);
+    iVar1 = *(int *)rt::from_guest(((int)rt::to_guest(menu) + 0x1c8));
+    ctx = *(game_pointer<TextCtx> *)rt::from_guest(((int)rt::to_guest(menu) + 0x1c4));
+    ot = (unsigned int *)rt::from_guest(((int)rt::to_guest(ot_00) + 8));
     MenuList_Draw(&g_ArcList_Garage, ot);
     GridPicker_Draw(&g_Arc_CarCarousel, ot);
     GrowBar_Draw((GrowBar *)&g_Arc_CarGrowBar, ot);
     Dialog_Draw_OVL2(&g_Arc_TransPicker, ot_00, ctx);
-    if (*(int *)(iVar1 + 0x14) == 0) {
-        ArcCarView_Draw(*(ArcCarView **)((int)menu + 0x228), (DrawLayer *)((int)menu + 0xbc),
-                                        (DrawLayer *)((int)menu + 0xcc), &g_Arc_CarView);
+    if (*(int *)rt::from_guest((iVar1 + 0x14)) == 0) {
+        ArcCarView_Draw(*(game_pointer<ArcCarView> *)rt::from_guest(((int)rt::to_guest(menu) + 0x228)), (DrawLayer *)rt::from_guest(((int)rt::to_guest(menu) + 0xbc)),
+                                        (DrawLayer *)rt::from_guest(((int)rt::to_guest(menu) + 0xcc)), &g_Arc_CarView);
     }
     local_20.x = 0x30;
     local_20.y = 0xb4;
     local_20.w = 0x100;
     local_20.h = 200;
-    DrawLayer_SetArea((DrawLayer *)((int)menu + 0xbc), &local_20);
-    DrawLayer_SetArea((DrawLayer *)((int)menu + 0xcc), &local_20);
+    DrawLayer_SetArea((DrawLayer *)rt::from_guest(((int)rt::to_guest(menu) + 0xbc)), &local_20);
+    DrawLayer_SetArea((DrawLayer *)rt::from_guest(((int)rt::to_guest(menu) + 0xcc)), &local_20);
 }
 
 // Camera of the 2P (and garage) car views: distance 0xb0000, smaller viewport, ground

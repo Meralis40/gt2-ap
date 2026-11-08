@@ -3,17 +3,23 @@
 #ifndef SYSLIB_H
 #define SYSLIB_H
 
-typedef unsigned int size_t;
+#include <stdarg.h>
+
+#include "gptr.h"
+
+typedef __SIZE_TYPE__ size_t;  // unsigned int on the console and i686
 
 // Header of a heap block; the payload follows it.
 typedef struct HeapBlock {
-    struct HeapBlock *prev;
-    struct HeapBlock *next;
+    game_pointer<struct HeapBlock> prev;
+    game_pointer<struct HeapBlock> next;
     unsigned int size; // payload bytes
     unsigned int used;
 } HeapBlock;
 
 typedef int (*PutcFunc)(int c);
+
+extern "C" {
 
 void Boot_InitHardware(void);
 void Heap_InitDefault(void);
@@ -22,8 +28,8 @@ void Heap_MergeNext(HeapBlock *block);
 void bcopy(const void *src, void *dst, size_t n);
 size_t strlen(const char *s);
 char *strcpy(char *dst, const char *src);
-int vsprintf(char *buf, const char *fmt, void *args);
-int Printf_Format(PutcFunc putc, const char *fmt, char *args);
+int vsprintf(char *buf, const char *fmt, va_list args);
+int Printf_Format(PutcFunc putc, const char *fmt, va_list args);
 int Printf_ParseInt(char **p);
 int Printf_FormatDec64(PutcFunc putc, unsigned int flags, int width, int prec, unsigned long long val, int sign,
                        int point);
@@ -33,7 +39,7 @@ int Printf_EmitString(PutcFunc putc, unsigned int flags, int width, int prec, ch
 int Printf_EmitNumber(PutcFunc putc, unsigned int flags, int width, int prec, char sign, char *digits, int len,
                       int base);
 int Printf_PutcToBuffer(int c);
-void InitHeap(unsigned long *base, unsigned long size);
+void InitHeap(unsigned int *base, unsigned int size);
 void Rt_Unimplemented(const char *what); // port/rt: stops with a message
 
 void Sys_Init(void);
@@ -43,18 +49,19 @@ int sprintf(char *buf, const char *fmt, ...);
 char *strncpy(char *dst, const char *src, size_t n);
 void *memcpy(void *dst, const void *src, size_t n);
 char *strcat(char *dst, const char *src);
-int strncasecmp(const char *a, const char *b, int n);
+int strncasecmp(const char *a, const char *b, size_t n);
 void *malloc(size_t size);
 int abs(int x);
-int memcmp(const void *a, const void *b, int n);
+int memcmp(const void *a, const void *b, size_t n);
 void free(void *ptr);
 
 extern HeapBlock *g_HeapBase;
-extern unsigned long g_HeapSize;
+extern unsigned int g_HeapSize;
 extern unsigned int g_StackSize;
 extern unsigned int g_StartupSP; // sp when start was called
 extern char D_801F0D60[];        // end of the BSS
-extern char *D_801C9898; // vsprintf's output pointer
-extern unsigned long long D_800A8CB8[19]; // 10^18 down to 10^0
+extern game_pointer<char> (&D_801C9898);        // vsprintf's output pointer
+extern unsigned long long (&D_800A8CB8)[19]; // 10^18 down to 10^0
+}
 
 #endif

@@ -1,13 +1,14 @@
 // OVL0 800505ac-80052838 (raceresults): Race and machine test result pages.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 
 // How InfoBar_Init sets up a bar.
 struct InfoBarDesc {
     uint unk00;
     uint unk04;
-    char *label;
+    game_pointer<char> label;
     uint labelRgb;
     uint value;
     uint valueRgb;
@@ -31,7 +32,7 @@ struct TimeStyle {
     short narrow;
     short lapGap;
     short digitShift;
-    Font *font;
+    game_pointer<Font> font;
 };
 
 // A fade counter and the bar it goes with.
@@ -74,43 +75,43 @@ struct RaceResultsWork {
 #define RESULT_DIALOG(work) ((CardDialog *)(work)->dialog)
 
 extern "C" {
-extern RaceResultsWork *g_OVL0_EndFontInfo;
-extern GameState g_GameState;
-extern RaceMem g_Race_IsDemo;
-extern QuickMenu *g_QuickMenu;
-extern QuickMenuPage g_Page_Quit;
-extern QuickMenuPage g_Page_SaveGame;
-extern QuickMenuPage g_Page_RaceResults;
-extern QuickMenuPage g_Page_MachineTestName;
-extern QuickMenuPage g_Page_MachineTestResult;
-extern MenuList g_LapList_List;
-extern RaceRecord g_GhostData;
-extern char *g_PlaceTexts[];
-extern uint g_PlaceColors[];
-extern char sR_PLAYER1WINS[];
-extern char sR_TOTALTIME[];
-extern char sR_RECORD[];
-extern char sR_OUTOFRANKING[];
-extern char D_8005A980[];
-extern CardDialogDesc D_8005B5AC;
-extern ButtonPromptDesc D_8005B5DC;
-extern TextEntry D_8005B5F8;
-extern InfoBarDesc D_8005B60C;
-extern TextStyle D_8005B62C;
-extern WipeBar D_8005B648;
-extern TimeStyle D_8005B664;
-extern TimeStyle D_8005B678;
-extern TimeStyle D_8005B68C;
-extern InfoBarDesc D_8005B6A0;
+extern game_pointer<RaceResultsWork> (&g_OVL0_EndFontInfo);
+extern GameState (&g_GameState);
+extern RaceMem (&g_Race_IsDemo);
+extern game_pointer<QuickMenu> (&g_QuickMenu);
+extern QuickMenuPage (&g_Page_Quit);
+extern QuickMenuPage (&g_Page_SaveGame);
+extern QuickMenuPage (&g_Page_RaceResults);
+extern QuickMenuPage (&g_Page_MachineTestName);
+extern QuickMenuPage (&g_Page_MachineTestResult);
+extern MenuList (&g_LapList_List);
+extern RaceRecord (&g_GhostData);
+extern game_pointer<char> (&g_PlaceTexts)[];
+extern uint (&g_PlaceColors)[];
+extern char (&sR_PLAYER1WINS)[];
+extern char (&sR_TOTALTIME)[];
+extern char (&sR_RECORD)[];
+extern char (&sR_OUTOFRANKING)[];
+extern char (&D_8005A980)[];
+extern CardDialogDesc (&D_8005B5AC);
+extern ButtonPromptDesc (&D_8005B5DC);
+extern TextEntry (&D_8005B5F8);
+extern InfoBarDesc (&D_8005B60C);
+extern TextStyle (&D_8005B62C);
+extern WipeBar (&D_8005B648);
+extern TimeStyle (&D_8005B664);
+extern TimeStyle (&D_8005B678);
+extern TimeStyle (&D_8005B68C);
+extern InfoBarDesc (&D_8005B6A0);
 #define g_TotalBarFade D_8005B6C0
-extern FadedBar D_8005B6C0;
-extern InfoBarDesc D_8005B6E0;
+extern FadedBar (&D_8005B6C0);
+extern InfoBarDesc (&D_8005B6E0);
 #define g_BestBarFade D_8005B700
-extern FadedBar D_8005B700;
-extern InfoBarDesc D_8005B720;
+extern FadedBar (&D_8005B700);
+extern InfoBarDesc (&D_8005B720);
 #define g_LapBarFade D_8005B740
-extern FadedBar D_8005B740;
-extern short D_8005B760[];
+extern FadedBar (&D_8005B740);
+extern short (&D_8005B760)[];
 void QuickMenu_PushPage(QuickMenu *menu, QuickMenuPage *page);
 void QuickMenu_SetupCardUiThen(QuickMenuPage *next, void *work);
 void InfoBar_Init(InfoBar *bar, InfoBarDesc *desc);
@@ -411,7 +412,7 @@ void RaceResultsRoot_Enter(int back)
 
     page->timer = 0x18;
     page->sel = back;
-    QuickMenu_SetupCardUiThen(&g_Page_Quit, (void *)(end & ~3));
+    QuickMenu_SetupCardUiThen(&g_Page_Quit, (void *)rt::from_guest((end & ~3)));
 }
 
 int RaceResultsRoot_Update(void)
@@ -856,7 +857,7 @@ int MachineTestName_Update(void)
 // TextEntry_Draw.
 void MachineTestName_Draw(DrawLayer *layer)
 {
-    TextEntry_Draw((TextEntry *)((int)g_OVL0_EndFontInfo + 0x5c8), (uint *)layer->ot);
+    TextEntry_Draw((TextEntry *)rt::from_guest(((int)g_OVL0_EndFontInfo + 0x5c8)), (uint *)layer->ot);
 }
 
 void MachineTestResult_Enter(int back)

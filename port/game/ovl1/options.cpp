@@ -1,6 +1,7 @@
 // OVL1 80017d74-80019218 (options): Options pages.
 // The functions that don't match yet are the original assembly, with their C++
 // under NON_MATCHING.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
@@ -14,8 +15,8 @@ struct OptionItem {
     short labelX;
     short valueX;
     short pad0a;
-    signed char *label;
-    signed char **choices;
+    game_pointer<signed char> label;
+    game_pointer<game_pointer<signed char>> choices;
 };
 
 // What the option lists keep beside them: the brightness and the rows' y offsets.
@@ -26,45 +27,45 @@ struct OptionRows {
 
 struct OptionList {
     MenuList list;
-    OptionRows *rows;
+    game_pointer<OptionRows> rows;
 };
 
 // A root page: a BaseMenuPage, then a delay and the back flag.
 extern "C" {
-extern BaseMenu *g_CurrentMenu;
-extern Font g_OVL1_FontMedium;
-extern Font g_OVL1_FontLarge;
-extern Font g_OVL1_FontTitle;
-extern unsigned char D_8004BCCC[];
-extern unsigned int D_8004BCD0;
-extern unsigned int D_8004BCD4;
-extern unsigned int D_8004BCD8;
-extern unsigned int D_8004BCDC;
-extern unsigned char D_8004BCE0[];
-extern unsigned int D_8004BCE4;
-extern unsigned int D_8004BCE8;
-extern unsigned char D_8004BCEC[];
-extern signed char s_1p[];
-extern signed char s_1Lap[];
-extern signed char s_ViewSettings[];
-extern signed char s_ArcadeRace[];
-extern OptionItem g_Options_GlobalItems[];
-extern OptionItem g_Options_RaceItems[];
-extern OptionList g_Options_GlobalList;
-extern OptionList g_Options_RaceList;
-extern OptionRows g_Options_GlobalRows;
-extern OptionRows g_Options_RaceRows;
-extern WipeBar g_Options_IconView;
-extern WipeBar g_Options_IconSound;
-extern WipeBar g_Options_IconDualShock;
-extern WipeBar g_Options_IconArcade;
-extern WipeBar g_Options_Icon2P;
-extern signed char *g_Options_TabTitles[];
-extern TabSelector g_Options_Tabs;
-extern KeyConfigPage g_KeyConfigPage;
-extern AnalogSettings g_AnalogSettings1P;
-extern AnalogSettings g_AnalogSettings2P;
-extern BaseMenuPage g_Page_OptionsMenu;
+extern game_pointer<BaseMenu> (&g_CurrentMenu);
+extern Font (&g_OVL1_FontMedium);
+extern Font (&g_OVL1_FontLarge);
+extern Font (&g_OVL1_FontTitle);
+extern unsigned char (&D_8004BCCC)[];
+extern unsigned int (&D_8004BCD0);
+extern unsigned int (&D_8004BCD4);
+extern unsigned int (&D_8004BCD8);
+extern unsigned int (&D_8004BCDC);
+extern unsigned char (&D_8004BCE0)[];
+extern unsigned int (&D_8004BCE4);
+extern unsigned int (&D_8004BCE8);
+extern unsigned char (&D_8004BCEC)[];
+extern signed char (&s_1p)[];
+extern signed char (&s_1Lap)[];
+extern signed char (&s_ViewSettings)[];
+extern signed char (&s_ArcadeRace)[];
+extern OptionItem (&g_Options_GlobalItems)[];
+extern OptionItem (&g_Options_RaceItems)[];
+extern OptionList (&g_Options_GlobalList);
+extern OptionList (&g_Options_RaceList);
+extern OptionRows (&g_Options_GlobalRows);
+extern OptionRows (&g_Options_RaceRows);
+extern WipeBar (&g_Options_IconView);
+extern WipeBar (&g_Options_IconSound);
+extern WipeBar (&g_Options_IconDualShock);
+extern WipeBar (&g_Options_IconArcade);
+extern WipeBar (&g_Options_Icon2P);
+extern game_pointer<signed char> (&g_Options_TabTitles)[];
+extern TabSelector (&g_Options_Tabs);
+extern KeyConfigPage (&g_KeyConfigPage);
+extern AnalogSettings (&g_AnalogSettings1P);
+extern AnalogSettings (&g_AnalogSettings2P);
+extern BaseMenuPage (&g_Page_OptionsMenu);
 void PushPage(BaseMenu *menu, BaseMenuPage *page);
 void TabSelector_Open(TabSelector *tabs);
 int TabSelector_Update(TabSelector *tabs, PadState *pad, PadState *pad2, int solo);
@@ -674,8 +675,8 @@ void OptionsRoot_Enter(int back)
     BaseMenuPage *pMVar1;
 
     pMVar1 = g_CurrentMenu->activePage;
-    pMVar1[1].enter = (MenuPageEnterFn *)0x10;
-    pMVar1[1].update = (MenuPageUpdateFn *)back;
+    pMVar1[1].enter = (MenuPageEnterFn *)rt::from_guest(0x10);
+    pMVar1[1].update = (MenuPageUpdateFn *)rt::from_guest(back);
 }
 
 // After the delay: pushes the options page, or leaves the menu (4) coming back.
@@ -705,7 +706,7 @@ void OptionsRoot_Draw(DrawLayer *layer)
 // Unreferenced page: 16-frame delay, MainMenu_StopMusic.
 void OptionsUnusedWait_Enter(int back)
 {
-    g_CurrentMenu->activePage[1].enter = (MenuPageEnterFn *)0x10;
+    g_CurrentMenu->activePage[1].enter = (MenuPageEnterFn *)rt::from_guest(0x10);
     MainMenu_StopMusic();
 }
 

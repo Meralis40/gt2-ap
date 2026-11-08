@@ -1,22 +1,23 @@
 // Resident code 80069890-80069ff8 (replaydata). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern unsigned char D_80091C8C;
-extern unsigned short g_VolBootIds[248];
-extern char g_GameState[];
+extern unsigned char (&D_80091C8C);
+extern unsigned short (&g_VolBootIds)[248];
+extern char (&g_GameState)[];
 
 void *Buf_Append(void *dst, void *src, int size)
 {
     memcpy(dst, src, size);
-    return (void *)((int)dst + (size + 3U & 0xfffffffc));
+    return (void *)rt::from_guest(((int)rt::to_guest(dst) + (size + 3U & 0xfffffffc)));
 }
 
 void *Buf_Read(void *src, void *dst, unsigned int size)
 {
     memcpy(dst, src, size);
-    return (void *)((int)src + (size + 3 & 0xfffffffc));
+    return (void *)rt::from_guest(((int)rt::to_guest(src) + (size + 3 & 0xfffffffc)));
 }
 
 void *Buf_AppendByte(unsigned char *dst, unsigned char *src)

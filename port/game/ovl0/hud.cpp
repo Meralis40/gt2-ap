@@ -1,5 +1,6 @@
 // OVL0 8002bcf0-8002ee98 (hud): HUD.
 // The functions that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 #include "gte.h"
@@ -50,7 +51,7 @@ struct VehicleHud {
     short refTimeTimer;
     short messageTimer;
     int lapTimeShown;
-    void *lapLabel;
+    game_pointer<void> lapLabel;
     int refTime;
     int refTime2;
 };
@@ -67,64 +68,64 @@ struct VehicleHud {
 #define SPRITE_SET_INDEX(prim, index, x, y)     do {         *(int *)(prim) = (x) - ((short)HUD_SIZES[index].w >> 1) + (((y) - ((short)HUD_SIZES[index].h >> 1)) << 16);         ((int *)(prim))[1] = *(int *)&g_Hud_Sprites[index];         ((int *)(prim))[2] = *(int *)&g_Hud_Sprites[index].w;     } while (0)
 
 extern "C" {
-extern RECT g_Hud_TimClutRect0;
-extern RECT g_Hud_TimImageRect0;
-extern RECT g_Hud_TimClutRect1;
-extern RECT g_Hud_TimImageRect1;
-extern HudSprite g_Hud_Sprites[];
-extern unsigned char g_Hud_ClockFrame;
-extern int g_HudTexFile[];
-extern signed char D_8002F868[];
-extern signed char D_8002F874[];
-extern HudNeedle D_8002F880;
-extern HudNeedle D_8002F898;
-extern HudNeedle D_8002F8B0;
-extern HudNeedle D_8002F8C8;
-extern GouraudQuad D_8002F8E0;
-extern unsigned char D_8002F8F0[];
-extern unsigned char D_8002F8F4[];
-extern unsigned int D_8002F8F8[];
-extern unsigned char D_8002F904[];
-extern unsigned char D_8002F908[];
-extern signed char D_8002F278[];
-extern signed char D_8002F27C[];
-extern char D_8002F280[];
-extern int D_8002F2E8[];
-extern signed char D_8002F318[];
-extern unsigned char D_801C98A2;
-extern short g_SinTable[];
-extern Font D_80093124;
-extern Font D_80093130;
-extern GameState g_GameState;
-extern RaceSetup g_RaceSetup;
-extern RaceMem g_Race_IsDemo;
-extern RaceWorld g_RaceWorld;
-extern RaceRecord g_RaceRecords;
-extern int g_RaceClock;
-extern int g_TyreWearEnabled;
-extern void *g_EventDataBuf;
-extern char *g_PacketPtr;
-extern char *g_PacketEnd;
-extern char sR_Mph[];
-extern signed char sR_Record[];
-extern signed char sR_TotalTime[];
-extern signed char sR_LapTime[];
-extern signed char sR_Lap[];
-extern signed char sR_TimeInvalid[];
-extern signed char sR_Crash[];
-extern signed char sR_Replay[];
-extern signed char sR_WrongWay[];
-extern signed char sR_TooFastToStop[];
-extern signed char sR_SkippedPitStop[];
-extern signed char sR_NoNeedToPitStop[];
-extern signed char sR_LimitedSpeed[];
-extern signed char sR_PitWorkInProgress[];
-extern signed char sR_FullThrottle[];
-extern signed char sR_Ready[];
-extern signed char sR_Go[];
-extern signed char sR_WARNINGWrongWay[];
-extern signed char sR_WARNINGDonTGoBack[];
-extern signed char sR_Exit[];
+extern RECT (&g_Hud_TimClutRect0);
+extern RECT (&g_Hud_TimImageRect0);
+extern RECT (&g_Hud_TimClutRect1);
+extern RECT (&g_Hud_TimImageRect1);
+extern HudSprite (&g_Hud_Sprites)[];
+extern unsigned char (&g_Hud_ClockFrame);
+extern int (&g_HudTexFile)[];
+extern signed char (&D_8002F868)[];
+extern signed char (&D_8002F874)[];
+extern HudNeedle (&D_8002F880);
+extern HudNeedle (&D_8002F898);
+extern HudNeedle (&D_8002F8B0);
+extern HudNeedle (&D_8002F8C8);
+extern GouraudQuad (&D_8002F8E0);
+extern unsigned char (&D_8002F8F0)[];
+extern unsigned char (&D_8002F8F4)[];
+extern unsigned int (&D_8002F8F8)[];
+extern unsigned char (&D_8002F904)[];
+extern unsigned char (&D_8002F908)[];
+extern signed char (&D_8002F278)[];
+extern signed char (&D_8002F27C)[];
+extern char (&D_8002F280)[];
+extern int (&D_8002F2E8)[];
+extern signed char (&D_8002F318)[];
+extern unsigned char (&D_801C98A2);
+extern short (&g_SinTable)[];
+extern Font (&D_80093124);
+extern Font (&D_80093130);
+extern GameState (&g_GameState);
+extern RaceSetup (&g_RaceSetup);
+extern RaceMem (&g_Race_IsDemo);
+extern RaceWorld (&g_RaceWorld);
+extern RaceRecord (&g_RaceRecords);
+extern int (&g_RaceClock);
+extern int (&g_TyreWearEnabled);
+extern game_pointer<void> (&g_EventDataBuf);
+extern game_pointer<char> (&g_PacketPtr);
+extern game_pointer<char> (&g_PacketEnd);
+extern char (&sR_Mph)[];
+extern signed char (&sR_Record)[];
+extern signed char (&sR_TotalTime)[];
+extern signed char (&sR_LapTime)[];
+extern signed char (&sR_Lap)[];
+extern signed char (&sR_TimeInvalid)[];
+extern signed char (&sR_Crash)[];
+extern signed char (&sR_Replay)[];
+extern signed char (&sR_WrongWay)[];
+extern signed char (&sR_TooFastToStop)[];
+extern signed char (&sR_SkippedPitStop)[];
+extern signed char (&sR_NoNeedToPitStop)[];
+extern signed char (&sR_LimitedSpeed)[];
+extern signed char (&sR_PitWorkInProgress)[];
+extern signed char (&sR_FullThrottle)[];
+extern signed char (&sR_Ready)[];
+extern signed char (&sR_Go)[];
+extern signed char (&sR_WARNINGWrongWay)[];
+extern signed char (&sR_WARNINGDonTGoBack)[];
+extern signed char (&sR_Exit)[];
 
 int Car_GetDisplayLap(CarPhys *car);
 void Color_HeatRamp(signed char heat, int *r, int *g, int *b);
@@ -1178,15 +1179,15 @@ lapPanel:
 // (Tim_LoadClutAndImage).
 void Hud_LoadCluts(void *view, int pack)
 {
-    Tim_LoadClutAndImage((void *)(pack + *(int *)(pack + 0x1c)), &g_Hud_TimClutRect0, &g_Hud_TimImageRect0);
-    Tim_LoadClutAndImage((void *)(pack + *(int *)(pack + 0x28)), &g_Hud_TimClutRect1, &g_Hud_TimImageRect1);
+    Tim_LoadClutAndImage((void *)rt::from_guest((pack + *(int *)rt::from_guest((pack + 0x1c)))), &g_Hud_TimClutRect0, &g_Hud_TimImageRect0);
+    Tim_LoadClutAndImage((void *)rt::from_guest((pack + *(int *)rt::from_guest((pack + 0x28)))), &g_Hud_TimClutRect1, &g_Hud_TimImageRect1);
 }
 
 // Handwritten: the smoke particles as textured quads, turned by their seed and sized by
 // the GTE's depth cue. The original keeps the packet writes in a single pass.
 void Particles_Draw(ParticlePool *pool, RaceCam *cam)
 {
-    ViewScratch *scratch = (ViewScratch *)0x1f800000;
+    ViewScratch *scratch = (ViewScratch *)rt::from_guest(0x1f800000);
     int *src = (int *)((char *)cam + 8);
     int *dst = (int *)scratch;
     short *xy = (short *)&scratch->otShift + 1;
@@ -1289,7 +1290,7 @@ void Particles_Draw(ParticlePool *pool, RaceCam *cam)
         ((short *)packet)[16] = sx + c - s;
         ((short *)packet)[17] = sy + s + c;
         prim[0] = (prim[0] & 0xff000000) | (*ot & 0xffffff);
-        *ot = (*ot & 0xff000000) | ((unsigned int)prim & 0xffffff);
+        *ot = (*ot & 0xff000000) | ((unsigned int)rt::to_guest(prim) & 0xffffff);
         packet += 0x28;
         if (packet >= end) {
             break;

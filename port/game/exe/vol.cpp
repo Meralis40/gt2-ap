@@ -5,11 +5,11 @@
 #include "common.h"
 
 extern "C" {
-extern unsigned short g_VolBootIds[248];
-extern VolHeader g_VolHeader;
-extern unsigned int g_VolLba;
-extern CarAsset g_CarAssets[];
-extern short g_CarAssetCount;
+extern unsigned short (&g_VolBootIds)[248];
+extern VolHeader (&g_VolHeader);
+extern unsigned int (&g_VolLba);
+extern CarAsset (&g_CarAssets)[];
+extern short (&g_CarAssetCount);
 
 unsigned int VolId_GetSector(VolBootId id)
 {

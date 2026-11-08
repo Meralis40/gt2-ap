@@ -1,13 +1,14 @@
 // Resident code 8007e8a0-8007f01c (card): the memory card driver's low level, the BIOS
 // events and the vblank state machine that reads a card's directory and runs a port's
 // reads and writes.
+#include "gptr.h"
 #include "common.h"
 
 // A BIOS event the driver opens, and the handler that records it.
 struct CardEvent {
     unsigned int cls;
     int spec;
-    void (*func)();
+    game_function<void()> func;
 };
 
 // g_CardEventTable: the 9 events and a word of padding.
@@ -24,14 +25,14 @@ struct CardDriver {
     unsigned char port;         // the port the state machine is on
     unsigned char unk3b;
     int sector;                 // the running transfer's
-    void *buffer;
+    game_pointer<void> buffer;
     McPort ports[2];
     unsigned char frame[0x80];  // g_McFrame
 };
 
 // A port of the driver, at CardDriver.ports.
 struct CardPort {
-    int (*op)(int event, int *sector, void **buf);
+    game_function<int(int, int *, game_pointer<void> *)> op;
     int frameIndex;             // the next frame to read of the directory or bad sectors
     unsigned char unk008[0x253];
     unsigned char addr;         // the port's BIOS number: 0 or 0x10
@@ -52,7 +53,7 @@ struct CardPort {
 #define CARD_ERROR 5
 
 extern "C" {
-extern CardEvents g_CardEventTable;
+extern CardEvents (&g_CardEventTable);
 
 // Opens and enables the card events and adds the driver to the vblank list.
 // The address in $a0 first (matching-quirks.md, not solved).
@@ -98,9 +99,9 @@ void func_8007E9DC(void)
 // Sets the port's operation and returns the old one.
 void *func_8007EA44(CardSystem *card, int port, void *op)
 {
-    void *old = (void *)card->ports[port].op;
+    void *old = (void *)card->ports[port].op.get();
 
-    card->ports[port].op = (int (*)(int, int *, void **))op;
+    card->ports[port].op = (int (*)(int, int *, game_pointer<void> *))op;
     return old;
 }
 
@@ -177,7 +178,7 @@ void Card_VSync(void)
     int frame = port->frameIndex;
     int result = 1;
     int event = 0;
-    int (*op)(int, int *, void **);
+    int (*op)(int, int *, game_pointer<void> *);
     int ret;
 
     // The first step (1, _card_info) and those past the commands run on the BIOS's

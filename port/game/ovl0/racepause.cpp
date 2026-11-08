@@ -81,7 +81,7 @@ static inline void Text_DrawCenteredRgb(TextCtx *ctx, signed char *s, int x, int
     Text_DrawCentered(ctx, s, x, y, 0);
 }
 
-extern "C" unsigned char g_Race_EndRequest;
+extern "C" unsigned char (&g_Race_EndRequest);
 
 static inline void Race_RequestEnd(int mode)
 {
@@ -89,47 +89,47 @@ static inline void Race_RequestEnd(int mode)
 }
 
 extern "C" {
-extern signed char g_PauseMenu_Cursor;
-extern signed char g_PauseMenu_Blink;
-extern signed char *g_PauseMenu_Items[];
-extern unsigned char g_Race_EndRequest;
-extern unsigned char g_Race_IsDemo;
-extern RaceSetup g_RaceSetup;
-extern RaceWorld g_RaceWorld;
-extern void *g_EventDataBuf;
-extern Font D_80093130;
-extern Font D_8009313C;
-extern unsigned char D_8002F5E8[];
-extern unsigned char D_8002F5FC[];
-extern unsigned int D_8002F600;
-extern unsigned char D_8002F604[];
-extern unsigned char D_8002F608[];
-extern unsigned char D_8002F60C[];
-extern unsigned int D_8002F610;
-extern unsigned int D_8002F614;
-extern unsigned char D_8002F618[];
-extern unsigned char D_8002F61C[];
-extern unsigned int D_8002F620;
-extern unsigned int D_8002F624;
-extern unsigned int D_8002F628;
-extern unsigned int D_8002F62C;
-extern HudSprite D_8002F804;
-extern HudSprite D_8005B18C;
-extern HudSprite D_8005B198;
-extern HudSprite D_8005B1A4;
-extern HudSprite D_8005B1B0;
-extern signed char sR_START[];
-extern signed char sR_Finish[];
-extern signed char sR_Results[];
-extern signed char sR_Running[];
-extern signed char sR_Npts[];
-extern signed char sR_BRONZEPRIZE[];
-extern signed char sR_SILVERPRIZE[];
-extern signed char sR_GOLDPRIZE[];
-extern signed char sR_PLAYER1WINS[];
-extern signed char sR_YOUWIN[];
-extern signed char sR_TotalPoints[];
-extern signed char sR_Points[];
+extern signed char (&g_PauseMenu_Cursor);
+extern signed char (&g_PauseMenu_Blink);
+extern game_pointer<signed char> (&g_PauseMenu_Items)[];
+extern unsigned char (&g_Race_EndRequest);
+extern unsigned char (&g_Race_IsDemo);
+extern RaceSetup (&g_RaceSetup);
+extern RaceWorld (&g_RaceWorld);
+extern game_pointer<void> (&g_EventDataBuf);
+extern Font (&D_80093130);
+extern Font (&D_8009313C);
+extern unsigned char (&D_8002F5E8)[];
+extern unsigned char (&D_8002F5FC)[];
+extern unsigned int (&D_8002F600);
+extern unsigned char (&D_8002F604)[];
+extern unsigned char (&D_8002F608)[];
+extern unsigned char (&D_8002F60C)[];
+extern unsigned int (&D_8002F610);
+extern unsigned int (&D_8002F614);
+extern unsigned char (&D_8002F618)[];
+extern unsigned char (&D_8002F61C)[];
+extern unsigned int (&D_8002F620);
+extern unsigned int (&D_8002F624);
+extern unsigned int (&D_8002F628);
+extern unsigned int (&D_8002F62C);
+extern HudSprite (&D_8002F804);
+extern HudSprite (&D_8005B18C);
+extern HudSprite (&D_8005B198);
+extern HudSprite (&D_8005B1A4);
+extern HudSprite (&D_8005B1B0);
+extern signed char (&sR_START)[];
+extern signed char (&sR_Finish)[];
+extern signed char (&sR_Results)[];
+extern signed char (&sR_Running)[];
+extern signed char (&sR_Npts)[];
+extern signed char (&sR_BRONZEPRIZE)[];
+extern signed char (&sR_SILVERPRIZE)[];
+extern signed char (&sR_GOLDPRIZE)[];
+extern signed char (&sR_PLAYER1WINS)[];
+extern signed char (&sR_YOUWIN)[];
+extern signed char (&sR_TotalPoints)[];
+extern signed char (&sR_Points)[];
 void RaceSfx_PlayStereo(int sfx);
 unsigned int PackedTime_ToMs(void *time, int index);
 int sprintf(char *buf, const char *format, ...);
@@ -187,7 +187,7 @@ void PauseMenu_Draw(RaceViewLoop *view)
 {
     ResultBox box;
     TextCtx text;
-    unsigned int *ot = *(unsigned int **)((char *)view + 0x8c);
+    unsigned int *ot = *(game_pointer<unsigned int> *)((char *)view + 0x8c);
 
     if (g_PauseMenu_Blink >= 0) {
         int blink;
@@ -239,7 +239,7 @@ void Countdown_Init(short *cnt, short introFrames)
     *cnt = introFrames + 0xf0;
 }
 
-// Counts down: the beeps at 3, 2 and 1, the long one and the music at 0.
+// Counts down: the beeps at 3, 2 and 1, the int one and the music at 0.
 void Countdown_Update(short *cnt, void *view)
 {
     int now = *cnt;

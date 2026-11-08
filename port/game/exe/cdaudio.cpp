@@ -1,17 +1,18 @@
 // Resident code 8007c36c-8007d024 (cdaudio). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern GfxIrqState g_GfxIrq;
-extern CdAudio g_CdAudio;
-extern unsigned char g_BcdToInt[];
-extern unsigned char g_BcdTable[];
+extern GfxIrqState (&g_GfxIrq);
+extern CdAudio (&g_CdAudio);
+extern unsigned char (&g_BcdToInt)[];
+extern unsigned char (&g_BcdTable)[];
 // Scripts: command words run by CdAudio_ExecScript (see there), ending with 0.
-extern unsigned int *g_CdAudioScripts[];
-extern unsigned int D_800903B4[];
-extern unsigned int D_800903B8[];
-extern unsigned int D_800903D4[];
+extern game_pointer<unsigned int> (&g_CdAudioScripts)[];
+extern unsigned int (&D_800903B4)[];
+extern unsigned int (&D_800903B8)[];
+extern unsigned int (&D_800903D4)[];
 
 // The bytes are read through an inline function (found with permuter); indexed
 // directly, the compiler loads the table's entries in another order.
@@ -75,8 +76,8 @@ void CdAudio_Init(void)
     memset(cd, 0, sizeof(CdAudio));
     cd->vsync.func = CdAudio_VSync;
     cd->vsync.priority = 0x30000;
-    cd->onSector = (void *)CdAudio_DefaultSectorFn;
-    cd->onIdle = (void *)CdAudio_DefaultFn;
+    cd->onSector = (CdSectorFn *)CdAudio_DefaultSectorFn;
+    cd->onIdle = CdAudio_DefaultFn;
     cd->masterVol = cd->volL = cd->volR = 0x8000;
     cd->fade = 0;
     CdAudio_ApplyVolume(cd);
@@ -143,8 +144,8 @@ void CdAudio_ClearPending(void *cd)
     int leave;
 
     leave = Sys_CriticalSection(0);
-    *(unsigned int *)((int)cd + 0x68) = 0;
-    *(unsigned int *)((int)cd + 0x4c) = 0;
+    *(unsigned int *)rt::from_guest(((int)rt::to_guest(cd) + 0x68)) = 0;
+    *(unsigned int *)rt::from_guest(((int)rt::to_guest(cd) + 0x4c)) = 0;
     Sys_CriticalSection(leave);
 }
 
@@ -218,7 +219,7 @@ void CdAudio_ExecScript(CdAudio *cd, unsigned int *script)
     unsigned char com;
     unsigned char *param;
     unsigned char flag;
-    void *fn;
+    game_function<CdSectorFn> fn;
     unsigned int *next;
     unsigned int sector;
 
@@ -239,7 +240,7 @@ void CdAudio_ExecScript(CdAudio *cd, unsigned int *script)
             cd->sectorFn = 0;
             cd->queuedScript = 0;
             if (script == 0) {
-                ((void (*)(void))cd->onIdle)();
+                cd->onIdle();
                 return;
             }
             continue;
@@ -275,11 +276,11 @@ void CdAudio_ExecScript(CdAudio *cd, unsigned int *script)
                 flag = cd->speedChanged;
                 goto wait;
             case 2:
-                script = (unsigned int *)*script;
+                script = (unsigned int *)rt::from_guest(*script);
                 break;
             case 3:
                 cmd = (signed char)cd->flag;
-                next = (unsigned int *)*script++;
+                next = (unsigned int *)rt::from_guest(*script++);
                 if (cmd != 0) {
                     script = next;
                 } else {
@@ -648,7 +649,7 @@ void CdAudio_SetupRead(void *dst, unsigned int start, unsigned int size, int rep
     g_CdAudio.reqMode = 0x80;
     g_CdAudio.reqStart = start;
     g_CdAudio.reqEnd = start + sectors;
-    g_CdAudio.onSector = (void *)CdAudio_OnReadSector;
+    g_CdAudio.onSector = (CdSectorFn *)CdAudio_OnReadSector;
     g_CdAudio.reqDst = dst;
     g_CdAudio.reqSkip = 0;
     g_CdAudio.reqSize = size;
