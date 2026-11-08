@@ -1,6 +1,7 @@
 // OVL0 80048bd8-80049a14 (resultwidgets): Result screen widgets.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 #include "prim.h"
@@ -12,7 +13,7 @@
 struct InfoBarDesc {
     uint rgbTop;
     uint rgbBottom;
-    char *label;
+    game_pointer<char> label;
     uint labelRgb;
     uint value;
     uint valueRgb;
@@ -36,7 +37,7 @@ struct TimeStyle {
     short narrow;
     short lapGap;
     short digitShift;
-    Font *font;
+    game_pointer<Font> font;
 };
 
 // The colours of a record row.
@@ -48,23 +49,23 @@ struct RecordRgb {
 // A row of a records table.
 struct RecordRow {
     short rank;
-    TimeRecord *record;
+    game_pointer<TimeRecord> record;
     RecordRgb rgb;
 };
 
 extern "C" {
-extern TextStyle D_8005ABC8;
-extern WipeBar D_8005ABAC;
-extern WipeBar D_8005ABE4;
-extern TextStyle D_8005AC00;
-extern unsigned char D_8005AC1C[];
-extern unsigned char D_8005AB58[];
-extern char D_8005A864[];
-extern char sR_Lap[];
-extern char sR_Mph[];
-extern Font g_OVL0_FontB;
-extern Font g_OVL0_FontD;
-extern KanjiFont *g_OVL0_KanjiFont;
+extern TextStyle (&D_8005ABC8);
+extern WipeBar (&D_8005ABAC);
+extern WipeBar (&D_8005ABE4);
+extern TextStyle (&D_8005AC00);
+extern unsigned char (&D_8005AC1C)[];
+extern unsigned char (&D_8005AB58)[];
+extern char (&D_8005A864)[];
+extern char (&sR_Lap)[];
+extern char (&sR_Mph)[];
+extern Font (&g_OVL0_FontB);
+extern Font (&g_OVL0_FontD);
+extern game_pointer<KanjiFont> (&g_OVL0_KanjiFont);
 void TitleBanner_Init(TitleBanner *b, char *text, TextCtx *ctx);
 void InfoBar_Init(InfoBar *b, InfoBarDesc *desc);
 
@@ -154,12 +155,12 @@ void InfoBar_Draw(InfoBar *b, uint *ot, int x, int y, TextCtx *ctx)
             break;
         case 0:
             Text_SetFont(ctx, &g_OVL0_FontD);
-            width = Text_MeasureString(ctx, (signed char *)b->value, 1);
-            Text_DrawString(ctx, (signed char *)b->value, x + b->bar.width - (width + 6), y + 0xd, one);
+            width = Text_MeasureString(ctx, (signed char *)rt::from_guest(b->value), 1);
+            Text_DrawString(ctx, (signed char *)rt::from_guest(b->value), x + b->bar.width - (width + 6), y + 0xd, one);
             break;
         default:
             Text_SetFont(ctx, &g_OVL0_FontB);
-            Text_DrawStringMonoDigitsRight(ctx, (signed char *)b->value, x + b->bar.width - 6, y + 9, one, -2, 0);
+            Text_DrawStringMonoDigitsRight(ctx, (signed char *)rt::from_guest(b->value), x + b->bar.width - 6, y + 9, one, -2, 0);
             break;
         }
     }
@@ -239,7 +240,7 @@ void FadeCounter_Update(short *c)
     }
 }
 
-// A time or speed that zooms in: fade[0] frames long, fade[1] the frame, ~frame
+// A time or speed that zooms in: fade[0] frames int, fade[1] the frame, ~frame
 // while closing and -1 hidden.
 void AnimatedTime_Draw(short *fade, uint *ot, TextCtx *ctx, int value, int x, int y, int mode, TimeStyle *style,
                        int isSpeed, int centre)

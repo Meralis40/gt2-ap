@@ -1,6 +1,7 @@
 // OVL0 80041e4c-80043388 (catchup): Catch-up, race order and car bodies.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 
 // The drivetrain block of CarPhys, from driveLayout on.
@@ -18,24 +19,24 @@ static inline CourseData *World_Course(void *world)
 }
 
 extern "C" {
-extern CatchUpParams g_CatchUp;
-extern unsigned char g_RaceEventParams[];
-extern int g_FrameRate;
-extern int g_FrameDt;
-extern unsigned char g_Race_IsDemo;
-extern signed char g_RaceOrder[];
-extern unsigned char g_PhysConstBytes[];
-extern RaceWorld g_RaceWorld;
-extern short g_SinTable[];
-extern short g_CosTable[];
-extern unsigned char D_801C9995;
+extern CatchUpParams (&g_CatchUp);
+extern unsigned char (&g_RaceEventParams)[];
+extern int (&g_FrameRate);
+extern int (&g_FrameDt);
+extern unsigned char (&g_Race_IsDemo);
+extern signed char (&g_RaceOrder)[];
+extern unsigned char (&g_PhysConstBytes)[];
+extern RaceWorld (&g_RaceWorld);
+extern short (&g_SinTable)[];
+extern short (&g_CosTable)[];
+extern unsigned char (&D_801C9995);
 // The rest of g_CatchUp, which the game reaches one word at a time.
-extern int D_80046F70; // aheadStart
-extern int D_80046F74; // aheadEnd
-extern int D_80046F78; // behindPct
-extern int D_80046F7C; // behindStart
-extern int D_80046F80; // behindEnd
-extern int D_80046F84; // scale
+extern int (&D_80046F70); // aheadStart
+extern int (&D_80046F74); // aheadEnd
+extern int (&D_80046F78); // behindPct
+extern int (&D_80046F7C); // behindStart
+extern int (&D_80046F80); // behindEnd
+extern int (&D_80046F84); // scale
 
 // Takes the catch-up settings from the event, or turns them off.
 void CatchUp_Init(int enabled)
@@ -500,7 +501,7 @@ capped:
             level = 0;
         }
         if (level != 0) {
-            amount = wheel->fxTimer + (*(int *)0x1f800000 * wheel->bumpFade >> 16);
+            amount = wheel->fxTimer + (*(int *)rt::from_guest(0x1f800000) * wheel->bumpFade >> 16);
             if (amount < p[0xa8]) {
                 level = 0;
                 wheel->fxTimer = amount;
@@ -512,7 +513,7 @@ capped:
         }
         wheel->fxSmoke = level;
     }
-    body->dirt += (unsigned int)(*(int *)0x1f800000 * gravel) >> 16;
+    body->dirt += (unsigned int)(*(int *)rt::from_guest(0x1f800000) * gravel) >> 16;
     if (body->dirt > 0x75300) {
         body->dirt = 0x75300;
     }

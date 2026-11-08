@@ -1,38 +1,39 @@
 // Boot code 80010f1c-80011d30 (boot_iso): an ISO 9660 reader that finds the game's files on
 // the disc, and the indexes of the cars, wheels, engine sounds and courses built from
 // GT2.VOL's directory.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern char D_80011D98[];       // "CD001"
-extern char D_80011DA0[];       // ";1"
-extern char D_80011DA4[];       // "gt2.vol"
-extern char D_80011DAC[];       // "music.dat"
-extern char D_80011DB8[];       // "stream.dat"
-extern char D_80011DC4[];       // "/carobj"
-extern char D_80011DCC[];       // "/carlogo"
-extern char D_80011DD8[];       // "/carwheel"
-extern char D_80011DE4[];       // "/engine"
-extern char D_80011DEC[];       // "/crsmap"
-extern char D_80091620[];       // "-0123456789abcdefghijklmnopqrstuvwxyz"
-extern char *D_800959C0[];      // the music's track names
-extern unsigned char D_801EF650[];
-extern unsigned char D_801E2CF0[];
-extern IsoContext g_IsoCtx;
-extern unsigned int g_VolLba;
-extern unsigned short g_WheelBrandCodes[];
-extern VolDirEntry g_VolDir[];
-extern CarAsset g_CarAssets[];
-extern short g_CarAssetCount;
-extern unsigned int g_WheelCodes[];
-extern short g_WheelCodeCount;
-extern unsigned short g_EngineSoundIds[];
-extern short g_EngineSoundCount;
-extern unsigned int g_CourseMapIds[];
-extern unsigned short g_CourseMapCount;
-extern unsigned short g_CourseMapFirstFile;
-extern CourseInfo g_CourseInfo;
-extern SpuBank g_CommonSoundBank;
+extern char (&D_80011D98)[];       // "CD001"
+extern char (&D_80011DA0)[];       // ";1"
+extern char (&D_80011DA4)[];       // "gt2.vol"
+extern char (&D_80011DAC)[];       // "music.dat"
+extern char (&D_80011DB8)[];       // "stream.dat"
+extern char (&D_80011DC4)[];       // "/carobj"
+extern char (&D_80011DCC)[];       // "/carlogo"
+extern char (&D_80011DD8)[];       // "/carwheel"
+extern char (&D_80011DE4)[];       // "/engine"
+extern char (&D_80011DEC)[];       // "/crsmap"
+extern char (&D_80091620)[];       // "-0123456789abcdefghijklmnopqrstuvwxyz"
+extern game_pointer<char> (&D_800959C0)[];      // the music's track names
+extern unsigned char (&D_801EF650)[];
+extern unsigned char (&D_801E2CF0)[];
+extern IsoContext (&g_IsoCtx);
+extern unsigned int (&g_VolLba);
+extern unsigned short (&g_WheelBrandCodes)[];
+extern VolDirEntry (&g_VolDir)[];
+extern CarAsset (&g_CarAssets)[];
+extern short (&g_CarAssetCount);
+extern unsigned int (&g_WheelCodes)[];
+extern short (&g_WheelCodeCount);
+extern unsigned short (&g_EngineSoundIds)[];
+extern short (&g_EngineSoundCount);
+extern unsigned int (&g_CourseMapIds)[];
+extern unsigned short (&g_CourseMapCount);
+extern unsigned short (&g_CourseMapFirstFile);
+extern CourseInfo (&g_CourseInfo);
+extern SpuBank (&g_CommonSoundBank);
 
 // The first file of a directory of GT2.VOL: past its ".." and its subdirectories.
 #define VOL_DIR_FILES(entry, path)                  \
@@ -497,7 +498,7 @@ void Vol_LoadCourseInfo(void)
     for (i = 0; i < info->count; i++) {
         CourseEntry *entry = &info->entries[i];
 
-        entry->name += (int)base;
+        entry->name += (int)rt::to_guest(base);
     }
 }
 

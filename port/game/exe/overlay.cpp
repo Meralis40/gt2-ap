@@ -5,8 +5,8 @@
 #include "rt.h"
 
 extern "C" {
-extern char g_MenuContext[];    // start of the overlays' .bss, and the CD read buffer
-extern char g_MainInitialized[]; // end of the overlays' .bss
+extern char (&g_MenuContext)[];    // start of the overlays' .bss, and the CD read buffer
+extern char (&g_MainInitialized)[]; // end of the overlays' .bss
 
 void Race_DefaultEntry();
 void MainMenu_Run();

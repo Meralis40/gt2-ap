@@ -2,9 +2,9 @@
 #include "common.h"
 
 extern "C" {
-extern int g_MenuBgm_Track;
-extern short g_MenuBgm_Delay;
-extern short g_MenuBgm_Playing;
+extern int (&g_MenuBgm_Track);
+extern short (&g_MenuBgm_Delay);
+extern short (&g_MenuBgm_Playing);
 
 /* No track, no delay; loads the music sample bank. */
 

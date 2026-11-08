@@ -1,6 +1,7 @@
 // OVL0 80011ec8-800122c4 (racedev): RaceDevelopment and the race entries.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 
 // The input logs a race starts from, copied whole.
@@ -9,8 +10,8 @@ struct RaceReplayBuf {
 };
 
 extern "C" {
-extern GameState g_GameState;
-extern RaceMem g_Race_IsDemo;
+extern GameState (&g_GameState);
+extern RaceMem (&g_Race_IsDemo);
 void RaceText_Load(void);
 void RaceFont_Load(int tpage);
 void RaceMem_ResetFlags(void *mem);
@@ -22,7 +23,7 @@ void RaceDevelopment_Run(int arg)
 {
     RaceViewLoop view;
 
-    view.Start(arg);
+    view.v_Start(arg);
 }
 
 // Entry of the race overlay: sets up the race's memory and runs the mode's race.
@@ -51,16 +52,16 @@ void Race_Entry(int arg)
     }
     switch (setup->raceType) {
     case 6:
-        *(RaceReplayBuf *)(((int)&g_Race_IsDemo + 0xc5397) & ~3) =
-            *(RaceReplayBuf *)(((int)state + 0xc6c0) & ~3);
+        *(RaceReplayBuf *)rt::from_guest((((int)rt::to_guest(&g_Race_IsDemo) + 0xc5397) & ~3)) =
+            *(RaceReplayBuf *)rt::from_guest((((int)rt::to_guest(state) + 0xc6c0) & ~3));
         break;
     case 1:
-        *(RaceReplayBuf *)(((int)&g_Race_IsDemo + 0xc5397) & ~3) =
-            *(RaceReplayBuf *)(((int)state + 0x10bd8) & ~3);
+        *(RaceReplayBuf *)rt::from_guest((((int)rt::to_guest(&g_Race_IsDemo) + 0xc5397) & ~3)) =
+            *(RaceReplayBuf *)rt::from_guest((((int)rt::to_guest(state) + 0x10bd8) & ~3));
         break;
     case 10:
-        *(RaceReplayBuf *)(((int)&g_Race_IsDemo + 0xc5397) & ~3) =
-            *(RaceReplayBuf *)(((int)state + 0xc6c0) & ~3);
+        *(RaceReplayBuf *)rt::from_guest((((int)rt::to_guest(&g_Race_IsDemo) + 0xc5397) & ~3)) =
+            *(RaceReplayBuf *)rt::from_guest((((int)rt::to_guest(state) + 0xc6c0) & ~3));
         break;
     }
     RaceFont_Load(6);

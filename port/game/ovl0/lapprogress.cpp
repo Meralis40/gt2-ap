@@ -13,20 +13,20 @@ struct PackedTime {
 #define TIME_NONE 0x157529ff
 
 extern "C" {
-extern unsigned char g_Race_IsEndurance;
-extern int g_RaceClock;
-extern RaceMem g_Race_IsDemo;
-extern GameState g_GameState;
-extern unsigned char g_RaceEventParams[];
-extern signed char g_RaceOrder[];
+extern unsigned char (&g_Race_IsEndurance);
+extern int (&g_RaceClock);
+extern RaceMem (&g_Race_IsDemo);
+extern GameState (&g_GameState);
+extern unsigned char (&g_RaceEventParams)[];
+extern signed char (&g_RaceOrder)[];
 
 // Per sector line: the order the cars crossed it on the lap the leader is on.
-extern unsigned int g_SplitTimes[4][6];
-extern signed char g_SplitCarIdx[4][6];
-extern short g_SplitLeaderLap[4];
-extern signed char g_SplitCount[4];
-extern signed char g_SplitReported[4];
-extern unsigned char g_Split_IsTimeTrial;
+extern unsigned int (&g_SplitTimes)[4][6];
+extern signed char (&g_SplitCarIdx)[4][6];
+extern short (&g_SplitLeaderLap)[4];
+extern signed char (&g_SplitCount)[4];
+extern signed char (&g_SplitReported)[4];
+extern unsigned char (&g_Split_IsTimeTrial);
 
 void Ai_SetMode(CarPhys *car, int mode);
 void Ai_EnterDefaultMode(CarPhys *car);

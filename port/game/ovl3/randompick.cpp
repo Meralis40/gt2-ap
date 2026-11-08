@@ -3,9 +3,9 @@
 #include "gamestate.h"
 
 extern "C" {
-extern int g_GameDataMode;
-extern char *g_GtModeRaceData;
-extern unsigned char D_80091620[];
+extern int (&g_GameDataMode);
+extern game_pointer<char> (&g_GtModeRaceData);
+extern unsigned char (&D_80091620)[];
 
 }
 

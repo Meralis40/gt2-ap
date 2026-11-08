@@ -2,23 +2,24 @@
 // slots, colours) and drawing. The drawing inner loops (CarBody_Draw*, WheelMesh_Draw,
 // CarModel_DrawWheel, ShadowMesh_Draw, Mesh_NormalsToEnvUV, Clut_Blend) are handwritten
 // GTE assembly; the functions that don't match yet are the original assembly too.
+#include "gptr.h"
 #include "common.h"
 #include "gte.h"
 
 extern "C" {
-extern unsigned char D_801C946C;
+extern unsigned char (&D_801C946C);
 
-extern int g_WheelMeshLod0[];
-extern int g_WheelMeshLod1[];
-extern int g_WheelMeshLod2[];
+extern int (&g_WheelMeshLod0)[];
+extern int (&g_WheelMeshLod1)[];
+extern int (&g_WheelMeshLod2)[];
 
 static inline LodEntry *LodAt(LodTable *table, int i)
 {
     return &table->lods[i];
 }
 
-extern unsigned char g_ModelPrimSizes[];
-extern unsigned char g_ModelPrimUvOffset[];
+extern unsigned char (&g_ModelPrimSizes)[];
+extern unsigned char (&g_ModelPrimUvOffset)[];
 
 // Links a primitive into an OT entry (the handwritten code's lwl/swl pairs, which keep
 // both top bytes).
@@ -27,7 +28,7 @@ static inline void Ot_AddPrim(unsigned int *ot, void *prim)
     unsigned int *tag = (unsigned int *)prim;
 
     *tag = (*tag & 0xff000000) | (*ot & 0xffffff);
-    *ot = (*ot & 0xff000000) | ((unsigned int)prim & 0xffffff);
+    *ot = (*ot & 0xff000000) | ((unsigned int)rt::to_guest(prim) & 0xffffff);
 }
 
 // The OT index of a depth, as the handwritten code computes it.
@@ -41,8 +42,8 @@ static inline int Ot_Index(int z, int shift)
     return i;
 }
 
-extern char *g_PacketPtr;
-extern char *g_PacketEnd;
+extern game_pointer<char> (&g_PacketPtr);
+extern game_pointer<char> (&g_PacketEnd);
 
 void CarModel_InitStub(CarModelHeader *model, int arg)
 {
@@ -271,7 +272,7 @@ loop:
 
 void FUN_800616a0(unsigned int param_1)
 {
-    FUN_800608e8(param_1, (int)&D_801C946C);
+    FUN_800608e8(param_1, (int)rt::to_guest(&D_801C946C));
 }
 
 // Turns each normal of a body mesh into environment map texture coordinates: the normal
@@ -281,7 +282,7 @@ void FUN_800616a0(unsigned int param_1)
 // next pass), which is where the zero pair at out comes from.
 void Mesh_NormalsToEnvUV(CarMesh *mesh, MATRIX *m, unsigned char *out)
 {
-    CarScratch *sp = (CarScratch *)0x1f800000;
+    CarScratch *sp = (CarScratch *)rt::from_guest(0x1f800000);
     unsigned int *n = (unsigned int *)mesh->normals;
     unsigned int *end = n + mesh->normalCount;
 
@@ -367,7 +368,7 @@ static inline unsigned int Body_SortZ(unsigned int flags, int *sz, int n)
 static inline void Ot_Link(unsigned int *ot, void *prim, int len)
 {
     *(unsigned int *)prim = len << 24 | (*ot & 0xffffff);
-    *ot = (*ot & 0xff000000) | ((unsigned int)prim & 0xffffff);
+    *ot = (*ot & 0xff000000) | ((unsigned int)rt::to_guest(prim) & 0xffffff);
 }
 
 // A vertex's entry in the table: its normal's field is the byte offset of the entry.
@@ -565,7 +566,7 @@ static void SubVert_Project(SubVert *s)
 // chain goes into the OT when the face is done.
 static void Sub_Chain(CarScratch *sp, SubFace *f, void *p, int len, int size)
 {
-    *(unsigned int *)p = len << 24 | (((unsigned int)p + size) & 0xffffff);
+    *(unsigned int *)p = len << 24 | (((unsigned int)rt::to_guest(p) + size) & 0xffffff);
     f->last = (char *)p;
     sp->packetPtr = (char *)p + size;
 }
@@ -809,7 +810,7 @@ static void SubFace_End(CarScratch *sp, SubFace *f, int ok)
 // recursive there.
 void CarBody_DrawUnclipped(CarMesh *mesh, MATRIX *light)
 {
-    CarScratch *sp = (CarScratch *)0x1f800000;
+    CarScratch *sp = (CarScratch *)rt::from_guest(0x1f800000);
     unsigned short env[0x204];
     unsigned int *w;
     unsigned int *end;
@@ -1215,7 +1216,7 @@ static void SubVert_SetClipped(SubVert *s, ShadowVert *v, unsigned int uv, int k
     s->z = v->z;
     *(unsigned short *)&s->u = uv;
     s->sxy = v->sxy;
-    s->rgb = (((unsigned int *)0x1f8000b4)[k * 4] & 0xffffff) | (v->clip & 0xff) << 24;
+    s->rgb = (((unsigned int *)rt::from_guest(0x1f8000b4))[k * 4] & 0xffffff) | (v->clip & 0xff) << 24;
     if (SubVert_Clip(s) & 0x20) {
         gte_SetDataReg(GTE_VXY0, *(int *)&s->x);
         gte_SetDataReg(GTE_VZ0, s->z);
@@ -1449,7 +1450,7 @@ static inline int Body_ClipQuadVisible(CarScratch *sp, int n1, int n2, unsigned 
 // first pass writes a record before the table from stale registers).
 void CarBody_DrawClipped(CarMesh *mesh, MATRIX *light)
 {
-    CarScratch *sp = (CarScratch *)0x1f800000;
+    CarScratch *sp = (CarScratch *)rt::from_guest(0x1f800000);
     ShadowVert table[256];
     unsigned short env[0x204];
     BodyVert *bv;
@@ -1984,7 +1985,7 @@ void WheelMesh_Draw(CarScratch *sp, int *mesh)
 // in the GTE's latency slots.
 void CarModel_DrawWheel(Camera *cam, MATRIX *world, WheelInst *wheel, CarModelHeader *model, int lod, int index)
 {
-    CarScratch *sp = (CarScratch *)0x1f800000;
+    CarScratch *sp = (CarScratch *)rt::from_guest(0x1f800000);
     WheelGeom *geom = (WheelGeom *)&model->wheelTexture;
     int rear = (index >> 1) & 1;
     int right = index & 1;
@@ -2093,7 +2094,7 @@ void CarModel_DrawWheel(Camera *cam, MATRIX *world, WheelInst *wheel, CarModelHe
 // $s2-$s4 and cam and the world matrix $s6/$s7 (ours permutes them).
 int CarModel_Draw(Camera *cam, CarModelInst *inst, int mirror)
 {
-    CarScratch *sp = (CarScratch *)0x1f800000;
+    CarScratch *sp = (CarScratch *)rt::from_guest(0x1f800000);
     MATRIX light;
     MATRIX *world;
     unsigned int distSq;
@@ -2154,7 +2155,7 @@ int CarModel_Draw(Camera *cam, CarModelInst *inst, int mirror)
     sp->verts = mesh->verts;
     sp->normals = mesh->normals;
     clip = Clip_TestBox((ViewScratch *)sp, mesh->bboxMin, mesh->bboxMax);
-    light.t[1] = (long)mesh;
+    light.t[1] = (int)rt::to_guest(mesh);
     if ((clip & 0x1f) == 0) {
         sp->packetPtr = g_PacketPtr;
         sp->packetLimit = g_PacketEnd - 0x2000;
@@ -2168,9 +2169,9 @@ int CarModel_Draw(Camera *cam, CarModelInst *inst, int mirror)
         light.m[2][1] >>= 3;
         light.m[2][2] >>= 3;
         if ((clip >> 16 & 0x3f) == 0) {
-            CarBody_DrawUnclipped((CarMesh *)light.t[1], &light);
+            CarBody_DrawUnclipped((CarMesh *)rt::from_guest(light.t[1]), &light);
         } else {
-            CarBody_DrawClipped((CarMesh *)light.t[1], &light);
+            CarBody_DrawClipped((CarMesh *)rt::from_guest(light.t[1]), &light);
         }
         if (distSq < 0x2400 && detail < 3) {
             int wheelLod = 2;
@@ -2319,8 +2320,8 @@ static inline char *Shadow_AddDrawMode(char *pkt, unsigned int *ot)
 void ShadowMesh_Draw(void *meshData)
 {
     ShadowMesh *mesh = (ShadowMesh *)meshData;
-    CarScratch *sp = (CarScratch *)0x1f800000;
-    ShadowClip *clip = (ShadowClip *)0x1f80009c;
+    CarScratch *sp = (CarScratch *)rt::from_guest(0x1f800000);
+    ShadowClip *clip = (ShadowClip *)rt::from_guest(0x1f80009c);
     ShadowVert verts[64];
     int nearHalf;
     unsigned int *face;
@@ -2517,7 +2518,7 @@ void ShadowMesh_Draw(void *meshData)
 void CarModel_DrawShadow(Camera *cam, CarModelInst *inst, CarModelHeader *model)
 {
     void *mesh = model->shadowMesh;
-    MATRIX *s = (MATRIX *)0x1f800000;
+    MATRIX *s = (MATRIX *)rt::from_guest(0x1f800000);
 
     *(CameraView *)s = *(CameraView *)&cam->view;
     Matrix_Comp(s, &inst->shadow);

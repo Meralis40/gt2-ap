@@ -4,6 +4,8 @@
 #ifndef OVL0_H
 #define OVL0_H
 
+#include "gptr.h"
+#include "vtable.h"
 #include "resident.h"
 #include "viewloop.h"
 #include "ovl2.h" // MenuPage
@@ -334,15 +336,15 @@ struct CourseSectionTable {
     uint unk00;
     ushort count;
     ushort pad06;
-    void *spriteTex;
-    struct CourseSection *sections[1];
+    game_pointer<void> spriteTex;
+    game_pointer<struct CourseSection> sections[1];
 };
 
 struct CourseMesh {
-    void *verts;
-    void *prims[8];
-    int *sprites;
-    int *flares;
+    game_pointer<void> verts;
+    game_pointer<void> prims[8];
+    game_pointer<int> sprites;
+    game_pointer<int> flares;
     ushort vertCount;
     ushort pad2e;
     ushort primCount[8];
@@ -353,8 +355,8 @@ struct CourseMesh {
 struct CourseSection {
     ushort nextIdx;
     ushort prevIdx;
-    struct CourseSection *next;
-    struct CourseSection *prev;
+    game_pointer<struct CourseSection> next;
+    game_pointer<struct CourseSection> prev;
     uint groupMask;
     uchar unk10[8];
     int planeOrigin[3];
@@ -365,23 +367,23 @@ struct CourseSection {
     uchar unk3c[8];
     int bbox[10];
     int bboxFar[10];
-    struct CourseMesh *mirrorMesh;
-    int *walls;
-    void *groundGrid;
-    ushort *visList;
+    game_pointer<struct CourseMesh> mirrorMesh;
+    game_pointer<int> walls;
+    game_pointer<void> groundGrid;
+    game_pointer<ushort> visList;
     struct CourseMesh mesh;
 };
 
 struct CourseData {
     uchar unk00[16];
-    struct CourseSectionTable *sections;
-    uint *modelLib;
-    uint *objModels;
-    ushort *table1c;
-    void *data20;
+    game_pointer<struct CourseSectionTable> sections;
+    game_pointer<uint> modelLib;
+    game_pointer<uint> objModels;
+    game_pointer<ushort> table1c;
+    game_pointer<void> data20;
     int checkpointCount;
     int checkpoints[60]; /* course distance of each sector line */
-    uint *objGroups[33];
+    game_pointer<uint> objGroups[33];
 };
 
 typedef struct InfoBar InfoBar, *PInfoBar;
@@ -428,16 +430,16 @@ struct QuickMenuPage {
 struct QuickMenu : public psxViewLoopDoubleBuffer {
     signed char hookActive;
     uchar pad71[3];
-    uchar (*hook)(void *, int, int);
-    void *hookArg;
+    game_function<uchar(void *, int, int)> hook;
+    game_pointer<void> hookArg;
     uchar unk7c;
     uchar pad7d[3];
     struct DrawLayer layers[6];
     struct PadDevice pads[2];
     struct PadState padState[2];
-    struct QuickMenuPage *activePage;
-    struct QuickMenuPage *leavingPage;
-    struct QuickMenuPage *pageStack[16];
+    game_pointer<struct QuickMenuPage> activePage;
+    game_pointer<struct QuickMenuPage> leavingPage;
+    game_pointer<struct QuickMenuPage> pageStack[16];
     signed char pageDepth;
     signed char transitionTimer;
     signed char transitionKind;
@@ -448,11 +450,12 @@ struct QuickMenu : public psxViewLoopDoubleBuffer {
     int updateCount;
 
 
-    void Enter() override;
-    void Leave() override;
-    void BeginFrame() override;
-    int Update() override;
-    void Draw() override;
+    void Enter();
+    void Leave();
+    void BeginFrame();
+    int Update();
+    void Draw();
+    QuickMenu() { vptr.address = 0x8005a7fc; }
 };
 
 typedef struct RaceCam RaceCam, *PRaceCam;
@@ -469,7 +472,7 @@ struct SVECTOR {
 
 struct RacePad { /* A race controller (RacePad_Open / RacePad_Update): pad device plus the key-config mapped action bits. */
     struct PadDevice dev;
-    struct PortConfig *config; /* &g_GameState.ports[port] (button maps) */
+    game_pointer<struct PortConfig> config; /* &g_GameState.ports[port] (button maps) */
     struct PadState raw; /* PadButtons_Read output */
     byte analogCopy[16]; /* copy of dev.analogMask and dev.analog */
     short analogCopy2; /* copy of dev +0x58 */
@@ -484,7 +487,7 @@ struct RacePad { /* A race controller (RacePad_Open / RacePad_Update): pad devic
 
 struct RaceCam { /* A race camera (RaceViewLoop.cams; RaceCam_*). */
     struct Camera cam;
-    struct RacePad *pad; /* controller that drives this camera */
+    game_pointer<struct RacePad> pad; /* controller that drives this camera */
     int section; /* track section of the camera */
     struct MATRIX view; /* camera transform; view.t is the position */
     struct SVECTOR angles; /* Euler angles of view (Matrix_ToEuler) */
@@ -536,13 +539,15 @@ public:
     unsigned char pad2f2[2];
 
     RaceViewLoop();
-    virtual ~RaceViewLoop();
-    virtual void Enter();
-    virtual void Leave();
-    virtual int Update();
-    virtual void BeginDraw();
-    virtual void Draw();
-    virtual void Start(int mode);
+    ~RaceViewLoop();
+    void Enter();
+    void Leave();
+    int Update();
+    void BeginDraw();
+    void Draw();
+    void Start(int mode);
+    // Calls through the vtable word (rt/vtable.h).
+    void v_Start(int mode) { return vptr.slot<void(ScreenViewLoop *, int)>(14)(this, mode); }
 };
 
 struct PreQuickMenuIO : public psxViewLoopDoubleBuffer {
@@ -554,11 +559,12 @@ struct PreQuickMenuIO : public psxViewLoopDoubleBuffer {
     signed char menuTimUploaded;
     signed char mode;
 
-    void Enter() override;
-    void Leave() override;
-    void BeginFrame() override;
-    int Update() override;
-    void Draw() override;
+    void Enter();
+    void Leave();
+    void BeginFrame();
+    int Update();
+    void Draw();
+    PreQuickMenuIO() { vptr.address = 0x8005a7b4; }
 };
 
 // Base of the race flow state machines (0x10 bytes; raceloops.cpp emits its
@@ -568,26 +574,41 @@ struct PreQuickMenuIO : public psxViewLoopDoubleBuffer {
 class RaceMenuLoop {
 public:
     int arg; /* Race_Entry argument: non-zero = replay only (attract demo, raceType 0xc) */
-    RaceViewLoop *view;
+    game_pointer<RaceViewLoop> view;
     int state; /* last direction: 3 forward (initial), 2 back */
+    game_vptr vptr;  // the console's vtable pointer: its vtable's address
 
     RaceMenuLoop(RaceViewLoop *view, int arg);
-    virtual ~RaceMenuLoop();
-    virtual void Init();
-    virtual void Run();
-    virtual void Finish();
-    virtual int State4();       // load
-    virtual int State5();
-    virtual int State6();       // menus
-    virtual int State7();
-    virtual int State8();       // before the race
-    virtual int State9();       // the race
-    virtual int State10();
-    virtual int State11();
-    virtual int State12();      // the replay
-    virtual int State13();
+    ~RaceMenuLoop();
+    void Init();
+    void Run();
+    void Finish();
+    int State4();       // load
+    int State5();
+    int State6();       // menus
+    int State7();
+    int State8();       // before the race
+    int State9();       // the race
+    int State10();
+    int State11();
+    int State12();      // the replay
+    int State13();
     void Execute();
     int ResolveState(int ret);
+    // Calls through the vtable word (rt/vtable.h).
+    void v_Init() { return vptr.slot<void(RaceMenuLoop *)>(0)(this); }
+    void v_Run() { return vptr.slot<void(RaceMenuLoop *)>(1)(this); }
+    void v_Finish() { return vptr.slot<void(RaceMenuLoop *)>(2)(this); }
+    int v_State4() { return vptr.slot<int(RaceMenuLoop *)>(3)(this); }
+    int v_State5() { return vptr.slot<int(RaceMenuLoop *)>(4)(this); }
+    int v_State6() { return vptr.slot<int(RaceMenuLoop *)>(5)(this); }
+    int v_State7() { return vptr.slot<int(RaceMenuLoop *)>(6)(this); }
+    int v_State8() { return vptr.slot<int(RaceMenuLoop *)>(7)(this); }
+    int v_State9() { return vptr.slot<int(RaceMenuLoop *)>(8)(this); }
+    int v_State10() { return vptr.slot<int(RaceMenuLoop *)>(9)(this); }
+    int v_State11() { return vptr.slot<int(RaceMenuLoop *)>(10)(this); }
+    int v_State12() { return vptr.slot<int(RaceMenuLoop *)>(11)(this); }
+    int v_State13() { return vptr.slot<int(RaceMenuLoop *)>(12)(this); }
 };
 
 // The arcade race loop (0x5d8 bytes; arcaderace.cpp emits its vtable),
@@ -604,12 +625,12 @@ public:
     unsigned char unk5d2[6];
 
     ArcadeRaceLoop(int arg);
-    virtual ~ArcadeRaceLoop();
-    virtual int State4();
-    virtual int State6();
-    virtual int State8();
-    virtual int State10();
-    virtual int State13();
+    ~ArcadeRaceLoop();
+    int State4();
+    int State6();
+    int State8();
+    int State10();
+    int State13();
 };
 
 // GranTurismoRaceLoop's layout (0x5e0 bytes) until it is a class: its
@@ -631,11 +652,11 @@ struct RaceLoop : public RaceMenuLoop {
     unsigned char unk5da[6];
 
     explicit RaceLoop(int arg);
-    int State4() override;
-    int State6() override;
-    int State8() override;
-    int State10() override;
-    int State13() override;
+    int State4();
+    int State6();
+    int State8();
+    int State10();
+    int State13();
 };
 
 typedef struct RaceVehicle RaceVehicle, *PRaceVehicle;
@@ -649,7 +670,7 @@ struct RaceWheelDraw { /* Drawn wheel position of a race car. */
 };
 
 struct RaceVehicle { /* One race car (0xb40 bytes; RaceWorld.vehicles[6] at 0x800a9688). Init: RaceVehicle_Init. */
-    struct RaceVehicle *next; /* next car in RaceWorld.drawList (sorted by camera distance) */
+    game_pointer<struct RaceVehicle> next; /* next car in RaceWorld.drawList (sorted by camera distance) */
     unsigned char unk4[8];
     short index; /* car index (RaceSetup.cars) */
     byte present; /* car takes part (0 for an unused ghost) */
@@ -659,7 +680,7 @@ struct RaceVehicle { /* One race car (0xb40 bytes; RaceWorld.vehicles[6] at 0x80
     int section; /* copy of phys.section, read by the cameras */
     short controlType; /* 0 CPU, 1 recorded car (ghost), 2 player 1, 3 player 2 (from RaceCar.driverType) */
     unsigned char unk1a[2];
-    struct InputLog *inputLog; /* recorded input: written for players, read for recorded cars and replays */
+    game_pointer<struct InputLog> inputLog; /* recorded input: written for players, read for recorded cars and replays */
     char ghostLap; /* time trial replay: lap ghost shown */
     char ghostLapDelta; /* time trial replay: -1/+1 requested by the replay camera */
     unsigned char unk22[2];
@@ -676,7 +697,7 @@ struct RaceVehicle { /* One race car (0xb40 bytes; RaceWorld.vehicles[6] at 0x80
     int prevPos[3];
     int vel[3]; /* world.t - prevPos */
     unsigned char unk874[4];
-    struct CarModelHeader *model; /* RaceWorld.carModels[index] */
+    game_pointer<struct CarModelHeader> model; /* RaceWorld.carModels[index] */
     int bodyLength; /* half length of the model x16 */
     unsigned char unk880[524];
     byte lapInvalid; /* lap does not count (set by the lap callbacks) */
@@ -685,7 +706,7 @@ struct RaceVehicle { /* One race car (0xb40 bytes; RaceWorld.vehicles[6] at 0x80
     short refTimeTimer; /* frames refTime stays shown (0x78) */
     short messageTimer;
     int lapTimeShown; /* last lap (or race) time shown on the HUD */
-    void *lapLabel; /* HUD label for lapTimeShown */
+    game_pointer<void> lapLabel; /* HUD label for lapTimeShown */
     int refTime; /* time trial: course best lap; 2P: gap to the leader */
     int refTime2; /* time trial: lap time; 2P: lead over the other car */
     byte soundStart; /* car sound state starts here (0x98 bytes, fork R2) */
@@ -722,16 +743,16 @@ struct ParticlePool { /* Tyre smoke particles of the race (RaceWorld.particles).
 };
 
 struct RaceWorld { /* The race state (g_RaceWorld, 0x800a9504; RaceWorld_Init). */
-    struct CarModelHeader *carModels[6];
+    game_pointer<struct CarModelHeader> carModels[6];
     byte isReplay; /* race view was started with Start(1): replay / demo playback */
     unsigned char unk19;
     ushort introFrames; /* length of the pre-race camera intro (0xb4, 0x78 license, 0 when RaceSetup.unk0d is 0) */
     ushort introTimer; /* counts down from introFrames */
     ushort finishFrames; /* counts up once the race is over; recording stops after 300 frames (60 license) */
-    struct CourseRecord *courseRecord; /* g_GameState course record of this course */
+    game_pointer<struct CourseRecord> courseRecord; /* g_GameState course record of this course */
     struct RacePad pads[2];
     struct RaceVehicle vehicles[6];
-    struct RaceVehicle *drawList;
+    game_pointer<struct RaceVehicle> drawList;
     struct ParticlePool particles;
     short countdown;
     short resultAnim[2];
@@ -755,7 +776,7 @@ typedef struct ResultCar ResultCar, *PResultCar;
 struct ResultCar {
     short unk00;
     short tpage;
-    void *model;
+    game_pointer<void> model;
     uchar enabled;
     uchar brightness;
     uchar pad0a[2];

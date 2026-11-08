@@ -2,7 +2,7 @@
 #include "common.h"
 
 extern "C" {
-extern GameState g_GameState;
+extern GameState (&g_GameState);
 
 // Clears the bank and sets up its sample bank in work (size bytes).
 void MenuBgmBank_Init(MenuBgmBank *bank, void *work, int size)

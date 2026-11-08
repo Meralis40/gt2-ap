@@ -12,7 +12,13 @@ void Sys_Init(void)
 
 int sprintf(char *buf, const char *fmt, ...)
 {
-    return vsprintf(buf, fmt, (char *)&fmt + 4);
+    va_list args;
+    int n;
+
+    va_start(args, fmt);
+    n = vsprintf(buf, fmt, args);
+    va_end(args);
+    return n;
 }
 
 
@@ -249,7 +255,7 @@ int Printf_ParseInt(char **p)
 // and precision can be * (but .* sets the width), sizes are h, l (int) and L
 // (64 bits). %i prints in octal and %t in decimal with a point before the last
 // prec digits; e, f, g, n and p only skip their argument.
-int Printf_Format(PutcFunc putc, const char *fmt, char *args)
+int Printf_Format(PutcFunc putc, const char *fmt, va_list args)
 {
     int count = 0;
     char c;
@@ -300,8 +306,7 @@ int Printf_Format(PutcFunc putc, const char *fmt, char *args)
             width = Printf_ParseInt((char **)&fmt);
             c = *fmt;
         } else if (c == '*') {
-            width = *(int *)args;
-            args += 4;
+            width = va_arg(args, int);
             c = *++fmt;
         }
         prec = -1;
@@ -310,8 +315,7 @@ int Printf_Format(PutcFunc putc, const char *fmt, char *args)
             if ((unsigned int)(c - '0') < 10) {
                 prec = Printf_ParseInt((char **)&fmt);
             } else if (c == '*') {
-                width = *(int *)args;
-                args += 4;
+                width = va_arg(args, int);
                 fmt++;
             }
         }
@@ -341,18 +345,15 @@ int Printf_Format(PutcFunc putc, const char *fmt, char *args)
         case 'x':
             switch (size) {
             case 1:
-                sval = (short)*(unsigned short *)args;
-                args += 4;
+                sval = (short)va_arg(args, int);
                 uval = sval & 0xffff;
                 break;
             case 3:
-                sval = *(long long *)args;
-                args += 8;
+                sval = va_arg(args, long long);
                 uval = sval;
                 break;
             default:
-                sval = *(int *)args;
-                args += 4;
+                sval = va_arg(args, int);
                 uval = sval & 0xffffffff;
                 break;
             }
@@ -392,27 +393,26 @@ int Printf_Format(PutcFunc putc, const char *fmt, char *args)
         case 'f':
         case 'g':
             if (size < 2) {
-                args += sizeof(float) ;
+                (void)va_arg(args, int); // the game steps 4 bytes, sizeof(float)
             } else if (size < 3) {
-                args += sizeof(double);
+                (void)va_arg(args, double);
             } else {
-                args += sizeof(long double);
+                (void)va_arg(args, long double);
             }
             break;
         case 'n':
         case 'p':
-            args += 4;
+            (void)va_arg(args, void *);
             break;
         case 'c':
-            if (putc(*args) < 0) {
+            if (putc((signed char)va_arg(args, int)) < 0) {
                 return -1;
             }
-            args += 4;
+
             count++;
             break;
         case 's':
-            r = Printf_EmitString(putc, flags, width, prec, *(char **)args);
-            args += 4;
+            r = Printf_EmitString(putc, flags, width, prec, va_arg(args, char *));
             if (r < 0) {
                 return -1;
             }
@@ -437,7 +437,7 @@ int Printf_PutcToBuffer(int c)
     return 0;
 }
 
-int vsprintf(char *buf, const char *fmt, void *args)
+int vsprintf(char *buf, const char *fmt, va_list args)
 {
     int n;
     D_801C9898 = buf;

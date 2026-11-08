@@ -1,12 +1,13 @@
 // Resident code 80069ff8-8006a348 (savefile): the game save on the memory card.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern char D_80091C94[];
-extern char D_80091CA8[];
-extern char D_80091CC4[];
-extern char D_80091CE4[];
-extern GameState g_GameState;
+extern char (&D_80091C94)[];
+extern char (&D_80091CA8)[];
+extern char (&D_80091CC4)[];
+extern char (&D_80091CE4)[];
+extern GameState (&g_GameState);
 
 int SaveFile_GetDataSize(void)
 {
@@ -98,7 +99,7 @@ void GameState_WriteSave(GameSaveFile *header, GameSaveFile *file, int size)
 
 void GameState_ReadSave(unsigned int param_1, int param_2)
 {
-    memcpy(&g_GameState, (void *)(param_2 + 0x200), 0x7c9c);
+    memcpy(&g_GameState, (void *)rt::from_guest((param_2 + 0x200)), 0x7c9c);
     Options_ApplyNeGconCalib(&g_GameState);
 }
 

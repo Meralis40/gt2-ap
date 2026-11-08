@@ -1,24 +1,25 @@
 // OVL4 80017750-800183ec (dealer): Dealer, tuning shop and garage sales.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "ap.h"
 
-extern "C" unsigned int g_MenuPageAttr;
+extern "C" unsigned int (&g_MenuPageAttr);
 
 // CarSpec_FromCarWorkWithPart's output, a resident type that ovl4.h doesn't have.
 struct CarSpec;
 
 extern "C" {
-extern GameState g_GameState;
-extern unsigned short g_GarageCar_NoMark[2];
-extern unsigned short g_GarageCar_Mark[2];
-extern short g_PartNameStrIds;
-extern CarWork g_CarWork;
-extern short g_RacingMod_Variant;
-extern short g_IncludedTireParts[];
-extern signed char *g_Car_ExcludedCodes[];
-extern unsigned short u_NoName[];
+extern GameState (&g_GameState);
+extern unsigned short (&g_GarageCar_NoMark)[2];
+extern unsigned short (&g_GarageCar_Mark)[2];
+extern short (&g_PartNameStrIds);
+extern CarWork (&g_CarWork);
+extern short (&g_RacingMod_Variant);
+extern short (&g_IncludedTireParts)[];
+extern game_pointer<signed char> (&g_Car_ExcludedCodes)[];
+extern unsigned short (&u_NoName)[];
 
 // Car_HasPart(...) == 1, kept as a value: the game tests it with xori.
 inline int Car_PartFitted(Car *car, int part)
@@ -34,7 +35,7 @@ int CarSetup_Finalize(unsigned int carId, CarSetup *setup)
     GameState *gs = &g_GameState;
     char *base = (char *)gs;
     int offset = 0x10bd8;
-    CarWork *work = (CarWork *)((int)(base + offset) & ~3);
+    CarWork *work = (CarWork *)rt::from_guest(((int)rt::to_guest((base + offset)) & ~3));
 
     CarWork_Clear(work);
     CarWork_LoadParts(work, carId);
@@ -91,7 +92,7 @@ int Car_GetTransFlag14(unsigned int carId)
 
     Car_GetDefaultSetup(carId, &CStack_90);
     pvVar1 = GameData_GetEntry(0x11, (unsigned int)(unsigned short)CStack_90.idx_t11);
-    return (unsigned int)(*(unsigned char *)((int)pvVar1 + 9) < 3);
+    return (unsigned int)(*(unsigned char *)rt::from_guest(((int)rt::to_guest(pvVar1) + 9)) < 3);
 }
 
 // 1, or -1 without the credits, -2 with a full garage.
@@ -329,7 +330,7 @@ int Garage_CanAfford(int price, int garageIdx)
 // 0 when the car's code is in g_Car_ExcludedCodes.
 int Car_IsNotExcluded(unsigned int carId)
 {
-    signed char **p = g_Car_ExcludedCodes;
+    game_pointer<signed char> *p = g_Car_ExcludedCodes;
     signed char *code = *p;
 
     while (code) {

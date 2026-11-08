@@ -4,14 +4,14 @@
 #include "common.h"
 
 extern "C" {
-extern Font D_80123810;
-extern unsigned char D_8004F604[];
-extern unsigned char D_8004F608[];
-extern unsigned char D_8004F60C[];
-extern unsigned char D_8004F610[];
-extern unsigned char D_8004F614[];
-extern char D_800F8775[]; // a number's format
-extern char D_800F871B[]; // what's shown without a record
+extern Font (&D_80123810);
+extern unsigned char (&D_8004F604)[];
+extern unsigned char (&D_8004F608)[];
+extern unsigned char (&D_8004F60C)[];
+extern unsigned char (&D_8004F610)[];
+extern unsigned char (&D_8004F614)[];
+extern char (&D_800F8775)[]; // a number's format
+extern char (&D_800F871B)[]; // what's shown without a record
 
 
 // Hidden.

@@ -15,8 +15,8 @@
 #define TEXTITEM_RIGHT 0x100
 
 extern "C" {
-extern Font D_80093124;
-extern char D_80027128[]; // an empty string
+extern Font (&D_80093124);
+extern char (&D_80027128)[]; // an empty string
 
 
 // Copies the template (defaults without one), with no text and nothing shown yet.

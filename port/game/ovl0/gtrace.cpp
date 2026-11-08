@@ -1,10 +1,11 @@
 // OVL0 80017098-80017e18 (gtrace): GT mode race loop and practice.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
-extern "C" unsigned char g_Race_IsDemo;
+extern "C" unsigned char (&g_Race_IsDemo);
 
 // g_RaceSetup, as the game reaches it: g_GameState plus 0xbf7c, added at run time.
 static inline RaceSetup *RaceSetup_Get(void)
@@ -18,7 +19,7 @@ static inline RaceSetup *RaceSetup_Get(void)
 // The race's memory, as the game reaches it, offset at run time.
 static inline void *RaceMem_Aligned(int offset)
 {
-    return (void *)(((int)&g_Race_IsDemo + offset) & -4);
+    return (void *)rt::from_guest((((int)rt::to_guest(&g_Race_IsDemo) + offset) & -4));
 }
 
 // The event buffers the menus keep over the race.
@@ -70,9 +71,9 @@ static inline void EventBlock_Keep(void)
 
     race = (char *)&g_Race_IsDemo + raceOffset;
     mask = -4;
-    dst = (EventBlock *)((int)race & mask);
+    dst = (EventBlock *)rt::from_guest(((int)rt::to_guest(race) & mask));
     state = (char *)&g_GameState;
-    *dst = *(EventBlock *)((int)(state + stateOffset) & mask);
+    *dst = *(EventBlock *)rt::from_guest(((int)rt::to_guest((state + stateOffset)) & mask));
 }
 
 // Runs a screen loop until it returns 0 or 1.
@@ -87,19 +88,19 @@ static inline void EventBlock_Keep(void)
 #define STATS_ENTERED(stats) (*(int *)((char *)(stats) + 0x48))
 
 extern "C" {
-extern void *g_EventDataBuf;
-extern signed char g_Flow_HomeOverlay;
-extern signed char g_Flow_GameMode;
-extern unsigned char g_Race_EndRequest;
-extern short D_8002F518[];
-extern QuickMenuPage g_Page_GtRaceRoot;
-extern QuickMenuPage g_Page_ResultRoot;
-extern QuickMenuPage g_Page_LicenseRoot;
-extern QuickMenuPage g_Page_RaceResultsRoot;
-extern QuickMenuPage g_Page_EventPrizeRoot;
-extern QuickMenuPage g_Page_ChampRacePrizeRoot;
-extern QuickMenuPage g_Page_ChampWonPrizeRoot;
-extern QuickMenuPage g_Page_EndingRoot;
+extern game_pointer<void> (&g_EventDataBuf);
+extern signed char (&g_Flow_HomeOverlay);
+extern signed char (&g_Flow_GameMode);
+extern unsigned char (&g_Race_EndRequest);
+extern short (&D_8002F518)[];
+extern QuickMenuPage (&g_Page_GtRaceRoot);
+extern QuickMenuPage (&g_Page_ResultRoot);
+extern QuickMenuPage (&g_Page_LicenseRoot);
+extern QuickMenuPage (&g_Page_RaceResultsRoot);
+extern QuickMenuPage (&g_Page_EventPrizeRoot);
+extern QuickMenuPage (&g_Page_ChampRacePrizeRoot);
+extern QuickMenuPage (&g_Page_ChampWonPrizeRoot);
+extern QuickMenuPage (&g_Page_EndingRoot);
 void GTRace_BeginPractice(RaceLoop *loop);
 void GTRace_EndPractice(RaceLoop *loop, int raceType, int nextType);
 void GTRace_RunMenus(RaceLoop *loop, int fresh);
@@ -271,10 +272,10 @@ int GranTurismoRaceLoop__State4(RaceLoop *loop)
 
             race = (char *)&g_Race_IsDemo + raceOffset;
             mask = -4;
-            dst = (RecordBlock *)((int)race & mask);
+            dst = (RecordBlock *)rt::from_guest(((int)rt::to_guest(race) & mask));
             state = (char *)&g_GameState;
             stateOffset = 0xc6c0;
-            *dst = *(RecordBlock *)((int)(state + stateOffset) & mask);
+            *dst = *(RecordBlock *)rt::from_guest(((int)rt::to_guest((state + stateOffset)) & mask));
         }
         EventBlock_Keep();
         break;
@@ -340,7 +341,7 @@ int GranTurismoRaceLoop__State8(RaceLoop *loop)
 
         if ((garage >= 0) & (slot >= 0)) {
             Garage *g = &state->garages[garage];
-            Car *from = (Car *)(slot * sizeof(Car) + (int)g->cars);
+            Car *from = (Car *)rt::from_guest((slot * sizeof(Car) + (int)rt::to_guest(g->cars)));
 
             car->dirt = from->dirt;
         }
@@ -361,7 +362,7 @@ int GranTurismoRaceLoop__State10(RaceLoop *loop)
 
     if ((garage >= 0) & (slot >= 0)) {
         Garage *g = &state->garages[garage];
-        Car *car = (Car *)(slot * sizeof(Car) + (int)g->cars);
+        Car *car = (Car *)rt::from_guest((slot * sizeof(Car) + (int)rt::to_guest(g->cars)));
 
         car->dirt = dirt;
     }
@@ -520,6 +521,7 @@ int GTRace_Run(int arg)
 
 RaceLoop::RaceLoop(int arg) : RaceMenuLoop(&view, arg)
 {
+    vptr.address = 0x8002f110;  // RaceLoop's vtable
 }
 
 int RaceLoop::State4()

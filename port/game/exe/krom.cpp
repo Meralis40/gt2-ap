@@ -3,10 +3,10 @@
 #include "common.h"
 
 extern "C" {
-extern unsigned short *g_KanjiSpaceAddr;
-extern short D_80095970[];          // the glyph index of each row's first cell
-extern signed char D_8009598C[];    // row 8's first cells, -1 for none
-extern signed char D_8009599C[];    // row 10's first cells, -1 for none
+extern game_pointer<unsigned short> (&g_KanjiSpaceAddr);
+extern short (&D_80095970)[];          // the glyph index of each row's first cell
+extern signed char (&D_8009598C)[];    // row 8's first cells, -1 for none
+extern signed char (&D_8009599C)[];    // row 10's first cells, -1 for none
 
 // Caches the ROM address of the full-width space (SJIS 0x8140).
 void Font_Init()

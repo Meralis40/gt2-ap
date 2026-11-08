@@ -1,32 +1,33 @@
 // OVL1 800124a4-80013230 (replaypages): Replay theater, demo, save and load pages.
 // The functions that don't match yet are the original assembly, with their C++ under
 // NON_MATCHING.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern BaseMenu *g_CurrentMenu;
-extern pointer g_OVL1_EndFontInfo;
-extern KanjiFont *g_OVL1_KanjiFont;
-extern short g_CardSlotStatus[];
-extern CardMenuConfig g_OVL1_CardMenuConfig;
-extern ReplayCopyConfig g_OVL1_ReplayCopyConfig;
-extern CardMenu *g_LoadReplay_CardMenu;
-extern CardMenu *g_RenameDeleteReplay_CardMenu;
-extern void *g_CopyReplay_End;
-extern MenuSprite g_ReplayTheater_Items[];
-extern MenuSpriteStyle g_ReplayTheater_ItemStyle;
-extern SpriteDesc g_ReplayTheater_Sprites[];
-extern MenuList g_ReplayTheater_List;
-extern BaseMenuPage *g_ReplayTheater_SubPages[];
-extern MenuList g_DemoSelect_List;
-extern short g_DemoSelect_OpenDelay;
-extern int g_DemoSelect_Index;
-extern ReplayEntryStyle D_8004B20C;
-extern BaseMenuPage g_Page_ReplayTheaterMenu;
-extern BaseMenuPage g_Page_StartReplayWait;
-extern BaseMenuPage g_Page_DemoStart;
-extern BaseMenuPage g_Page_SaveGameCard;
-extern BaseMenuPage g_Page_LoadGameCard;
+extern game_pointer<BaseMenu> (&g_CurrentMenu);
+extern pointer (&g_OVL1_EndFontInfo);
+extern game_pointer<KanjiFont> (&g_OVL1_KanjiFont);
+extern short (&g_CardSlotStatus)[];
+extern CardMenuConfig (&g_OVL1_CardMenuConfig);
+extern ReplayCopyConfig (&g_OVL1_ReplayCopyConfig);
+extern game_pointer<CardMenu> (&g_LoadReplay_CardMenu);
+extern game_pointer<CardMenu> (&g_RenameDeleteReplay_CardMenu);
+extern game_pointer<void> (&g_CopyReplay_End);
+extern MenuSprite (&g_ReplayTheater_Items)[];
+extern MenuSpriteStyle (&g_ReplayTheater_ItemStyle);
+extern SpriteDesc (&g_ReplayTheater_Sprites)[];
+extern MenuList (&g_ReplayTheater_List);
+extern game_pointer<BaseMenuPage> (&g_ReplayTheater_SubPages)[];
+extern MenuList (&g_DemoSelect_List);
+extern short (&g_DemoSelect_OpenDelay);
+extern int (&g_DemoSelect_Index);
+extern ReplayEntryStyle (&D_8004B20C);
+extern BaseMenuPage (&g_Page_ReplayTheaterMenu);
+extern BaseMenuPage (&g_Page_StartReplayWait);
+extern BaseMenuPage (&g_Page_DemoStart);
+extern BaseMenuPage (&g_Page_SaveGameCard);
+extern BaseMenuPage (&g_Page_LoadGameCard);
 void PushPage(BaseMenu *menu, BaseMenuPage *page);
 int ReplayTheaterMenu_ItemCallback(MenuListEventId event, MenuListEvent *ev, int index);
 int DemoSelect_ItemCallback(MenuListEventId event, MenuListEvent *ev, int index);
@@ -38,8 +39,8 @@ void ReplayTheaterRoot_Enter(int back)
     BaseMenuPage *pMVar1;
 
     pMVar1 = g_CurrentMenu->activePage;
-    pMVar1[1].enter = (MenuPageEnterFn *)0x14;
-    pMVar1[1].update = (MenuPageUpdateFn *)back;
+    pMVar1[1].enter = (MenuPageEnterFn *)rt::from_guest(0x14);
+    pMVar1[1].update = (MenuPageUpdateFn *)rt::from_guest(back);
     if (back == 0) {
         DemoReplay_Count(g_OVL1_EndFontInfo);
     }
@@ -74,7 +75,7 @@ void ReplayTheaterRoot_Draw(DrawLayer *layer)
 // delay and stops the music (MainMenu_StopMusic).
 void StartReplayWait_Enter(int back)
 {
-    g_CurrentMenu->activePage[1].enter = (MenuPageEnterFn *)0x14;
+    g_CurrentMenu->activePage[1].enter = (MenuPageEnterFn *)rt::from_guest(0x14);
     MainMenu_StopMusic();
 }
 
@@ -247,7 +248,7 @@ int LoadReplay_Update(int arg)
 // CardMenu_Draw.
 void LoadReplay_Draw(DrawLayer *layer)
 {
-    CardMenu_Draw((unsigned int *)((int)layer->ot + 0x10));
+    CardMenu_Draw((unsigned int *)rt::from_guest(((int)layer->ot + 0x10)));
 }
 
 // Starts the card menu on the replays to rename or delete.
@@ -283,14 +284,14 @@ int RenameDeleteReplay_Update(int arg)
 // CardMenu_Draw.
 void RenameDeleteReplay_Draw(DrawLayer *layer)
 {
-    CardMenu_Draw((unsigned int *)((int)layer->ot + 0x10));
+    CardMenu_Draw((unsigned int *)rt::from_guest(((int)layer->ot + 0x10)));
 }
 
 // Starts the replay copy.
 void CopyReplay_Enter(int back)
 {
     g_OVL1_ReplayCopyConfig.cardSlots = g_CardSlotStatus;
-    g_OVL1_ReplayCopyConfig.heap = (unsigned int)g_OVL1_EndFontInfo + 0x40000;
+    g_OVL1_ReplayCopyConfig.heap = (unsigned int)rt::to_guest(g_OVL1_EndFontInfo) + 0x40000;
     g_OVL1_ReplayCopyConfig.font = g_OVL1_KanjiFont;
     g_CopyReplay_End = ReplayCopy_Setup(&g_OVL1_ReplayCopyConfig);
     ReplayCopy_Start();
@@ -319,7 +320,7 @@ int CopyReplay_Update(int arg)
 // ReplayCopy_Draw.
 void CopyReplay_Draw(DrawLayer *layer)
 {
-    ReplayCopy_Draw((unsigned int *)((int)layer->ot + 0x10));
+    ReplayCopy_Draw((unsigned int *)rt::from_guest(((int)layer->ot + 0x10)));
 }
 
 // A row of the demo list: the replay's entry from the demo file, sliding in with the
@@ -438,7 +439,7 @@ void DemoStart_Enter(int back)
     BaseMenu *pBVar1;
 
     pBVar1 = g_CurrentMenu;
-    g_CurrentMenu->activePage[1].enter = (MenuPageEnterFn *)0x14;
+    g_CurrentMenu->activePage[1].enter = (MenuPageEnterFn *)rt::from_guest(0x14);
     pBVar1->result = '\x01';
 }
 
@@ -468,8 +469,8 @@ void SaveGameRoot_Enter(int back)
     BaseMenuPage *pMVar1;
 
     pMVar1 = g_CurrentMenu->activePage;
-    pMVar1[1].update = (MenuPageUpdateFn *)back;
-    pMVar1[1].enter = (MenuPageEnterFn *)0x14;
+    pMVar1[1].update = (MenuPageUpdateFn *)rt::from_guest(back);
+    pMVar1[1].enter = (MenuPageEnterFn *)rt::from_guest(0x14);
     MainMenu_PlayMusic(7);
 }
 
@@ -530,7 +531,7 @@ int SaveGameCard_Update(int arg)
 // CardMenu_Draw.
 void SaveGameCard_Draw(DrawLayer *layer)
 {
-    CardMenu_Draw((unsigned int *)((int)layer->ot + 0x10));
+    CardMenu_Draw((unsigned int *)rt::from_guest(((int)layer->ot + 0x10)));
 }
 
 // Root page of the Load Game menu: stores back, waits 20 frames, starts music track 7.
@@ -539,8 +540,8 @@ void LoadGameRoot_Enter(int back)
     BaseMenuPage *pMVar1;
 
     pMVar1 = g_CurrentMenu->activePage;
-    pMVar1[1].update = (MenuPageUpdateFn *)back;
-    pMVar1[1].enter = (MenuPageEnterFn *)0x14;
+    pMVar1[1].update = (MenuPageUpdateFn *)rt::from_guest(back);
+    pMVar1[1].enter = (MenuPageEnterFn *)rt::from_guest(0x14);
     MainMenu_PlayMusic(7);
 }
 
@@ -601,6 +602,6 @@ int LoadGameCard_Update(int arg)
 // CardMenu_Draw.
 void LoadGameCard_Draw(DrawLayer *layer)
 {
-    CardMenu_Draw((unsigned int *)((int)layer->ot + 0x10));
+    CardMenu_Draw((unsigned int *)rt::from_guest(((int)layer->ot + 0x10)));
 }
 }

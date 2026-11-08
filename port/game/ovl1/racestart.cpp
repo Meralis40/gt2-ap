@@ -4,10 +4,10 @@
 #include "gamestate.h"
 
 extern "C" {
-extern void *g_EventDataBuf;
-extern void *g_GtModeRaceDataBuf;
-extern unsigned char g_OVL1_DataBuf[];
-extern unsigned char g_OVL1_FontInfo[];
+extern game_pointer<void> (&g_EventDataBuf);
+extern game_pointer<void> (&g_GtModeRaceDataBuf);
+extern unsigned char (&g_OVL1_DataBuf)[];
+extern unsigned char (&g_OVL1_FontInfo)[];
 
 // Before jumping to Race_Entry (OVL0) for a replay loaded into g_RaceSetup (Replay
 // Theater or demo replay): reloads the data files matching g_RaceSetup.game and

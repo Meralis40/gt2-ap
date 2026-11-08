@@ -1,9 +1,10 @@
 // Resident code 8006c274-8006c460 (grounddisc): a disc drawn flat on the ground.
 // OVL2 builds it too.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern short g_SinTable[];
+extern short (&g_SinTable)[];
 
 // Puts the rim points on a circle of radius 0x40000 and the centre at 0.
 void GroundDisc_Init(GroundDisc *disc, int unused)
@@ -31,7 +32,7 @@ void GroundDisc_Init(GroundDisc *disc, int unused)
 // if blend is set, each at the deepest of its three points.
 void GroundDisc_Draw(GroundDisc *disc, uint *ot, uchar *camera, int blend, uint rgb)
 {
-    ScreenPoint *pts = (ScreenPoint *)0x1f800000;
+    ScreenPoint *pts = (ScreenPoint *)rt::from_guest(0x1f800000);
     ScreenPoint *a = pts;
     ScreenPoint *centre = &pts[25];
     uint code = 0x30;

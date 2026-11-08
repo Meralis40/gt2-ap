@@ -4,8 +4,8 @@
 #include "common.h"
 
 extern "C" {
-extern TextCtx D_801F0D00;
-extern unsigned int D_801F0D14;
+extern TextCtx (&D_801F0D00);
+extern unsigned int (&D_801F0D14);
 
 // The frame a sector is read from: its replacement frame (36-55) if it is bad.
 // The game computes the loop's end (port + 0x23c) inside the loop, in the load delay

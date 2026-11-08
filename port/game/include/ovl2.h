@@ -4,6 +4,8 @@
 #ifndef OVL2_H
 #define OVL2_H
 
+#include "gptr.h"
+#include "vtable.h"
 #include "resident.h"
 #include "movie.h"
 
@@ -11,11 +13,11 @@ class ArcadeMenu;
 
 // A page of the arcade menu, its callbacks called with the menu.
 struct MenuPage {
-    void (*enter)(ArcadeMenu *menu, int back); // back: 1 when returning from a child page
-    int (*update)(ArcadeMenu *menu, int active); // active: 0 for the leaving page; returns 1 push, 2 back, 3 to 6 leave the menu
-    void (*draw)(ArcadeMenu *menu, DrawLayer *layer);
+    game_function<void(ArcadeMenu *, int)> enter; // back: 1 when returning from a child page
+    game_function<int(ArcadeMenu *, int)> update; // active: 0 for the leaving page; returns 1 push, 2 back, 3 to 6 leave the menu
+    game_function<void(ArcadeMenu *, DrawLayer *)> draw;
     unsigned int titleColor; // RGB of the title bar
-    char *title; // NULL = no title bar
+    game_pointer<char> title; // NULL = no title bar
 };
 
 struct AsyncRead {
@@ -39,8 +41,8 @@ struct ArcTextItem {
     short y;
     unsigned char rgbFrom[4];
     unsigned char rgbTo[4];
-    Font *font;
-    char *text;
+    game_pointer<Font> font;
+    game_pointer<char> text;
     short anim;
     short animEnd;
     short length;
@@ -60,22 +62,22 @@ struct ArcTextItemTmpl {
     unsigned short flags;
     signed char height;
     unsigned char pad0f;
-    Font *font;
+    game_pointer<Font> font;
     unsigned int rgbFrom;
     unsigned int rgbTo;
 };
 
 // What Dialog_Init_OVL2 copies.
 struct ArcDialogDesc {
-    char *message;
-    char *option0;
-    char *option1;
+    game_pointer<char> message;
+    game_pointer<char> option0;
+    game_pointer<char> option1;
     unsigned char choice;
     unsigned char pad0d;
     unsigned short flags;
     signed char spacing;
     unsigned char pad11[3];
-    Font *font;
+    game_pointer<Font> font;
 };
 
 struct ArcDialog {
@@ -106,7 +108,7 @@ struct ArcIconItem {
     unsigned char brightness;
     unsigned char pulseBrightness;
     unsigned short scale;
-    void *sprite;
+    game_pointer<void> sprite;
     short anim;
     short pad16;
 };
@@ -139,9 +141,9 @@ struct ArcMenuItem {
     signed char kind;
     char pad01;
     short height; // 0 or less: the list's itemHeight
-    void *item; // ArcTextItem or ArcIconItem
-    void *tmpl; // its template (TextItem_Init_OVL2, IconItem_Init)
-    void *data; // its text or sprite
+    game_pointer<void> item; // ArcTextItem or ArcIconItem
+    game_pointer<void> tmpl; // its template (TextItem_Init_OVL2, IconItem_Init)
+    game_pointer<void> data; // its text or sprite
     int value; // MenuList_Update_OVL2's result when chosen
 };
 
@@ -155,7 +157,7 @@ struct ArcMenuList {
     short itemHeight;
     short itemGap;
     short pad0a;
-    ArcMenuItem *items;
+    game_pointer<ArcMenuItem> items;
     short x;
     short y;
     signed char selected;
@@ -177,14 +179,14 @@ struct ArcGridPos {
 
 // What GridPicker_Draw passes to the item callback, for the current and the previous item.
 struct ArcGridPickerDraw {
-    ArcGridPicker *picker;
-    void *ot;
+    game_pointer<ArcGridPicker> picker;
+    game_pointer<void> ot;
     short x;
     short y;
     short brightness; // 0x80 shown
     ArcGridPos pos;
     short pad12;
-    void *arg; // ArcGridPicker.drawArg
+    game_pointer<void> arg; // ArcGridPicker.drawArg
 };
 
 // What GridPicker_Init copies.
@@ -193,8 +195,8 @@ struct ArcGridPickerTmpl {
     short y;
     short w;
     short h;
-    void (*draw)(ArcGridPickerDraw *ctx, int item);
-    void *drawArg;
+    game_function<void(ArcGridPickerDraw *, int)> draw;
+    game_pointer<void> drawArg;
 };
 
 // The car and course selection pages' picker (0x2c bytes): rows of items, Left/Right change the
@@ -213,9 +215,9 @@ struct ArcGridPicker {
     short slideVertical; // 1: the slide is between rows
     signed char moving; // the row has more than one item (Left/Right shown)
     unsigned char pad1d[3];
-    void (*draw)(ArcGridPickerDraw *ctx, int item);
-    void *drawArg;
-    signed char *enabled; // per item; NULL: all
+    game_function<void(ArcGridPickerDraw *, int)> draw;
+    game_pointer<void> drawArg;
+    game_pointer<signed char> enabled; // per item; NULL: all
 };
 
 struct ArcGradientBar {
@@ -242,7 +244,7 @@ struct ArcStatBar {
     short anim;
     short pad02;
     ArcTextItem label;
-    char *text;
+    game_pointer<char> text;
 };
 
 // The figures SpecTable_Set shows.
@@ -279,7 +281,7 @@ struct ArcPowerGraph {
     signed char textMode;
     signed char charH;
     unsigned char pad0d[3];
-    Font *font;
+    game_pointer<Font> font;
     unsigned char powerRgb[4];
     unsigned char torqueRgb[4];
     unsigned char rpmRgb[4];
@@ -287,8 +289,8 @@ struct ArcPowerGraph {
     short maxPower;
     short maxTorque;
     short pad26;
-    void *powerCurve;
-    void *torqueCurve;
+    game_pointer<void> powerCurve;
+    game_pointer<void> torqueCurve;
     short frame;            // the fade-in frame; -1 hidden, below -1 closing
     short powerTop;
     short powerTicks;
@@ -316,7 +318,7 @@ struct ArcPowerGraphTmpl {
     unsigned int powerRgb;
     unsigned int torqueRgb;
     unsigned int rpmRgb;
-    Font *font;
+    game_pointer<Font> font;
 };
 
 // The arcade car spec panel (g_ArcCarSpecPanel): two slots that alternate, so that the old car's
@@ -341,7 +343,7 @@ struct ArcRecordPanel {
     signed char active;
     char pad01;
     short anim;
-    void *data;
+    game_pointer<void> data;
 };
 
 struct ArcCoursePreviewMovie {
@@ -349,7 +351,7 @@ struct ArcCoursePreviewMovie {
     signed char cdClaimed;
     signed char stopRequested;
     signed char started;
-    void *buffer;
+    game_pointer<void> buffer;
     short movie;
     short pad0a;
 };
@@ -368,7 +370,7 @@ struct ArcCarRating {
 struct ArcGarageInfo {
     short count;
     short pad02;
-    Garage *garage;
+    game_pointer<Garage> garage;
     ArcCarRating ratings[100];
 };
 
@@ -386,9 +388,9 @@ struct ArcCourseInfo {
 };
 
 struct ArcCourse {
-    char *name;
-    char *label;
-    ArcCourseInfo *info;
+    game_pointer<char> name;
+    game_pointer<char> label;
+    game_pointer<ArcCourseInfo> info;
     unsigned int flags;
     unsigned int hash; // Str_Hash of name
     short license;
@@ -411,9 +413,9 @@ struct ArcCourseMapEntry {
 struct ArcCourseMap {
     short tpage;
     short pad02;
-    ArcCourseMapEntry *info;
-    void *buf;
-    void *buf2;
+    game_pointer<ArcCourseMapEntry> info;
+    game_pointer<void> buf;
+    game_pointer<void> buf2;
     short state; // 1 wait for the CD, 2/3 read, 4 wait for the hook, 11 show
     short pad12;
     unsigned int hash; // the requested map
@@ -430,7 +432,7 @@ struct ArcCourseMap {
 
 // A bonus course of the arcade menu (g_ArcBonusCourses, ends with no name).
 struct ArcBonusCourse {
-    char *name;
+    game_pointer<char> name;
     signed char gold;
     signed char lit;
     signed char lamp;
@@ -457,23 +459,23 @@ struct ArcSavedSel {
 
 // What GuestLoad_Setup uses.
 struct ArcGuestLoadConfig {
-    void *buffer;
-    void *font;
-    short *slots;
-    Font *fontSmall;
-    Font *fontMedium;
-    Font *fontLarge;
+    game_pointer<void> buffer;
+    game_pointer<void> font;
+    game_pointer<short> slots;
+    game_pointer<Font> fontSmall;
+    game_pointer<Font> fontMedium;
+    game_pointer<Font> fontLarge;
     short textPri;
 };
 
 // The memory a car view loads into.
 struct ArcCarBuffers {
-    void *model; // inflated CarModelHeader
-    void *tex; // inflated textures: colour count (u16), palette blocks of 0x240 from +0x20, image at +0x43a0
-    void *modelGz; // compressed model read from the CD
-    void *texGz; // compressed textures read from the CD
-    void *wheelBuf; // wheel model / TIM
-    GzipStream *gzip; // shared inflate state
+    game_pointer<void> model; // inflated CarModelHeader
+    game_pointer<void> tex; // inflated textures: colour count (u16), palette blocks of 0x240 from +0x20, image at +0x43a0
+    game_pointer<void> modelGz; // compressed model read from the CD
+    game_pointer<void> texGz; // compressed textures read from the CD
+    game_pointer<void> wheelBuf; // wheel model / TIM
+    game_pointer<GzipStream> gzip; // shared inflate state
 };
 
 // Arcade 3D car preview: streams a car model, its textures and wheel from the CD, inflates them in a menu hook and draws them with a ground disc. Two of them (ArcadeMenu.carViews).
@@ -523,7 +525,7 @@ struct ArcCarView {
 struct ArcLogo {
     short vramPage; // texture page of the two logo slots (x (p&0xf)*64, y (p&0x10)*16); slot n at +n*0x80 lines
     unsigned char pad2[2];
-    unsigned char *archive; // arc_carlogo archive in memory (offset table at +4)
+    game_pointer<unsigned char> archive; // arc_carlogo archive in memory (offset table at +4)
     signed char cur; // slot used by the last request (alternates 0/1)
     unsigned char pad9;
     short w[2]; // logo width per slot (pixels)
@@ -537,14 +539,14 @@ struct ArcLogo {
     signed char loadState; // CD read state: 1 wait for the drive, 2 start, 3 poll
     signed char cdBusy; // owns the menu CD read
     signed char cancel; // stop the read on the next update
-    void *timBuf; // buffer for a logo read from the CD
+    game_pointer<void> timBuf; // buffer for a logo read from the CD
 };
 
 // The course preview movie player (0x5c bytes): OVL5's MoviePlayer, which OVL2's copy
 // of the movie code plays (Movie_*_OVL2, src/sim/ovl2/copies.h), then the state of
 // the course selection page's player (StrPlayer_Poll).
 struct ArcStrPlayer : MoviePlayer {
-    void *work;
+    game_pointer<void> work;
     short movie; // index in the stream table
     unsigned char started;
     unsigned char frameReady;
@@ -579,15 +581,15 @@ class ArcadeMenu : public psxViewLoopDoubleBuffer {
 public:
     signed char hookActive; // hook runs each frame (BeginFrame step 0, Update step 1) while it returns non-zero
     unsigned char pad71[3];
-    unsigned char (*hook)(void *, int, int);
-    void *hookArg;
+    game_function<unsigned char(void *, int, int)> hook;
+    game_pointer<void> hookArg;
     DrawLayer layers[6]; // priorities 0,5,1,2,3,4
     PadDevice pads[2];
     PadState padState[2];
-    TextCtx *text; // shared text context (0x800efd38)
-    MenuPage *activePage; // page being updated or drawn
-    MenuPage *leavingPage; // drawn fading out during a transition
-    MenuPage *pageStack[16];
+    game_pointer<TextCtx> text; // shared text context (0x800efd38)
+    game_pointer<MenuPage> activePage; // page being updated or drawn
+    game_pointer<MenuPage> leavingPage; // drawn fading out during a transition
+    game_pointer<MenuPage> pageStack[16];
     signed char pageDepth;
     unsigned char pad211;
     short transitionTimer; // 16 down to 0
@@ -599,19 +601,19 @@ public:
     AsyncRead cdRead; // menu CD read, shared by the car views, logos and logo archive
     signed char cdBusy; // a client owns cdRead
     unsigned char pad227;
-    ArcCarView *carViews[2];
+    game_pointer<ArcCarView> carViews[2];
     unsigned char pad230[8];
     int logoArcReady; // CarLogoArc_Update result; forces the logo uploads
     ArcLogo logos[2];
     ArcCourseMap courseMap; // set up by CourseMap_Init (ArcadeMode_Run's frame gives its size)
 
     ArcadeMenu();
-    virtual ~ArcadeMenu();
-    virtual void Enter();
-    virtual void Leave();
-    virtual void BeginFrame();  // menupages.cpp
-    virtual int Update();
-    virtual void Draw();
+    ~ArcadeMenu();
+    void Enter();
+    void Leave();
+    void BeginFrame();  // menupages.cpp
+    int Update();
+    void Draw();
 };
 
 // What ArcadeRace_Setup leaves for the loading screen (g_ArcadeLoadInfo, 0x154 bytes).
@@ -626,7 +628,7 @@ struct ArcadeLoadInfo {
         unsigned short rgb;     // CarInfoA_GetColorRgb
         unsigned short pad;
     } cars[32];
-    void *tim;                  // race type 6: uploaded to 0x1c0, 0x100
+    game_pointer<void> tim;                  // race type 6: uploaded to 0x1c0, 0x100
 };
 
 // The arcade race loading screen (0x1ac bytes), derived from the resident
@@ -644,11 +646,11 @@ public:
     short rolls[2];
 
     ArcadeRacingMenu();
-    virtual ~ArcadeRacingMenu();
-    virtual void Enter();
-    virtual void Leave();
-    virtual int Update();
-    virtual void Draw();
+    ~ArcadeRacingMenu();
+    void Enter();
+    void Leave();
+    int Update();
+    void Draw();
 };
 
 

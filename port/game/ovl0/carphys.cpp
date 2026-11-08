@@ -2,24 +2,25 @@
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
 #define FIXED_MULFLOOR_INT
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern unsigned char g_Damper_RateMin;
-extern unsigned char g_Damper_RateMax;
-extern signed char g_DiffTypeTable[];
-extern short g_SinTable[];
-extern short g_CosTable[];
-extern int g_TyreWearEnabled;
-extern int g_TyreWearInit;
-extern int g_TyreGripLossInit;
-extern int g_FrameRate;
-extern int g_SurfaceRollResist;
-extern unsigned char g_DragCurve[];
-extern RaceMem g_Race_IsDemo;
-extern unsigned char g_AiDriveParams[];
-extern int g_PhysConst_SlipDrag;
-extern unsigned char g_RaceCourseId;
+extern unsigned char (&g_Damper_RateMin);
+extern unsigned char (&g_Damper_RateMax);
+extern signed char (&g_DiffTypeTable)[];
+extern short (&g_SinTable)[];
+extern short (&g_CosTable)[];
+extern int (&g_TyreWearEnabled);
+extern int (&g_TyreWearInit);
+extern int (&g_TyreGripLossInit);
+extern int (&g_FrameRate);
+extern int (&g_SurfaceRollResist);
+extern unsigned char (&g_DragCurve)[];
+extern RaceMem (&g_Race_IsDemo);
+extern unsigned char (&g_AiDriveParams)[];
+extern int (&g_PhysConst_SlipDrag);
+extern unsigned char (&g_RaceCourseId);
 void CarPhys_SetUnk1c(CarPhys *phys, unsigned char v);
 void CarPhys_InitSpeedLimits(CarPhys *phys, int arg);
 int Drivetrain_GetClass(int layout);
@@ -32,16 +33,16 @@ void Suspension_InitAxleTravel(CarPhys *phys, SuspAxle *susp, CarParams *params,
 void Damper_Init(SuspAxle *susp, unsigned char *settings, unsigned char rate, int axle);
 extern char D_80046BC4[];
 extern char D_80046BD0[];
-extern unsigned char D_80046DA4[];
-extern unsigned short D_80046DB4[];
-extern unsigned short D_80046DB8[];
-extern unsigned short D_80046DBC[];
-extern unsigned short D_80046DC0[];
-extern unsigned short D_80046DC4[];
-extern unsigned short g_PhysFrameRates[];
-extern int D_80046F3C;
-extern int D_80046F40;
-extern int D_80046F44;
+extern unsigned char (&D_80046DA4)[];
+extern unsigned short (&D_80046DB4)[];
+extern unsigned short (&D_80046DB8)[];
+extern unsigned short (&D_80046DBC)[];
+extern unsigned short (&D_80046DC0)[];
+extern unsigned short (&D_80046DC4)[];
+extern unsigned short (&g_PhysFrameRates)[];
+extern int (&D_80046F3C);
+extern int (&D_80046F40);
+extern int (&D_80046F44);
 int Math_ApproxDist3(int x, int y, int z);
 void Car_UpdateClutchAuto(CarPhys *phys);
 void Car_UpdateClutchManual(CarPhys *phys, short *input, unsigned char *out, int assist);
@@ -49,11 +50,11 @@ void Car_LaunchAssist(CarPhys *phys, short *input, unsigned char *reverse);
 void CarPhys_SetProximityFlags(CarPhys *phys, int x, int z, int front, int back, int width);
 void Damper_SolveCurve(int *dead, int *base, int *gain, short speed0, int force0, short speed1, int force1, int axle,
                        char *name);
-extern GameState g_GameState;
-extern unsigned char g_PhysConstBytes[];
-extern unsigned char g_RaceEventParams[];
-extern unsigned short D_800A9520;
-extern unsigned char D_801C98A2;
+extern GameState (&g_GameState);
+extern unsigned char (&g_PhysConstBytes)[];
+extern unsigned char (&g_RaceEventParams)[];
+extern unsigned short (&D_800A9520);
+extern unsigned char (&D_801C98A2);
 void Body_ComputeFootprint(CarPhys *body);
 void Body_SaveFootprint(CarPhys *body);
 unsigned int Body_SweepFootprint(CarPhys *body, int *outFraction, unsigned int *outCorner);
@@ -93,8 +94,8 @@ int AiLine_PickForSlot(int slot);
 int World_GetGroundHeight(void *world, int x, int z, int y, int *section);
 int World_GetCourseDistance(void *world, int hint, int *pos);
 
-extern int g_FrameDt;
-#define FRAME_DT (*(int *)0x1f800000)
+extern int (&g_FrameDt);
+#define FRAME_DT (*(int *)rt::guest(0x1f800000))
 
 // What World_GetGroundInfo fills.
 struct GroundInfo {
@@ -125,8 +126,8 @@ static inline RaceSetup *RaceSetup_Get(void)
 // A curve header: count points, at x and y.
 struct CurveHeader {
     short count;
-    short *x;
-    short *y;
+    game_pointer<short> x;
+    game_pointer<short> y;
 };
 
 // Curve16_Eval's curve.
@@ -135,8 +136,8 @@ int Curve16_Eval(Curve16 *curve, short x);
 
 struct CurveHeaderInt {
     short count;
-    int *x;
-    int *y;
+    game_pointer<int> x;
+    game_pointer<int> y;
 };
 
 // TyreAxle, as its builders see it.
@@ -511,7 +512,7 @@ void Cars_ComputeFrameDelta(RaceVehicle *cars, int count)
     i = 0;
     while (i < count) {
         int offset = i * 0x10 + 0xb4;
-        int *delta = (int *)(0x1f800000 + offset);
+        int *delta = (int *)rt::from_guest((0x1f800000 + offset));
         CarPhys *phys = &cars[i].phys;
         int k;
 
@@ -893,8 +894,8 @@ void CarPhys_LinkTables(CarPhys *phys)
 
     engine->rpm = engine->rpmFx;
     engine->torque = engine->torqueFx;
-    CARPHYS_FIELD(car, void *, 0x40) = (char *)car + 0x48;
-    CARPHYS_FIELD(car, void *, 0x44) = (char *)car + 0x54;
+    CARPHYS_FIELD(car, game_pointer<void>, 0x40) = (char *)car + 0x48;
+    CARPHYS_FIELD(car, game_pointer<void>, 0x44) = (char *)car + 0x54;
     for (i = 0; i < 2; i++) {
         TyreCurves *t = (TyreCurves *)&car->tyres[i];
         short *slipX;
@@ -1169,8 +1170,8 @@ int CarPhys_Init(CarPhys *phys, CarParams *params, int control, int arg, unsigne
         (&CARPHYS_FIELD(phys, short, 0x54))[i] = (PARAM_B(params, 0x4b + i) << 12) / 1800;
     }
     CARPHYS_FIELD(phys, short, 0x3c) = PARAM_B(params, 0x44);
-    CARPHYS_FIELD(phys, void *, 0x40) = (char *)phys + 0x48;
-    CARPHYS_FIELD(phys, void *, 0x44) = (char *)phys + 0x54;
+    CARPHYS_FIELD(phys, game_pointer<void>, 0x40) = (char *)phys + 0x48;
+    CARPHYS_FIELD(phys, game_pointer<void>, 0x44) = (char *)phys + 0x54;
     front = phys->distFrontAxle + phys->distRearAxle;
     rear = phys->halfTrackF;
     CARPHYS_FIELD(phys, short, 0x64) = Math_Atan2(front, front - rear) << 3;
@@ -1620,7 +1621,7 @@ void CarPhys_ClearProximity(CarPhys *phys)
     int iVar2;
 
     iVar2 = 7;
-    puVar1 = (unsigned char *)((int)&phys->lenRear + 3);
+    puVar1 = (unsigned char *)rt::from_guest(((int)rt::to_guest(&phys->lenRear) + 3));
     phys->pushed = 0;
     phys->followSlowdown = 0;
     do {
@@ -1946,7 +1947,7 @@ void Cars_MoveAll(RaceVehicle *cars, int count)
     for (i = 0; i < count; i++) {
         CarPhys *phys = &cars[i].phys;
         int offset = i * 0x10 + 0xb4;
-        int *delta = (int *)(0x1f800000 + offset);
+        int *delta = (int *)rt::from_guest((0x1f800000 + offset));
         int rest;
 
         phys->aiBlockMask = CarPhys_MoveAndCollide(phys, delta, &rest, 0);

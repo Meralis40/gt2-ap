@@ -1,6 +1,7 @@
 // OVL0 80035714-800392d8 (ai): CPU drivers, racing lines and pits.
 // The functions that don't match yet are the original assembly.
 #define FIXED_MULFLOOR_INT
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
@@ -30,7 +31,7 @@ struct AiLine {
 struct AiLines {
     int count;
     int unk04;
-    AiLine *lines[7]; /* 3 pit entry, 4 pit lane, 6 the racing line */
+    game_pointer<AiLine> lines[7]; /* 3 pit entry, 4 pit lane, 6 the racing line */
 };
 
 // How a drive class is driven.
@@ -54,7 +55,7 @@ struct AiInput {
     signed char b;
     unsigned char pad[2];
 };
-#define AI_INPUT ((AiInput *)0x1f800364)
+#define AI_INPUT ((AiInput *)rt::guest(0x1f800364))
 
 // What World_GetGroundInfo fills.
 struct GroundInfo {
@@ -71,21 +72,21 @@ struct GroundInfo {
 #define AI_COURSE ((CourseData *)((char *)&g_Race_IsDemo + 0xb534))
 
 extern "C" {
-extern unsigned char g_Race_IsDemo;
-extern GameState g_GameState;
-extern RaceWorld g_RaceWorld;
-extern AiLines *g_AiLines;
-extern AiDriveParams g_AiDriveParams[];
-extern signed char g_AiLineChoices[7][5];
-extern unsigned char g_AiLineOrder[];
-extern short g_SinTable[];
-extern short g_CosTable[];
-extern int g_FrameRate;
-extern int g_TyreWearEnabled;
-extern int g_TyreWearInit;
-extern unsigned int g_RaceClock;
-extern unsigned char g_RaceCourseId;
-extern unsigned char g_RaceCarCount;
+extern unsigned char (&g_Race_IsDemo);
+extern GameState (&g_GameState);
+extern RaceWorld (&g_RaceWorld);
+extern game_pointer<AiLines> (&g_AiLines);
+extern AiDriveParams (&g_AiDriveParams)[];
+extern signed char (&g_AiLineChoices)[7][5];
+extern unsigned char (&g_AiLineOrder)[];
+extern short (&g_SinTable)[];
+extern short (&g_CosTable)[];
+extern int (&g_FrameRate);
+extern int (&g_TyreWearEnabled);
+extern int (&g_TyreWearInit);
+extern unsigned int (&g_RaceClock);
+extern unsigned char (&g_RaceCourseId);
+extern unsigned char (&g_RaceCarCount);
 
 int Math_ApproxDist3(int x, int y, int z);
 void World_GetGroundInfo(void *world, GroundInfo *info);
@@ -1095,7 +1096,7 @@ int Ai_FindLookaheadPoint(CarPhys *phys, int dist, int *outX, int *outZ)
 // Steers at the car's rate towards an angle.
 void Ai_SteerTowards(CarPhys *phys, int target)
 {
-    int step = phys->steerSpeed * *(int *)0x1f800000 >> 16;
+    int step = phys->steerSpeed * *(int *)rt::from_guest(0x1f800000) >> 16;
 
     if (phys->steer < target) {
         phys->steer += step;

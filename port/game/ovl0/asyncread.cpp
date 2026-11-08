@@ -4,7 +4,7 @@
 #include "common.h"
 
 extern "C" {
-extern CdAudio g_CdAudio;
+extern CdAudio (&g_CdAudio);
 void AsyncRead_Init(AsyncRead *r)
 {
     r->busy = 0;

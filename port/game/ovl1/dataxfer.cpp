@@ -1,5 +1,6 @@
 // OVL1 8001f508-80020dcc (dataxfer): GT1 and GT2 save data transfer.
 // The resident card menu (exe/cardmenu.cpp) with fewer pages, and most of its states.
+#include "gptr.h"
 #include "common.h"
 
 typedef int DataXferStateFn(int event, void *arg);
@@ -8,14 +9,14 @@ typedef int DataXferStateFn(int event, void *arg);
 struct DataXferWork {
     short mode; // 0 trade, 1 mix records, 2 convert GT1
     short state;
-    DataXferStateFn *handler;
-    KanjiFont *kanjiFont;
-    short *slotStatus;
+    game_function<DataXferStateFn> handler;
+    game_pointer<KanjiFont> kanjiFont;
+    game_pointer<short> slotStatus;
     short slot;
     unsigned char pad12[0x12];
-    char *errorMsg;
-    char *line1;
-    char *line2;
+    game_pointer<char> errorMsg;
+    game_pointer<char> line1;
+    game_pointer<char> line2;
     short textPri;
     short timer;
     WipeBar slotBar;
@@ -26,48 +27,48 @@ struct DataXferWork {
     CardDialog dlgConfirm;
     CardDialog dlgNoCars;
     CardProgressBar progress;
-    GameSaveFile *file;
+    game_pointer<GameSaveFile> file;
     unsigned char data[0x10000]; // the save read; a GT1 save starts at +0x200
 };
 
 extern "C" {
-extern GameState g_GameState;
-extern GameSaveFile g_SaveFileBuf;
-extern DataXferWork *g_DataXfer;
-extern Font g_DataXfer_Fonts; // medium
-extern Font g_DataXfer_FontLarge;
-extern Font g_DataXfer_FontSmall;
-extern char *g_DataXfer_SlotNames[];
-extern DataXferStateFn *g_DataXfer_States[];
-extern int g_McOp_Remaining;
-extern char D_80023D98[]; // an empty string
-extern char D_8004C6EC[]; // BASCUS-94194GT, GT1's save file
-extern WipeBar D_8004C6FC;
-extern CardDialogDesc D_8004C718;
-extern CardDialogDesc D_8004C748;
-extern CardDialogDesc D_8004C778;
-extern CardDialogDesc D_8004C7A8;
-extern CardDialogDesc D_8004C7D8;
-extern CardDialogDesc D_8004C808;
-extern CardProgressBar D_8004C838;
-extern char sB_MemoryCard1[];
-extern char sB_SelectASlot[];
-extern char sB_CheckingSlot[];
-extern char sB_NoMemoryCardDetected[];
-extern char sB_FailedToReadMemoryCard[];
-extern char sB_StartLoading[];
-extern char sB_Loading[];
-extern char sB_LoadingFailed[];
-extern char sB_LoadingDataFailed[];
-extern char sB_NoGameFileFound[];
-extern char s_PurchaseCarsFromSavedGameFiles[];
-extern char s_MixCourseLicenseRecords[];
-extern char s_ConvertGranTurismoGameData[];
-extern char s_CannotFindGranTurismoGameData[];
-extern char s_CannotFindCarsInGameFile[];
-extern char s_CombiningRecordsComplete[];
-extern char s_ConvertingDataComplete[];
-extern char s_LoadingDataFailed[];
+extern GameState (&g_GameState);
+extern GameSaveFile (&g_SaveFileBuf);
+extern game_pointer<DataXferWork> (&g_DataXfer);
+extern Font (&g_DataXfer_Fonts); // medium
+extern Font (&g_DataXfer_FontLarge);
+extern Font (&g_DataXfer_FontSmall);
+extern game_pointer<char> (&g_DataXfer_SlotNames)[];
+extern game_function<DataXferStateFn> (&g_DataXfer_States)[];
+extern int (&g_McOp_Remaining);
+extern char (&D_80023D98)[]; // an empty string
+extern char (&D_8004C6EC)[]; // BASCUS-94194GT, GT1's save file
+extern WipeBar (&D_8004C6FC);
+extern CardDialogDesc (&D_8004C718);
+extern CardDialogDesc (&D_8004C748);
+extern CardDialogDesc (&D_8004C778);
+extern CardDialogDesc (&D_8004C7A8);
+extern CardDialogDesc (&D_8004C7D8);
+extern CardDialogDesc (&D_8004C808);
+extern CardProgressBar (&D_8004C838);
+extern char (&sB_MemoryCard1)[];
+extern char (&sB_SelectASlot)[];
+extern char (&sB_CheckingSlot)[];
+extern char (&sB_NoMemoryCardDetected)[];
+extern char (&sB_FailedToReadMemoryCard)[];
+extern char (&sB_StartLoading)[];
+extern char (&sB_Loading)[];
+extern char (&sB_LoadingFailed)[];
+extern char (&sB_LoadingDataFailed)[];
+extern char (&sB_NoGameFileFound)[];
+extern char (&s_PurchaseCarsFromSavedGameFiles)[];
+extern char (&s_MixCourseLicenseRecords)[];
+extern char (&s_ConvertGranTurismoGameData)[];
+extern char (&s_CannotFindGranTurismoGameData)[];
+extern char (&s_CannotFindCarsInGameFile)[];
+extern char (&s_CombiningRecordsComplete)[];
+extern char (&s_ConvertingDataComplete)[];
+extern char (&s_LoadingDataFailed)[];
 void DataXfer_DrawKanji(uint *ot, char *sjis, int x, int y, int center, uint rgb);
 void *DataXfer_FindGt1File(void);
 
@@ -144,8 +145,8 @@ void DataXfer_CacheMessages(void)
     pvVar1 = g_DataXfer;
     if (g_GameState.language == '\0') {
         DataXfer_CacheKanjiCommon();
-        DataXfer_CacheKanji(*(char **)((int)pvVar1 + 0x28));
-        DataXfer_CacheKanji(*(char **)((int)pvVar1 + 0x2c));
+        DataXfer_CacheKanji(*(game_pointer<char> *)rt::from_guest(((int)rt::to_guest(pvVar1) + 0x28)));
+        DataXfer_CacheKanji(*(game_pointer<char> *)rt::from_guest(((int)rt::to_guest(pvVar1) + 0x2c)));
     }
 }
 
@@ -157,7 +158,7 @@ void DataXfer_CacheErrorText(void)
     pvVar1 = g_DataXfer;
     if (g_GameState.language == '\0') {
         DataXfer_CacheKanjiCommon();
-        DataXfer_CacheKanji(*(char **)((int)pvVar1 + 0x24));
+        DataXfer_CacheKanji(*(game_pointer<char> *)rt::from_guest(((int)rt::to_guest(pvVar1) + 0x24)));
     }
 }
 
@@ -824,7 +825,7 @@ void DataXfer_InitWidgets(void)
 // Sets up the transfer in config's work area; returns the end of the area.
 void *DataXfer_Setup(DataXferConfig *config)
 {
-    DataXferWork *m = (DataXferWork *)config->heap;
+    DataXferWork *m = (DataXferWork *)rt::from_guest(config->heap);
 
     g_DataXfer_FontSmall = *config->fontSmall;
     g_DataXfer_Fonts = *config->fontMedium;
@@ -845,8 +846,8 @@ void DataXfer_Start(short mode)
 
     pvVar1 = g_DataXfer;
     *(short *)g_DataXfer = mode;
-    file = (GameSaveFile *)((int)pvVar1 + 0x41c);
-    *(GameSaveFile **)((int)pvVar1 + 0x418) = file;
+    file = (GameSaveFile *)rt::from_guest(((int)rt::to_guest(pvVar1) + 0x41c));
+    *(game_pointer<GameSaveFile> *)rt::from_guest(((int)rt::to_guest(pvVar1) + 0x418)) = file;
     SaveFile_InitHeader(file);
     DataXfer_InitWidgets();
     DataXfer_SetState(0);
@@ -978,8 +979,8 @@ void *DataXfer_GetCarList(void)
 {
     void *pvVar1;
 
-    pvVar1 = SaveFile_GetGarages(*(GameSaveFile **)((int)g_DataXfer + 0x418),
-                                                              *(GameSaveFile **)((int)g_DataXfer + 0x418));
+    pvVar1 = SaveFile_GetGarages(*(game_pointer<GameSaveFile> *)rt::from_guest(((int)g_DataXfer + 0x418)),
+                                                              *(game_pointer<GameSaveFile> *)rt::from_guest(((int)g_DataXfer + 0x418)));
     return pvVar1;
 }
 
@@ -989,8 +990,8 @@ void *DataXfer_GetCourseRecords(void)
     void *pvVar1;
 
     pvVar1 = SaveFile_GetCourseRecords
-                                          (*(GameSaveFile **)((int)g_DataXfer + 0x418),
-                                            *(GameSaveFile **)((int)g_DataXfer + 0x418));
+                                          (*(game_pointer<GameSaveFile> *)rt::from_guest(((int)g_DataXfer + 0x418)),
+                                            *(game_pointer<GameSaveFile> *)rt::from_guest(((int)g_DataXfer + 0x418)));
     return pvVar1;
 }
 
@@ -1000,8 +1001,8 @@ void *DataXfer_GetLicenseTests(void)
     void *pvVar1;
 
     pvVar1 = SaveFile_GetLicenses
-                                          (*(GameSaveFile **)((int)g_DataXfer + 0x418),
-                                            *(GameSaveFile **)((int)g_DataXfer + 0x418));
+                                          (*(game_pointer<GameSaveFile> *)rt::from_guest(((int)g_DataXfer + 0x418)),
+                                            *(game_pointer<GameSaveFile> *)rt::from_guest(((int)g_DataXfer + 0x418)));
     return pvVar1;
 }
 
@@ -1010,8 +1011,8 @@ void *DataXfer_GetMachineTest0(void)
     void *pvVar1;
 
     pvVar1 = SaveFile_GetMachineTest0
-                                          (*(GameSaveFile **)((int)g_DataXfer + 0x418),
-                                            *(GameSaveFile **)((int)g_DataXfer + 0x418));
+                                          (*(game_pointer<GameSaveFile> *)rt::from_guest(((int)g_DataXfer + 0x418)),
+                                            *(game_pointer<GameSaveFile> *)rt::from_guest(((int)g_DataXfer + 0x418)));
     return pvVar1;
 }
 
@@ -1020,8 +1021,8 @@ void *DataXfer_GetMachineTest1(void)
     void *pvVar1;
 
     pvVar1 = SaveFile_GetMachineTest1
-                                          (*(GameSaveFile **)((int)g_DataXfer + 0x418),
-                                            *(GameSaveFile **)((int)g_DataXfer + 0x418));
+                                          (*(game_pointer<GameSaveFile> *)rt::from_guest(((int)g_DataXfer + 0x418)),
+                                            *(game_pointer<GameSaveFile> *)rt::from_guest(((int)g_DataXfer + 0x418)));
     return pvVar1;
 }
 
@@ -1030,14 +1031,14 @@ void *DataXfer_GetMachineTest2(void)
     void *pvVar1;
 
     pvVar1 = SaveFile_GetMachineTest2
-                                          (*(GameSaveFile **)((int)g_DataXfer + 0x418),
-                                            *(GameSaveFile **)((int)g_DataXfer + 0x418));
+                                          (*(game_pointer<GameSaveFile> *)rt::from_guest(((int)g_DataXfer + 0x418)),
+                                            *(game_pointer<GameSaveFile> *)rt::from_guest(((int)g_DataXfer + 0x418)));
     return pvVar1;
 }
 
 // GT1 save data (+0x61c of the work area, after the card header).
 unsigned char *DataXfer_GetGt1Data(void)
 {
-    return (unsigned char *)((int)g_DataXfer + 0x61c);
+    return (unsigned char *)rt::from_guest(((int)g_DataXfer + 0x61c));
 }
 }

@@ -1,6 +1,7 @@
 // OVL0 80047024-80048418 (quickmenu): QuickMenu, the race's menu loop.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 
 // The packet of Gpu_MoveImage.
@@ -12,22 +13,22 @@ struct MoveImage {
 };
 
 extern "C" {
-extern GameState g_GameState;
-extern QuickMenu *g_QuickMenu;
-extern unsigned char g_HudTexFile[];
-extern unsigned char g_QuickMenu_OtBuf[];
-extern unsigned char g_PreQuickMenu_PacketBuf[];
-extern unsigned char g_OVL0_FontInfo[];
-extern void *g_OVL0_EndFontInfo;
-extern unsigned char D_8019EC00[];
-extern void *g_OVL0_KanjiFont;
-extern short g_OVL0_CardSlotStatus[];
-extern unsigned int g_VolLba;
-extern PadHandler g_PadHandlers[];
-extern Font g_OVL0_FontA;
-extern Font g_OVL0_FontB;
-extern Font g_OVL0_FontC;
-extern Font g_OVL0_FontD;
+extern GameState (&g_GameState);
+extern game_pointer<QuickMenu> (&g_QuickMenu);
+extern unsigned char (&g_HudTexFile)[];
+extern unsigned char (&g_QuickMenu_OtBuf)[];
+extern unsigned char (&g_PreQuickMenu_PacketBuf)[];
+extern unsigned char (&g_OVL0_FontInfo)[];
+extern game_pointer<void> (&g_OVL0_EndFontInfo);
+extern unsigned char (&D_8019EC00)[];
+extern game_pointer<void> (&g_OVL0_KanjiFont);
+extern short (&g_OVL0_CardSlotStatus)[];
+extern unsigned int (&g_VolLba);
+extern PadHandler (&g_PadHandlers)[];
+extern Font (&g_OVL0_FontA);
+extern Font (&g_OVL0_FontB);
+extern Font (&g_OVL0_FontC);
+extern Font (&g_OVL0_FontD);
 int psxViewLoop__Update(void *self);
 void AsyncRead_Init(AsyncRead *r);
 int AsyncRead_Poll(AsyncRead *r);
@@ -474,7 +475,7 @@ int PreQuickMenuIO__Update(PreQuickMenuIO *io)
                 g_OVL0_FontA.glyphs = (FontGlyphTable *)((char *)info + info[7]);
                 g_OVL0_FontA.kerning = (FontKerning *)((char *)info + info[8]);
                 g_OVL0_EndFontInfo =
-                    (void *)(((int)g_OVL0_FontInfo + VolId_GetSize((VolBootId)0xe) + 3) & ~3);
+                    (void *)rt::from_guest((((int)rt::to_guest(g_OVL0_FontInfo) + VolId_GetSize((VolBootId)0xe) + 3) & ~3));
                 io->step++;
                 break;
             case 2:

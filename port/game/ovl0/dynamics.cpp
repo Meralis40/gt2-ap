@@ -1,13 +1,14 @@
 // OVL0 8003d848-8003ef18 (dynamics): Car dynamics and the world step.
 // The functions that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
 // A piecewise linear curve: count points, x ascending.
 struct Curve16 {
     unsigned short count;
-    short *x;
-    short *y;
+    game_pointer<short> x;
+    game_pointer<short> y;
 };
 
 // Per-car values in the scratchpad (0x1f800090 + carIndex * 0x90).
@@ -49,11 +50,11 @@ struct AiDriveParams {
     char unk24[4];
 };
 
-extern RaceMem g_Race_IsDemo;
-extern RaceWorld g_RaceWorld;
-extern AiDriveParams g_AiDriveParams[];
-extern short g_SinTable[];
-extern unsigned short g_CosTable[];
+extern RaceMem (&g_Race_IsDemo);
+extern RaceWorld (&g_RaceWorld);
+extern AiDriveParams (&g_AiDriveParams)[];
+extern short (&g_SinTable)[];
+extern unsigned short (&g_CosTable)[];
 int Ghost_ShouldHold(void);
 void Body_ApplyTimeScale(CarPhys *car);
 void Tyres_ComputeGripLimit(RaceVehicle *cars, int count);
@@ -66,16 +67,16 @@ int Body_GetCollisionRule(CarPhys *car);
 void CarPhys_UpdateDrivetrain(RaceVehicle *cars, int count);
 void Cars_ComputeFrameDelta(RaceVehicle *cars, int count);
 void Cars_UpdateDynamics(RaceVehicle *cars, int count);
-extern GameState g_GameState;
-extern unsigned char g_RaceEventParams[];
-extern signed char g_RaceOrder[];
-extern int g_PhysConst_SlipDragMin;
-extern unsigned char g_PhysConst_AbsPct;
-extern int g_BodySway_YawStiffness[];
-extern int g_BodySway_YawDamping[];
+extern GameState (&g_GameState);
+extern unsigned char (&g_RaceEventParams)[];
+extern signed char (&g_RaceOrder)[];
+extern int (&g_PhysConst_SlipDragMin);
+extern unsigned char (&g_PhysConst_AbsPct);
+extern int (&g_BodySway_YawStiffness)[];
+extern int (&g_BodySway_YawDamping)[];
 
-#define g_PhysScratch ((PhysScratch *)0x1f800000)
-#define g_FrameDt (*(int *)0x1f800000)
+#define g_PhysScratch ((PhysScratch *)rt::guest(0x1f800000))
+#define g_FrameDt (*(int *)rt::guest(0x1f800000))
 #define AXLES(car) ((CarPhysAxleView *)(car))
 // CarPhys fields that ovl0.h doesn't name yet (in its unkXXX runs).
 #define CARPHYS_FIELD(car, type, off) (*(type *)((char *)(car) + (off)))
@@ -407,7 +408,7 @@ void Cars_UpdateDynamics(RaceVehicle *cars, int count)
     char *pad;
 
     i = 0;
-    pad = (char *)0x1f800000;
+    pad = (char *)rt::from_guest(0x1f800000);
     for (; i < count; i++) {
         RaceVehicle *car = &cars[i];
         int offset = i * 4 + 0x364;
@@ -424,7 +425,7 @@ void Cars_UpdateDynamics(RaceVehicle *cars, int count)
             if (p->aiMode == 0 || (unsigned short)p->pitTimer != 0) {
                 unsigned int w;
 
-                Car_ApplyControls(p, input, (int *)(offset + (int)pad), i);
+                Car_ApplyControls(p, input, (int *)rt::from_guest((offset + (int)rt::to_guest(pad))), i);
                 p->throttleTarget = p->throttle;
                 for (w = 0; w < 4; w++) {
                     p->wheels[w].brake = p->brake;
@@ -444,7 +445,7 @@ void Cars_UpdateDynamics(RaceVehicle *cars, int count)
     unsigned short *cosTable;
 
     i = 0;
-    pad = (char *)0x1f800000;
+    pad = (char *)rt::from_guest(0x1f800000);
     cosTable = g_CosTable;
     for (; i < count; i++) {
         CarPhys *p = &cars[i].phys;
@@ -482,7 +483,7 @@ void Cars_UpdateDynamics(RaceVehicle *cars, int count)
         sinTable = (unsigned short *)g_SinTable;
         for (; w < 4; w++) {
             int offset = i * 0x90 + w * 0x1c;
-            PhysWheelTrig *trig = (PhysWheelTrig *)(offset + (int)pad + 0x1c);
+            PhysWheelTrig *trig = (PhysWheelTrig *)rt::from_guest((offset + (int)rt::to_guest(pad) + 0x1c));
 
             trig->cos = cosTable[p->wheels[w].heading & 0xfff];
             trig->sin = sinTable[p->wheels[w].heading & 0xfff];

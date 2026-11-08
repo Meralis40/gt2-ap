@@ -1,11 +1,12 @@
 // Resident code 8007f01c-8007f5a8 (kanjifont). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern unsigned char *g_PacketPtr;
-extern unsigned int D_800A0A68[];    // the glyphs' CLUT
-extern unsigned short D_80095950[]; // a ROM row nibble, spread into three 5-bit fields
+extern game_pointer<unsigned char> (&g_PacketPtr);
+extern unsigned int (&D_800A0A68)[];    // the glyphs' CLUT
+extern unsigned short (&D_80095950)[]; // a ROM row nibble, spread into three 5-bit fields
 
 // Adds a quad of the glyph's cell, linked in after ot, and returns it for the caller to
 // place (the game copies the 24-bit links with lwl and swl).
@@ -20,7 +21,7 @@ KanjiQuad *KanjiFont_AddGlyphQuad(KanjiGlyph *glyph, unsigned int *ot, unsigned 
     p = (KanjiPrim *)g_PacketPtr;
     p->len = 9;
     Mips_Swl2(link, p);
-    Mips_Swl2((unsigned int)p << 8, ot);
+    Mips_Swl2((unsigned int)rt::to_guest(p) << 8, ot);
     h = 0x1700;
     if (!glyph->wide) {
         h = 0xf00;
@@ -85,7 +86,7 @@ KanjiGlyph *KanjiFont_FindGlyph(KanjiFont *font, unsigned int code)
 {
     KanjiGlyph *node = font->root;
     KanjiGlyph *parent = 0;
-    KanjiGlyph **link;
+    game_pointer<KanjiGlyph> *link;
     unsigned int bit = 0;
     unsigned int mask = 1;
     int col;

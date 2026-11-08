@@ -1,5 +1,6 @@
 // Resident code 8007c268-8007c36c (dma): starts SPU transfers, and waits with a timeout
 // for a DMA channel to go idle.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
@@ -30,7 +31,7 @@ void Spu_DmaTransfer(void *src, int spuAddr, unsigned int size, int dir)
         spu[0x1a6 / 2] = addr;
         spu[0x1aa / 2] = mode;
         *delay = timing;
-        dma[0x40 / 4] = (unsigned int)src;
+        dma[0x40 / 4] = (unsigned int)rt::to_guest(src);
         dma[0x44 / 4] = bcr;
         dma[0x48 / 4] = chcr;
         Hw_SpuDma(src, (blocks + 1) * 0x40, dir != 0);

@@ -1,6 +1,7 @@
 // OVL0 800292a0-800299d8 (raceview): Race view.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
@@ -41,8 +42,8 @@ struct Int3 {
 };
 
 extern "C" {
-extern RaceMem g_Race_IsDemo;
-extern SplitRects g_SplitViewRects;
+extern RaceMem (&g_Race_IsDemo);
+extern SplitRects (&g_SplitViewRects);
 void PauseMenu_Draw(RaceViewLoop *view);
 void Hud_DrawReplayLabel(RaceViewLoop *view, int car);
 void Hud_DrawFull(RaceViewLoop *view, RaceVehicle *car, RaceCam *cam);
@@ -200,7 +201,7 @@ void RaceView_DrawSingle(RaceViewLoop *view)
 void RaceView_SetSplitArea(RaceViewLoop *view, int idx)
 {
     SplitRects rects = g_SplitViewRects;
-    RECT *area = (RECT *)(idx * 8 + (int)&rects);
+    RECT *area = (RECT *)rt::from_guest((idx * 8 + (int)rt::to_guest(&rects)));
 
     DrawLayer_SetArea(&view->layers[2], area);
     DrawLayer_SetArea(&view->layers[3], area);
@@ -212,10 +213,10 @@ void RaceView_DrawSplit(RaceViewLoop *view, int skip)
         RaceView_DrawHud(view);
         RaceView_SetSplitArea(view, 0);
         RaceView_RenderView(view, 0);
-        view->EndDraw();
+        view->v_EndDraw();
         Gpu_DrawSync();
         view->drawFront = 0;
-        view->BeginDraw();
+        view->v_BeginDraw();
         view->drawFront = 1;
     }
     if ((skip & 2) == 0) {

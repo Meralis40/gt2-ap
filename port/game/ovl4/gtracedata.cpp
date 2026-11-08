@@ -2,8 +2,8 @@
 #include "common.h"
 
 extern "C" {
-extern void *g_GtModeRaceData;
-extern void *g_GtModeData;
+extern game_pointer<void> (&g_GtModeRaceData);
+extern game_pointer<void> (&g_GtModeData);
 
 // Entry index of table 0 of g_GtModeRaceData.
 unsigned short *GtRaceData_GetEvent(int index)

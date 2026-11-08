@@ -1,11 +1,12 @@
 // OVL0 80018d1c-80026bb4 (coursedraw): Course, sky and course object drawing.
 // The functions that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gte.h"
 #include "gamestate.h"
 #include "prim.h"
 
-#define SCRATCH ((ViewScratch *)0x1f800000)
+#define SCRATCH ((ViewScratch *)rt::guest(0x1f800000))
 
 // A sky mesh: its vertices follow the header, then the eight primitive lists.
 struct SkyMesh {
@@ -26,8 +27,8 @@ struct PrimF4 {
     short x3, y3;
 };
 
-extern "C" int g_MeshFrameParity;
-extern "C" RaceWorld g_RaceWorld;
+extern "C" int (&g_MeshFrameParity);
+extern "C" RaceWorld (&g_RaceWorld);
 
 extern "C" void Gte_LoadRotationOnly(ViewScratch *scr);
 extern "C" void Sky_DrawHorizonFill(unsigned int *ot, Camera *cam, SkyMesh *sky);
@@ -72,13 +73,13 @@ struct MeshScratch {
     char unkbc[0x2dc];
     int subdivTri;              // 0x398
     int subdivQuad;
-    char *spriteTex;
+    game_pointer<char> spriteTex;
     char unk3a4[0x4c];
     short yawSin;               // 0x3f0: half the sine of the camera's heading
     short yawCos;
 };
 
-#define MESH_SCRATCH ((MeshScratch *)0x1f800000)
+#define MESH_SCRATCH ((MeshScratch *)rt::guest(0x1f800000))
 #define COURSE ((CourseData *)((char *)&g_Race_IsDemo + 0xb534))
 
 // A textured quad as whole words.
@@ -142,10 +143,10 @@ struct PrimGT4 {
 };
 
 extern "C" {
-extern char *g_PacketPtr;
-extern char *g_PacketEnd;
-extern short g_SinTable[];
-extern unsigned char g_Race_IsDemo;
+extern game_pointer<char> (&g_PacketPtr);
+extern game_pointer<char> (&g_PacketEnd);
+extern short (&g_SinTable)[];
+extern unsigned char (&g_Race_IsDemo);
 
 void CourseObj_DrawMeshUnclipped(CourseMesh *mesh);
 void CourseObj_DrawMeshClipped(CourseMesh *mesh);
@@ -506,15 +507,15 @@ struct MeshVert {
 
 // The polygon being subdivided: its pieces chain together and link into one OT entry.
 struct MeshBatch {
-    unsigned int *slot;
+    game_pointer<unsigned int> slot;
     unsigned int rgb;           // colour and code; Gouraud pieces take only the code
     unsigned int clut;
     unsigned int tpage;
     unsigned int limit;         // pieces of a larger screen area split again
     int gouraud;
     int obj;                    // an object's mesh: the vertices keep outcodes
-    char *first;
-    char *last;
+    game_pointer<char> first;
+    game_pointer<char> last;
 };
 
 // The polygons in whole words.
@@ -690,7 +691,8 @@ static inline MeshTex *Mesh_Tex(MeshScratch *scr, int word1, unsigned int area)
 }
 
 // Moves past a primitive of size bytes; returns 1 if it was past the packet limit.
-static inline int Mesh_Advance(MeshScratch *scr, char **prim, int size)
+template <class Prim>  // char * or game_pointer<char>
+static inline int Mesh_Advance(MeshScratch *scr, Prim *prim, int size)
 {
     int over = *prim > scr->view.packetLimit;
 
@@ -775,7 +777,7 @@ static inline void Mesh_AddPrim(MeshScratch *scr, MeshBatch *batch, void *prim, 
 {
     char *next = (char *)prim + size;
 
-    *(unsigned int *)prim = words << 24 | ((unsigned int)next & 0xffffff);
+    *(unsigned int *)prim = words << 24 | ((unsigned int)rt::to_guest(next) & 0xffffff);
     batch->last = (char *)prim;
     scr->view.packetPtr = next;
 }
@@ -2488,7 +2490,7 @@ void CourseObjects_Draw(Camera *cam, unsigned int *group)
         m->t[2] = place->pos[2];
         Matrix_FromEuler(m, -place->rot[1], place->rot[0], place->rot[2]);
         Matrix_Scale(m, place->scale[0], place->scale[1], -place->scale[2]);
-        lod = (LodTable *)COURSE->modelLib[place->model + 1];
+        lod = (LodTable *)rt::from_guest(COURSE->modelLib[place->model + 1]);
         *(CameraView *)scr = *(CameraView *)&cam->view;
         Matrix_Comp(&scr->view.view, m);
         depth = (cam->depthScale << 12) / place->lodScale;
@@ -2530,14 +2532,14 @@ void CourseObjects_DrawGroups(Camera *cam, CourseData *course, unsigned int mask
 }
 
 // Adds base to a pointer.
-static inline void Ptr_Relocate(void **p, int base)
+static inline void Ptr_Relocate(game_pointer<void> *p, unsigned int base)
 {
     *p = (char *)*p + base;
 }
 
 // Adds base to the 11 pointers of a mesh header (vertices, 8 primitive lists, sprites,
 // flares).
-void CourseObjModel_Relocate(CourseMesh *mesh, int base)
+void CourseObjModel_Relocate(CourseMesh *mesh, unsigned int base)
 {
     int i;
 
@@ -2551,8 +2553,8 @@ void CourseObjModel_Relocate(CourseMesh *mesh, int base)
 
 // A section to draw, in the list sorted by distance.
 struct CourseDrawNode {
-    CourseDrawNode *next;
-    CourseSection *section;
+    game_pointer<CourseDrawNode> next;
+    game_pointer<CourseSection> section;
     unsigned int dist;
     unsigned short mode;        // the visibility list's top two bits
     unsigned short clip;        // CourseSection_TestBox's result
@@ -2636,7 +2638,7 @@ unsigned int Course_Draw(Camera *cam, CourseData *course, int mirror)
         CourseMesh *mesh;
 
         CourseSection_LoadTransform(section, &scr->view);
-        mesh = mirror == 0 ? &section->mesh : section->mirrorMesh;
+        mesh = mirror == 0 ? &section->mesh : section->mirrorMesh.get();
         if (g_RaceWorld.isReplay == 0 && node->mode >= 3) {
             Course_DrawFlares(scr, mesh);
             continue;

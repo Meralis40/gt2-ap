@@ -1,6 +1,7 @@
 // psxMovieLoop, the movie screen loop: its members, the three movies and the
 // overlay entries. Its vtable (.rodata), __tf function and typeinfo (.bss) are
 // emitted here.
+#include "gptr.h"
 #include "common.h"
 #include "rt.h"
 
@@ -11,12 +12,13 @@ unsigned char g_MovieVlcBufA[0x20000] OVL5_BSS;
 unsigned char g_MovieVlcBufB[0x20000] OVL5_BSS;
 unsigned char g_MovieSliceBufA[0x3000] OVL5_BSS;
 unsigned char g_MovieSliceBufB[0x3000] OVL5_BSS;
-unsigned char *g_MovieRing[32] OVL5_BSS;
+game_pointer<unsigned char> g_MovieRing[32] OVL5_BSS;
 
 // triple: triple buffered display (and two frames queued before the first
 // decode).
 psxMovieLoop::psxMovieLoop(int movie, int triple)
 {
+    vptr.address = 0x8001156c;  // psxMovieLoop's vtable
     PadDevice_Open(&pad, 0, g_PadHandlers);
     noSkip = 0;
     rgb24 = 1;
@@ -54,7 +56,7 @@ void psxMovieLoop::Enter()
     mp->onFrameDone = Movie_OnFrameDone;
     Movie_SetRing(mp, 0x20, g_MovieRing);
     Movie_SetVlcBuffers(mp, g_MovieVlcBufA, g_MovieVlcBufB);
-    Movie_SetSliceBuffers(mp, (unsigned long *)g_MovieSliceBufA, (unsigned long *)(g_MovieSliceBufA + 0x3000));
+    Movie_SetSliceBuffers(mp, (unsigned int *)g_MovieSliceBufA, (unsigned int *)(g_MovieSliceBufA + 0x3000));
     Movie_Open(mp, movieIndex);
     Movie_Start(mp);
 }
@@ -102,12 +104,12 @@ int psxMovieLoop::Update()
         }
         // RestartRead returns 1 to keep playing. The original tests the
         // result with xori, which only `^ 1` gives.
-        if (status == 3 && (RestartRead() ^ 1) != 0) {
+        if (status == 3 && (v_RestartRead() ^ 1) != 0) {
             return 0;
         }
     }
     {
-        short *pos = (short *)(decodeBuf * 4 + (int)dispStarts);
+        short *pos = (short *)rt::from_guest((decodeBuf * 4 + (int)dispStarts));
         Movie_Step(&player, pos[0] + dispOffX, pos[1] + dispOffY);
     }
     if (++decodeBuf >= bufferCount) {
@@ -134,7 +136,7 @@ void psxMovieLoop::UpdateDisplay()
 
             framesReady--;
             idx <<= 2;
-            pos = (short *)(idx + (int)dispStarts);
+            pos = (short *)rt::from_guest((idx + (int)dispStarts));
             Gpu_SetDisplayStart((pos[0] * 3) >> 1, pos[1]);
             if (++bufferIndex >= bufferCount) {
                 bufferIndex = 0;

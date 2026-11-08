@@ -14,7 +14,7 @@ struct PrimF4 {
 };
 
 extern "C" {
-extern ArcTextItemTmpl D_8004F6D0; // the message's template
+extern ArcTextItemTmpl (&D_8004F6D0); // the message's template
 
 
 // A message over two option boxes, as CardDialog_Init.

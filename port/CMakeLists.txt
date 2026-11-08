@@ -1,8 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# The native game. A 32-bit build: guest memory is at its real addresses (docs/port.md).
-if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
-    message(FATAL_ERROR "The port is a 32-bit build: see docs/port.md")
-endif()
+# The native game, for 32-bit or 64-bit x86. Guest memory is a window of the address space,
+# at 0 on i686 and wherever the system puts it on x86-64 (docs/port.md).
 
 enable_language(C ASM)
 
@@ -57,7 +55,7 @@ file(GLOB GAME_SOURCES CONFIGURE_DEPENDS
 
 # GCC 2.8.1 behaviour the game relies on: unsigned char, wrapping signed arithmetic,
 # aliasing between types, and no library calls made up by the compiler.
-add_library(game OBJECT ${GAME_SOURCES})
+add_library(game OBJECT ${GAME_SOURCES} gen/vtables.cpp)
 # The data names whose address depends on the overlay (tools/gen_syms.py).
 foreach(unit ovl0 ovl1 ovl4)
     file(GLOB unit_sources CONFIGURE_DEPENDS game/${unit}/*.cpp)
@@ -65,16 +63,24 @@ foreach(unit ovl0 ovl1 ovl4)
         g_Page_SaveGame=g_Page_SaveGame_${unit} g_LicensePrefixes=g_LicensePrefixes_${unit})
 endforeach()
 target_include_directories(game PRIVATE game/include rt ap)
+# syslib was C, built with signed char as the console's compiler had it.
+set_source_files_properties(game/exe/syslib.cpp PROPERTIES COMPILE_OPTIONS -fsigned-char)
 # The game has its own of these, which must not replace the C library's for SDL or libstdc++.
 target_compile_definitions(game PRIVATE GTE_C
-    sprintf=Game_sprintf vsprintf=Game_vsprintf strchr=Game_strchr bcopy=Game_bcopy)
+    sprintf=Game_sprintf vsprintf=Game_vsprintf strchr=Game_strchr bcopy=Game_bcopy
+    EnterCriticalSection=Psx_EnterCriticalSection)
 target_compile_options(game PRIVATE
-    -w -fwrapv -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-exceptions -fno-rtti -fno-builtin
+    $<$<NOT:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>>:-w> -fwrapv -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-exceptions -fno-rtti -fno-builtin
     -fno-stack-protector -fno-vectorize -fno-slp-vectorize -fno-omit-frame-pointer -fno-strict-return
     $<$<COMPILE_LANGUAGE:CXX>:-funsigned-char -std=gnu++20>
     $<$<COMPILE_LANGUAGE:C>:-fsigned-char -std=gnu89>
     -nostdlibinc)
-if(NOT WIN32)
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    # A cast between a pointer and a 32-bit integer drops half the address: guest addresses go
+    # through rt::to_guest and rt::from_guest (rt/gptr.h). -w would hide these.
+    target_compile_options(game PRIVATE -Wno-everything -Werror=pointer-to-int-cast
+        -Werror=void-pointer-to-int-cast -Werror=int-to-pointer-cast -Werror=int-to-void-pointer-cast)
+elseif(NOT WIN32)
     # Doubles in guest structures sit at the alignment they have on the console.
     target_compile_options(game PRIVATE -fno-pic -malign-double)
 endif()
@@ -92,26 +98,33 @@ add_executable(gt2ap
     hw/pad.cpp
     hw/spu.cpp
     rt/config.cpp
+    $<$<AND:$<BOOL:${WIN32}>,$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>>:rt/stack_win64.S>
+    rt/functions.cpp
     rt/irq.cpp
     rt/main.cpp
     rt/memmap.cpp
     rt/record.cpp
     rt/stubs.cpp
-    gen/guest_syms.S
-    gen/fixups_exe.cpp
-    gen/fixups_ovl0.cpp
-    gen/fixups_ovl1.cpp
-    gen/fixups_ovl2.cpp
-    gen/fixups_ovl3.cpp
-    gen/fixups_ovl4.cpp
-    gen/fixups_ovl5.cpp)
+    gen/guest_data.cpp
+    gen/functions_exe.cpp
+    gen/functions_ovl0.cpp
+    gen/functions_ovl1.cpp
+    gen/functions_ovl2.cpp
+    gen/functions_ovl3.cpp
+    gen/functions_ovl4.cpp
+    gen/functions_ovl5.cpp)
 target_include_directories(gt2ap PRIVATE . ap hw rt ${nlohmann_json_SOURCE_DIR}/single_include)
 target_compile_options(gt2ap PRIVATE -fno-omit-frame-pointer)
 target_link_libraries(gt2ap PRIVATE gt2ap::discio SDL3::SDL3-static mbedtls_all)
 if(WIN32)
     target_link_libraries(gt2ap PRIVATE user32 ws2_32 crypt32 bcrypt)
 endif()
-if(WIN32)
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    if(NOT WIN32)
+        target_link_options(gt2ap PRIVATE -static-libstdc++ -static-libgcc)
+    endif()
+elseif(WIN32)
+    # i686: guest memory sits at its real addresses, so the image keeps clear of 0x80000000.
     target_link_options(gt2ap PRIVATE
         -Wl,/BASE:0x400000,/FIXED,/LARGEADDRESSAWARE,/DYNAMICBASE:NO,/NXCOMPAT,/SAFESEH:NO)
 else()

@@ -1,23 +1,24 @@
 // OVL2 8002344c-80023690 (racelaunch): Race launch and guest garage pages.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern GameState g_GameState;
-extern ArcGarageInfo g_Arc_GuestGarageInfo;
-extern ArcGuestLoadConfig D_800521A4;
-extern ArcBonusCourse g_ArcBonusCourses[];
-extern short g_ArcCardSlotStatus[];
-extern void *g_ArcKanjiFont;
-extern unsigned char D_801C9AF5;
+extern GameState (&g_GameState);
+extern ArcGarageInfo (&g_Arc_GuestGarageInfo);
+extern ArcGuestLoadConfig (&D_800521A4);
+extern ArcBonusCourse (&g_ArcBonusCourses)[];
+extern short (&g_ArcCardSlotStatus)[];
+extern game_pointer<void> (&g_ArcKanjiFont);
+extern unsigned char (&D_801C9AF5);
 
 
 
 // 24-frame delay.
 void RaceLaunch_Enter(void *menu, int back)
 {
-    *(unsigned int *)(*(int *)((int)menu + 0x1c8) + 0x14) = 0x18;
+    *(unsigned int *)rt::from_guest((*(int *)rt::from_guest(((int)rt::to_guest(menu) + 0x1c8)) + 0x14)) = 0x18;
 }
 
 // 3 at the end of the delay: leaves the menu for the race.
@@ -76,7 +77,7 @@ int LoadGuest_Update(ArcadeMenu *menu, int active)
 // GuestLoad_Draw.
 void LoadGuest_Draw(void *menu, DrawLayer *layer)
 {
-    GuestLoad_Draw((unsigned int *)((int)layer->ot + 0x10));
+    GuestLoad_Draw((unsigned int *)rt::from_guest(((int)layer->ot + 0x10)));
 }
 
 // Always 0: LEVEL SELECTION shows 3 levels (the 4-level layout is unused).

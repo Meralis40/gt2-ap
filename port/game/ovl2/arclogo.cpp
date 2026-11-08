@@ -4,7 +4,7 @@
 #include "common.h"
 
 extern "C" {
-extern unsigned int g_VolLba;
+extern unsigned int (&g_VolLba);
 
 
 // Uploads a logo to slot: the archive's image index, or the buffer read from the CD.

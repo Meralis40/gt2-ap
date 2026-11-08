@@ -2,18 +2,19 @@
 // opponents, and the battle opponent pool. The class's vtable and type name
 // (.rodata), __tf function and typeinfo (.bss, which build.py's CXX_NAMES places)
 // are emitted here.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
 
-extern GameState g_GameState;
-extern unsigned char g_OVL4_OrderingTable[];
-extern unsigned char g_Battle_PacketBuf[];
-extern CardProgressBar g_Battle_Progress;
-extern BattlePlayer g_Battle_Player;
-extern OpponentPool g_Battle_Pool;
-extern short g_Battle_PoolSize;
-extern short g_Battle_PoolBelow;
+extern GameState (&g_GameState);
+extern unsigned char (&g_OVL4_OrderingTable)[];
+extern unsigned char (&g_Battle_PacketBuf)[];
+extern CardProgressBar (&g_Battle_Progress);
+extern BattlePlayer (&g_Battle_Player);
+extern OpponentPool (&g_Battle_Pool);
+extern short (&g_Battle_PoolSize);
+extern short (&g_Battle_PoolBelow);
 }
 
 // The work table, in g_RaceCarWorkAlt: the game takes it as g_GameState + 0xc6c0
@@ -21,7 +22,7 @@ extern short g_Battle_PoolBelow;
 inline BattleCarTable *Battle_Table()
 {
     GameState *state = &g_GameState;
-    return (BattleCarTable *)((unsigned int)((char *)state + 0xc6c0) & ~3);
+    return (BattleCarTable *)rt::from_guest(((unsigned int)rt::to_guest(((char *)state + 0xc6c0)) & ~3));
 }
 
 extern "C" {
@@ -59,6 +60,7 @@ void Battle_SetPlayer(short poolSize, short below)
 
 GTBattleMenu::GTBattleMenu()
 {
+    vptr.address = 0x80022d04;  // GTBattleMenu's vtable
     noDrawSync = 1;
 }
 

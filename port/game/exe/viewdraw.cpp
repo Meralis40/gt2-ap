@@ -1,12 +1,13 @@
 // Resident code 80080088-800804f8 (viewdraw): a view's ordering table, split into
 // layers sorted by priority, each starting with a packet that sets its drawing area,
 // and the double-buffered pool the primitives are allocated from.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern uint *g_PacketPtr;
-extern uint *g_PacketEnd;
-extern RECT g_DrawArea;
+extern game_pointer<uint> (&g_PacketPtr);
+extern game_pointer<uint> (&g_PacketEnd);
+extern RECT (&g_DrawArea);
 
 void ViewDrawContext_Init(ViewDrawContext *ctx, void *ot, unsigned int bytes)
 {
@@ -79,7 +80,7 @@ void ViewDrawContext_Begin(ViewDrawContext *ctx, RECT *area)
     p = g_PacketPtr;
     ctx->tailPackets = p;
     p += 4;
-    tag = (uint)p << 8;
+    tag = (uint)rt::to_guest(p) << 8;
     ((uchar *)p)[3] = 1;
     p[1] = 0;
     ot = (OtTag *)ctx->otBase;
@@ -126,7 +127,7 @@ void ViewDrawContext_End(ViewDrawContext *ctx)
         link = Mips_Lwl2(last);
         ((uchar *)header)[3] = 3;
         Mips_Swl2(link, header);
-        Mips_Swl2((uint)header << 8, last);
+        Mips_Swl2((uint)rt::to_guest(header) << 8, last);
     }
     ot = (OtTag *)ctx->otEnd;
     mode = ctx->drawMode;
@@ -135,12 +136,12 @@ void ViewDrawContext_End(ViewDrawContext *ctx)
     link = Mips_Lwl2(ot);
     ((uchar *)p)[3] = 1;
     Mips_Swl2(link, p);
-    Mips_Swl2((uint)p << 8, ot);
+    Mips_Swl2((uint)rt::to_guest(p) << 8, ot);
     p[3] = mode ^ 0xe1000200;
     link = Mips_Lwl2(ot);
     ((uchar *)p)[11] = 1;
     Mips_Swl2(link, (p + 2));
-    Mips_Swl2((uint)(p + 2) << 8, ot);
+    Mips_Swl2((uint)rt::to_guest((p + 2)) << 8, ot);
 }
 
 void ViewDrawContext_Submit(ViewDrawContext *ctx)
@@ -239,7 +240,7 @@ void *Prim_AddTexQuad(OtTag *ot, uint rgb)
     p = g_PacketPtr;
     ((uchar *)p)[3] = 5;
     Mips_Swl2(link, p);
-    Mips_Swl2((uint)p << 8, ot);
+    Mips_Swl2((uint)rt::to_guest(p) << 8, ot);
     p[1] = 0xe1000000;
     p[2] = rgb ^ 0x64000000;
     g_PacketPtr = p + 6;

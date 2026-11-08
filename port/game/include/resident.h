@@ -7,13 +7,16 @@
 #ifndef RESIDENT_H
 #define RESIDENT_H
 
+#include "gptr.h"
+#include "vtable.h"
+
 typedef int code(...);
 typedef unsigned char   undefined;
 typedef unsigned char    byte;
 
 typedef unsigned char    uchar;
 typedef unsigned int    uint;
-typedef unsigned long    ulong;
+typedef unsigned int    ulong;
 typedef unsigned char    undefined1;
 typedef unsigned short    undefined2;
 typedef unsigned int    undefined4;
@@ -32,7 +35,7 @@ typedef struct MATRIX MATRIX, *PMATRIX;
 
 struct MATRIX {
     short m[3][3];
-    long t[3];
+    int t[3];
 };
 
 struct Camera {
@@ -52,9 +55,9 @@ struct Camera {
     short screenW;
     short screenH;
     short nearZ;
-    void *ot;
-    void *ot2;
-    void *otEnd;
+    game_pointer<void> ot;
+    game_pointer<void> ot2;
+    game_pointer<void> otEnd;
     int depthScale;
     short invRot[9];
     short pad8e;
@@ -85,10 +88,10 @@ struct TextItem {
     signed char height;
     ushort flags;
     ushort pad0e;
-    struct Font *font;
+    game_pointer<struct Font> font;
     uchar rgbFrom[4];
     uchar rgbTo[4];
-    char *text;
+    game_pointer<char> text;
     uchar brightness;
     uchar pad21;
     short anim;
@@ -174,8 +177,8 @@ struct FontKerning { /* Kerning pairs, subtracted from the left glyph's advance.
 };
 
 struct Font {
-    struct FontGlyphTable *glyphs;
-    struct FontKerning *kerning;
+    game_pointer<struct FontGlyphTable> glyphs;
+    game_pointer<struct FontKerning> kerning;
     uchar digitWidth; /* cell width for fixed-width digits */
 
     char spacing; /* added to every advance */
@@ -282,8 +285,8 @@ struct MenuList {
     short blinkTimer;
     short fade;
     short state;
-    MenuListFn *callback;
-    void *userData;
+    game_function<MenuListFn> callback;
+    game_pointer<void> userData;
 };
 
 struct WipeBar {
@@ -300,7 +303,7 @@ struct WipeBar {
 };
 
 struct TextEntry {
-    struct Font *font;
+    game_pointer<struct Font> font;
     char cellWidth;
     char cellHeight;
     char cellGap;
@@ -320,7 +323,7 @@ struct TextEntry {
     short maxLen;
     short maxWidth;
     short pad22;
-    char *text;
+    game_pointer<char> text;
     struct WipeBar bar;
     struct MenuList list;
     uchar pad74[4];
@@ -344,9 +347,9 @@ struct CardMenu { /* Shared memory-card UI context (g_CardMenu). Handlers in g_C
 
     CardMode mode;
     short state;
-    void *handler;
-    void *kanjiFont;
-    short *slotStatus;
+    game_function<int(int, void *)> handler;  // CardStateFn
+    game_pointer<void> kanjiFont;
+    game_pointer<short> slotStatus;
     short slot;
     short delay;
     PadButton pressed;
@@ -354,9 +357,9 @@ struct CardMenu { /* Shared memory-card UI context (g_CardMenu). Handlers in g_C
     PadButton repeat;
     uchar deleteMode;
     uchar pad21[3];
-    char *errorMsg;
-    char *line1;
-    char *line2;
+    game_pointer<char> errorMsg;
+    game_pointer<char> line1;
+    game_pointer<char> line2;
     short textPri;
     short timer;
     struct WipeBar slotBar;
@@ -389,7 +392,7 @@ struct CardMenu { /* Shared memory-card UI context (g_CardMenu). Handlers in g_C
     short newSectors[962];
     uchar replayData[32768];
     int replaySize;
-    struct GameSaveFile *saveFile;
+    game_pointer<struct GameSaveFile> saveFile;
 };
 
 struct GameSaveFile {
@@ -408,9 +411,9 @@ struct PadState { /* Button events since the previous PadButtons_Read. */
 };
 
 struct MenuListEvent {
-    struct MenuList *list;
-    void *ot;
-    struct PadState *pad;
+    game_pointer<struct MenuList> list;
+    game_pointer<void> ot;
+    game_pointer<struct PadState> pad;
     short x;
     short y;
     short brightness;
@@ -452,7 +455,7 @@ struct CarModelWheelPos {
 
 struct CarModelHeader {
     int unk00;
-    void *shadowMesh;
+    game_pointer<void> shadowMesh;
     uint colors[4];
     short frontWheel[2];
     short rearWheel[2];
@@ -653,35 +656,35 @@ typedef struct CarSpec CarSpec, *PCarSpec;
 struct CarSpec { /* Setup resolved to game-data entry pointers (CarSpec_Resolve, CarSpec_FromCarWork), input of CarParams_Build. */
 
     uint unk00;
-    void *brakes;
-    void *brakeBalance;
-    void *t02;
-    void *t03;
-    void *t06;
-    void *t0d;
-    void *transmission;
-    void *suspension;
-    void *lsd;
-    void *frontTyre18;
-    void *frontTyre19;
-    void *frontTyre1a;
-    void *rearTyre18;
-    void *rearTyre19;
-    void *weightReduction;
-    void *racingMod;
-    void *portPolish;
-    void *balancing;
-    void *displacement;
-    void *chip;
-    void *naTune;
-    void *turbo;
-    void *flywheel;
-    void *clutch;
-    void *driveshaft;
-    void *muffler;
-    void *intercooler;
-    void *asc;
-    void *tcs;
+    game_pointer<void> brakes;
+    game_pointer<void> brakeBalance;
+    game_pointer<void> t02;
+    game_pointer<void> t03;
+    game_pointer<void> t06;
+    game_pointer<void> t0d;
+    game_pointer<void> transmission;
+    game_pointer<void> suspension;
+    game_pointer<void> lsd;
+    game_pointer<void> frontTyre18;
+    game_pointer<void> frontTyre19;
+    game_pointer<void> frontTyre1a;
+    game_pointer<void> rearTyre18;
+    game_pointer<void> rearTyre19;
+    game_pointer<void> weightReduction;
+    game_pointer<void> racingMod;
+    game_pointer<void> portPolish;
+    game_pointer<void> balancing;
+    game_pointer<void> displacement;
+    game_pointer<void> chip;
+    game_pointer<void> naTune;
+    game_pointer<void> turbo;
+    game_pointer<void> flywheel;
+    game_pointer<void> clutch;
+    game_pointer<void> driveshaft;
+    game_pointer<void> muffler;
+    game_pointer<void> intercooler;
+    game_pointer<void> asc;
+    game_pointer<void> tcs;
     ushort unk78;
     short unk7a;
     short t11_values[8]; /* gear ratios x1000 (see CarSetup.t11_values) */
@@ -824,13 +827,16 @@ struct CarWork {
 };
 
 typedef struct CdAudio CdAudio, *PCdAudio;
+// What the CD driver calls for each sector read; the handlers take their own arguments.
+typedef unsigned int CdSectorFn(unsigned int sector, void *header);
+
 struct CdAudio {
     struct VSyncCallback vsync;
     ushort pollTimer; /* counts down from 8 (7 after a poll) */
 
     short fadeStep; /* added to fade each vblank; 0 = no fade */
 
-    void *onIdle;
+    game_function<void()> onIdle;
     ushort masterVol; /* 1.15, 0x8000 = 1.0 */
 
     ushort volL;
@@ -848,8 +854,8 @@ struct CdAudio {
 
     uint reqEnd; /* request end sector (exclusive) */
 
-    void *onSector;
-    void *reqDst; /* request destination / ring buffer */
+    game_function<CdSectorFn> onSector;
+    game_pointer<void> reqDst; /* request destination / ring buffer */
 
     uint reqSize; /* request byte count / ring sectors */
 
@@ -867,8 +873,8 @@ struct CdAudio {
 
     uint endSector; /* end sector (exclusive), copied from reqEnd */
 
-    void *sectorFn;
-    void *dst; /* destination / ring buffer base */
+    game_function<CdSectorFn> sectorFn;
+    game_pointer<void> dst; /* destination / ring buffer base */
 
     uint remaining; /* bytes left (data read) or ring size in sectors (stream) */
 
@@ -885,7 +891,7 @@ struct CdAudio {
     byte locChannel;
     byte stallCount; /* CdlGetlocL returned the same sector this many times */
     undefined field38_0x67;
-    void *savedSectorFn;
+    game_function<CdSectorFn> savedSectorFn;
     byte locParam[4]; /* CdlSetloc parameter (BCD m/s/f) */
 
     byte filterParam[4]; /* CdlSetfilter parameter */
@@ -897,10 +903,10 @@ struct CdAudio {
     undefined field45_0x77;
     byte cmd14Param[4]; /* parameter of command 0x14 */
 
-    uint *script; /* next command word */
+    game_pointer<uint> script; /* next command word */
 
-    uint *retryScript;
-    uint *queuedScript;
+    game_pointer<uint> retryScript;
+    game_pointer<uint> queuedScript;
     uint command;
     uint result[2]; /* last CD interrupt result */
     byte trackPos[100][2]; /* BCD minute and second of each track (1-based, then the lead-out), from CdlGetTD */
@@ -950,9 +956,9 @@ struct EngineCurve { /* Torque curve built from CarParams (EngineCurve_Build), 0
 
     short count;
     short pad02;
-    int *rpm; /* -> rpmFx */
+    game_pointer<int> rpm; /* -> rpmFx */
 
-    int *torque; /* -> torqueFx */
+    game_pointer<int> torque; /* -> torqueFx */
 
     int rpmFx[16];
     int torqueFx[16];
@@ -994,7 +1000,7 @@ struct EnginePerf { /* Power/torque summary (EngineCurve_GetPerf), 0x6c bytes. m
 typedef struct GameDataTable GameDataTable, *PGameDataTable;
 
 struct GameDataTable {
-    void *entries; /* Relocated at load by GameData_Relocate */
+    game_pointer<void> entries; /* Relocated at load by GameData_Relocate */
 
     ushort entrySize;
     ushort count;
@@ -1353,28 +1359,28 @@ typedef struct InflateState InflateState, *PInflateState;
 typedef struct Huft Huft, *PHuft;
 
 struct InflateState {
-    InflateState * (*yield)(struct InflateState *); /* optional, called after each block header and table build */
+    game_function<InflateState *(struct InflateState *)> yield; /* optional, called after each block header and table build */
 
-    InflateState * (*refill)(struct InflateState *); /* called when in == inEnd; must set in/inEnd */
+    game_function<InflateState *(struct InflateState *)> refill; /* called when in == inEnd; must set in/inEnd */
 
-    byte *inBase;
-    ushort *in; /* read 16 bits at a time */
+    game_pointer<byte> inBase;
+    game_pointer<ushort> in; /* read 16 bits at a time */
 
-    ushort *inEnd;
+    game_pointer<ushort> inEnd;
     uint bitBuf;
     int bitCount;
-    InflateState * (*flush)(struct InflateState *); /* called when out == outEnd; must move outEnd */
+    game_function<InflateState *(struct InflateState *)> flush; /* called when out == outEnd; must move outEnd */
 
-    byte *outBase;
-    byte *out;
-    byte *outEnd;
-    void *heapBase; /* Huft table storage */
+    game_pointer<byte> outBase;
+    game_pointer<byte> out;
+    game_pointer<byte> outEnd;
+    game_pointer<void> heapBase; /* Huft table storage */
 
-    void *heapEnd;
-    void *heapPtr; /* bump allocator, reset per block */
+    game_pointer<void> heapEnd;
+    game_pointer<void> heapPtr; /* bump allocator, reset per block */
 
-    struct Huft *litTable;
-    struct Huft *distTable;
+    game_pointer<struct Huft> litTable;
+    game_pointer<struct Huft> distTable;
     uint litBits; /* lookup bits; Inflate_Codes turns it into a mask */
 
     uint distBits; /* same as litBits */
@@ -1390,7 +1396,7 @@ struct GzipStream {
 };
 
 struct Huft {
-    struct Huft *next; /* sub-table when op > 16 */
+    game_pointer<struct Huft> next; /* sub-table when op > 16 */
 
     ushort base; /* literal/length/distance base, or symbol */
 
@@ -1452,7 +1458,7 @@ struct NumberPicker {
     short max;
     short height;
     uint rgb;
-    struct Font *font;
+    game_pointer<struct Font> font;
     short unk14;
     short spacing;
     short unk18;
@@ -1490,9 +1496,9 @@ struct PadDevice {
     uchar type; /* controller type from the raw buffer, 0 = none */
 
     uchar connected;
-    struct PadHandler *handlers; /* PadHandler table, e.g. 0x800a6f5c */
+    game_pointer<struct PadHandler> handlers; /* PadHandler table, e.g. 0x800a6f5c */
 
-    struct PadDevice *prevDevice; /* device this one replaced on its port; restored on close */
+    game_pointer<struct PadDevice> prevDevice; /* device this one replaced on its port; restored on close */
 
     struct PadButtonState buttons;
     ushort analogMask; /* bit n set = analog[n] valid; 0xf for NeGcon and analog pads */
@@ -1517,8 +1523,8 @@ struct PadHandler { /* Entry of a PadDevice.handlers table, searched by type. */
 
     int type; /* controller type (typeLen>>4, 0 = none) */
 
-    void (*update)(struct PadDevice *, ushort, ushort *, int);
-    void (*post)(struct PadDevice *); /* also called when the device is closed */
+    game_function<void(struct PadDevice *, ushort, ushort *, int)> update;
+    game_function<void(struct PadDevice *)> post; /* also called when the device is closed */
 
 };
 
@@ -1530,10 +1536,10 @@ struct DrawLayer {
 
     ushort otSize; /* OT entries for this layer (its slice of the view's OT) */
 
-    struct DrawLayer *next;
-    void *ot; /* this layer's OT slice; primitives are added here */
+    game_pointer<struct DrawLayer> next;
+    game_pointer<void> ot; /* this layer's OT slice; primitives are added here */
 
-    struct LayerHeader *header; /* draw area and offset packet sent before the layer's primitives */
+    game_pointer<struct LayerHeader> header; /* draw area and offset packet sent before the layer's primitives */
 
 };
 
@@ -1638,18 +1644,18 @@ struct SeqBank {
     uchar unk08[4];
     int spu; /* the SPU address its regions' addr are relative to */
     int spuSize; /* bytes of sample data */
-    void *unk14;
+    game_pointer<void> unk14;
     uint regionCount;
-    struct SeqRegion *regions;
+    game_pointer<struct SeqRegion> regions;
     uint programCount;
-    struct SeqProgram **programs;
+    game_pointer<game_pointer<struct SeqProgram>> programs;
 };
 typedef struct SeqPlayer SeqPlayer, *PSeqPlayer;
 typedef struct SeqTrack SeqTrack, *PSeqTrack;
 typedef struct SeqFade SeqFade, *PSeqFade;
 
 struct SeqTrack {
-    uchar *ptr;
+    game_pointer<uchar> ptr;
     int delta;
     ushort trackVol;
     ushort effVol;
@@ -1662,7 +1668,7 @@ struct SeqTrack {
     signed char loopDepth; /* loop stack depth (events 0x01/0x20-0x3f push, 0x02 pops), -1 = none */
 
     uchar pad13;
-    uchar *loopStart[4]; /* loop start pointers */
+    game_pointer<uchar> loopStart[4]; /* loop start pointers */
 
     uchar loopCount[4]; /* remaining loop counts (0xff = forever) */
 
@@ -1678,24 +1684,24 @@ struct SeqFade {
 };
 
 struct SeqPlayer {
-    struct SeqPlayer *next;
+    game_pointer<struct SeqPlayer> next;
     ushort baseVol;
     ushort vol;
     int tempo;
     int tickAcc;
     int tickPeriod;
     int ticksThisFrame;
-    struct SeqBank *instBank;
+    game_pointer<struct SeqBank> instBank;
     struct SeqFade fade; /* volume fade (SeqFade_Step each tick); count 0 = idle */
 
     struct SeqTrack tracks[16];
 };
 
 struct SeqChannel {
-    struct SeqPlayer *player;
-    struct SeqTrack *track;
-    struct SeqProgram *program;
-    struct SeqRegion *region;
+    game_pointer<struct SeqPlayer> player;
+    game_pointer<struct SeqTrack> track;
+    game_pointer<struct SeqProgram> program;
+    game_pointer<struct SeqRegion> region;
     int releaseTime;
     ushort lastVol;
     short lastBend;
@@ -1709,7 +1715,7 @@ typedef struct SfxLoop SfxLoop, *PSfxLoop;
 
 /* A looping sound effect (SfxLoop_Update), started on its first update. */
 struct SfxLoop {
-    struct SeqRegion *sample;
+    game_pointer<struct SeqRegion> sample;
     signed char voice; /* the SfxVoice handle, -1 = none */
     uchar pad05[3];
 };
@@ -1746,7 +1752,7 @@ struct EngineVoice {
 typedef struct EngineSound EngineSound, *PEngineSound;
 
 struct EngineSound {
-    struct EngnRange *ranges;
+    game_pointer<struct EngnRange> ranges;
     uchar count;
     uchar priority;
     short unk06;
@@ -1761,7 +1767,7 @@ struct EngineSound {
 typedef struct SeqState SeqState, *PSeqState;
 
 struct SeqState {
-    struct SeqPlayer *players; /* linked through next (SeqPlayer_Link) */
+    game_pointer<struct SeqPlayer> players; /* linked through next (SeqPlayer_Link) */
     ushort tickRate; /* Seq_SetTickRate */
     ushort masterVol;
     uchar nextChannel; /* where the channel search starts */
@@ -1805,7 +1811,7 @@ struct SfxVoice {
     ushort addr;
     ushort adsr1;
     ushort adsr2;
-    signed char *owner; /* the caller's voice handle, set to -1 when the voice stops */
+    game_pointer<signed char> owner; /* the caller's voice handle, set to -1 when the voice stops */
     int age; /* ticks since key-on */
     uint duration;
     uint elapsed; /* sums the SPU pitch each tick, against duration */
@@ -1826,16 +1832,16 @@ struct SoundDriver {
     struct SfxVoice voices[24];
 };
 
-typedef uint size_t;
+typedef __SIZE_TYPE__ size_t;  // unsigned int on the console and i686
 
 /* WARNING! conflicting data type names: /stddef.h/size_t - /TYPES.H/size_t */
 
 typedef struct SpuFileLoad SpuFileLoad, *PSpuFileLoad;
 
 struct SpuFileLoad {
-    uchar *sectorBuf;
-    uchar *ramBase;
-    uchar *ramCur;
+    game_pointer<uchar> sectorBuf;
+    game_pointer<uchar> ramBase;
+    game_pointer<uchar> ramCur;
     int headerSize;
     int headerLeft;
     int spuBase;
@@ -1855,7 +1861,7 @@ struct TextCtx {
 
     ushort clut;
     ushort tpage;
-    uint *ot; /* ordering-table entry glyphs are linked into */
+    game_pointer<uint> ot; /* ordering-table entry glyphs are linked into */
 
     uint rgb; /* SPRT color, top byte cleared */
 
@@ -1866,10 +1872,10 @@ struct TextCtx {
 typedef struct VECTOR VECTOR, *PVECTOR;
 
 struct VECTOR {
-    long vx;
-    long vy;
-    long vz;
-    long pad;
+    int vx;
+    int vy;
+    int vz;
+    int pad;
 };
 
 enum {  };
@@ -1914,7 +1920,7 @@ struct WheelDims {
 
 // A splash screen of g_SplashScreens, which ends with a null timGz.
 struct SplashScreen {
-    void *timGz;                // gzip-compressed TIM
+    game_pointer<void> timGz;                // gzip-compressed TIM
     unsigned short frames;
     unsigned char fadeOut;
     unsigned char hiRes;        // 640 pixels wide
@@ -1930,9 +1936,9 @@ public:
     int hiRes;
 
     VendorBootLogo();
-    virtual ~VendorBootLogo();
-    virtual int Update();
-    virtual void Draw();
+    ~VendorBootLogo();
+    int Update();
+    void Draw();
     void InitLayer();
 };
 
@@ -1954,8 +1960,8 @@ struct CdReq {
     unsigned char channel;
     unsigned int start;         // first sector
     unsigned int end;           // end sector (exclusive)
-    void *onSector;
-    void *dst;                  // destination or ring buffer
+    game_function<CdSectorFn> onSector;
+    game_pointer<void> dst;                  // destination or ring buffer
     unsigned int size;          // bytes, or ring sectors
     unsigned short skip;        // bytes to skip in the first sector
     unsigned short fill;        // the ring's indices
@@ -1987,7 +1993,7 @@ struct CarModelInst {
     short unk06;
     unsigned short tpage;
     short pad0a;
-    CarModelHeader *model;
+    game_pointer<CarModelHeader> model;
     MATRIX world;
     WheelInst wheels[4];
     MATRIX shadow;
@@ -2023,9 +2029,9 @@ struct CarMesh {
     unsigned short vertCount;
     unsigned short normalCount;
     unsigned short primCount[8];
-    char *verts;
-    char *normals;
-    char *prims[8];
+    game_pointer<char> verts;
+    game_pointer<char> normals;
+    game_pointer<char> prims[8];
     short bboxMin[4];
     short bboxMax[4];
     unsigned short unk4c;
@@ -2034,7 +2040,7 @@ struct CarMesh {
 
 struct LodEntry {
     int dist;
-    CarMesh *mesh;
+    game_pointer<CarMesh> mesh;
 };
 
 // CarModelHeader.lodCount and the LOD entries after it; the meshes follow.
@@ -2064,11 +2070,11 @@ struct CarScratch {
     short screenW;
     short screenH;
     short nearZ;                // 0x62
-    unsigned int *ot;           // 0x64
-    char *packetPtr;            // 0x68
-    char *packetLimit;
-    char *verts;                // 0x70: the mesh's vertices (ShadowMesh_Draw: transformed ones)
-    char *normals;              // the environment map coordinates of the normals
+    game_pointer<unsigned int> ot;           // 0x64
+    game_pointer<char> packetPtr;            // 0x68
+    game_pointer<char> packetLimit;
+    game_pointer<char> verts;                // 0x70: the mesh's vertices (ShadowMesh_Draw: transformed ones)
+    game_pointer<char> normals;              // the environment map coordinates of the normals
     int savedTrans[3];          // 0x78: the body transform, which CarBody_Draw* reload
     int savedRot[5];
     short otShift;              // 0x98: depth << otShift >> 13 is the OT index
@@ -2108,13 +2114,13 @@ struct SubVert {
 // What the subdivision of one face shares: where its packets go, its code and texture
 // words, the area above which a part is subdivided again, and the chain of packets.
 struct SubFace {
-    unsigned int *ot;
+    game_pointer<unsigned int> ot;
     unsigned int code;          // the face's colour and command word
     unsigned int texWord;       // the texture page (top half) and CLUT (bottom half)
     int threshold;
     int gouraud;
-    char *first;
-    char *last;
+    game_pointer<char> first;
+    game_pointer<char> last;
 };
 
 // A transformed vertex (CarBody_DrawClipped, ShadowMesh_Draw): view-space x, y, z, the
@@ -2160,11 +2166,11 @@ struct ShadowClipVert {
 };
 
 struct ShadowClip {
-    unsigned int *ot;
+    game_pointer<unsigned int> ot;
     unsigned int code;
     int pad;
     ShadowClipVert v[4];
-    ShadowVert *src[4];
+    game_pointer<ShadowVert> src[4];
 };
 
 // exe/buttonprompt.cpp
@@ -2172,7 +2178,7 @@ struct ShadowClip {
 struct ButtonPromptDesc {
     short x;                    // centre
     short y;
-    char *text;
+    game_pointer<char> text;
     uint textRgb;
     uint color;                 // box colour
     uint color2;                // bottom of the box gradient
@@ -2180,7 +2186,7 @@ struct ButtonPromptDesc {
     signed char spacing;
     char textHeight;
     uchar pad17;
-    Font *font;
+    game_pointer<Font> font;
 };
 
 struct ButtonPrompt {
@@ -2201,9 +2207,9 @@ struct ButtonPrompt {
 struct CardDialogDesc {
     short x;                    // centre
     short y;
-    char *message;
-    char *option0;
-    char *option1;
+    game_pointer<char> message;
+    game_pointer<char> option0;
+    game_pointer<char> option1;
     uint messageRgb;            // bit 25: the text's alternative style
     uint optionRgb;
     uint color;                 // box colour
@@ -2214,7 +2220,7 @@ struct CardDialogDesc {
     uchar pad23;
     short textHeight;
     short pad26;
-    Font *font;
+    game_pointer<Font> font;
     signed char sfx;
     uchar pad2d[3];
 };
@@ -2233,19 +2239,19 @@ struct Sprite {
 
 // What an overlay hands CardMenu_Setup.
 struct CardMenuConfig {
-    CardMenu *work; // becomes g_CardMenu
-    void *kanjiFont;
-    short *slotStatus;
-    Font *fontSmall;
-    Font *fontMedium;
-    Font *fontLarge;
+    game_pointer<CardMenu> work; // becomes g_CardMenu
+    game_pointer<void> kanjiFont;
+    game_pointer<short> slotStatus;
+    game_pointer<Font> fontSmall;
+    game_pointer<Font> fontMedium;
+    game_pointer<Font> fontLarge;
     short textPri;
 };
 
 // exe/carinfo.cpp
 
 struct CourseEntry {
-    char *name;
+    game_pointer<char> name;
     unsigned int hash;
     unsigned short flags;
     char unkA[0xe];
@@ -2271,7 +2277,7 @@ struct CarSpecPartLink {
 struct CarParamsPartDesc {
     unsigned short table;
     unsigned short specOffset;
-    unsigned int *desc;
+    game_pointer<unsigned int> desc;
 };
 
 // exe/enginecurve.cpp
@@ -2291,7 +2297,7 @@ struct CarNameTable {
 
 // Upload of the race font (VOL entry 0xc2) to VRAM, eight lines per sector.
 struct RaceFontUpload {
-    void *buf;      // sector buffer
+    game_pointer<void> buf;      // sector buffer
     RECT rect;      // VRAM rectangle of the next sector
     ushort tpageId; // texture page the font goes to
     short unkE;
@@ -2343,11 +2349,11 @@ struct ViewScratch {
     short screenW;
     short screenH;
     short nearZ;                // 0x62
-    unsigned int *ot;
-    char *packetPtr;            // 0x68
-    char *packetLimit;
-    char *verts;
-    char *normals;
+    game_pointer<unsigned int> ot;
+    game_pointer<char> packetPtr;            // 0x68
+    game_pointer<char> packetLimit;
+    game_pointer<char> verts;
+    game_pointer<char> normals;
     int savedTrans[3];          // 0x78: the view, scaled down by Gte_LoadScaled
     short savedRot[10];
     short otShift;              // 0x98: the translation's shift
@@ -2375,7 +2381,7 @@ struct BoxScratch {
 
 // Poly_Clip's input.
 struct PolyClipIn {
-    unsigned int *ot;           // 0x9c
+    game_pointer<unsigned int> ot;           // 0x9c
     unsigned int code;          // the POLY_G3 or POLY_G4 code, in the top byte
     int pad;
     struct {
@@ -2394,8 +2400,8 @@ struct ClipVert {
     short pad;
     int sxy;
     unsigned int rgbc;          // a cut point keeps the record's old top byte
-    ClipVert *prev;
-    ClipVert *next;
+    game_pointer<ClipVert> prev;
+    game_pointer<ClipVert> next;
     unsigned short code;        // 0x18: bit 0 nearer than nearZ, bits 1-4 outside a side
     short dist[5];              // the distance to each plane, negative outside
 };
@@ -2403,8 +2409,8 @@ struct ClipVert {
 // The working state after the input, through 0x2e8.
 struct PolyClip {
     ClipVert pool[14];          // 0xe8
-    ClipVert *head;             // 0x2e0
-    ClipVert *free;             // 0x2e4
+    game_pointer<ClipVert> head;             // 0x2e0
+    game_pointer<ClipVert> free;             // 0x2e4
 };
 
 // exe/kanjifont.cpp
@@ -2412,8 +2418,8 @@ struct PolyClip {
 // A cached glyph: a node of the binary trie KanjiFont_FindGlyph walks with the code's
 // bits, and the texture coordinates of its cell.
 struct KanjiGlyph {
-    KanjiGlyph *left;  // code bit clear
-    KanjiGlyph *right; // code bit set
+    game_pointer<KanjiGlyph> left;  // code bit clear
+    game_pointer<KanjiGlyph> right; // code bit set
     short x, y;        // cell position in the pixel buffer
     unsigned short code;
     unsigned char rendered;
@@ -2425,13 +2431,13 @@ struct KanjiGlyph {
 
 // A glyph cache: a 4-bit texture of 16-pixel-wide cells and the glyph nodes that own them.
 struct KanjiFont {
-    unsigned char *pixels;
+    game_pointer<unsigned char> pixels;
     RECT texRect; // in VRAM (w in 16-bit units)
     unsigned short tpage;
     unsigned short clut;
-    KanjiGlyph *nodes;
-    KanjiGlyph *root;
-    KanjiGlyph *next; // the next free node
+    game_pointer<KanjiGlyph> nodes;
+    game_pointer<KanjiGlyph> root;
+    game_pointer<KanjiGlyph> next; // the next free node
     short col, row;   // the next free cell
     short cols;       // cells a row
     unsigned char pad22;
@@ -2449,7 +2455,7 @@ struct OverlayEntry {
 struct OverlayPack {
     int unk0;
     int unk4;
-    char *data; // the pack in memory, or 0 to read it from the CD
+    game_pointer<char> data; // the pack in memory, or 0 to read it from the CD
     OverlayEntry entries[1];
 };
 
@@ -2465,7 +2471,7 @@ struct PowerGraphView {
     signed char textMode;
     signed char charH;
     unsigned char unk0e[2];
-    Font *font;
+    game_pointer<Font> font;
     unsigned int powerRgb;
     unsigned int torqueRgb;
     unsigned int rpmRgb;
@@ -2528,10 +2534,10 @@ struct Str3 {
 
 // How the card menu's replay list draws its rows (D_800921BC).
 struct ReplayEntryStyle {
-    Font *titleFont;
+    game_pointer<Font> titleFont;
     short unk4;
     short titleArg; // Text_DrawString's last argument
-    Font *fieldFont;
+    game_pointer<Font> fieldFont;
     short unkc;
     short spacing; // the fields' letter spacing
     uint rgb;      // the row's background
@@ -2539,8 +2545,8 @@ struct ReplayEntryStyle {
 
 // What ReplayEntry_DrawField draws with.
 struct ReplayField {
-    uint *ot;
-    TextCtx *text;
+    game_pointer<uint> ot;
+    game_pointer<TextCtx> text;
     short spacing;
     short fade; // 0-128, towards black
     uint rgb;   // the text's colour
@@ -2561,7 +2567,7 @@ struct SeqSong {
     ushort vol;
     ushort pad02;
     int tempo;
-    uchar *tracks[16];
+    game_pointer<uchar> tracks[16];
 };
 
 // A sequence file ("SEQG"): its songs, with the track pointers as offsets from base.
@@ -2576,7 +2582,7 @@ struct SeqFile {
 
 // A sound bank in SPU RAM: its instrument file in main RAM and where its samples went.
 struct SpuBank {
-    SeqBank *ram;
+    game_pointer<SeqBank> ram;
     int size;
     int spu;
 };
@@ -2588,10 +2594,10 @@ struct EngnFile {
     uchar unk08[4];
     int spu;
     int spuSize;
-    void *unk14;
+    game_pointer<void> unk14;
     struct {
         uint count;
-        EngnRange *ranges;
+        game_pointer<EngnRange> ranges;
     } sets[2];
 };
 
@@ -2621,7 +2627,7 @@ struct TextStyle {
     signed char height;
     ushort flags;
     ushort pad0e;
-    Font *font;
+    game_pointer<Font> font;
     uint rgbFrom;
     uint rgbTo;
 };
@@ -2756,7 +2762,7 @@ struct ArcadeRaceSel {
     struct CarSetup setupCopy[2]; // 0x1c0
     int useGarageCars;        // 0x2c8
     int dirt;                 // 0x2cc: dirt course (dirt tyres)
-    void *courseMap;          // 0x2d0
+    game_pointer<void> courseMap;          // 0x2d0
 };
 
 // ovl3/storesetup.cpp

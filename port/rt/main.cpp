@@ -13,7 +13,7 @@
 #include "ap.h"
 #include "ap_host.h"
 #include "config.h"
-#include "fixups.h"
+#include "functions.h"
 #include "memmap.h"
 #include "rt.h"
 #include "host.h"
@@ -41,14 +41,6 @@ void Sys_Init(void);
 void Game_Main(void);
 }
 
-extern const rt::Fixup g_Fixups_exe[];
-extern const rt::Fixup g_Fixups_ovl0[];
-extern const rt::Fixup g_Fixups_ovl1[];
-extern const rt::Fixup g_Fixups_ovl2[];
-extern const rt::Fixup g_Fixups_ovl3[];
-extern const rt::Fixup g_Fixups_ovl4[];
-extern const rt::Fixup g_Fixups_ovl5[];
-
 namespace {
 
 using Bytes = std::vector<std::uint8_t>;
@@ -61,8 +53,6 @@ constexpr int kOverlayCount = 6;
 constexpr const char *kExeSha1 = "3030aa271c0a4022fc69ce09d76a6bc75e69a32a";
 
 Bytes g_Overlays[kOverlayCount];
-const rt::Fixup *const g_OverlayFixups[kOverlayCount] = {g_Fixups_ovl0, g_Fixups_ovl1, g_Fixups_ovl2,
-                                                         g_Fixups_ovl3, g_Fixups_ovl4, g_Fixups_ovl5};
 
 // What Rt_RunEntry leaves for the loop in main.
 std::jmp_buf g_EntryJump;
@@ -158,22 +148,10 @@ void loadExecutable(const Bytes &exe)
     }
     std::memcpy(rt::guest(address), exe.data() + kExeHeaderSize, size);
     std::memset(rt::guest(kBssStart), 0, kBssEnd - kBssStart);
-    rt::applyFixups(g_Fixups_exe);
     Rt_Log("loaded %u bytes at %08x", size, address);
 }
 
 }  // namespace
-
-namespace rt {
-
-void applyFixups(const Fixup *table)
-{
-    for (; table->function != nullptr; table++) {
-        *static_cast<void (**)()>(guest(table->slot)) = table->function;
-    }
-}
-
-}  // namespace rt
 
 extern "C" {
 
@@ -209,7 +187,7 @@ void Rt_LoadOverlay(int index)
     const Bytes &image = g_Overlays[index];
 
     std::memcpy(rt::guest(rt::kOverlayBase), image.data(), image.size());
-    rt::applyFixups(g_OverlayFixups[index]);
+    rt::setOverlayFunctions(index);
     Rt_Log("overlay %d loaded", index);
 }
 
@@ -224,6 +202,19 @@ void Rt_RunEntry(void *entry, int a, int b, int c, int d)
 }
 
 }  // extern "C"
+
+// The game longjmps from deep in one overlay to start another; this frame stays alive.
+static void runGame()
+{
+    if (setjmp(g_EntryJump) == 0) {
+        Sys_Init();
+        Rt_Log("Sys_Init done");
+        Game_Main();
+    } else {
+        auto entry = reinterpret_cast<void (*)(int, int, int, int)>(g_Entry);
+        entry(g_EntryArgs[0], g_EntryArgs[1], g_EntryArgs[2], g_EntryArgs[3]);
+    }
+}
 
 int main(int argc, char **argv)
 {
@@ -297,14 +288,6 @@ int main(int argc, char **argv)
         Rt_Fatal("%s", e.what());
     }
 
-    // The game longjmps from deep in one overlay to start another; this frame stays alive.
-    if (setjmp(g_EntryJump) == 0) {
-        Sys_Init();
-        Rt_Log("Sys_Init done");
-        Game_Main();
-    } else {
-        auto entry = reinterpret_cast<void (*)(int, int, int, int)>(g_Entry);
-        entry(g_EntryArgs[0], g_EntryArgs[1], g_EntryArgs[2], g_EntryArgs[3]);
-    }
+    rt::runOnGameStack(runGame);
     return 0;
 }

@@ -1,12 +1,13 @@
 // OVL0 8003fe8c-80041e4c (carcoll): Car to car collisions and body footprints.
 // The functions that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
 extern "C" {
 void Body_ComputeFootprint(CarPhys *body);
-extern RaceWorld g_RaceWorld;
-extern unsigned char g_Race_IsDemo;
+extern RaceWorld (&g_RaceWorld);
+extern unsigned char (&g_Race_IsDemo);
 
 // One corner of a car against another car (g_CarColl_Pairs), per footprint buffer.
 struct CarCollCorner {
@@ -16,13 +17,13 @@ struct CarCollCorner {
     int z[2];
 };
 
-extern int g_CarColl_Buf;
-extern short g_CarColl_Toi[6][5];
-extern signed char g_CarColl_Corner[6][5];
-extern signed char g_CarColl_Side[6][5];
-extern CarCollCorner g_CarColl_Pairs[6][5][4];
-extern short g_SinTable[];
-extern short g_CosTable[];
+extern int (&g_CarColl_Buf);
+extern short (&g_CarColl_Toi)[6][5];
+extern signed char (&g_CarColl_Corner)[6][5];
+extern signed char (&g_CarColl_Side)[6][5];
+extern CarCollCorner (&g_CarColl_Pairs)[6][5][4];
+extern short (&g_SinTable)[];
+extern short (&g_CosTable)[];
 
 // A footprint corner swept against the course walls (World_CollideWalls), in the
 // scratchpad from 0x1f800004 on.
@@ -34,7 +35,7 @@ struct WallSweep {
     short normal[2]; /* wall normal x, z of the hit */
     unsigned char unk20[12];
 };
-#define WALL_SWEEPS ((WallSweep *)0x1f800004)
+#define WALL_SWEEPS ((WallSweep *)rt::guest(0x1f800004))
 
 // The moves CarColl_ResolveImpacts hands CarPhys_MoveAndCollide, in the scratchpad.
 struct MoveScratch {
@@ -42,9 +43,9 @@ struct MoveScratch {
     int moveA[4];
     int moveB[4];
 };
-#define MOVE_SCRATCH ((MoveScratch *)0x1f800000)
+#define MOVE_SCRATCH ((MoveScratch *)rt::guest(0x1f800000))
 
-extern int g_FrameDt;
+extern int (&g_FrameDt);
 int CarPhys_MoveAndCollide(CarPhys *body, int *move, int *rest, int count);
 
 // 1 when v is outside lo..hi, for values whose difference can't overflow.
@@ -804,7 +805,7 @@ unsigned int Body_SweepFootprint(CarPhys *body, int *outFraction, unsigned int *
     for (i = 0; i < 4; i++) {
         CarPhys *to = (CarPhys *)((char *)body + cur);
         CarPhys *from = (CarPhys *)((char *)body + prev);
-        WallSweep *s = (WallSweep *)(0x1f800000 + off);
+        WallSweep *s = (WallSweep *)rt::from_guest((0x1f800000 + off));
         cur += 8;
         prev += 8;
         s->from[0] = from->footprint[0][0][0] << 4;

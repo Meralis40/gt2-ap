@@ -1,18 +1,19 @@
 // OVL4 80010000-80010550: License tests.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern GameState g_GameState;
-extern void *g_EventDataBuf;
-extern int g_GameDataMode;
-extern char *g_GtModeRaceData;
-extern unsigned char D_80091620[];
-extern RaceEventParams g_RaceEventParams;
-extern char *D_80024418[6];
-extern char *g_LicenseTestFmt[6];
-extern CarSetup g_License_TmpSetup;
-extern CarParams g_License_TmpParams;
-extern EnginePerf g_License_TmpPerf;
+extern GameState (&g_GameState);
+extern game_pointer<void> (&g_EventDataBuf);
+extern int (&g_GameDataMode);
+extern game_pointer<char> (&g_GtModeRaceData);
+extern unsigned char (&D_80091620)[];
+extern RaceEventParams (&g_RaceEventParams);
+extern game_pointer<char> (&D_80024418)[6];
+extern game_pointer<char> (&g_LicenseTestFmt)[6];
+extern CarSetup (&g_License_TmpSetup);
+extern CarParams (&g_License_TmpParams);
+extern EnginePerf (&g_License_TmpPerf);
 
 // The license of a license test code ("LIS..." to "LIB..."), from its first 3
 // letters (this file's copy of License_IdFromRaceCode2).
@@ -161,7 +162,7 @@ void GTMenu_StartLicenseTest(char *raceCode)
     GameState *gs = &g_GameState;
     char *base = (char *)gs;
     int offset = 0x10bd8;
-    LicenseTestCar *table = (LicenseTestCar *)((int)(base + offset) & ~3);
+    LicenseTestCar *table = (LicenseTestCar *)rt::from_guest(((int)rt::to_guest((base + offset)) & ~3));
 
     RaceSetup_InitLicenseTest(raceCode);
     License_BuildTestCarTable(table);

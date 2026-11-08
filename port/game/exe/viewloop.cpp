@@ -9,18 +9,19 @@
 #define PAD_RAW_RESET 0xef79
 
 extern "C" {
-extern unsigned char g_CurrentVideoMode;
-extern unsigned short g_VideoModeWidths[5];
+extern unsigned char (&g_CurrentVideoMode);
+extern unsigned short (&g_VideoModeWidths)[5];
 
 }
 
 void psxViewLoop::VSyncHandler()
 {
-    g_CurrentViewLoop->UpdateDisplay();
+    g_CurrentViewLoop->v_UpdateDisplay();
 }
 
 psxViewLoop::psxViewLoop() : vsync(VSyncHandler, 0)
 {
+    vptr.address = 0x800906c8;  // psxViewLoop's vtable
     vsyncInterval = 1;
     videoModeDelay = 3;
     bufferIndex = 0;
@@ -95,13 +96,13 @@ int psxViewLoop::Step()
         }
     }
     Timer_StartFrame();
-    BeginFrame();
-    BeginDraw();
+    v_BeginFrame();
+    v_BeginDraw();
     if (result == 0) {
-        result = Update();
+        result = v_Update();
     }
-    Draw();
-    EndDraw();
+    v_Draw();
+    v_EndDraw();
     return result;
 }
 
@@ -130,10 +131,10 @@ void psxViewLoop::Flip()
     leave = Sys_CriticalSection(0);
     if (swapPending != 0) {
         swapPending = 0;
-        SwapDisplay();
+        v_SwapDisplay();
         if (videoModePending != 0) {
             videoModePending = 0;
-            ApplyVideoMode();
+            v_ApplyVideoMode();
         }
     }
     Sys_CriticalSection(leave);
@@ -183,10 +184,10 @@ void psxViewLoop::EndDraw()
 
 void psxViewLoop::DrawFrame()
 {
-    BeginDraw();
-    Draw();
-    EndDraw();
-    Flip();
+    v_BeginDraw();
+    v_Draw();
+    v_EndDraw();
+    v_Flip();
 }
 
 void psxViewLoop::SwapDisplay()
@@ -213,10 +214,10 @@ void psxViewLoop::UpdateDisplay()
 
     if (swap != 0 && vblanks >= swap) {
         swapPending = 0;
-        SwapDisplay();
+        v_SwapDisplay();
         if (modePending != 0) {
             videoModePending = 0;
-            ApplyVideoMode();
+            v_ApplyVideoMode();
         }
     }
 }

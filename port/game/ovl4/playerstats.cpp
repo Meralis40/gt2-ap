@@ -2,8 +2,8 @@
 #include "common.h"
 
 extern "C" {
-extern GameState g_GameState;
-extern int g_EventCount;
+extern GameState (&g_GameState);
+extern int (&g_EventCount);
 
 // g_GameState.stats.racesEntered.
 int PlayerStats_GetRacesEntered(void)

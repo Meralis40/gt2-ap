@@ -4,7 +4,7 @@
 #include "common.h"
 
 extern "C" {
-extern CdAudio g_CdAudio;
+extern CdAudio (&g_CdAudio);
 
 
 static inline int CdAudio_GetState(volatile CdAudio *cd)

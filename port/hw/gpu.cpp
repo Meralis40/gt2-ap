@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // The GPU, in software: GP0 and GP1 commands, 1 MB of VRAM and the rasterizer. The game
 // builds the same packets it sends a real GPU; this walks its ordering tables and draws them.
+#include "gptr.h"
 #include "hw.h"
 #include "rt.h"
 
@@ -597,13 +598,13 @@ unsigned int Hw_GpuRead(void)
 // DMA down a linked list. Each tag is a word count and the 24-bit address of the next one.
 void Hw_GpuDrawList(const void *list)
 {
-    std::uint32_t address = reinterpret_cast<std::uintptr_t>(list) & 0xffffff;
+    std::uint32_t address = rt::to_guest(list) & 0xffffff;
 
     while ((address & 0x800000) == 0) {
         if (address > kGuestRamMask) {
             Rt_Fatal("GPU list link %06x is outside guest RAM", address);
         }
-        auto *packet = reinterpret_cast<const std::uint32_t *>(static_cast<std::uintptr_t>(address | 0x80000000u));
+        auto *packet = rt::guest<const std::uint32_t>(address | 0x80000000u);
         std::uint32_t tag = packet[0];
         for (std::uint32_t i = 1; i <= tag >> 24; i++) {
             Hw_Gp0(packet[i]);

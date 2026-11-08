@@ -1,6 +1,7 @@
 // OVL2 80010c84-80011a50 (arcademode): Arcade race setup, the arcade mode loop and its strings.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
@@ -16,25 +17,25 @@ struct ArcOptions {
     unsigned char b[8];
 };
 
-extern FlowMenuState g_Flow_IntroShown;
-extern void *g_EventDataBuf;
-extern GameState g_GameState;
-extern RaceEventParams g_RaceEventParams;
-extern ArcadeLoadInfo g_ArcadeLoadInfo;
-extern char *g_ArcadeEventCodes[][4];
-extern signed char g_ArcadeLevelByte[];
-extern int D_801C3618;
-extern char D_800267CC[];
-extern char D_800267D0[];
-extern char D_800267D4[];
-RaceSetup *RaceSetup_BuildArcade_OVL2(int a, int b, void *event, void *entry, RaceCarPick *pick, int c, int d);
+extern FlowMenuState (&g_Flow_IntroShown);
+extern game_pointer<void> (&g_EventDataBuf);
+extern GameState (&g_GameState);
+extern RaceEventParams (&g_RaceEventParams);
+extern ArcadeLoadInfo (&g_ArcadeLoadInfo);
+extern game_pointer<char> (&g_ArcadeEventCodes)[][4];
+extern signed char (&g_ArcadeLevelByte)[];
+extern int (&D_801C3618);
+extern char (&D_800267CC)[];
+extern char (&D_800267D0)[];
+extern char (&D_800267D4)[];
+RaceSetup *RaceSetup_BuildArcade_OVL2(int a, int b, void *event, void *entry, RaceCarPick *pick, void *c, RaceCarPick *d);
 int ArcadeCar_GetColorCode(unsigned int carId, int color);
-void *memset(void *p, int c, unsigned int n);
+void *memset(void *p, int c, size_t n);
 char *strcpy(char *dst, const char *src);
-extern MenuPage g_ArcPage_Root;
-extern ArcadeRaceSel g_ArcSel_Level;
-extern ArcStrings g_OVL2_Strings;
-extern unsigned char g_OVL2_StringsGz[];
+extern MenuPage (&g_ArcPage_Root);
+extern ArcadeRaceSel (&g_ArcSel_Level);
+extern ArcStrings (&g_OVL2_Strings);
+extern unsigned char (&g_OVL2_StringsGz)[];
 
 // Builds the race setup from sel (2-player battle, single race or time trial) and what the
 // loading screen shows.
@@ -261,7 +262,7 @@ void ArcadeMode_Run(void)
 
             g_Flow_IntroShown.homeOverlay = 1;
             g_Flow_IntroShown.gameMode = 1;
-            *(ArcadeRaceSel *)((int)(base + offset) & ~3) = g_ArcSel_Level;
+            *(ArcadeRaceSel *)rt::from_guest(((int)rt::to_guest((base + offset)) & ~3)) = g_ArcSel_Level;
         }
         Overlay_Start(3);
         Overlay_StartAt(0, (void *)Race_Entry, 0);

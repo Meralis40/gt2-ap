@@ -15,12 +15,12 @@ static inline RaceSetup *RaceSetup_Get(void)
 }
 
 extern "C" {
-extern RaceMem g_Race_IsDemo;
-extern RaceViewLoop *g_RaceView;
-extern unsigned int g_RandomSeed;
-extern DrawLayer g_Race3DLayer;         // RaceView_DrawFrame's 3D layer
-extern unsigned char g_Race_EndRequest;
-extern int g_TT_GhostResync;
+extern RaceMem (&g_Race_IsDemo);
+extern game_pointer<RaceViewLoop> (&g_RaceView);
+extern unsigned int (&g_RandomSeed);
+extern DrawLayer (&g_Race3DLayer);         // RaceView_DrawFrame's 3D layer
+extern unsigned char (&g_Race_EndRequest);
+extern int (&g_TT_GhostResync);
 
 }
 
@@ -33,6 +33,7 @@ static inline void DrawLayer_Set(DrawLayer *l, int priority, int otSize)
 
 RaceViewLoop::RaceViewLoop()
 {
+    vptr.address = 0x8002ef98;  // RaceViewLoop's vtable
     int vsyncs;
     unsigned int seed;
 
@@ -302,6 +303,7 @@ void RaceViewLoop::Draw()
 
 RaceMenuLoop::RaceMenuLoop(RaceViewLoop *view, int arg)
 {
+    vptr.address = 0x8002ef58;  // RaceMenuLoop's vtable
     this->view = view;
     this->arg = arg;
 }
@@ -313,9 +315,9 @@ RaceMenuLoop::~RaceMenuLoop()
 // Runs the state machine: Init, Run, Finish.
 void RaceMenuLoop::Execute()
 {
-    Init();
-    Run();
-    Finish();
+    v_Init();
+    v_Run();
+    v_Finish();
 }
 
 // A state's result: 0 repeats the last direction, 2 (back) and 3 (forward)
@@ -349,12 +351,12 @@ void RaceMenuLoop::Run()
     int ret;
 
 state4:
-    ret = State4();
+    ret = v_State4();
     back = &&leave;
     next = &&state5;
     goto resolve;
 state5:
-    ret = State5();
+    ret = v_State5();
     back = &&state4;
     if (arg == 0) {
         next = &&state8;
@@ -363,7 +365,7 @@ state5:
     }
     goto resolve;
 state6:
-    ret = State6();
+    ret = v_State6();
     if (arg == 0) {
         back = &&state10;
     } else {
@@ -372,37 +374,37 @@ state6:
     next = &&state7;
     goto resolve;
 state7:
-    ret = State7();
+    ret = v_State7();
     back = &&state6;
     next = &&leave;
     goto resolve;
 state8:
-    ret = State8();
+    ret = v_State8();
     back = &&state5;
     next = &&state9;
     goto resolve;
 state9:
-    ret = State9();
+    ret = v_State9();
     back = &&state8;
     next = &&state10;
     goto resolve;
 state10:
-    ret = State10();
+    ret = v_State10();
     back = &&state8;
     next = &&state6;
     goto resolve;
 state11:
-    ret = State11();
+    ret = v_State11();
     back = &&state5;
     next = &&state12;
     goto resolve;
 state12:
-    ret = State12();
+    ret = v_State12();
     back = &&state11;
     next = &&state13;
     goto resolve;
 state13:
-    ret = State13();
+    ret = v_State13();
     back = &&state11;
     next = &&state6;
 resolve:
@@ -470,7 +472,7 @@ int RaceMenuLoop::State8()
 // Runs the race.
 int RaceMenuLoop::State9()
 {
-    view->Start(0);
+    view->v_Start(0);
     return 0;
 }
 
@@ -487,7 +489,7 @@ int RaceMenuLoop::State11()
 // Runs the replay.
 int RaceMenuLoop::State12()
 {
-    view->Start(1);
+    view->v_Start(1);
     return 0;
 }
 

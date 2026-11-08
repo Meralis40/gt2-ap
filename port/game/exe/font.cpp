@@ -1,17 +1,18 @@
 // Resident code 8007da44-8007e0b0 (font). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
+#include "gptr.h"
 #include <stdarg.h>
 #include "common.h"
 
 extern "C" {
 
-extern CdAudio g_CdAudio;
-extern unsigned int g_VolLba;
-extern char *g_PacketPtr;
-extern unsigned char D_80093148;
-extern TextCtx *D_8009314C;
+extern CdAudio (&g_CdAudio);
+extern unsigned int (&g_VolLba);
+extern game_pointer<char> (&g_PacketPtr);
+extern unsigned char (&D_80093148);
+extern game_pointer<TextCtx> (&D_8009314C);
 
-extern RaceFontUpload g_RaceFont_Buf;
+extern RaceFontUpload (&g_RaceFont_Buf);
 
 // The pen position, in TextCtx.unk18.
 #define TEXT_PEN_X(ctx) (((short *)&(ctx)->unk18)[0])
@@ -28,7 +29,7 @@ void *Prim_AddDrawMode(void *ot, unsigned int mode)
     p = (unsigned int *)g_PacketPtr;
     ((unsigned char *)p)[3] = 1;
     Mips_Swl2(link, p);
-    Mips_Swl2((unsigned int)p << 8, ot);
+    Mips_Swl2((unsigned int)rt::to_guest(p) << 8, ot);
     p[1] = mode | 0xe1000000;
     g_PacketPtr = (char *)(p + 2);
     return p + 1;
@@ -68,13 +69,13 @@ int FUN_8007dae4(TextCtx *ctx, signed char *s)
     return 0;
 }
 
-void FUN_8007db30(TextCtx *ctx, char *fmt, void *args)
+void FUN_8007db30(TextCtx *ctx, char *fmt, va_list args)
 {
     TextCtx *prev;
 
     prev = D_8009314C;
     D_8009314C = ctx;
-    Printf_Format((PutcFunc)(void *)FUN_8007da9c, fmt, (char *)args);
+    Printf_Format((PutcFunc)(void *)FUN_8007da9c, fmt, args);
     D_8009314C = prev;
 }
 
@@ -116,7 +117,7 @@ void Text_SetTexturePage(TextCtx *ctx, int tpageId)
     uVar1 = (unsigned short)tpageId;
     ctx->clut = (uVar1 & 0xf) * 4 + (uVar1 & 0x10) * 0x400;
     ctx->tpage = uVar1;
-    *(unsigned char *)((int)&ctx->rgb + 3) = 0;
+    *(unsigned char *)rt::from_guest(((int)rt::to_guest(&ctx->rgb) + 3)) = 0;
 }
 
 // Advance from left to right: left's advance plus the spacing, less the kerning.
@@ -199,7 +200,7 @@ void Text_DrawGlyph(TextCtx *ctx, int code, int x, int y)
     link = Mips_Lwl2(ot);
     Mips_Swl2(link, p);
     ((unsigned char *)p)[3] = 5;
-    Mips_Swl2((unsigned int)p << 8, ot);
+    Mips_Swl2((unsigned int)rt::to_guest(p) << 8, ot);
     if ((g0 >> 14) & 7) {
         s = ((unsigned int *)tbl->accents)[((g0 >> 14) & 7) - 1];
         p += 6;
@@ -215,7 +216,7 @@ void Text_DrawGlyph(TextCtx *ctx, int code, int x, int y)
         link = Mips_Lwl2(ot);
         ((unsigned char *)p)[3] = 5;
         Mips_Swl2(link, p);
-        Mips_Swl2((unsigned int)p << 8, ot);
+        Mips_Swl2((unsigned int)rt::to_guest(p) << 8, ot);
     }
     g_PacketPtr = (char *)(p + 6);
 }
@@ -274,7 +275,7 @@ void RaceFont_Load(int tpageId)
     RaceFont_InitUpload();
     start = g_VolLba + VolId_GetSector(0xc2);
     CdAudio_SetupRead(0, start, VolId_GetSize(0xc2), 0);
-    g_CdAudio.onSector = (void *)RaceFont_OnSector;
+    g_CdAudio.onSector = (CdSectorFn *)RaceFont_OnSector;
     CdAudio_WaitRead(RaceFont_InitUpload);
 }
 }

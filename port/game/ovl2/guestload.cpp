@@ -1,6 +1,7 @@
 // OVL2 8002445c-80025614 (guestload): Guest garage loading.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 
 typedef int GuestLoadStateFn(int event, void *arg);
@@ -10,14 +11,14 @@ typedef int GuestLoadStateFn(int event, void *arg);
 struct GuestLoadWork {
     short state;
     short pad02;
-    GuestLoadStateFn *handler;
-    KanjiFont *kanjiFont;
-    short *slotStatus;
+    game_function<GuestLoadStateFn> handler;
+    game_pointer<KanjiFont> kanjiFont;
+    game_pointer<short> slotStatus;
     short slot;
     unsigned char pad12[0x12];
-    char *errorMsg;
-    char *line1;
-    char *line2;
+    game_pointer<char> errorMsg;
+    game_pointer<char> line1;
+    game_pointer<char> line2;
     short textPri;
     short timer;
     WipeBar slotBar;
@@ -27,39 +28,39 @@ struct GuestLoadWork {
     CardDialog dlgComplete;
     CardDialog dlgConfirm;
     CardProgressBar progress;
-    GameSaveFile *file;
+    game_pointer<GameSaveFile> file;
     unsigned char data[0x8000];
 };
 
 extern "C" {
-extern GameState g_GameState;
-extern GuestLoadWork *g_GuestLoad;
-extern Font D_800F39F0; // medium
-extern Font D_800F3A00; // large
-extern Font D_800F3A10; // small
-extern char *D_800529DC[]; // the slots' names
-extern GuestLoadStateFn *g_GuestLoad_States[];
-extern int g_McOp_Remaining;
-extern char D_8002746C[]; // an empty string
-extern char D_800F879E[]; // the file has no cars
-extern WipeBar D_80052898;
-extern CardDialogDesc D_800528B4;
-extern CardDialogDesc D_800528E4;
-extern CardDialogDesc D_80052914;
-extern CardDialogDesc D_80052944;
-extern CardDialogDesc D_80052974;
-extern CardProgressBar D_800529A4;
-extern char sB_MemoryCard1[];
-extern char sB_SelectASlot[];
-extern char sB_CheckingSlot[];
-extern char sB_NoMemoryCardDetected[];
-extern char sB_FailedToReadMemoryCard[];
-extern char sB_StartLoading[];
-extern char sB_Loading[];
-extern char sB_LoadingFailed[];
-extern char sB_LoadingDataFailed[];
-extern char sB_LoadingComplete[];
-extern char sB_NoGameFileFound[];
+extern GameState (&g_GameState);
+extern game_pointer<GuestLoadWork> (&g_GuestLoad);
+extern Font (&D_800F39F0); // medium
+extern Font (&D_800F3A00); // large
+extern Font (&D_800F3A10); // small
+extern game_pointer<char> (&D_800529DC)[]; // the slots' names
+extern game_function<GuestLoadStateFn> (&g_GuestLoad_States)[];
+extern int (&g_McOp_Remaining);
+extern char (&D_8002746C)[]; // an empty string
+extern char (&D_800F879E)[]; // the file has no cars
+extern WipeBar (&D_80052898);
+extern CardDialogDesc (&D_800528B4);
+extern CardDialogDesc (&D_800528E4);
+extern CardDialogDesc (&D_80052914);
+extern CardDialogDesc (&D_80052944);
+extern CardDialogDesc (&D_80052974);
+extern CardProgressBar (&D_800529A4);
+extern char (&sB_MemoryCard1)[];
+extern char (&sB_SelectASlot)[];
+extern char (&sB_CheckingSlot)[];
+extern char (&sB_NoMemoryCardDetected)[];
+extern char (&sB_FailedToReadMemoryCard)[];
+extern char (&sB_StartLoading)[];
+extern char (&sB_Loading)[];
+extern char (&sB_LoadingFailed)[];
+extern char (&sB_LoadingDataFailed)[];
+extern char (&sB_LoadingComplete)[];
+extern char (&sB_NoGameFileFound)[];
 void GuestLoad_DrawKanji(uint *ot, char *sjis, int x, int y, int center, uint rgb);
 
 // Japanese only: empties the kanji cache and adds both slot names.
@@ -135,8 +136,8 @@ void GuestLoad_CacheMessages(void)
     pvVar1 = g_GuestLoad;
     if (g_GameState.language == '\0') {
         GuestLoad_CacheKanjiCommon();
-        GuestLoad_CacheKanji(*(char **)((int)pvVar1 + 0x28));
-        GuestLoad_CacheKanji(*(char **)((int)pvVar1 + 0x2c));
+        GuestLoad_CacheKanji(*(game_pointer<char> *)rt::from_guest(((int)rt::to_guest(pvVar1) + 0x28)));
+        GuestLoad_CacheKanji(*(game_pointer<char> *)rt::from_guest(((int)rt::to_guest(pvVar1) + 0x2c)));
     }
 }
 
@@ -148,7 +149,7 @@ void GuestLoad_CacheErrorText(void)
     pvVar1 = g_GuestLoad;
     if (g_GameState.language == '\0') {
         GuestLoad_CacheKanjiCommon();
-        GuestLoad_CacheKanji(*(char **)((int)pvVar1 + 0x24));
+        GuestLoad_CacheKanji(*(game_pointer<char> *)rt::from_guest(((int)rt::to_guest(pvVar1) + 0x24)));
     }
 }
 
@@ -603,8 +604,8 @@ void GuestLoad_Start(void)
 {
     GameSaveFile *file;
 
-    file = (GameSaveFile *)((int)g_GuestLoad + 900);
-    *(GameSaveFile **)((int)g_GuestLoad + 0x380) = file;
+    file = (GameSaveFile *)rt::from_guest(((int)g_GuestLoad + 900));
+    *(game_pointer<GameSaveFile> *)rt::from_guest(((int)g_GuestLoad + 0x380)) = file;
     SaveFile_InitHeader(file);
     GuestLoad_InitWidgets();
     GuestLoad_SetState(0);

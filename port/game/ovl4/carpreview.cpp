@@ -1,13 +1,14 @@
 // OVL4 8001a454-8001b3ac (carpreview): The car preview of the GT mode menus: the
 // car's model on its ground disc, its maker logo, its colours (chips, names, the
 // texture CLUT) and the spec sheet of a dealer or garage car.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern GameState g_GameState;
-extern CarSpecStrings g_CarSpecStrings;
-extern short g_WheelOffsetTable[];
-extern unsigned short g_CarPreview_NoText[];
+extern GameState (&g_GameState);
+extern CarSpecStrings (&g_CarSpecStrings);
+extern short (&g_WheelOffsetTable)[];
+extern unsigned short (&g_CarPreview_NoText)[];
 
 }
 
@@ -256,7 +257,7 @@ void CarPreview_Init(CarPreview *preview, CarPreviewConfig *config)
 
 void FUN_OVL4__8001ab64(int param_1)
 {
-    *(unsigned char *)(param_1 + 0x1c) = 0;
+    *(unsigned char *)rt::from_guest((param_1 + 0x1c)) = 0;
 }
 
 // Shows the garage's current car (with its colour, wheels and dirt) unless it is
@@ -405,20 +406,20 @@ void CarPreview_SpecFromDefault(CarSpecSheet *spec, int carId)
     pvVar5 = GameData_GetEntry(0xd, (unsigned int)(unsigned short)CStack_a0.idx_t0d);
     // Most racing modification variants have no table 0x1e entry: the PlayStation reads
     // addresses 0x41 and 0x44 there. A year of 0 shows as "----".
-    spec->modelYear = puVar2 != 0 ? (unsigned short)*(unsigned char *)((int)puVar2 + 0x41) : 0;
-    spec->length = (unsigned int)*(unsigned short *)((int)pvVar1 + 8);
-    spec->width = (unsigned int)*(unsigned short *)((int)pvVar1 + 10);
-    spec->height = (unsigned int)*(unsigned short *)((int)pvVar3 + 0x1a);
-    spec->weight = (unsigned int)*(unsigned short *)((int)pvVar1 + 0xe);
-    spec->displacement = (unsigned int)*(unsigned short *)((int)pvVar4 + 0x2c);
-    spec->drivetrain = (unsigned int)*(unsigned char *)((int)pvVar5 + 8);
-    spec->engineStrA = (unsigned int)*(unsigned short *)((int)pvVar4 + 4);
-    spec->engineStrB = (unsigned int)*(unsigned short *)((int)pvVar4 + 8);
-    spec->engineStrC = (unsigned int)*(unsigned short *)((int)pvVar4 + 6);
-    spec->power = (unsigned int)*(unsigned short *)((int)pvVar4 + 0x2e);
-    spec->powerRpm = (unsigned int)*(unsigned short *)((int)pvVar4 + 0x30) * 10;
-    spec->torque = (unsigned int)*(unsigned short *)((int)pvVar4 + 0x32);
-    spec->torqueRpmStr = (unsigned int)*(unsigned short *)((int)pvVar4 + 0x34);
+    spec->modelYear = puVar2 != 0 ? (unsigned short)*(unsigned char *)rt::from_guest(((int)rt::to_guest(puVar2) + 0x41)) : 0;
+    spec->length = (unsigned int)*(unsigned short *)rt::from_guest(((int)rt::to_guest(pvVar1) + 8));
+    spec->width = (unsigned int)*(unsigned short *)rt::from_guest(((int)rt::to_guest(pvVar1) + 10));
+    spec->height = (unsigned int)*(unsigned short *)rt::from_guest(((int)rt::to_guest(pvVar3) + 0x1a));
+    spec->weight = (unsigned int)*(unsigned short *)rt::from_guest(((int)rt::to_guest(pvVar1) + 0xe));
+    spec->displacement = (unsigned int)*(unsigned short *)rt::from_guest(((int)rt::to_guest(pvVar4) + 0x2c));
+    spec->drivetrain = (unsigned int)*(unsigned char *)rt::from_guest(((int)rt::to_guest(pvVar5) + 8));
+    spec->engineStrA = (unsigned int)*(unsigned short *)rt::from_guest(((int)rt::to_guest(pvVar4) + 4));
+    spec->engineStrB = (unsigned int)*(unsigned short *)rt::from_guest(((int)rt::to_guest(pvVar4) + 8));
+    spec->engineStrC = (unsigned int)*(unsigned short *)rt::from_guest(((int)rt::to_guest(pvVar4) + 6));
+    spec->power = (unsigned int)*(unsigned short *)rt::from_guest(((int)rt::to_guest(pvVar4) + 0x2e));
+    spec->powerRpm = (unsigned int)*(unsigned short *)rt::from_guest(((int)rt::to_guest(pvVar4) + 0x30)) * 10;
+    spec->torque = (unsigned int)*(unsigned short *)rt::from_guest(((int)rt::to_guest(pvVar4) + 0x32));
+    spec->torqueRpmStr = (unsigned int)*(unsigned short *)rt::from_guest(((int)rt::to_guest(pvVar4) + 0x34));
     spec->price = puVar2 != 0 ? puVar2[0x11] : 0;
 }
 

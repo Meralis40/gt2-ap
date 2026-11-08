@@ -36,11 +36,37 @@
       }
     },
     {
+      "name": "port-windows64",
+      "displayName": "The game, for 64-bit Windows",
+      "binaryDir": "${sourceDir}/build/port-win64",
+      "generator": "Ninja",
+      "toolchainFile": "${sourceDir}/cmake/x86_64-windows-clang.cmake",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "GT2AP_BUILD_PORT": "ON",
+        "GT2AP_BUILD_TESTS": "OFF"
+      }
+    },
+    {
       "name": "port-linux",
       "displayName": "The game, for 32-bit Linux",
       "binaryDir": "${sourceDir}/build/port-linux",
       "generator": "Ninja",
       "toolchainFile": "${sourceDir}/cmake/i686-linux-clang.cmake",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "GT2AP_BUILD_PORT": "ON",
+        "GT2AP_BUILD_TESTS": "OFF"
+      }
+    },
+    {
+      "name": "port-linux64",
+      "displayName": "The game, for 64-bit Linux",
+      "binaryDir": "${sourceDir}/build/port-linux64",
+      "generator": "Ninja",
+      "toolchainFile": "${sourceDir}/cmake/x86_64-linux-clang.cmake",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo",
@@ -59,7 +85,9 @@
     { "name": "debug", "configurePreset": "debug" },
     { "name": "release", "configurePreset": "release" },
     { "name": "port-windows", "configurePreset": "port-windows", "targets": ["gt2ap"] },
+    { "name": "port-windows64", "configurePreset": "port-windows64", "targets": ["gt2ap"] },
     { "name": "port-linux", "configurePreset": "port-linux", "targets": ["gt2ap"] },
+    { "name": "port-linux64", "configurePreset": "port-linux64", "targets": ["gt2ap"] },
     { "name": "vs-debug", "configurePreset": "vs", "configuration": "Debug" },
     { "name": "vs-release", "configurePreset": "vs", "configuration": "RelWithDebInfo" }
   ],

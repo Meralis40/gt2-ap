@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // The geometry coprocessor, written from the public psx-spx documentation of its registers
 // and commands. The game calls one function per register move and per command (game/include/gte.h).
+#include "gptr.h"
 #include "hw.h"
 
 #include <algorithm>
@@ -494,7 +495,7 @@ void ot_AddPrims(unsigned int *ot, void *first, void *last)
     auto *tail = static_cast<unsigned int *>(last);
     unsigned int next = *ot & 0xffffff;
 
-    *ot = (*ot & 0xff000000) | (reinterpret_cast<std::uintptr_t>(first) & 0xffffff);
+    *ot = (*ot & 0xff000000) | (rt::to_guest(first) & 0xffffff);
     *tail = (*tail & 0xff000000) | next;
 }
 

@@ -3,7 +3,7 @@
 #include "common.h"
 
 extern "C" {
-extern char D_8008FAAC[]; // "%d"
+extern char (&D_8008FAAC)[]; // "%d"
 
 void NumberPicker_Init(NumberPicker *p)
 {

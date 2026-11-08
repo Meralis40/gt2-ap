@@ -5,12 +5,12 @@
 #include "syslib.h"
 
 extern "C" {
-extern ArcTextItemTmpl D_8004F698; // the labels' template
-extern ArcTextItemTmpl D_8004F6B4; // the values' template
-extern char D_800F866D[];          // the labels and formats
-extern char D_800F8698[];
-extern char D_800270F8[];
-extern char D_80027100[];
+extern ArcTextItemTmpl (&D_8004F698); // the labels' template
+extern ArcTextItemTmpl (&D_8004F6B4); // the values' template
+extern char (&D_800F866D)[];          // the labels and formats
+extern char (&D_800F8698)[];
+extern char (&D_800270F8)[];
+extern char (&D_80027100)[];
 
 
 // The labels are grey, blue and orange, and every text starts as its label.

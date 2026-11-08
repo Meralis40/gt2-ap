@@ -1,17 +1,18 @@
 // Resident code 80080eec-80081084 (music): plays the tracks of MUSIC.DAT as streamed XA.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
 // An entry of the music track table: the track's name and its sector range in MUSIC.DAT.
 struct MusicTrack {
-    void *name;
+    game_pointer<void> name;
     unsigned int start;
     unsigned int end;
 };
 
 extern "C" {
-extern MusicTrack *D_80095ABC; // Disc_LocateDataFiles' table
-extern unsigned int g_MusicLba; // MUSIC.DAT's sector, 0 if the disc has none
+extern game_pointer<MusicTrack> (&D_80095ABC); // Disc_LocateDataFiles' table
+extern unsigned int (&g_MusicLba); // MUSIC.DAT's sector, 0 if the disc has none
 
 void Music_Init(void *tracks, unsigned int lba)
 {

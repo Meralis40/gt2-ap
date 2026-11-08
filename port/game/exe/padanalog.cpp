@@ -4,7 +4,7 @@
 
 extern "C" {
 
-extern unsigned char g_PadButtonMap[16][2];
+extern unsigned char (&g_PadButtonMap)[16][2];
 
 // Shift-JIS code of a JIS X 0208 code (row << 8 | cell).
 int Ascii_ToSjis(int c)

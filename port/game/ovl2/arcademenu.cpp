@@ -6,42 +6,42 @@
 #include "common.h"
 
 extern "C" {
-extern ArcCoursePreviewMovie g_ArcCoursePreviewMovie;
-extern short g_CarLogoArcState;
-extern short g_ArcCardSlotStatus[];
-extern unsigned char g_ArcadeMenuExit; // what ArcadeMode_Run does next: 0 title, 1 race, 2 and 3 movies
-extern KanjiFont *g_ArcKanjiFont;
-extern GameState g_GameState;
-extern void *g_EventDataBuf;
-extern short g_ArcadeBgFileByLang[];    // background TIMs, per language
-extern short g_ArcadeBg2FileByLang[];
-extern unsigned char g_OVL2_PacketBuf[];
-extern unsigned char g_OVL2_OrderingTable[];
-extern unsigned char g_OVL2_FileBuf[];  // the TIMs, then the logo archive, the course map info and the font info
-extern CarInfoA g_OVL2_storageCarInfoA;
-extern unsigned char g_ArcadeT002nModel[];
-extern unsigned char g_ArcadeT002nTex[];
-extern TextCtx g_ArcadeText;
-extern unsigned char g_OVL2_CarGzBuf[];
+extern ArcCoursePreviewMovie (&g_ArcCoursePreviewMovie);
+extern short (&g_CarLogoArcState);
+extern short (&g_ArcCardSlotStatus)[];
+extern unsigned char (&g_ArcadeMenuExit); // what ArcadeMode_Run does next: 0 title, 1 race, 2 and 3 movies
+extern game_pointer<KanjiFont> (&g_ArcKanjiFont);
+extern GameState (&g_GameState);
+extern game_pointer<void> (&g_EventDataBuf);
+extern short (&g_ArcadeBgFileByLang)[];    // background TIMs, per language
+extern short (&g_ArcadeBg2FileByLang)[];
+extern unsigned char (&g_OVL2_PacketBuf)[];
+extern unsigned char (&g_OVL2_OrderingTable)[];
+extern unsigned char (&g_OVL2_FileBuf)[];  // the TIMs, then the logo archive, the course map info and the font info
+extern CarInfoA (&g_OVL2_storageCarInfoA);
+extern unsigned char (&g_ArcadeT002nModel)[];
+extern unsigned char (&g_ArcadeT002nTex)[];
+extern TextCtx (&g_ArcadeText);
+extern unsigned char (&g_OVL2_CarGzBuf)[];
 // The car views and their buffers: models, textures, compressed textures and
 // wheels, and the inflate state they share.
-extern ArcCarView D_800EF4A8[2];
-extern unsigned char D_800274D4[];
-extern unsigned char D_800A8D68[];
-extern unsigned char D_800CF4A8[];
-extern unsigned char D_800334D4[];
-extern unsigned char D_800DF4A8[];
-extern unsigned short D_800454D4[];     // [1] clut y and [4] texture page of the car views
-extern unsigned char D_800E34A8[];      // logo TIM buffers
-extern unsigned char D_800C74A8[];      // course map buffer
-extern unsigned char D_800F8800[];      // arcade game data
-extern unsigned char D_80103800[];      // preview movie buffer
-extern unsigned char D_800455DC[];      // kanji font
+extern ArcCarView (&D_800EF4A8)[2];
+extern unsigned char (&D_800274D4)[];
+extern unsigned char (&D_800A8D68)[];
+extern unsigned char (&D_800CF4A8)[];
+extern unsigned char (&D_800334D4)[];
+extern unsigned char (&D_800DF4A8)[];
+extern unsigned short (&D_800454D4)[];     // [1] clut y and [4] texture page of the car views
+extern unsigned char (&D_800E34A8)[];      // logo TIM buffers
+extern unsigned char (&D_800C74A8)[];      // course map buffer
+extern unsigned char (&D_800F8800)[];      // arcade game data
+extern unsigned char (&D_80103800)[];      // preview movie buffer
+extern unsigned char (&D_800455DC)[];      // kanji font
 // The fonts of fontinfo, by their digit width.
-extern Font D_80129830;                 // 12, the page titles
-extern Font D_80129820;                 // 7
-extern Font D_80123810;                 // 5
-extern Font D_80129840;                 // 3
+extern Font (&D_80129830);                 // 12, the page titles
+extern Font (&D_80129820);                 // 7
+extern Font (&D_80123810);                 // 5
+extern Font (&D_80129840);                 // 3
 }
 
 // Draws page: its title bar, with fade (0-128) dimming it, then the page itself.
@@ -125,6 +125,7 @@ void ArcadeMenu_DrawMovie(ArcadeMenu *menu, void *ot, int x, int y, int unused)
 
 ArcadeMenu::ArcadeMenu()
 {
+    vptr.address = 0x80026fb8;  // ArcadeMenu's vtable
 }
 
 ArcadeMenu::~ArcadeMenu()

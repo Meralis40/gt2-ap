@@ -2,6 +2,7 @@
 // The PsyQ and BIOS functions the game calls, until each has its real implementation
 // in port/hw. A stub stops with its name, so the next one to write is the one the game
 // reached.
+#include "memmap.h"
 #include "rt.h"
 
 #include <cstring>
@@ -30,7 +31,7 @@ PENDING(DecDCTout)
 
 NOTHING(ResetCallback)
 NOTHING(SetIntrMask)
-NOTHING(EnterCriticalSection)
+NOTHING(Psx_EnterCriticalSection)  // the BIOS call; the name is also Win32's
 NOTHING(ExitCriticalSection)
 NOTHING(FlushCache)
 NOTHING(CdInit)
@@ -44,22 +45,26 @@ NOTHING(CloseEvent)
 NOTHING(GPU_cw)
 
 // The BIOS Kanji ROM isn't on the disc. Its glyphs read as blank for now; only memory card
-// screens use them. The game indexes from the space's address, in both directions.
-static unsigned short s_BlankKanji[0x80000];
-
+// screens use them. The game indexes from the space's address, in both directions, and keeps
+// it in guest data, so the blank ROM is in guest memory.
 void *Krom2RawAdd(unsigned int)
 {
-    return &s_BlankKanji[0x40000];
+    static unsigned short *blank;
+
+    if (!blank) {
+        blank = static_cast<unsigned short *>(rt::guestAlloc(0x80000 * sizeof(unsigned short)));
+    }
+    return blank + 0x40000;
 }
 
 // libc names with no equivalent in the host's C library.
-void Game_bcopy(const void *src, void *dst, unsigned int size)
+void Game_bcopy(const void *src, void *dst, std::size_t size)
 {
     std::memmove(dst, src, size);
 }
 
 #if defined(_WIN32)
-int strncasecmp(const char *a, const char *b, unsigned int size)
+int strncasecmp(const char *a, const char *b, std::size_t size)
 {
     return _strnicmp(a, b, size);
 }

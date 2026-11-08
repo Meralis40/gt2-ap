@@ -1,9 +1,10 @@
 // Resident code 8007f7f4-8007f924 (misc): a line primitive, the display enable and the
 // SPU's reset.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern void *g_PacketPtr;
+extern game_pointer<void> (&g_PacketPtr);
 
 struct GpuPorts {
     unsigned int data;
@@ -20,7 +21,7 @@ LineF2 *Prim_AddLineF2(uint *ot, uint rgb)
     p = (unsigned int *)g_PacketPtr;
     ((unsigned char *)p)[3] = 3;
     Mips_Swl2(link, p);
-    Mips_Swl2((unsigned int)p << 8, ot);
+    Mips_Swl2((unsigned int)rt::to_guest(p) << 8, ot);
     p[1] = rgb ^ 0x40000000;
     g_PacketPtr = (char *)(p + 4);
     return (LineF2 *)(p + 2);

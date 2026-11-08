@@ -1,6 +1,7 @@
 // OVL2 80023690-8002445c (bonus): Bonus items pages.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 
 static inline int Half(unsigned short v)
@@ -22,37 +23,37 @@ static inline void Row_PutSprite(void *ot, ArcSprite *sprite, unsigned int rgb, 
 
 extern "C" {
 int License_IsEarned_OVL2(int license);
-extern Font D_80123810;
-extern ArcBonusCourse g_ArcBonusCourses[];
-extern MenuList g_ArcList_Bonus;
-extern ArcMenuList g_ArcMenu_Bonus;
-extern ArcMenuItem D_80052754[2];
-extern ButtonPrompt g_Arc_BonusPrompt;
-extern ButtonPromptDesc D_8005272C;
-extern short g_Arc_BonusCourseCount;
-extern short g_Arc_BonusChoice;
-extern MenuPage g_ArcPage_BonusSelect;
-extern MenuPage g_ArcPage_BonusLaunch;
-extern unsigned char D_801C9998[]; // PlayerStats
-extern unsigned int D_800526DC[7]; // the licences' colours
-extern unsigned char D_800526B8[];
-extern unsigned char D_800526BC[];
-extern unsigned char D_800526C0[];
-extern unsigned char D_800526C8[];
-extern unsigned char D_800526CC[];
-extern unsigned char D_800526D0[];
-extern unsigned char D_800526D4[];
-extern unsigned char D_800526D8[];
-extern ArcSprite D_80052604;
-extern ArcSprite D_80052628;
-extern ArcSprite D_80052634;
-extern ArcSprite D_80052640;
-extern ArcSprite D_8005264C;
-extern ArcSprite D_80052658[2];
-extern ArcSprite D_8005267C[3]; // the medals
-extern ArcSprite D_800526A0;
-extern ArcSprite D_800526AC;
-extern char D_800F87B9[];
+extern Font (&D_80123810);
+extern ArcBonusCourse (&g_ArcBonusCourses)[];
+extern MenuList (&g_ArcList_Bonus);
+extern ArcMenuList (&g_ArcMenu_Bonus);
+extern ArcMenuItem (&D_80052754)[2];
+extern ButtonPrompt (&g_Arc_BonusPrompt);
+extern ButtonPromptDesc (&D_8005272C);
+extern short (&g_Arc_BonusCourseCount);
+extern short (&g_Arc_BonusChoice);
+extern MenuPage (&g_ArcPage_BonusSelect);
+extern MenuPage (&g_ArcPage_BonusLaunch);
+extern unsigned char (&D_801C9998)[]; // PlayerStats
+extern unsigned int (&D_800526DC)[7]; // the licences' colours
+extern unsigned char (&D_800526B8)[];
+extern unsigned char (&D_800526BC)[];
+extern unsigned char (&D_800526C0)[];
+extern unsigned char (&D_800526C8)[];
+extern unsigned char (&D_800526CC)[];
+extern unsigned char (&D_800526D0)[];
+extern unsigned char (&D_800526D4)[];
+extern unsigned char (&D_800526D8)[];
+extern ArcSprite (&D_80052604);
+extern ArcSprite (&D_80052628);
+extern ArcSprite (&D_80052634);
+extern ArcSprite (&D_80052640);
+extern ArcSprite (&D_8005264C);
+extern ArcSprite (&D_80052658)[2];
+extern ArcSprite (&D_8005267C)[3]; // the medals
+extern ArcSprite (&D_800526A0);
+extern ArcSprite (&D_800526AC);
+extern char (&D_800F87B9)[];
 int ArcBonus_AllCoursesWon(void);
 int ArcBonus_IsStat349Set(void);
 
@@ -401,7 +402,7 @@ void BonusSelect_Draw(ArcadeMenu *menu, DrawLayer *layer)
 // 24-frame delay.
 void BonusLaunch_Enter(void *menu, int back)
 {
-    *(unsigned int *)(*(int *)((int)menu + 0x1c8) + 0x14) = 0x18;
+    *(unsigned int *)rt::from_guest((*(int *)rt::from_guest(((int)rt::to_guest(menu) + 0x1c8)) + 0x14)) = 0x18;
 }
 
 // After the delay leaves the menu for the chosen bonus.

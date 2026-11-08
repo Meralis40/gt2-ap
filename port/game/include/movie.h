@@ -3,6 +3,9 @@
 #ifndef MOVIE_H
 #define MOVIE_H
 
+#include "gptr.h"
+#include "vtable.h"
+
 #include "resident.h"
 
 // Ring of frames read from the CD (0x1c bytes).
@@ -12,8 +15,8 @@ struct MovieStream {
     short writeIdx;
     short queued;
     short ringSize;
-    unsigned char **ring;
-    unsigned char *dst;
+    game_pointer<game_pointer<unsigned char>> ring;
+    game_pointer<unsigned char> dst;
     unsigned int frameNo;
     unsigned int sectorIdx;
 };
@@ -26,21 +29,21 @@ struct MdecOut {
     unsigned short sliceWords;
     short sliceCount;
     short slicesLeft;
-    unsigned long *slice[2];
+    game_pointer<unsigned int> slice[2];
 };
 
 struct MoviePlayer {
-    void (*savedGpuDmaHook)();
-    void (*onFrameDone)();
+    game_function<void()> savedGpuDmaHook;
+    game_function<void()> onFrameDone;
     MovieStream stream;
     MdecOut mdec;
     short dstX;
     short dstY;
     short frameW;
     short frameH;
-    void *vlcNext;
-    void *vlcOther;
-    void *vlcReady;
+    game_pointer<void> vlcNext;
+    game_pointer<void> vlcOther;
+    game_pointer<void> vlcReady;
 };
 
 // The movie screen loop of OVL5 (movieloop.cpp, which emits its vtable).
@@ -56,23 +59,27 @@ public:
     int framesReady;           // decoded frames waiting for display
     int decodeBuf;
     int vsyncTick;
-    short *dispStarts;         // display buffer positions (x, y)
+    game_pointer<short> dispStarts;         // display buffer positions (x, y)
     int dispOffX;
     int dispOffY;
 
     psxMovieLoop(int movie, int triple);
-    virtual ~psxMovieLoop();
-    virtual void Enter();
-    virtual void Flip();
-    virtual void Leave();
-    virtual int Update();
-    virtual void BeginDraw();
-    virtual void Draw();
-    virtual void EndDraw();
-    virtual void UpdateDisplay();
-    virtual void Virtual15();
-    virtual int RestartRead();
-    virtual void OnFrameDecoded();
+    ~psxMovieLoop();
+    void Enter();
+    void Flip();
+    void Leave();
+    int Update();
+    void BeginDraw();
+    void Draw();
+    void EndDraw();
+    void UpdateDisplay();
+    void Virtual15();
+    int RestartRead();
+    void OnFrameDecoded();
+    // Calls through the vtable word (rt/vtable.h).
+    void v_Virtual15() { return vptr.slot<void(ScreenViewLoop *)>(14)(this); }
+    int v_RestartRead() { return vptr.slot<int(ScreenViewLoop *)>(15)(this); }
+    void v_OnFrameDecoded() { return vptr.slot<void(ScreenViewLoop *)>(16)(this); }
 };
 
 // Header of a movie sector (the first 8 words, read before the 0x1f8 words of
@@ -102,18 +109,18 @@ extern unsigned char g_MovieVlcBufA[];
 extern unsigned char g_MovieVlcBufB[];
 extern unsigned char g_MovieSliceBufA[];
 extern unsigned char g_MovieSliceBufB[];
-extern unsigned char *g_MovieRing[32];
-extern short D_800120CC[];  // display buffers, double buffered
-extern short D_800120D4[];  // display buffers, triple buffered
+extern game_pointer<unsigned char> g_MovieRing[32];
+extern short (&D_800120CC)[];  // display buffers, double buffered
+extern short (&D_800120D4)[];  // display buffers, triple buffered
 // VLC table, 0x100 bytes before its start (0x800115CC): one row of 64 words
 // per leading-zero count from 1.
-extern unsigned int D_800114CC[];
+extern unsigned int (&D_800114CC)[];
 
 // Resident data.
-extern CdAudio g_CdAudio;
-extern int g_MovieSectors[];
-extern int g_StreamLba;
-extern PadHandler g_PadHandlers[];
+extern CdAudio (&g_CdAudio);
+extern int (&g_MovieSectors)[];
+extern int (&g_StreamLba);
+extern PadHandler (&g_PadHandlers)[];
 
 }
 

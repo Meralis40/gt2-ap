@@ -5,32 +5,32 @@
 
 extern "C" {
 int License_IsEarned_OVL2(int license);
-extern GameState g_GameState;
-extern ArcCourse g_ArcCourses_Race[];
-extern ArcCourse g_ArcCourses_RaceRev[];
-extern ArcCourse g_ArcCourses_TimeTrial[];
-extern ArcCourse g_ArcCourses_TimeTrialRev[];
-extern ArcCourse g_ArcCourses_Rally[];
-extern ArcCourse g_ArcCourses_2P[];
-extern ArcCourse g_ArcCourses_2PRally[];
-extern short g_Arc_CourseCount;
-extern short D_800F3958;
-extern short D_800F395A;
-extern short D_800F395C;
-extern short D_800F395E;
-extern short D_800F3960;
-extern short D_800F3962;
-extern short g_ArcCarList_Count[7];
-extern signed char g_ArcCarList_UnlockS[];
-extern signed char g_ArcCarList_UnlockRally[];
-extern unsigned char D_80051BAC[]; // class S: available
-extern unsigned char D_80051F20[]; // rally class: available
-extern unsigned char D_800507A8;
-extern unsigned char D_8005076C;
-extern short *g_ArcCarList_Colors[7];
-extern char **g_ArcCarList_Codes[7];
-extern short *g_ArcCarList_Logos[7];
-extern int g_Arc_ClassSUnlocked;
+extern GameState (&g_GameState);
+extern ArcCourse (&g_ArcCourses_Race)[];
+extern ArcCourse (&g_ArcCourses_RaceRev)[];
+extern ArcCourse (&g_ArcCourses_TimeTrial)[];
+extern ArcCourse (&g_ArcCourses_TimeTrialRev)[];
+extern ArcCourse (&g_ArcCourses_Rally)[];
+extern ArcCourse (&g_ArcCourses_2P)[];
+extern ArcCourse (&g_ArcCourses_2PRally)[];
+extern short (&g_Arc_CourseCount);
+extern short (&D_800F3958);
+extern short (&D_800F395A);
+extern short (&D_800F395C);
+extern short (&D_800F395E);
+extern short (&D_800F3960);
+extern short (&D_800F3962);
+extern short (&g_ArcCarList_Count)[7];
+extern signed char (&g_ArcCarList_UnlockS)[];
+extern signed char (&g_ArcCarList_UnlockRally)[];
+extern unsigned char (&D_80051BAC)[]; // class S: available
+extern unsigned char (&D_80051F20)[]; // rally class: available
+extern unsigned char (&D_800507A8);
+extern unsigned char (&D_8005076C);
+extern game_pointer<short> (&g_ArcCarList_Colors)[7];
+extern game_pointer<game_pointer<char>> (&g_ArcCarList_Codes)[7];
+extern game_pointer<short> (&g_ArcCarList_Logos)[7];
+extern int (&g_Arc_ClassSUnlocked);
 
 // Hashes the names of a course list and sets which courses are unlocked: by their
 // license, and with reverse by their stat byte too. Returns how many are.

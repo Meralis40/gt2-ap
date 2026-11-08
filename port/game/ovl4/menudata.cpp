@@ -1,32 +1,33 @@
 // OVL4 80020c50-80021a40 (menudata): Menu data files, pages and the background picture
 // stream.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern int *g_SoloData_CarPages;
-extern int g_MenuElementCount;
-extern int g_MenuLanguage;
-extern LangMenuFiles g_LangMenuFiles[7];
-extern unsigned int g_MenuPageAttr;
-extern int g_MenuPageBackPage;
-extern int *g_CommonPicIdx;
-extern int *g_GtMenuDatIdx;
-extern int *g_SoloData;
-extern void *g_MenuPageBuf;
-extern void *g_MenuScratch;
-extern unsigned int *g_MenuTileMap;
-extern unsigned int *g_MenuOverlayTiles;
-extern int *g_MenuSpriteGroups;
-extern MenuElement g_MenuElements[64];
-extern int g_MenuBgPicId;
-extern BgPicStream g_BgPicStream;
-extern GameState g_GameState;
-extern unsigned char g_CarSpecStringsGz[];
-extern CarSpecStrings g_CarSpecStrings;
-extern unsigned short g_VolBootIds[248];
-extern VolHeader g_VolHeader;
-extern unsigned int g_VolLba;
-extern CdAudio g_CdAudio;
+extern game_pointer<int> (&g_SoloData_CarPages);
+extern int (&g_MenuElementCount);
+extern int (&g_MenuLanguage);
+extern LangMenuFiles (&g_LangMenuFiles)[7];
+extern unsigned int (&g_MenuPageAttr);
+extern int (&g_MenuPageBackPage);
+extern game_pointer<int> (&g_CommonPicIdx);
+extern game_pointer<int> (&g_GtMenuDatIdx);
+extern game_pointer<int> (&g_SoloData);
+extern game_pointer<void> (&g_MenuPageBuf);
+extern game_pointer<void> (&g_MenuScratch);
+extern game_pointer<unsigned int> (&g_MenuTileMap);
+extern game_pointer<unsigned int> (&g_MenuOverlayTiles);
+extern game_pointer<int> (&g_MenuSpriteGroups);
+extern MenuElement (&g_MenuElements)[64];
+extern int (&g_MenuBgPicId);
+extern BgPicStream (&g_BgPicStream);
+extern GameState (&g_GameState);
+extern unsigned char (&g_CarSpecStringsGz)[];
+extern CarSpecStrings (&g_CarSpecStrings);
+extern unsigned short (&g_VolBootIds)[248];
+extern VolHeader (&g_VolHeader);
+extern unsigned int (&g_VolLba);
+extern CdAudio (&g_CdAudio);
 
 // Inflates the car spec strings of all the languages and keeps the game
 // language's.
@@ -198,7 +199,7 @@ void MenuPage_LoadById(int pageId, void *buf)
     int iVar1;
 
     if (pageId < 0) {
-        pageId = (int)*(unsigned short *)((int)g_SoloData + pageId *2 + 4);
+        pageId = (int)*(unsigned short *)rt::from_guest(((int)g_SoloData + pageId *2 + 4));
     }
     Gpu_DrawSync();
     GtMenuDat_ReadPage(pageId, g_MenuPageBuf);
@@ -254,9 +255,9 @@ unsigned int *MenuPage_UploadBgClut(void *header)
     local_10.w = 0x200;
     local_10.x = 0;
     local_10.h = 8;
-    Gpu_TransferImage(&local_10, (unsigned int *)((int)header + 0x1f84), 0);
+    Gpu_TransferImage(&local_10, (unsigned int *)rt::from_guest(((int)rt::to_guest(header) + 0x1f84)), 0);
     Gpu_DrawSync();
-    return (unsigned int *)((int)header + 0x1f84);
+    return (unsigned int *)rt::from_guest(((int)rt::to_guest(header) + 0x1f84));
 }
 
 // Parses a gtmenudat page: the sprite groups (each with its own elements),
@@ -326,7 +327,7 @@ void OT_InsertChain(OtTag *ot, OtTag *head, OtTag *tail)
 
     link = Mips_Lwl2(ot);
     Mips_Swl2(link, tail);
-    Mips_Swl2((unsigned int)head << 8, ot);
+    Mips_Swl2((unsigned int)rt::to_guest(head) << 8, ot);
 }
 
 // The page's element index, or null past the last one.
@@ -451,7 +452,7 @@ int BgPic_StreamRead(void *header, unsigned int offset, int size)
         CdAudio *cd = &g_CdAudio;
 
         cd->reqSkip = skip;
-        cd->onSector = (void *)BgPicStream_OnSector;
+        cd->onSector = (CdSectorFn *)BgPicStream_OnSector;
         s->startOffset = skip;
     }
     CdAudio_WaitRead(BgPicStream_Restart);

@@ -1,6 +1,7 @@
 // OVL0 80014e28-800157a8 (raceworld): Race world and the lap callbacks.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
@@ -46,20 +47,21 @@ struct RaceCarHud {
     short refTimeTimer;
     short messageTimer;
     int lapTimeShown;
-    void *lapLabel;
+    game_pointer<void> lapLabel;
     int refTime;
     int refTime2;
 };
 
 extern "C" {
-extern RaceMem g_Race_IsDemo;
-extern RaceWorld g_RaceWorld;
-extern RaceViewLoop *g_RaceView;
-extern int g_FrameRate;
-extern int g_FrameDt;
-extern int g_TT_GhostResync;
+extern RaceMem (&g_Race_IsDemo);
+extern RaceWorld (&g_RaceWorld);
+extern game_pointer<RaceViewLoop> (&g_RaceView);
+extern int (&g_FrameRate);
+extern int (&g_FrameDt);
+extern int (&g_TT_GhostResync);
 void RaceVehicle_UpdateSound(RaceVehicle *car, int rank, RaceCam *cam);
-void RaceVehicle_Init(RaceVehicle *car, int index, int init);
+struct CarDims;  // racevehicle.cpp
+void RaceVehicle_Init(RaceVehicle *car, int index, CarDims *dims);
 void RaceVehicle_Shutdown(RaceVehicle *car);
 void RaceVehicle_Draw(RaceVehicle *car, RaceCam *cam, int mirror);
 void RaceVehicle_OnLap(RaceVehicle *car, int lap, int time, int invalid);
@@ -218,7 +220,7 @@ void RaceWorld_Start(RaceWorld *w)
         RaceVehicle *car = &w->vehicles[i];
         int offset = i * 0x1c0 + 0x14fda;
 
-        RaceVehicle_Init(car, i, offset + (int)state);
+        RaceVehicle_Init(car, i, (CarDims *)(state + offset));
     }
     Race_InitCarState();
     PadDevice_FlushInput(&w->pads[0].dev);

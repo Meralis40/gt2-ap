@@ -3,7 +3,7 @@
 #include "common.h"
 
 extern "C" {
-extern char g_McCreateName[];
+extern char (&g_McCreateName)[];
 
 void McHeader_Init(McFileHeader *h)
 {
@@ -76,7 +76,7 @@ int McCard_StartCreate(int port, char *name, unsigned int size)
 // Allocates the blocks, then writes the directory frames from the first.
 // The game loads &g_McOp_Port into $a0 first, moving the arguments up to $a1-$a3, then
 // copies it to a saved register (as in Overlay_Load); the rest is the game's code.
-int McOp_Create(int event, int *sector, void **buf)
+int McOp_Create(int event, int *sector, game_pointer<void> *buf)
 {
     McOpState *op = McOp_Get();
     McPort *port = op->port;
@@ -189,7 +189,7 @@ int McCard_GetResult(void)
 // remapped.
 // The game loads &g_McOp_Port into $a0 first, moving the arguments up to $a1-$a3, then
 // copies it to a saved register (as in Overlay_Load); the rest differs in registers.
-int McOp_Transfer(int event, int *sector, void **buf)
+int McOp_Transfer(int event, int *sector, game_pointer<void> *buf)
 {
     McOpState *op = &g_McOp_Port;
     McPort *port = op->port;

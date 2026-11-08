@@ -21,6 +21,6 @@ void Rt_DmaDone(int channel);
 }
 #endif
 
-#define HW_REG(offset) ((unsigned int)g_HwRegs + (offset))
+#define HW_REG(offset) ((__UINTPTR_TYPE__)g_HwRegs + (offset))
 
 #endif

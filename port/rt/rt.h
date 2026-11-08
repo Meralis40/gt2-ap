@@ -11,7 +11,7 @@ void Rt_Log(const char *format, ...);
 [[noreturn]] void Rt_Fatal(const char *format, ...);
 void Rt_Unimplemented(const char *what);
 
-// Copies overlay index to its guest address and patches its code pointers.
+// Copies overlay index to its guest address; its functions then answer for its addresses.
 void Rt_LoadOverlay(int index);
 // Leaves the current overlay and runs entry(a, b, c, d) from the runtime's loop.
 [[noreturn]] void Rt_RunEntry(void *entry, int a, int b, int c, int d);

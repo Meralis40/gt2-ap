@@ -11,8 +11,8 @@ struct RaceLoadVSync {
 };
 
 extern "C" {
-extern RaceLoadVSync g_RaceLoadVSync;
-extern unsigned char g_Race_IsDemo;
+extern RaceLoadVSync (&g_RaceLoadVSync);
+extern unsigned char (&g_Race_IsDemo);
 
 // g_RaceSetup, from g_GameState and an offset local (the offset is too big for an addiu).
 static inline RaceSetup *RaceSetup_Get()

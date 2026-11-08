@@ -3,13 +3,13 @@
 #include "common.h"
 
 extern "C" {
-extern unsigned char D_800A6F28;
-extern int D_800A6F20[2];
-extern short g_InitRange[2][2];
-extern unsigned char D_800A6F2C[];
-extern unsigned char D_800A6F34[];
-extern unsigned char g_PadButtonMap[16][2];
-extern PadRepeat g_PadRepeatStart; // with g_PadRepeatEnd
+extern unsigned char (&D_800A6F28);
+extern int (&D_800A6F20)[2];
+extern short (&g_InitRange)[2][2];
+extern unsigned char (&D_800A6F2C)[];
+extern unsigned char (&D_800A6F34)[];
+extern unsigned char (&g_PadButtonMap)[16][2];
+extern PadRepeat (&g_PadRepeatStart); // with g_PadRepeatEnd
 
 // Sends force as one actuator byte: its level (0-15, from 256ths) with 0x10 or 0x20
 // for its sign, 0 when it is 0.

@@ -9,7 +9,7 @@ Reference projects: [ctr-native-ap](https://github.com/dowlle/ctr-native-ap) (ta
 |---|---|
 | Target version | NTSC-U 1.2 (Simulation SCUS-94488, Arcade SCUS-94455) |
 | Assets | User provides CD images; client extracts/verifies them. No assets distributed. |
-| Platforms | Windows, Linux/Steam Deck. The port is a 32-bit build, so macOS is dropped |
+| Platforms | Windows, Linux/Steam Deck, as x86-64 builds (docs/port.md). macOS is possible but not built |
 | Runtime | Native source port, forked into `port/`; guest RAM at its real address |
 | Client stack | C++20, CMake, SDL3, `apclientpp`. Python for tooling and the AP world. |
 | Licenses | Client GPL-2.0-or-later, AP world MIT. mbedTLS, not OpenSSL. See [licensing.md](licensing.md). |

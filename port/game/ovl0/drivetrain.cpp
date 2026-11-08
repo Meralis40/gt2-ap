@@ -1,5 +1,6 @@
 // OVL0 800392d8-8003b69c (drivetrain): Engine, gearbox and tyre slip.
 // The functions that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
@@ -24,14 +25,14 @@ struct CarWheelScratch {
     WheelScratch wheels[4];
     unsigned char unk70[0x20];
 };
-#define WHEEL_SCRATCH(car, wheel) ((WheelScratch *)(0x1f800004 + (car) * 0x90 + (wheel) * sizeof(WheelScratch)))
+#define WHEEL_SCRATCH(car, wheel) ((WheelScratch *)rt::guest(0x1f800004 + (car) * 0x90 + (wheel) * sizeof(WheelScratch)))
 
 // One player's shift input in the scratchpad, per car.
 struct ShiftInput {
     signed char button;
     unsigned char unk1[3];
 };
-#define SHIFT_INPUT ((ShiftInput *)0x1f800364)
+#define SHIFT_INPUT ((ShiftInput *)rt::guest(0x1f800364))
 
 // Per-car values in the scratchpad (0x1f800000 + carIndex * 0x90).
 struct PhysCarScratch {
@@ -43,21 +44,21 @@ struct PhysCarScratch {
     int torqueRatio; /* RaceCars_StepDrivetrain */
 };
 
-#define g_FrameDt (*(int *)0x1f800000)
+#define g_FrameDt (*(int *)rt::guest(0x1f800000))
 #define CARPHYS_FIELD(car, type, offset) (*(type *)((char *)(car) + (offset)))
 
-extern int g_TyreWearEnabled;
-extern int g_TyreWear_MaxGripLoss;
-extern int g_TyreWearInit;
-extern int g_TyreGripLossInit;
-extern int g_TyreWear_Knee;
-extern int g_TyreWear_KneeGripLoss;
-extern int g_TyreWear_WornGrip;
-extern int g_SurfaceRollResist[];
-extern EngineCurve g_DragCurve;
-extern int g_FrameRate;
-extern short g_SinTable[];
-extern short g_CosTable[];
+extern int (&g_TyreWearEnabled);
+extern int (&g_TyreWear_MaxGripLoss);
+extern int (&g_TyreWearInit);
+extern int (&g_TyreGripLossInit);
+extern int (&g_TyreWear_Knee);
+extern int (&g_TyreWear_KneeGripLoss);
+extern int (&g_TyreWear_WornGrip);
+extern int (&g_SurfaceRollResist)[];
+extern EngineCurve (&g_DragCurve);
+extern int (&g_FrameRate);
+extern short (&g_SinTable)[];
+extern short (&g_CosTable)[];
 
 int Curve16_Eval(Curve16 *curve, short x);
 int Curve16_Eval2(Curve16 *curve, Curve16 *curve2, short x, short *outY, short *outY2);
@@ -152,7 +153,7 @@ void Clutch_UpdateShiftState(CarPhys *car)
 void Tyre_ComputeSlipRatio(CarPhys *car, int index)
 {
     unsigned int i;
-    WheelScratch *s = ((CarWheelScratch *)0x1f800004)[index].wheels;
+    WheelScratch *s = ((CarWheelScratch *)rt::from_guest(0x1f800004))[index].wheels;
 
     for (i = 0; i < 4; i++, s++) {
         CarPhysWheel *wheel = &car->wheels[i];
@@ -293,7 +294,7 @@ void Engine_SetRpmDisplay(CarPhys *car)
 // address is built first, which also shifts the registers.
 void Gearbox_AutoSelectDirection(CarPhys *car, int index)
 {
-    int want = *(signed char *)((int *)0x1f800364 + index);
+    int want = *(signed char *)((int *)rt::from_guest(0x1f800364) + index);
     int gear = car->gear;
     int next = -1;
 
@@ -546,7 +547,7 @@ void CarPhys_UpdateDrivetrain(RaceVehicle *cars, int count)
     // The clutch and the brake torque of each wheel.
     for (i = 0; i < count; i++) {
         CarPhys *car = &cars[i].phys;
-        PhysCarScratch *scratch = &((PhysCarScratch *)0x1f800000)[i];
+        PhysCarScratch *scratch = &((PhysCarScratch *)rt::from_guest(0x1f800000))[i];
         int hand;
 
         g_FrameDt = car->timeStep;
@@ -611,7 +612,7 @@ void CarPhys_UpdateDrivetrain(RaceVehicle *cars, int count)
     // The rolling resistance.
     for (i = 0; i < count; i++) {
         CarPhys *car = &cars[i].phys;
-        PhysCarScratch *scratch = &((PhysCarScratch *)0x1f800000)[i];
+        PhysCarScratch *scratch = &((PhysCarScratch *)rt::from_guest(0x1f800000))[i];
         int sum = 0;
         int k;
 
@@ -721,7 +722,7 @@ void CarPhys_UpdateDrivetrain(RaceVehicle *cars, int count)
     // The forward acceleration.
     for (i = 0; i < count; i++) {
         CarPhys *car = &cars[i].phys;
-        PhysCarScratch *scratch = &((PhysCarScratch *)0x1f800000)[i];
+        PhysCarScratch *scratch = &((PhysCarScratch *)rt::from_guest(0x1f800000))[i];
         int sum = 0;
         int weight = 0;
         int accel;
@@ -782,11 +783,11 @@ void CarPhys_UpdateDrivetrain(RaceVehicle *cars, int count)
             ((void (*)(CarPhys *, int))Engine_SetRpmDisplay)(car, i);
             Gearbox_AutoSelectDirection(car, i);
         } else if (car->gearCount == 2) {
-            Engine_Step(car, &((PhysCarScratch *)0x1f800000)[i]);
+            Engine_Step(car, &((PhysCarScratch *)rt::from_guest(0x1f800000))[i]);
             Engine_UpdateRpmDisplay(car);
             Gearbox_AutoSelectDirection(car, i);
         } else {
-            Engine_Step(car, &((PhysCarScratch *)0x1f800000)[i]);
+            Engine_Step(car, &((PhysCarScratch *)rt::from_guest(0x1f800000))[i]);
             Engine_UpdateRpmDisplay(car);
             Gearbox_ApplyShiftRequest(car, i);
         }

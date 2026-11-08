@@ -1,17 +1,18 @@
 // OVL0 8005019c-800505ac (cardpages): Memory card pages.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
 void QuickMenu_PushPage(QuickMenu *menu, QuickMenuPage *page);
-extern QuickMenu *g_QuickMenu;
-extern CardMenuConfig g_QuickMenu_CardConfig;
-extern short g_OVL0_CardSlotStatus[];
-extern void *g_OVL0_KanjiFont;
-extern QuickMenuPage *g_SaveGame_NextPage;
-extern GameState g_GameState;
-extern unsigned char g_TT_GhostReady;
+extern game_pointer<QuickMenu> (&g_QuickMenu);
+extern CardMenuConfig (&g_QuickMenu_CardConfig);
+extern short (&g_OVL0_CardSlotStatus)[];
+extern game_pointer<void> (&g_OVL0_KanjiFont);
+extern game_pointer<QuickMenuPage> (&g_SaveGame_NextPage);
+extern GameState (&g_GameState);
+extern unsigned char (&g_TT_GhostReady);
 // g_Page_SaveReplay: CardMenu_StartSaveReplay.
 void SaveReplay_Enter(int back)
 {
@@ -42,7 +43,7 @@ int SaveReplay_Update(int active)
 // CardMenu_Draw.
 void SaveReplay_Draw(DrawLayer *layer)
 {
-    CardMenu_Draw((unsigned int *)((int)layer->ot + 0x10));
+    CardMenu_Draw((unsigned int *)rt::from_guest(((int)layer->ot + 0x10)));
 }
 
 // g_Page_SaveGhost: CardMenu_StartSaveGhost.
@@ -74,7 +75,7 @@ int SaveGhost_Update(int active)
 // CardMenu_Draw.
 void SaveGhost_Draw(DrawLayer *layer)
 {
-    CardMenu_Draw((unsigned int *)((int)layer->ot + 0x10));
+    CardMenu_Draw((unsigned int *)rt::from_guest(((int)layer->ot + 0x10)));
 }
 
 // g_Page_LoadGhost: CardMenu_StartLoadGhost.
@@ -116,7 +117,7 @@ int LoadGhost_Update(int active)
 // CardMenu_Draw.
 void LoadGhost_Draw(DrawLayer *layer)
 {
-    CardMenu_Draw((unsigned int *)((int)layer->ot + 0x10));
+    CardMenu_Draw((unsigned int *)rt::from_guest(((int)layer->ot + 0x10)));
 }
 
 // g_Page_SaveGame: CardMenu_StartSave (save the game after a prize or license).
@@ -155,7 +156,7 @@ int SaveGame_Update(int active)
 // CardMenu_Draw.
 void SaveGame_Draw(DrawLayer *layer)
 {
-    CardMenu_Draw((unsigned int *)((int)layer->ot + 0x10));
+    CardMenu_Draw((unsigned int *)rt::from_guest(((int)layer->ot + 0x10)));
 }
 
 void QuickMenu_SetupCardUi(void *work)

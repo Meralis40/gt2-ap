@@ -1,5 +1,6 @@
 // Resident code 8007f5a8-8007f7f4 (mcformat). Ghidra's decompilation; the functions
 // that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
@@ -34,7 +35,7 @@ void McFrame_InitHeader(void *frame)
     memset(frame, 0, 0x80);
     *(unsigned short *)frame = 0x434d;
     uVar1 = McFrame_Checksum((unsigned int *)frame);
-    *(unsigned char *)((int)frame + 0x7f) = uVar1;
+    *(unsigned char *)rt::from_guest(((int)rt::to_guest(frame) + 0x7f)) = uVar1;
 }
 
 void McFrame_InitBadSector(int *frame, int sector)
@@ -44,14 +45,14 @@ void McFrame_InitBadSector(int *frame, int sector)
     memset(frame, 0, 0x80);
     *frame = sector;
     uVar1 = McFrame_Checksum((unsigned int *)frame);
-    *(unsigned char *)((int)frame + 0x7f) = uVar1;
+    *(unsigned char *)rt::from_guest(((int)rt::to_guest(frame) + 0x7f)) = uVar1;
 }
 
 // Writes the card's frames a step at a time: the header in frame 0 cleared, the 15
 // directory frames, the 20 bad sector frames, then the header.
 // The game loads &g_McOp_Port into $a0 first, moving the arguments up to $a1-$a3, then
 // copies it to a saved register (as in McOp_Create); the rest is the game's code.
-int McOp_Format(int event, int *sector, void **buf)
+int McOp_Format(int event, int *sector, game_pointer<void> *buf)
 {
     McOpState *op = McOp_Get();
     McPort *port = op->port;

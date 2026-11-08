@@ -1,5 +1,6 @@
 // OVL0 80043388-80046bac (suspension): Suspension and drivetrain.
 // The functions that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
@@ -44,7 +45,7 @@ struct WheelProbe {
     int pos[3]; /* x, y, z x16 */
     int height;
 };
-#define WHEEL_PROBES ((WheelProbe (*)[4])0x1f800004)
+#define WHEEL_PROBES ((WheelProbe (*)[4])rt::guest(0x1f800004))
 
 // Per-wheel values in the scratchpad, 4 per 0x90 bytes of car, from 0x1f800004.
 struct WheelScratch {
@@ -54,7 +55,7 @@ struct WheelScratch {
     int torque;
     unsigned char unk10[0xc];
 };
-#define WHEEL_SCRATCH(car, wheel) ((WheelScratch *)(0x1f800004 + (car) * 0x90 + (wheel) * sizeof(WheelScratch)))
+#define WHEEL_SCRATCH(car, wheel) ((WheelScratch *)rt::guest(0x1f800004 + (car) * 0x90 + (wheel) * sizeof(WheelScratch)))
 
 // Per-car values in the scratchpad (0x1f800000 + carIndex * 0x90).
 struct PhysCarScratch {
@@ -67,7 +68,7 @@ struct PhysCarScratch {
     int rollDrag;
     int torqueRatio;
 };
-#define SCRATCH ((PhysCarScratch *)0x1f800000)
+#define SCRATCH ((PhysCarScratch *)rt::guest(0x1f800000))
 
 // Per-car suspension values in the scratchpad, every 0x34 bytes.
 struct SuspScratch {
@@ -77,24 +78,24 @@ struct SuspScratch {
     int load[4];
     int damper[4];
 };
-#define SUSP_SCRATCH(car) ((SuspScratch *)(0x1f800000 + (car) * 0x34))
+#define SUSP_SCRATCH(car) ((SuspScratch *)rt::guest(0x1f800000 + (car) * 0x34))
 
-#define g_FrameDt (*(int *)0x1f800000)
+#define g_FrameDt (*(int *)rt::guest(0x1f800000))
 #define CARPHYS_FIELD(car, type, offset) (*(type *)((char *)(car) + (offset)))
 #define CAR_UP(car) ((short *)((char *)(car) + 0x678))
 
-extern unsigned char g_Race_IsDemo;
-extern RaceSetup g_RaceSetup;
-extern short g_SinTable[];
-extern short g_CosTable[];
-extern short g_SurfaceGrip[];
-extern short g_SurfaceTable3[];
-extern unsigned char g_SurfaceTable4[];
+extern unsigned char (&g_Race_IsDemo);
+extern RaceSetup (&g_RaceSetup);
+extern short (&g_SinTable)[];
+extern short (&g_CosTable)[];
+extern short (&g_SurfaceGrip)[];
+extern short (&g_SurfaceTable3)[];
+extern unsigned char (&g_SurfaceTable4)[];
 struct AiLineSet {
     unsigned char unk0[0x18];
-    char *unk18;
+    game_pointer<char> unk18;
 };
-extern AiLineSet *g_AiLines;
+extern game_pointer<AiLineSet> (&g_AiLines);
 
 int Race_AllowsOffCourseFlag(void);
 int Body_ChecksCourseOut(CarPhys *body);
@@ -157,7 +158,7 @@ void RaceCars_PrepareWheelProbes(RaceVehicle *cars, int count)
 void RaceCars_ProbeGround(RaceVehicle *cars, int count)
 {
     int i;
-    char *scratch = (char *)0x1f800000;
+    char *scratch = (char *)rt::from_guest(0x1f800000);
 
     for (i = 0; i < count; i++) {
         WheelProbe *probe = (WheelProbe *)(i * sizeof(WheelProbe[4]) + 4 + scratch);

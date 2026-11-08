@@ -4,7 +4,7 @@
 #include "gamestate.h"
 
 extern "C" {
-extern unsigned char D_80091620[];
+extern unsigned char (&D_80091620)[];
 
 void RaceCarPick_SetColor(RaceCarPick *pick, unsigned int carId, unsigned int colorIdx,
                           unsigned int *seed)

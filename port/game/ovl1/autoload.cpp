@@ -1,31 +1,32 @@
 // OVL1 800169b0-8001721c (autoload): Kanji strings and the auto-load page.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern GameState g_GameState;
-extern char *g_AutoLoad_Line1;
-extern char *g_AutoLoad_Line2;
-extern int g_AutoLoad_State;
-extern int g_AutoLoad_Port;
-extern int g_AutoLoad_Timer;
-extern unsigned char g_AutoLoad_EmptyLine;
-extern CardProgressBar g_AutoLoad_Progress;
-extern GameSaveFile g_SaveFileBuf;
-extern KanjiFont *g_OVL1_KanjiFont;
-extern short g_CardSlotStatus[];
-extern short D_8004B860;
-extern int g_McOp_Remaining;
-extern Font g_OVL1_FontLarge;
-extern BaseMenu *g_CurrentMenu;
-extern char sB_MemoryCard1[];
-extern char sB_Loading[];
-extern char sB_LoadingComplete[];
-extern char sB_LoadingFailed[];
-extern char sB_LoadingDataFailed[];
-extern signed char s_LoadingSaveData[];
-extern signed char s_AutoLoadingComplete[];
-extern signed char s_AutoLoadingFailed[];
-extern signed char s_SaveDataIsCorrupt[];
+extern GameState (&g_GameState);
+extern game_pointer<char> (&g_AutoLoad_Line1);
+extern game_pointer<char> (&g_AutoLoad_Line2);
+extern int (&g_AutoLoad_State);
+extern int (&g_AutoLoad_Port);
+extern int (&g_AutoLoad_Timer);
+extern unsigned char (&g_AutoLoad_EmptyLine);
+extern CardProgressBar (&g_AutoLoad_Progress);
+extern GameSaveFile (&g_SaveFileBuf);
+extern game_pointer<KanjiFont> (&g_OVL1_KanjiFont);
+extern short (&g_CardSlotStatus)[];
+extern short (&D_8004B860);
+extern int (&g_McOp_Remaining);
+extern Font (&g_OVL1_FontLarge);
+extern game_pointer<BaseMenu> (&g_CurrentMenu);
+extern char (&sB_MemoryCard1)[];
+extern char (&sB_Loading)[];
+extern char (&sB_LoadingComplete)[];
+extern char (&sB_LoadingFailed)[];
+extern char (&sB_LoadingDataFailed)[];
+extern signed char (&s_LoadingSaveData)[];
+extern signed char (&s_AutoLoadingComplete)[];
+extern signed char (&s_AutoLoadingFailed)[];
+extern signed char (&s_SaveDataIsCorrupt)[];
 void Kanji_DrawString(void *ot, char *sjis, int x, int y, int center, unsigned int rgb);
 
 // Japanese only: resets the kanji glyph cache and caches the two slot names.
@@ -181,7 +182,7 @@ int AutoLoad_Update(int arg)
         break;
     case 4:
         if (SaveFile_CheckCrc(&g_SaveFileBuf, &g_SaveFileBuf) != 0) {
-            GameState_ReadSave((unsigned int)&g_SaveFileBuf, (int)&g_SaveFileBuf);
+            GameState_ReadSave(rt::to_guest(&g_SaveFileBuf), (int)rt::to_guest(&g_SaveFileBuf));
             g_AutoLoad_Timer = 0xb4;
             g_AutoLoad_State = 5;
             g_AutoLoad_Line1 = (char *)&g_AutoLoad_EmptyLine;

@@ -2,9 +2,9 @@
 #include "common.h"
 
 extern "C" {
-extern char sB_Nhp[];
-extern char D_801C3108[];
-extern char s_FmtDay[];
+extern char (&sB_Nhp)[];
+extern char (&D_801C3108)[];
+extern char (&s_FmtDay)[];
 
 // Writes price in decimal with a comma every three digits, as Credits_FormatCommas.
 void FormatPrice(unsigned short *buf, unsigned int price)

@@ -4,7 +4,23 @@ How the game runs natively on PC, from the C++ in `decomp/`, with the Archipelag
 
 ## Memory model
 
-The port is a 32-bit x86 build, and guest RAM is mapped at its real address, `0x80000000`. Disc pointers, `int`/pointer casts, fixed offsets and per-overlay BSS then work unchanged, and a GPU link becomes a pointer with `link | 0x80000000`. macOS is out of scope: it has no 32-bit support.
+Guest memory is a 4 GB window of the address space at `rt::base`, and a PlayStation address `a` is at `base + a`. On x86-64 the system picks the base. On i686, which still builds, it is 0, so guest RAM sits at its real address `0x80000000`. Guest data keeps the console's layout and values on both (`rt/gptr.h`):
+
+- **Pointers in guest data** are `game_pointer<T>`: 4 bytes, the PlayStation address. They convert to and from `T *`. `(int)p` gives the address, as on the console. In code, `rt::to_guest(p)` and `rt::from_guest(a)` convert a host pointer and an address, and `rt::guest(a)` gives a fixed address such as the scratchpad's.
+- **Code pointers in guest data** are `game_function<F>`: the function's PlayStation address, as in the loaded image. A call looks it up in `gen/functions_<unit>.cpp`, in the loaded overlay's table and then the executable's. A function the console didn't have gets an address from `0xc0000000` when first stored.
+- **The game's data names** are references (`extern T (&name)`), which `rt::bindGuestData` points at `base + address` (`gen/guest_data.cpp`).
+- **The game runs on a stack inside the window** on x86-64 (`0x80c00000`, 4 MB), so its locals have guest addresses too. Data the port adds and guest pointers reach goes in `rt::guestAlloc`'s 4 MB from `0x80200000`.
+- **The screen loops, menus and race loops** have no C++ virtual functions. A C++ vtable pointer would be 8 bytes on x86-64, and decompiled code reaches their fields by the console's offsets. Each class keeps a `game_vptr` word where the console has its vtable pointer, holding that vtable's address. `v_F()` calls through the port's table for it (`rt/vtable.h`, `gen/vtables.cpp`).
+- **Game code has no C++ library headers** (`-nostdlibinc`). `long` is `int`, as on the console, and `size_t` is the compiler's.
+
+On x86-64, a host address that ends up in a `game_pointer` stops the game with its caller ("host address … stored as a guest pointer"). A cast between a pointer and a 32-bit integer is a compile error. These tools check what the compiler can't:
+
+- `tools/check_layout.py` compares every game structure between two targets.
+- `tools/check_ptrargs.py` finds C functions declared with an `int` where another declaration has a pointer.
+
+The one-off conversions are in `tools/ref_externs.py`, `convert_members.py`, `convert_casts.py` and `devirtualize.py`. The x86-64 builds' frames and sound match the i686 build's byte for byte on the attract demo and three recorded races.
+
+macOS isn't built yet; the window doesn't need a fixed address, so it is possible.
 
 ## M0 results
 
@@ -30,23 +46,25 @@ The port is a 32-bit x86 build, and guest RAM is mapped at its real address, `0x
 
 ## Building
 
-`port/` builds as part of the top-level CMake project with `GT2AP_BUILD_PORT=ON`, on a 32-bit toolchain. On Windows:
+`port/` builds as part of the top-level CMake project with `GT2AP_BUILD_PORT=ON`. On Windows:
 
 ```bash
-cmake --preset port-windows
-cmake --build --preset port-windows
+cmake --preset port-windows64
+cmake --build --preset port-windows64
 ```
 
-From a Visual Studio x86 developer prompt the toolchain file finds Visual Studio and the Windows SDK by itself; otherwise its `VS_VC`, `WIN_SDK` and `WIN_SDK_VERSION` name the installed versions. The C runtime is linked statically. CMake fetches SDL3 3.2.8, which needs git on the PATH.
+From a Visual Studio developer prompt the toolchain file finds Visual Studio and the Windows SDK by itself; otherwise its `VS_VC`, `WIN_SDK` and `WIN_SDK_VERSION` name the installed versions. The C runtime is linked statically. CMake fetches SDL3 3.2.8, which needs git on the PATH.
 
-On Linux, from a 64-bit Ubuntu with Clang, CMake, Ninja, `gcc-multilib` and `g++-multilib`:
+On Linux, with Clang, CMake, Ninja and the X11, PulseAudio and ALSA development packages:
 
 ```bash
-cmake --preset port-linux
-cmake --build --preset port-linux
+cmake --preset port-linux64
+cmake --build --preset port-linux64
 ```
 
-`.github/workflows/package.yml` lists the packages. SDL takes the X11, PulseAudio and ALSA headers and library names from the ordinary amd64 development packages and loads those libraries when it runs, so the machine that runs the game needs their i386 versions; the toolchain file sets the two X11 checks that can't link. The C++ runtime is linked statically. Only X11 is built in, so a Wayland desktop needs XWayland. This has been run under WSLg only. Its frames came out the same as the Windows build's, and its sound within 1 of it in value.
+`.github/workflows/package.yml` lists the packages. The C++ runtime is linked statically. Only X11 is built in, so a Wayland desktop needs XWayland. This has been run under WSLg only.
+
+The 32-bit builds, `port-windows` and `port-linux`, still work. `port-linux` needs `gcc-multilib`, `g++-multilib` and the i386 libraries to run. The 32-bit builds are the reference that the x86-64 builds' recordings are compared with.
 
 ## Releases
 
@@ -63,11 +81,11 @@ Run it with `gt2ap [<disc.cue>]`, which opens on the Archipelago connection page
 | `port/game` | The forked sources, edited by hand. `FORK_REPORT.txt` is what `fork.py` left to convert, and is out of date since those edits |
 | `port/rt` | Runtime: guest memory, loading, the setjmp point, the pump (`irq.cpp`), stubs (`stubs.cpp`) |
 | `port/hw` | The hardware: GPU, GTE, CD, memory card, pad, and the SDL3 window (`host.cpp`) |
-| `port/gen` | Generated and checked in: `guest_syms.S` binds data names to guest addresses, `fixups_<unit>.cpp` lists the code pointers in guest data |
+| `port/gen` | Generated and checked in: `guest_data.cpp` binds data names to guest addresses, `functions_<unit>.cpp` gives each function's PlayStation address, `vtables.cpp` the classes' tables |
 | `port/ap` | The Archipelago client: `ws.cpp` (websocket, mbedTLS), `session.cpp` (protocol, on its own thread), `state.cpp` (items, locations, a seed's files) |
-| `port/tools` | `fork.py`, `gen_syms.py`, `update_syms.sh`, `gen_fixups.py`, `check_protos.py`, `check_argorder.py`, `fake_ap_server.py` |
+| `port/tools` | `fork.py`, `gen_syms.py`, `update_syms.sh`, `gen_functions.py`, `check_protos.py`, `check_argorder.py`, `check_layout.py`, `check_ptrargs.py`, `fake_ap_server.py`, and the one-off conversions above |
 
-`gen_syms.py` takes the names the objects leave undefined. It reports function names instead of binding them: those are for the port to define. `gen_fixups.py` found 333 slots, with none pointing at a function the port doesn't define. Any word of data can equal a function's address by chance, so slots outside a named table need checking: three such words are listed in `NOT_POINTERS`. `Overlay_StartAt`'s default entries aren't among them, because they're overlay addresses in resident data; `overlay.cpp` has them as a table of host functions.
+`gen_syms.py` takes the names the objects leave undefined. It reports function names instead of binding them: those are for the port to define. `gen_functions.py` lists every function the port defines that the symbol files give an address, per unit. The 333 words of guest data that hold one (menu pages, state tables, callbacks) are declared as `game_function` members. `Overlay_StartAt`'s default entries are host functions in `overlay.cpp`; they never enter guest memory.
 
 ## Archipelago
 

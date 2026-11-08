@@ -3,7 +3,7 @@
 #include "common.h"
 
 extern "C" {
-extern GhostEventFile g_GhostEventFiles[];
+extern GhostEventFile (&g_GhostEventFiles)[];
 
 // The replay file of event eventCode's ghost, or that of IA dirt (no name).
 VolBootId Event_GetGhostFileId(char *eventCode)

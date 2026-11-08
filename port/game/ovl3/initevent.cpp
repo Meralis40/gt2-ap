@@ -3,9 +3,9 @@
 #include "gamestate.h"
 
 extern "C" {
-extern void *g_EventDataBuf;
-extern void *g_GtModeRaceDataBuf;
-extern RaceEventParams g_RaceEventParams;
+extern game_pointer<void> (&g_EventDataBuf);
+extern game_pointer<void> (&g_GtModeRaceDataBuf);
+extern RaceEventParams (&g_RaceEventParams);
 
 }
 

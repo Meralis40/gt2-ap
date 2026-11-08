@@ -14,7 +14,7 @@ void TabSelector_Init(TabSelector *tabs, void *callback, void *userData)
     tabs->anim = -1;
     tabs->hadInput = '\0';
     tabs->active = '\0';
-    tabs->callback = callback;
+    tabs->callback = (TabCallback *)callback;
     tabs->userData = userData;
     tabs->skipInput = '\0';
 }

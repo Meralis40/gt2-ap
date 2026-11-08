@@ -4,9 +4,9 @@
 
 extern "C" {
 
-extern NeGconCalib g_NeGconCalib[2];
-extern PadAnalogMap g_NeGconButtonMap[];
-extern unsigned char g_PadButtonMap[16][2];
+extern NeGconCalib (&g_NeGconCalib)[2];
+extern PadAnalogMap (&g_NeGconButtonMap)[];
+extern unsigned char (&g_PadButtonMap)[16][2];
 
 // The twist: 0 to 0x80 below the centre, 0x80 in the centre's dead zone, 0x80 to 0xff above it.
 // Registers: the game keeps base in $t0 and the upper end in $t1; here they swap.

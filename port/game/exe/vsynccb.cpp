@@ -4,7 +4,7 @@
 
 extern "C" {
 void func_8008107C(void);
-extern GfxIrqState g_GfxIrq;
+extern GfxIrqState (&g_GfxIrq);
 
 // Clears cb and adds it to the vsync list with an empty function, first (priority 0).
 void VSyncCallback_Install(VSyncCallback *cb)

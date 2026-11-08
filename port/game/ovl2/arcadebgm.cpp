@@ -5,9 +5,9 @@
 #include "common.h"
 
 extern "C" {
-extern MenuBgmBank g_ArcadeBgmBank;
-extern unsigned char g_ArcadeBgmWork;
-extern unsigned int g_SpuAllocPtr;
+extern MenuBgmBank (&g_ArcadeBgmBank);
+extern unsigned char (&g_ArcadeBgmWork);
+extern unsigned int (&g_SpuAllocPtr);
 
 // Loads sound bank 0xeb (work 0x4800 bytes) and VOLID_SOUND_ARCADE_SEQ into
 // g_ArcadeBgmBank, then restores the SPU allocation pointer.

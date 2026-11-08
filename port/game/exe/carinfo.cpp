@@ -4,22 +4,22 @@
 #include "common.h"
 
 extern "C" {
-extern CarInfoA *g_CurrentCarInfoA;
-extern GameState g_GameState;
+extern game_pointer<CarInfoA> (&g_CurrentCarInfoA);
+extern GameState (&g_GameState);
 
-extern unsigned char D_801EF630[];     // car code letter -> 6-bit value
-extern CarAsset g_CarAssets[];
-extern CourseInfo g_CourseInfo;
-extern unsigned int g_WheelCodes[];
-extern short g_WheelCodeCount;
-extern unsigned short D_801E2FC6;      // first wheel file
-extern unsigned short g_EngineSoundIds[];
-extern short g_EngineSoundCount;
-extern int g_DemoRaceCount;
-extern unsigned short D_801E30B8;      // file before the first demo race setup
-extern unsigned int g_CourseMapIds[];
-extern unsigned short g_CourseMapCount;
-extern unsigned short g_CourseMapFirstFile;
+extern unsigned char (&D_801EF630)[];     // car code letter -> 6-bit value
+extern CarAsset (&g_CarAssets)[];
+extern CourseInfo (&g_CourseInfo);
+extern unsigned int (&g_WheelCodes)[];
+extern short (&g_WheelCodeCount);
+extern unsigned short (&D_801E2FC6);      // first wheel file
+extern unsigned short (&g_EngineSoundIds)[];
+extern short (&g_EngineSoundCount);
+extern int (&g_DemoRaceCount);
+extern unsigned short (&D_801E30B8);      // file before the first demo race setup
+extern unsigned int (&g_CourseMapIds)[];
+extern unsigned short (&g_CourseMapCount);
+extern unsigned short (&g_CourseMapFirstFile);
 
 // Packs a five-letter car code into 6 bits a letter, the first letter highest.
 unsigned int CarCode_Encode(signed char *code)

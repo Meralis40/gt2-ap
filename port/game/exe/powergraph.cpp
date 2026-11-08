@@ -3,12 +3,12 @@
 #include "common.h"
 
 extern "C" {
-extern char sB_Hp[];
-extern char sB_LbFt[];
-extern char sB_1000rpm[];
-extern char D_8008FB38[];       // "%d"
-extern unsigned char D_80092388[];
-extern unsigned char D_8009238C[];
+extern char (&sB_Hp)[];
+extern char (&sB_LbFt)[];
+extern char (&sB_1000rpm)[];
+extern char (&D_8008FB38)[];       // "%d"
+extern unsigned char (&D_80092388)[];
+extern unsigned char (&D_8009238C)[];
 
 void PowerGraphView_Init(PowerGraphView *v)
 {

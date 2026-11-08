@@ -5,21 +5,21 @@
 #include "gamestate.h"
 
 extern "C" {
-extern short g_MainMenu_Fade;
-extern short g_MainMenu_FadeOut;
-extern short g_MainMenu_State;
-extern MenuList g_MainMenu_List;
-extern short g_MainMenu_OpenDelay;
-extern GameSaveFile g_SaveFileBuf;
-extern int g_MainMenu_IdleFrames;
-extern MenuSprite g_MainMenu_Items[];
-extern short g_MainMenu_RowChoice[];
-extern short g_MainMenu_RowSprite[];
-extern MenuSpriteStyle g_MainMenu_ItemStyle;
-extern SpriteDesc *g_MainMenu_SpriteTables[];
-extern FlowMenuState g_Flow_IntroShown;
-extern signed char g_Flow_MainMenuChoice;
-extern BaseMenu *g_CurrentMenu;
+extern short (&g_MainMenu_Fade);
+extern short (&g_MainMenu_FadeOut);
+extern short (&g_MainMenu_State);
+extern MenuList (&g_MainMenu_List);
+extern short (&g_MainMenu_OpenDelay);
+extern GameSaveFile (&g_SaveFileBuf);
+extern int (&g_MainMenu_IdleFrames);
+extern MenuSprite (&g_MainMenu_Items)[];
+extern short (&g_MainMenu_RowChoice)[];
+extern short (&g_MainMenu_RowSprite)[];
+extern MenuSpriteStyle (&g_MainMenu_ItemStyle);
+extern game_pointer<SpriteDesc> (&g_MainMenu_SpriteTables)[];
+extern FlowMenuState (&g_Flow_IntroShown);
+extern signed char (&g_Flow_MainMenuChoice);
+extern game_pointer<BaseMenu> (&g_CurrentMenu);
 
 // The rows are sprites. A row whose choice is negative does nothing.
 int MainMenu_ItemCallback(MenuListEventId event, MenuListEvent *ev, int index)

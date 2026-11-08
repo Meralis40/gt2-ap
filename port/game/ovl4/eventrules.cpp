@@ -1,19 +1,20 @@
 // OVL4 8001907c-80019bf0 (eventrules): Licenses and event entry rules.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "ap.h"
 
 extern "C" {
-extern unsigned int g_License_EntryMsgPages[6];
-extern GameState g_GameState;
-extern char *g_RandomCourseNames[];
-extern char *g_LicenseRaceCodes[6];
-extern char *g_EventCodes[];
-extern EventRules g_EventRules[];
-extern unsigned int g_EventAllowedCars[];
-extern void *g_GtModeRaceData;
-extern void *g_GtModeRaceDataBuf;
+extern unsigned int (&g_License_EntryMsgPages)[6];
+extern GameState (&g_GameState);
+extern game_pointer<char> (&g_RandomCourseNames)[];
+extern game_pointer<char> (&g_LicenseRaceCodes)[6];
+extern game_pointer<char> (&g_EventCodes)[];
+extern EventRules (&g_EventRules)[];
+extern unsigned int (&g_EventAllowedCars)[];
+extern game_pointer<void> (&g_GtModeRaceData);
+extern game_pointer<void> (&g_GtModeRaceDataBuf);
 
 // One of the random course names, picked with seed.
 char *Course_PickRandom(unsigned int *seed)
@@ -133,7 +134,7 @@ int EventRules_Load(EventRules *rules, char *raceCode, unsigned int *allowedCars
         int i = 0;
         unsigned int *src = cars;
         // In int arithmetic: the game adds allowedStart * 4 first.
-        unsigned int *out = (unsigned int *)(allowedStart * 4 + (int)allowedCars);
+        unsigned int *out = (unsigned int *)rt::from_guest((allowedStart * 4 + (int)rt::to_guest(allowedCars)));
 
         for (; i < 32; i++) {
             if (*src == 0)
@@ -153,7 +154,7 @@ void EventRules_BuildAll(void)
 {
     int allowedStart = 0;
     int i = 0;
-    char **codes = g_EventCodes;
+    game_pointer<char> *codes = g_EventCodes;
     EventRules *rules = g_EventRules;
 
     do {

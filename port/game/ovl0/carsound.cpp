@@ -1,6 +1,7 @@
 // OVL0 80017e18-80018a68 (carsound): Wheels and car sounds.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
@@ -48,7 +49,7 @@ static inline RaceCar *RaceSetup_Car(RaceSetup *setup, int i)
 {
     int offset = i * (int)sizeof(RaceCar) + 0x5c;
 
-    return (RaceCar *)(offset + (int)setup);
+    return (RaceCar *)rt::from_guest((offset + (int)rt::to_guest(setup)));
 }
 
 // Soft limit of a voice's volume.
@@ -64,13 +65,13 @@ static inline int Vol_Clamp(int vol)
 #define WHEEL_RIM(v, i) (((short *)((char *)(v) + 0x41c))[i])
 
 extern "C" {
-extern SpuBank D_8017D894;
-extern unsigned char D_801C9994;
-extern unsigned short D_801E306E;
-extern unsigned char g_CarSfxIds[];
-extern unsigned char g_RaceSfxStereoPairs[][2];
-extern short g_WheelOffsetTable[];
-extern int g_SpuAllocPtr;
+extern SpuBank (&D_8017D894);
+extern unsigned char (&D_801C9994);
+extern unsigned short (&D_801E306E);
+extern unsigned char (&g_CarSfxIds)[];
+extern unsigned char (&g_RaceSfxStereoPairs)[][2];
+extern short (&g_WheelOffsetTable)[];
+extern int (&g_SpuAllocPtr);
 void CarSound_PlayOneShot(CarSound *cs, int index, int pan, int volume);
 
 // How far the wheel's half width pokes out of the tyre of rim size rim.
@@ -89,7 +90,7 @@ int Tyre_GetHubOffset(int rim, int width)
 void RaceVehicle_SetupModelDims(RaceVehicle *v, CarDims *dims)
 {
     if (v->model != 0) {
-        CarBodyDims *body = *(CarBodyDims **)((char *)v->model + 0x870);
+        CarBodyDims *body = *(game_pointer<CarBodyDims> *)((char *)v->model + 0x870);
         int y = body->y;
         int rear = body->rear;
         int front = body->front;
@@ -314,10 +315,10 @@ void CarSound_PlayOneShot(CarSound *cs, int index, int pan, int volume)
 // (0x500 bytes).
 void Race_LoadSfxBank(void *race, int bootId)
 {
-    if (*(char *)((int)race + 0x11d702) == '\0') {
-        *(unsigned char *)((int)race + 0x11d702) = 1;
-        SpuBank_Init((SpuBank *)((int)race + 0xd4394), (SeqBank *)((int)race + 0xd43a0), 0x500);
-        SpuBank_Load((SpuBank *)((int)race + 0xd4394), bootId, 0, 1);
+    if (*(char *)rt::from_guest(((int)rt::to_guest(race) + 0x11d702)) == '\0') {
+        *(unsigned char *)rt::from_guest(((int)rt::to_guest(race) + 0x11d702)) = 1;
+        SpuBank_Init((SpuBank *)rt::from_guest(((int)rt::to_guest(race) + 0xd4394)), (SeqBank *)rt::from_guest(((int)rt::to_guest(race) + 0xd43a0)), 0x500);
+        SpuBank_Load((SpuBank *)rt::from_guest(((int)rt::to_guest(race) + 0xd4394)), bootId, 0, 1);
     }
 }
 

@@ -1,5 +1,6 @@
 // OVL0 8003b69c-8003c360 (physparams): Physics constants and parameters, car state and input.
 // The functions that don't match yet are the original assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
@@ -42,30 +43,30 @@ struct AiDriveParams {
 };
 
 extern "C" {
-extern RaceWorld g_RaceWorld;
-extern PhysDriveTable D_80046E5C;
-extern AiDriveParams g_AiDriveParams[];
-extern int g_FrameRate;
-extern unsigned char D_80046ED4[];
-extern short g_PhysFrameRates[2];
-extern short D_80046DB4[2];
-extern short D_80046DB8[2];
-extern short D_80046DBC[2];
-extern short D_80046DC0[2];
-extern short D_80046DC4[2];
-extern int g_TyreWearEnabled;
-extern int g_TyreWear_MaxGripLoss;
-extern int g_TyreWear_WornGrip;
-extern int g_TyreWearInit;
-extern int g_TyreGripLossInit;
-extern int g_TyreWear_Knee;
-extern int g_TyreWear_KneeGripLoss;
+extern RaceWorld (&g_RaceWorld);
+extern PhysDriveTable (&D_80046E5C);
+extern AiDriveParams (&g_AiDriveParams)[];
+extern int (&g_FrameRate);
+extern unsigned char (&D_80046ED4)[];
+extern short (&g_PhysFrameRates)[2];
+extern short (&D_80046DB4)[2];
+extern short (&D_80046DB8)[2];
+extern short (&D_80046DBC)[2];
+extern short (&D_80046DC0)[2];
+extern short (&D_80046DC4)[2];
+extern int (&g_TyreWearEnabled);
+extern int (&g_TyreWear_MaxGripLoss);
+extern int (&g_TyreWear_WornGrip);
+extern int (&g_TyreWearInit);
+extern int (&g_TyreGripLossInit);
+extern int (&g_TyreWear_Knee);
+extern int (&g_TyreWear_KneeGripLoss);
 void CatchUp_Init(int on);
 void SplitTimes_Reset(void);
 void TimeTrial_InitBuffers(void);
 void PhysParams_Init(int unused);
-extern unsigned char g_RaceEventParams[];
-extern unsigned char g_Race_IsDemo;
+extern unsigned char (&g_RaceEventParams)[];
+extern unsigned char (&g_Race_IsDemo);
 
 // The physics constants as bytes (0x80046e20), converted to fixed point by PhysConsts_Init.
 struct PhysConstBytes {
@@ -88,24 +89,24 @@ struct PhysConstBytes {
 // A piecewise linear curve over int tables.
 struct IntCurve {
     short count;
-    int *x;
-    int *y;
+    game_pointer<int> x;
+    game_pointer<int> y;
 };
 
-extern PhysConstBytes g_PhysConstBytes;
-extern int g_PhysConst_SlipDrag;
-extern int g_PhysConst_SlipDragMin;
-extern int g_DragCurveCount;
-extern int g_DragCurveX[8];
-extern int g_DragCurveY[8];
-extern short g_SurfaceGrip[8];
-extern int g_SurfaceRollResist[8];
-extern short g_SurfaceTable3[8];
-extern unsigned char g_SurfaceTable4[8];
-extern IntCurve g_DragCurve;
-extern int D_80046F3C;
-extern int D_80046F40;
-extern int D_80046F44;
+extern PhysConstBytes (&g_PhysConstBytes);
+extern int (&g_PhysConst_SlipDrag);
+extern int (&g_PhysConst_SlipDragMin);
+extern int (&g_DragCurveCount);
+extern int (&g_DragCurveX)[8];
+extern int (&g_DragCurveY)[8];
+extern short (&g_SurfaceGrip)[8];
+extern int (&g_SurfaceRollResist)[8];
+extern short (&g_SurfaceTable3)[8];
+extern unsigned char (&g_SurfaceTable4)[8];
+extern IntCurve (&g_DragCurve);
+extern int (&D_80046F3C);
+extern int (&D_80046F40);
+extern int (&D_80046F44);
 
 // Tyre wear parameters g_RaceEventParams[0x1d..0x23]: level 1 strong, 2 light, anything else off.
 void RaceParams_SetTyreWear(int level)
@@ -226,7 +227,7 @@ void PhysParams_Init(int unused)
         if (Course_Get(world->course)->flags & 4) {
             idx = 4;
         }
-        src = (PhysDriveBytes *)(idx * 16 + (int)table);
+        src = (PhysDriveBytes *)rt::from_guest((idx * 16 + (int)rt::to_guest(table)));
         params->unk08 = (src->b[3] << 12) / 100;
         params->unk10 = src->b[7] << 16;
         params->unk14 = src->b[8] << 16;
@@ -251,7 +252,7 @@ void PhysParams_Init(int unused)
     drive = g_AiDriveParams;
     for (; i < 4; i++) {
         AiDriveParams *params = &drive[i];
-        unsigned char *p = (unsigned char *)(i + (int)event);
+        unsigned char *p = (unsigned char *)rt::from_guest((i + (int)rt::to_guest(event)));
         int grip = p[0xc];
         int brake;
 

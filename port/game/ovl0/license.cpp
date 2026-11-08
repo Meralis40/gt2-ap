@@ -1,6 +1,7 @@
 // OVL0 8004c728-8004f8b4 (license): License tests: pages, medals and prize cars.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "ap.h"
 #include "gamestate.h"
@@ -38,7 +39,7 @@ struct LicenseResult {
 
 // A row of the license menu.
 struct LicenseOption {
-    char *label;
+    game_pointer<char> label;
     signed char enabled;
     signed char action;
 };
@@ -69,8 +70,8 @@ struct LicenseWork {
     InfoBar bar2;                  // 0x468
     short test;                    // 0x4b8: the test shown
     WipeBar titleBar;              // 0x4bc
-    char *title;                   // 0x4d8
-    char *lines[8];                // 0x4dc
+    game_pointer<char> title;                   // 0x4d8
+    game_pointer<char> lines[8];                // 0x4dc
     short lineCount;               // 0x4fc
     WipeBar descBar;               // 0x500
     short descFade;                // 0x51c
@@ -83,40 +84,40 @@ struct LicenseWork {
 };
 
 extern "C" {
-extern signed char g_LicenseResult_Fresh;
-extern QuickMenu *g_QuickMenu;
-extern LicenseWork *g_OVL0_EndFontInfo;
-extern unsigned char g_License_RuleRgbFrom;
-extern unsigned char g_License_RuleRgbTo;
-extern unsigned char D_8005B1BC, D_8005B1C0, D_8005B1C8, D_8005B1CC, D_8005B1D0, D_8005B1D4;
-extern unsigned int D_8005B1E8, D_8005B1EC;
-extern MedalSprite D_8005B150[];
-extern char *g_LicensePrefixes[];
-extern char *g_LicenseRaceCodeFormats[];
-extern char *g_LicenseTestLabels[];
-extern char *g_LicensePrizeCarCodes[];
-extern char *g_LicenseAcquiredTexts[];
-extern LicenseOption g_LicenseMenu_Options[];
-extern MenuList g_LicenseMenu_List;
-extern TextStyle D_8005B2F4, D_8005B310, D_8005B32C;
-extern WipeBar D_8005B348, D_8005B238, D_8005B294;
-extern CardDialogDesc D_8005B2C4, D_8005AC20;
-extern InfoBarDesc D_8005B254, D_8005B274;
-extern TextEntry D_8005B2B0;
-extern QuickMenuPage g_Page_LicenseMenu, g_Page_LicenseName, g_Page_LicenseAcquired, g_Page_LicenseRetry;
-extern QuickMenuPage g_Page_LicenseDemo, g_Page_LicenseRecords, g_Page_SaveReplay, g_Page_SaveGame;
-extern void *g_License_Work;
-extern void *g_EventDataBuf;
-extern int g_GameDataMode;
-extern char *g_GtModeRaceData;
-extern unsigned char D_80091620[];
-extern RaceEventParams g_RaceEventParams;
-extern KanjiFont *g_OVL0_KanjiFont;
-extern Font g_OVL0_FontB, g_OVL0_FontC;
-extern char g_Race_IsDemo;
-extern void *D_80081B5C;
-extern unsigned char D_801D156E;
-extern char sR_Nhp[], sR_LaunchSpeedAtNMph[], sR_NewCarAcquired[], sR_LicenseTest[];
+extern signed char (&g_LicenseResult_Fresh);
+extern game_pointer<QuickMenu> (&g_QuickMenu);
+extern game_pointer<LicenseWork> (&g_OVL0_EndFontInfo);
+extern unsigned char (&g_License_RuleRgbFrom);
+extern unsigned char (&g_License_RuleRgbTo);
+extern unsigned char (&D_8005B1BC), (&D_8005B1C0), (&D_8005B1C8), (&D_8005B1CC), (&D_8005B1D0), (&D_8005B1D4);
+extern unsigned int (&D_8005B1E8), (&D_8005B1EC);
+extern MedalSprite (&D_8005B150)[];
+extern game_pointer<char> (&g_LicensePrefixes)[];
+extern game_pointer<char> (&g_LicenseRaceCodeFormats)[];
+extern game_pointer<char> (&g_LicenseTestLabels)[];
+extern game_pointer<char> (&g_LicensePrizeCarCodes)[];
+extern game_pointer<char> (&g_LicenseAcquiredTexts)[];
+extern LicenseOption (&g_LicenseMenu_Options)[];
+extern MenuList (&g_LicenseMenu_List);
+extern TextStyle (&D_8005B2F4), (&D_8005B310), (&D_8005B32C);
+extern WipeBar (&D_8005B348), (&D_8005B238), (&D_8005B294);
+extern CardDialogDesc (&D_8005B2C4), (&D_8005AC20);
+extern InfoBarDesc (&D_8005B254), (&D_8005B274);
+extern TextEntry (&D_8005B2B0);
+extern QuickMenuPage (&g_Page_LicenseMenu), (&g_Page_LicenseName), (&g_Page_LicenseAcquired), (&g_Page_LicenseRetry);
+extern QuickMenuPage (&g_Page_LicenseDemo), (&g_Page_LicenseRecords), (&g_Page_SaveReplay), (&g_Page_SaveGame);
+extern game_pointer<void> (&g_License_Work);
+extern game_pointer<void> (&g_EventDataBuf);
+extern int (&g_GameDataMode);
+extern game_pointer<char> (&g_GtModeRaceData);
+extern unsigned char (&D_80091620)[];
+extern RaceEventParams (&g_RaceEventParams);
+extern game_pointer<KanjiFont> (&g_OVL0_KanjiFont);
+extern Font (&g_OVL0_FontB), (&g_OVL0_FontC);
+extern char (&g_Race_IsDemo);
+extern game_pointer<void> (&D_80081B5C);
+extern unsigned char (&D_801D156E);
+extern char (&sR_Nhp)[], (&sR_LaunchSpeedAtNMph)[], (&sR_NewCarAcquired)[], (&sR_LicenseTest)[];
 
 unsigned int PackedTime_ToMs(void *time, int index);
 void QuickMenu_PushPage(QuickMenu *menu, QuickMenuPage *page);
@@ -140,7 +141,7 @@ static inline void Rect_Set(RECT *rect, int x, int y, int w, int h)
 
 static inline void *RaceMem_Aligned(int offset)
 {
-    return (void *)((int)(&g_Race_IsDemo + offset) & ~3);
+    return (void *)rt::from_guest(((int)rt::to_guest(&g_Race_IsDemo + offset) & ~3));
 }
 
 // The car on the menu's stage.
@@ -316,7 +317,7 @@ void License_LoadDescription(int license, int test)
         int i = 0;
         char *s;
 
-        *(void **)((char *)font + 0x8000 + 0x1824) = &D_80081B5C;
+        *(game_pointer<void> *)((char *)font + 0x8000 + 0x1824) = &D_80081B5C;
         KanjiFont_Reset(font);
         s = WORK->title;
         for (;;) {
@@ -328,7 +329,7 @@ void License_LoadDescription(int license, int test)
             WORK->lines[i] = s;
             i++;
         }
-        *(void **)((char *)font + 0x8000 + 0x1824) = (void *)KanjiFont_RenderGlyph;
+        *(game_function<void(void *, void *)> *)((char *)font + 0x8000 + 0x1824) = (KanjiLoadFn)KanjiFont_RenderGlyph;
     } else {
         int i = 0;
 
@@ -562,7 +563,7 @@ void License_DrawTestInfo(void *ot, LicenseTestInfo *info, int x, int fade, int 
     char buf[64];
     char *base = (char *)&g_GameState;
     int offset = 0x10bd8;
-    LicenseTestCar *table = (LicenseTestCar *)((int)(base + offset) & ~3);
+    LicenseTestCar *table = (LicenseTestCar *)rt::from_guest(((int)rt::to_guest((base + offset)) & ~3));
     TextCtx *c;
     LicenseTestCar *car;
     unsigned int rgb;
@@ -934,7 +935,7 @@ int LicenseDemo_Update(int active)
     setup = (RaceSetup *)(base + offset);
     if (page->timer < 0) {
         int offset2 = 0x10bd8;
-        void *table = (void *)((int)(base + offset2) & ~3);
+        void *table = (void *)rt::from_guest(((int)rt::to_guest((base + offset2)) & ~3));
 
         loop->raceDone = 0;
         memcpy(g_License_Work, table, 0xff0);
@@ -1155,13 +1156,13 @@ void LicenseAcquired_Draw(DrawLayer *layer)
     pQVar1 = g_QuickMenu;
     ot = (unsigned int *)layer->ot;
     ctx = &g_QuickMenu->text;
-    CardDialog_Draw((CardDialog *)((int)g_OVL0_EndFontInfo + 0x58), ot, ctx);
-    TextItem_Draw((TextItem *)((int)g_OVL0_EndFontInfo + 4), ot, 0xb0, 200, ctx);
-    TextItem_Draw((TextItem *)((int)g_OVL0_EndFontInfo + 0x30), ot, 0xb0, 300, ctx);
-    if ((*(int *)((int)g_OVL0_EndFontInfo + 0x688) != 0) &&
-          (0x17 < *(short *)((int)g_OVL0_EndFontInfo + 0x68c))) {
-        ResultCar_Draw((ResultCar *)((int)g_OVL0_EndFontInfo + 0x690), pQVar1->layers + 4, pQVar1->layers + 5,
-                       (ResultCarView *)((int)g_OVL0_EndFontInfo + 0x7d4), 1);
+    CardDialog_Draw((CardDialog *)rt::from_guest(((int)g_OVL0_EndFontInfo + 0x58)), ot, ctx);
+    TextItem_Draw((TextItem *)rt::from_guest(((int)g_OVL0_EndFontInfo + 4)), ot, 0xb0, 200, ctx);
+    TextItem_Draw((TextItem *)rt::from_guest(((int)g_OVL0_EndFontInfo + 0x30)), ot, 0xb0, 300, ctx);
+    if ((*(int *)rt::from_guest(((int)g_OVL0_EndFontInfo + 0x688)) != 0) &&
+          (0x17 < *(short *)rt::from_guest(((int)g_OVL0_EndFontInfo + 0x68c)))) {
+        ResultCar_Draw((ResultCar *)rt::from_guest(((int)g_OVL0_EndFontInfo + 0x690)), pQVar1->layers + 4, pQVar1->layers + 5,
+                       (ResultCarView *)rt::from_guest(((int)g_OVL0_EndFontInfo + 0x7d4)), 1);
     }
 }
 

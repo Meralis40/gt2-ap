@@ -4,7 +4,7 @@
 #include "gamestate.h"
 
 extern "C" {
-extern VolBootId g_DemoReplay_Files[];
+extern VolBootId (&g_DemoReplay_Files)[];
 
 // A memory card sector of a replay file.
 struct ReplaySector {

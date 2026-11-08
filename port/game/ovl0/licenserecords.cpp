@@ -23,17 +23,17 @@ struct RoundedBox {
 };
 
 extern "C" {
-extern QuickMenu *g_QuickMenu;
-extern void *g_OVL0_EndFontInfo;
-extern unsigned char g_License_RuleRgbFrom;
-extern unsigned char D_8005B1DC;
-extern unsigned char D_8005B1E0;
-extern unsigned char D_8005B1E4;
-extern char D_8005A97C[];        // "%d"
-extern WipeBar D_8005B238;       // the records page's wipe bar
-extern Font g_OVL0_FontB;
-extern Font g_OVL0_FontD;
-extern char sR_NoRecords[];
+extern game_pointer<QuickMenu> (&g_QuickMenu);
+extern game_pointer<void> (&g_OVL0_EndFontInfo);
+extern unsigned char (&g_License_RuleRgbFrom);
+extern unsigned char (&D_8005B1DC);
+extern unsigned char (&D_8005B1E0);
+extern unsigned char (&D_8005B1E4);
+extern char (&D_8005A97C)[];        // "%d"
+extern WipeBar (&D_8005B238);       // the records page's wipe bar
+extern Font (&g_OVL0_FontB);
+extern Font (&g_OVL0_FontD);
+extern char (&sR_NoRecords)[];
 
 #define WORK ((LicenseRecordsWork *)g_OVL0_EndFontInfo)
 

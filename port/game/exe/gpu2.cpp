@@ -1,15 +1,16 @@
 // Resident code 80082ba8-80082fac (gpu2): GPU and ordering table DMA, more vector and
 // arctangent maths, a sector callback and a three-word packet.
+#include "gptr.h"
 #include "common.h"
 #include "gte.h"
 
 extern "C" {
-extern CdAudio g_CdAudio;
-extern unsigned int *g_PacketPtr;
-extern short g_AsinTable[];
-extern short g_AtanTable[];
-extern signed char g_AtanOctantSign[];
-extern short g_AtanOctantBase[];
+extern CdAudio (&g_CdAudio);
+extern game_pointer<unsigned int> (&g_PacketPtr);
+extern short (&g_AsinTable)[];
+extern short (&g_AtanTable)[];
+extern signed char (&g_AtanOctantSign)[];
+extern short (&g_AtanOctantBase)[];
 
 // Waits for the GPU, then starts its DMA down the linked list at list.
 void Gpu_DrawOTag(void *list)
@@ -26,7 +27,7 @@ void Dma_ClearOTagR(void *ot, int n)
     unsigned int *entry = (unsigned int *)ot + n - 1;
 
     while (--n != 0) {
-        *entry = (unsigned int)(entry - 1) & 0xffffff;
+        *entry = (unsigned int)rt::to_guest((entry - 1)) & 0xffffff;
         entry--;
     }
     *entry = 0xffffff;
@@ -202,7 +203,7 @@ void FUN_80082f74(void *p, unsigned int area0, unsigned int area1, unsigned int 
     pkt = g_PacketPtr;
     ((unsigned char *)pkt)[3] = 3;
     Mips_Swl2(link, pkt);
-    Mips_Swl2((unsigned int)pkt << 8, p);
+    Mips_Swl2((unsigned int)rt::to_guest(pkt) << 8, p);
     pkt[1] = area0;
     pkt[2] = area1;
     pkt[3] = offset;

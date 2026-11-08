@@ -8,8 +8,8 @@ struct MainStringsBlock {
 };
 
 extern "C" {
-extern unsigned char D_80021104[];
-extern char s_CannotDetectMemoryCard1[];
+extern unsigned char (&D_80021104)[];
+extern char (&s_CannotDetectMemoryCard1)[];
 
 // Inflates the first string table and copies the current language's strings to
 // 0x801b9630.

@@ -37,7 +37,7 @@ void Movie_RestartRead(MoviePlayer *mp)
 
 int Movie_StartMdec(MoviePlayer *mp)
 {
-    unsigned long *vlc = (unsigned long *)mp->vlcReady;
+    unsigned int *vlc = (unsigned int *)mp->vlcReady;
 
     if (vlc == 0) {
         return 0;

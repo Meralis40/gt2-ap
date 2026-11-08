@@ -3,7 +3,7 @@
 #include "common.h"
 
 extern "C" {
-extern int g_McOp_Remaining;
+extern int (&g_McOp_Remaining);
 struct PrimFT4;
 // Through an inline function, as the game tests the result with xori and beqz.
 static inline int ReplayDir_IsOk(ReplayDir *dir)
@@ -11,26 +11,26 @@ static inline int ReplayDir_IsOk(ReplayDir *dir)
     return ReplayDir_IsValid(dir) == 1;
 }
 struct CardDialogDesc;
-extern WipeBar D_80091EE8;          // the slot bar
-extern CardDialogDesc D_80091F04;   // the dialogs, in CardMenu order
-extern CardDialogDesc D_80091F34;
-extern CardDialogDesc D_80091F64;
-extern CardDialogDesc D_80091F94;
-extern CardDialogDesc D_80092018;
-extern CardDialogDesc D_80092048;
-extern CardDialogDesc D_80092078;
-extern CardDialogDesc D_800920A8;
-extern CardDialogDesc D_800920D8;
-extern CardDialogDesc D_80092108;
-extern CardDialogDesc D_80092138;
-extern CardProgressBar D_80092168;  // the progress bar
-extern TextEntry D_800921A0;        // the title entry
-extern uint D_800921BC[]; // the entry list's style; [4] is the row colour
-extern char *D_800921B4[2]; // the slot names
-extern CardStateFn g_CardMenu_States[];
+extern WipeBar (&D_80091EE8);          // the slot bar
+extern CardDialogDesc (&D_80091F04);   // the dialogs, in CardMenu order
+extern CardDialogDesc (&D_80091F34);
+extern CardDialogDesc (&D_80091F64);
+extern CardDialogDesc (&D_80091F94);
+extern CardDialogDesc (&D_80092018);
+extern CardDialogDesc (&D_80092048);
+extern CardDialogDesc (&D_80092078);
+extern CardDialogDesc (&D_800920A8);
+extern CardDialogDesc (&D_800920D8);
+extern CardDialogDesc (&D_80092108);
+extern CardDialogDesc (&D_80092138);
+extern CardProgressBar (&D_80092168);  // the progress bar
+extern TextEntry (&D_800921A0);        // the title entry
+extern uint (&D_800921BC)[]; // the entry list's style; [4] is the row colour
+extern game_pointer<char> (&D_800921B4)[2]; // the slot names
+extern game_function<int(int, void *)> (&g_CardMenu_States)[];
 // The menu text, one block of strings (sB_LbFt is the first). The game addresses them
 // from one base, so the second of two strings is often an offset from the first.
-extern char sB_LbFt[];
+extern char (&sB_LbFt)[];
 enum {
     T_LbFt = 0x0,
     T_Hp = 0x6,
@@ -133,7 +133,7 @@ enum {
 
 // m->dir.entries + i, added up as the game does in CardState_EditTitle: the entry's offset
 // and m first, then the offset of the entries.
-#define DIR_ENTRY(m, i)     ((ReplayDirEntry *)((char *)(m) + (i) * sizeof(ReplayDirEntry) + (int)((CardMenu *)0)->dir.entries))
+#define DIR_ENTRY(m, i)     ((ReplayDirEntry *)((char *)(m) + (i) * sizeof(ReplayDirEntry) + __builtin_offsetof(CardMenu, dir.entries)))
 
 // This file's .rodata, in the game's order: the empty line, CardState_CheckSlot's three
 // jump tables, the default replay title and CardMenu_Update's jump table.
@@ -141,16 +141,16 @@ extern const char D_8008FAC8[8];
 const char D_8008FAC8[8] = { 0 }; // braces: a string initializer is emitted again as a literal
 #define EMPTY ((char *)D_8008FAC8)
 enum { CARD_EXIT = 0x27, CARD_REPLAY_LOADED = 0x28 }; // what a state returns to leave
-extern CardMenu *g_CardMenu;
-extern signed char g_CardMenu_GhostLoaded;
-extern GameState g_GameState;
-extern MenuList g_CardMenu_EntryList;      // the replay files
-extern NumberPicker g_CardMenu_BlockPicker; // the replay file's size, in blocks
-extern Font g_CardMenu_FontSmall;
-extern Font g_CardMenu_FontMedium;
-extern Font g_CardMenu_FontLarge;
+extern game_pointer<CardMenu> (&g_CardMenu);
+extern signed char (&g_CardMenu_GhostLoaded);
+extern GameState (&g_GameState);
+extern MenuList (&g_CardMenu_EntryList);      // the replay files
+extern NumberPicker (&g_CardMenu_BlockPicker); // the replay file's size, in blocks
+extern Font (&g_CardMenu_FontSmall);
+extern Font (&g_CardMenu_FontMedium);
+extern Font (&g_CardMenu_FontLarge);
 
-extern CardSystem g_Card;
+extern CardSystem (&g_Card);
 
 // Sets up a kanji glyph cache: the pixel buffer at +0x1824, 256 glyph nodes at +0x24,
 // its texture and CLUT in VRAM, and the glyph loader at +0x9824.
@@ -160,7 +160,7 @@ void KanjiFont_Init(void *font, int vramX, int vramY, int texWidth, int texHeigh
     KanjiFont_SetVram((KanjiFont *)font, vramX, vramY, texWidth, texHeight);
     *(short *)((char *)font + 0xe) = (clutX >> 4) + clutY * 64;
     KanjiFont_Reset((KanjiFont *)font);
-    *(KanjiLoadFn *)((char *)font + 0x9824) = (KanjiLoadFn)KanjiFont_RenderGlyph;
+    *(game_function<void(void *, void *)> *)((char *)font + 0x9824) = (KanjiLoadFn)KanjiFont_RenderGlyph;
 }
 
 void KanjiFont_Upload(void *font)
@@ -175,7 +175,7 @@ void KanjiFont_CacheString(void *font, char *sjis)
     unsigned char *p = (unsigned char *)sjis;
 
     for (; *p != 0; p += 2) {
-        (*(KanjiLoadFn *)((char *)font + 0x9824))(font, KanjiFont_FindGlyph((KanjiFont *)font, p[0] << 8 | p[1]));
+        (*(game_function<void(void *, void *)> *)((char *)font + 0x9824))(font, KanjiFont_FindGlyph((KanjiFont *)font, p[0] << 8 | p[1]));
     }
 }
 
@@ -542,7 +542,7 @@ int CardState_DiscardChanges(int event, void *arg)
 // m->rows[i], added up the game's way: the row's offset first, then m. A row is the
 // directory entry (-1 for the last row), what it is (0 an entry, 1 a new file, 2 save the
 // changes) and, when saving, whether the replay fits and why not.
-#define ROW(m, i) ((signed char *)((i) * 4 + (char *)(m) + (int)((CardMenu *)0)->rows))
+#define ROW(m, i) ((signed char *)((i) * 4 + (char *)(m) + __builtin_offsetof(CardMenu, rows)))
 
 // Through an inline function, as the game tests the result with xori and beqz.
 static inline int Row_IsOk(CardMenu *m, int row)
@@ -2383,12 +2383,12 @@ int CardMenu_SetState(int state)
     CardMenu *m = g_CardMenu;
 
     if (state < 0) {
-        m->handler = (void *)CardState_Idle;
+        m->handler = CardState_Idle;
     } else {
-        m->handler = (void *)g_CardMenu_States[state];
+        m->handler = g_CardMenu_States[state];
     }
     m->state = state;
-    return ((CardStateFn)m->handler)(0, 0);
+    return m->handler(0, 0);
 }
 
 extern const char D_8008FB14[12];
@@ -2528,7 +2528,7 @@ int CardMenu_Update(PadState *pad)
     m->dlgConfirmSave.result = CardDialog_Update(&m->dlgConfirmSave, pad);
     m->dlgConfirmLoad.result = CardDialog_Update(&m->dlgConfirmLoad, pad);
     m->dlgDiscard.result = CardDialog_Update(&m->dlgDiscard, pad);
-    r = ((CardStateFn)m->handler)(1, 0);
+    r = m->handler(1, 0);
 next:
     switch (r) {
     case CARD_EXIT: {
@@ -2626,7 +2626,7 @@ void CardMenu_Draw(uint *ot)
     CardDialog_Draw(&m->dlgConfirmLoad, ot, &ctx);
     CardDialog_Draw(&m->dlgDiscard, ot, &ctx);
     TextEntry_Draw(&m->titleEntry, ot);
-    ((CardStateFn)m->handler)(2, ot);
+    m->handler(2, ot);
 }
 
 void CardMenu_StartSaveReplay(void)

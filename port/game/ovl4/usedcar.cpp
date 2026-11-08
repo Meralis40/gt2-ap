@@ -1,12 +1,13 @@
 // OVL4 800224b0-800226a0 (usedcar): Used car tables.
+#include "gptr.h"
 #include "common.h"
 
 extern "C" {
-extern UsedCarPeriod g_OVL4_StorageUsedCar;
+extern UsedCarPeriod (&g_OVL4_StorageUsedCar);
 
 UsedCarEntry *UsedCar_GetMakerCars(UsedCarPeriod *period, int makerId)
 {
-    return (UsedCarEntry *)((int)&period->makers[0].offset + (unsigned int)period->makers[makerId].offset);
+    return (UsedCarEntry *)rt::from_guest(((int)rt::to_guest(&period->makers[0].offset) + (unsigned int)period->makers[makerId].offset));
 }
 
 unsigned short *UsedCar_GetMakerCount(UsedCarPeriod *period, int makerId)
@@ -50,7 +51,7 @@ void UsedCar_LoadPeriod(unsigned int day, char *buf)
 }
 
 // Used cars of makerId for the current period (UsedCar_GetPeriod).
-void UsedCarList_GetCars(int makerId, unsigned int *count, UsedCarEntry **cars)
+void UsedCarList_GetCars(int makerId, unsigned int *count, game_pointer<UsedCarEntry> *cars)
 {
     UsedCarPeriod *period;
     unsigned short *puVar1;

@@ -3,30 +3,30 @@
 #include "common.h"
 
 extern "C" {
-extern unsigned char D_8008FA74;
-extern uint D_80091E64; // ReplayEntry_Draw's colours
-extern uint D_80091E68;
-extern uint D_80091E6C;
-extern uint D_80091E70;
-extern uint D_80091E74;
-extern uint D_80091E78;
-extern uint D_80091E7C; // black, what everything fades to
-extern char *D_80091E80[6]; // the license names' formats
-extern uint D_80091E98; // the usage bar's colours
-extern uint D_80091E9C;
-extern uint D_80091EA0;
-extern uint D_80091EA4;
-extern char sB_NSector[]; // the card menu's strings start here
-extern char sB_NewFile[];
-extern char sB_Exit[];
-extern char sB_Ok_2[];
-extern char sB_TimeTrial[];
-extern char sB_License[];
-extern char sB_2p[];
-extern char sB_TestRun[];
-extern char sB_0400m[];
-extern char sB_01000m[];
-extern char sB_MaxSpeed[];
+extern unsigned char (&D_8008FA74);
+extern uint (&D_80091E64); // ReplayEntry_Draw's colours
+extern uint (&D_80091E68);
+extern uint (&D_80091E6C);
+extern uint (&D_80091E70);
+extern uint (&D_80091E74);
+extern uint (&D_80091E78);
+extern uint (&D_80091E7C); // black, what everything fades to
+extern game_pointer<char> (&D_80091E80)[6]; // the license names' formats
+extern uint (&D_80091E98); // the usage bar's colours
+extern uint (&D_80091E9C);
+extern uint (&D_80091EA0);
+extern uint (&D_80091EA4);
+extern char (&sB_NSector)[]; // the card menu's strings start here
+extern char (&sB_NewFile)[];
+extern char (&sB_Exit)[];
+extern char (&sB_Ok_2)[];
+extern char (&sB_TimeTrial)[];
+extern char (&sB_License)[];
+extern char (&sB_2p)[];
+extern char (&sB_TestRun)[];
+extern char (&sB_0400m)[];
+extern char (&sB_01000m)[];
+extern char (&sB_MaxSpeed)[];
 #define sB_Ghost (sB_NSector + 0x49)
 #define sB_Race (sB_NSector + 0x59)
 

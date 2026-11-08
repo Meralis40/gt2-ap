@@ -4,21 +4,21 @@
 #include "common.h"
 
 extern "C" {
-extern GameState g_GameState;
-extern MenuList g_GarageList_Menu;
-extern short g_GarageList_Blink;
-extern unsigned char g_GarageList_Black[];
-extern unsigned char g_GarageList_TextRgb[];
-extern unsigned char g_GarageList_OutlineRgb[];
-extern unsigned char g_GarageList_CurrentRgb[];
-extern CarSpecStrings g_CarSpecStrings;
-extern MenuList g_UsedCarList_Menu;
-extern short g_UsedCarList_Blink;
-extern unsigned char g_UsedCarList_Black[];
-extern unsigned char g_UsedCarList_TextRgb[];
-extern unsigned char g_UsedCarList_PriceRgb[];
-extern unsigned char g_UsedCarList_OutlineRgb[];
-extern UsedCarEntry *g_UsedCarListCars;
+extern GameState (&g_GameState);
+extern MenuList (&g_GarageList_Menu);
+extern short (&g_GarageList_Blink);
+extern unsigned char (&g_GarageList_Black)[];
+extern unsigned char (&g_GarageList_TextRgb)[];
+extern unsigned char (&g_GarageList_OutlineRgb)[];
+extern unsigned char (&g_GarageList_CurrentRgb)[];
+extern CarSpecStrings (&g_CarSpecStrings);
+extern MenuList (&g_UsedCarList_Menu);
+extern short (&g_UsedCarList_Blink);
+extern unsigned char (&g_UsedCarList_Black)[];
+extern unsigned char (&g_UsedCarList_TextRgb)[];
+extern unsigned char (&g_UsedCarList_PriceRgb)[];
+extern unsigned char (&g_UsedCarList_OutlineRgb)[];
+extern game_pointer<UsedCarEntry> (&g_UsedCarListCars);
 
 // MenuList callback. MLE_DRAW draws garage car index: the blinking highlight box
 // when selected, the mark, maker and name, the colour swatch, the current car

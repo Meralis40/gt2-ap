@@ -1,6 +1,7 @@
 // OVL0 8004a718-8004c728 (timetrialmenu): Time trial menu pages.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 
@@ -53,7 +54,7 @@ static inline RaceRecord *Session_Record(void)
 struct InfoBarDesc {
     uint unk00;
     uint unk04;
-    char *label;
+    game_pointer<char> label;
     uint labelRgb;
     uint value;
     uint valueRgb;
@@ -66,7 +67,7 @@ struct InfoBarDesc {
 // A row of the time trial menu.
 struct TimeTrialOption {
     uint unk00;
-    char *label;
+    game_pointer<char> label;
     signed char enabled;
     signed char next;
     unsigned char pad0a[2];
@@ -100,47 +101,47 @@ struct TimeTrialWork {
 };
 
 extern "C" {
-extern QuickMenu *g_QuickMenu;
-extern TimeTrialWork *g_OVL0_EndFontInfo;
-extern signed char g_TimeTrial_FreshResult;
-extern signed char g_TimeTrial_SettingsUsed;
-extern void *g_TimeTrial_CardWork;
-extern short g_GhostTypeList_Blink;
-extern unsigned char g_TT_GhostReady;
-extern unsigned char D_801C9995;    // the ghost setting
-extern MenuList g_SessionResults_List;
-extern MenuList g_TimeTrialMenu_List;
-extern MenuList g_GhostTypeList;
-extern TimeTrialOption g_TimeTrialMenu_Options[];
-extern char *g_GhostTypeNames[];
-extern QuickMenuPage g_Page_TimeTrialName;
-extern QuickMenuPage g_Page_TimeTrialMenu;
-extern QuickMenuPage g_Page_TimeTrialQuit;
-extern QuickMenuPage g_Page_SessionResults;
-extern QuickMenuPage g_Page_ChangeParts;
-extern QuickMenuPage g_Page_SaveReplay;
-extern QuickMenuPage g_Page_SaveGhost;
-extern QuickMenuPage g_Page_LoadGhost;
-extern TextEntry D_8005AF68;
-extern WipeBar D_8005AECC;
-extern InfoBarDesc D_8005AEE8;
-extern InfoBarDesc D_8005AF08;
-extern InfoBarDesc D_8005AF28;
-extern InfoBarDesc D_8005AF48;
-extern GrowBar D_8005AEB8;
-extern TextStyle D_8005AFE4;
-extern WipeBar D_8005B000;
-extern unsigned char D_8005AE78[];
-extern unsigned char D_8005AE7C[];
-extern unsigned char D_8005AE80[];
-extern void *D_800A9F00;
-extern Font g_OVL0_FontB;
-extern Font g_OVL0_FontD;
-extern char sR_CAR[];
-extern char sR_SectorN[];
-extern char sR_Lap[];
-extern char sR_Total[];
-extern char sR_Mph[];
+extern game_pointer<QuickMenu> (&g_QuickMenu);
+extern game_pointer<TimeTrialWork> (&g_OVL0_EndFontInfo);
+extern signed char (&g_TimeTrial_FreshResult);
+extern signed char (&g_TimeTrial_SettingsUsed);
+extern game_pointer<void> (&g_TimeTrial_CardWork);
+extern short (&g_GhostTypeList_Blink);
+extern unsigned char (&g_TT_GhostReady);
+extern unsigned char (&D_801C9995);    // the ghost setting
+extern MenuList (&g_SessionResults_List);
+extern MenuList (&g_TimeTrialMenu_List);
+extern MenuList (&g_GhostTypeList);
+extern TimeTrialOption (&g_TimeTrialMenu_Options)[];
+extern game_pointer<char> (&g_GhostTypeNames)[];
+extern QuickMenuPage (&g_Page_TimeTrialName);
+extern QuickMenuPage (&g_Page_TimeTrialMenu);
+extern QuickMenuPage (&g_Page_TimeTrialQuit);
+extern QuickMenuPage (&g_Page_SessionResults);
+extern QuickMenuPage (&g_Page_ChangeParts);
+extern QuickMenuPage (&g_Page_SaveReplay);
+extern QuickMenuPage (&g_Page_SaveGhost);
+extern QuickMenuPage (&g_Page_LoadGhost);
+extern TextEntry (&D_8005AF68);
+extern WipeBar (&D_8005AECC);
+extern InfoBarDesc (&D_8005AEE8);
+extern InfoBarDesc (&D_8005AF08);
+extern InfoBarDesc (&D_8005AF28);
+extern InfoBarDesc (&D_8005AF48);
+extern GrowBar (&D_8005AEB8);
+extern TextStyle (&D_8005AFE4);
+extern WipeBar (&D_8005B000);
+extern unsigned char (&D_8005AE78)[];
+extern unsigned char (&D_8005AE7C)[];
+extern unsigned char (&D_8005AE80)[];
+extern game_pointer<void> (&D_800A9F00);
+extern Font (&g_OVL0_FontB);
+extern Font (&g_OVL0_FontD);
+extern char (&sR_CAR)[];
+extern char (&sR_SectorN)[];
+extern char (&sR_Lap)[];
+extern char (&sR_Total)[];
+extern char (&sR_Mph)[];
 void QuickMenu_PushPage(QuickMenu *menu, QuickMenuPage *page);
 void QuickMenu_SetupCardUi2(void *work);
 int SessionResults_ItemCallback(MenuListEventId event, MenuListEvent *e, int i);

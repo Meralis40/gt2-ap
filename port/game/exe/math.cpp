@@ -1,14 +1,15 @@
 // Resident code 800810f8-80081c5c (math): direct GPU packets, vectors and matrices through
 // the GTE, integer square root and arctangent, and a polygon clipper.
+#include "gptr.h"
 #include "common.h"
 #include "gte.h"
 
 extern "C" {
-extern unsigned int *g_PacketPtr;
-extern short g_SinTable[];
-extern short g_CosTable[];
-extern short g_SqrtOneMinusSqTable[];
-extern unsigned short D_800A2AA4[];     // a ROM row nibble, spread into 12 bits
+extern game_pointer<unsigned int> (&g_PacketPtr);
+extern short (&g_SinTable)[];
+extern short (&g_CosTable)[];
+extern short (&g_SqrtOneMinusSqTable)[];
+extern unsigned short (&D_800A2AA4)[];     // a ROM row nibble, spread into 12 bits
 
 // A VRAM to VRAM copy: packet[1] is the source, [2] the destination, [3] the size.
 // A tail call (j Gpu_SendDirect).
@@ -183,7 +184,7 @@ PrimSprite *Prim_AddSprite(void *ot, unsigned int rgb)
     p = g_PacketPtr;
     ((unsigned char *)p)[3] = 4;
     Mips_Swl2(link, p);
-    Mips_Swl2((unsigned int)p << 8, ot);
+    Mips_Swl2((unsigned int)rt::to_guest(p) << 8, ot);
     p[1] = rgb ^ 0x64000000;
     g_PacketPtr = p + 5;
     return (PrimSprite *)(p + 2);
@@ -489,7 +490,7 @@ void Poly_ClipLit(ViewScratch *sp, int count)
             } else {
                 ClipPolyF4 *f = (ClipPolyF4 *)pkt;
 
-                f->tag = 0x05000000 | ((unsigned int)(pkt + sizeof(ClipPolyF4)) & 0xffffff);
+                f->tag = 0x05000000 | ((unsigned int)rt::to_guest((pkt + sizeof(ClipPolyF4))) & 0xffffff);
                 f->xy0 = a->sxy;
                 f->xy1 = z->sxy;
                 f->xy2 = b->sxy;
@@ -504,7 +505,7 @@ void Poly_ClipLit(ViewScratch *sp, int count)
         }
         sp->packetPtr = pkt;
         *last = (*last & 0xff000000) | (*in->ot & 0xffffff);
-        *in->ot = (*in->ot & 0xff000000) | ((unsigned int)first & 0xffffff);
+        *in->ot = (*in->ot & 0xff000000) | ((unsigned int)rt::to_guest(first) & 0xffffff);
     }
 }
 

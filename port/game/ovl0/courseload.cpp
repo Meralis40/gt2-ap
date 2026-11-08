@@ -1,6 +1,7 @@
 // OVL0 80026bb4-800279e8 (courseload): Course data relocation and loading.
 // Ghidra's decompilation; the functions that don't match yet are the original
 // assembly.
+#include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
 #include "gte.h"
@@ -40,7 +41,7 @@ struct PtrTable {
 
 // A place banners go on a course.
 struct BannerSlot {
-    short (*coords)[2];
+    game_pointer<short[2]> coords;
     short clutX;
     short clutY;
     unsigned short size;
@@ -54,13 +55,13 @@ struct BannerSlot {
 #define WORLD_COURSE(world) (*((unsigned char *)(world) + 0x5d2c))
 
 extern "C" {
-extern unsigned short g_VolBootIds[248];
-extern RECT g_CourseMapClutRect;
-extern RECT g_CourseMapImageRect;
-extern char D_8002F1B8[];
-extern unsigned char D_800A951C;
-extern BannerSlot g_BannerSlots[];
-void CourseObjModel_Relocate(void *model, int base);
+extern unsigned short (&g_VolBootIds)[248];
+extern RECT (&g_CourseMapClutRect);
+extern RECT (&g_CourseMapImageRect);
+extern char (&D_8002F1B8)[];
+extern unsigned char (&D_800A951C);
+extern BannerSlot (&g_BannerSlots)[];
+void CourseObjModel_Relocate(void *model, unsigned int base);
 void AiLines_Init(void *lines);
 void Race_LoadBanners(void *race, int index);
 void Race_LoadCourseTims(void *race);
@@ -139,7 +140,7 @@ void CourseSection_LoadTransform(CourseSection *section, CourseView *view)
     }
 }
 
-void CourseMesh_Relocate(CourseMesh *mesh, int base)
+void CourseMesh_Relocate(CourseMesh *mesh, unsigned int base)
 {
     int i;
 
@@ -158,12 +159,12 @@ next:
 }
 
 // Empty.
-void CourseWalls_Relocate(int *walls, int base)
+void CourseWalls_Relocate(int *walls, unsigned int base)
 {
 }
 
 // A section's ground grid: 16 lists of cells.
-void CourseGrid_Relocate(CourseGrid *grid, int base)
+void CourseGrid_Relocate(CourseGrid *grid, unsigned int base)
 {
     int i;
 
@@ -176,7 +177,7 @@ void CourseGrid_Relocate(CourseGrid *grid, int base)
     next:
         *entry = value + base;
         if (j < count) {
-            entry = (int *)((j << 2) + grid->cells[i]);
+            entry = (int *)rt::from_guest(((j << 2) + grid->cells[i]));
             value = *entry;
             j++;
             goto next;
@@ -185,11 +186,11 @@ void CourseGrid_Relocate(CourseGrid *grid, int base)
 }
 
 // Empty.
-void CourseVisList_Relocate(unsigned short *list, int base)
+void CourseVisList_Relocate(unsigned short *list, unsigned int base)
 {
 }
 
-void CourseSection_Relocate(CourseSection *section, int base)
+void CourseSection_Relocate(CourseSection *section, unsigned int base)
 {
     section->mirrorMesh = (CourseMesh *)((char *)section->mirrorMesh + base);
     CourseMesh_Relocate(section->mirrorMesh, base);
@@ -203,7 +204,7 @@ void CourseSection_Relocate(CourseSection *section, int base)
 }
 
 // Also links each section to its neighbours.
-void CourseSections_Relocate(CourseSectionTable *table, int base)
+void CourseSections_Relocate(CourseSectionTable *table, unsigned int base)
 {
     int i;
 
@@ -228,11 +229,11 @@ next:
 }
 
 // Empty.
-void CourseObjGroup_Relocate(unsigned int *group, int base)
+void CourseObjGroup_Relocate(unsigned int *group, unsigned int base)
 {
 }
 
-void LodTable_Relocate(LodTable *table, int base)
+void LodTable_Relocate(LodTable *table, unsigned int base)
 {
     unsigned int i;
 
@@ -248,7 +249,7 @@ next:
     }
 }
 
-void ModelLib_Relocate(unsigned int *lib, int base)
+void ModelLib_Relocate(unsigned int *lib, unsigned int base)
 {
     unsigned int i = 0;
     unsigned int *entry = lib;
@@ -259,13 +260,13 @@ next:
 
         i++;
         *table += base;
-        LodTable_Relocate((LodTable *)entry[1], base);
+        LodTable_Relocate((LodTable *)rt::from_guest(entry[1]), base);
         entry++;
         goto next;
     }
 }
 
-void CourseObjModels_Relocate(unsigned int *models, int base)
+void CourseObjModels_Relocate(unsigned int *models, unsigned int base)
 {
     unsigned int i = 0;
     unsigned int *entry = models;
@@ -276,13 +277,13 @@ next:
 
         i++;
         *model += base;
-        CourseObjModel_Relocate((void *)entry[1], base);
+        CourseObjModel_Relocate((void *)rt::from_guest(entry[1]), base);
         entry++;
         goto next;
     }
 }
 
-void PtrTable_Relocate(unsigned short *table, int base)
+void PtrTable_Relocate(unsigned short *table, unsigned int base)
 {
     int i;
 
@@ -300,7 +301,7 @@ next:
 // Makes the offsets in a loaded course absolute.
 void Course_Relocate(CourseData *course)
 {
-    int base = (int)course;
+    unsigned int base = rt::to_guest(course);  // unsigned: an offset plus it is an address
     int i;
 
     course->sections = (CourseSectionTable *)((char *)course->sections + base);
@@ -341,7 +342,7 @@ next:
     n--;
     if (n != end) {
         tim = (int *)Tim_LoadNext(tim, 0, 0);
-        tim = (int *)(((int)tim + 3) & mask);
+        tim = (int *)rt::from_guest((((int)rt::to_guest(tim) + 3) & mask));
         goto next;
     }
 }
@@ -362,9 +363,9 @@ void Race_LoadSky(void *race, int skyId)
     int file;
 
     file = (unsigned int)g_VolBootIds[0x46] + skyId *2;
-    Vol_ReadFileAsync(file + 1, (int *)((int)race + 0xe5700));
-    TimList_Upload((int *)((int)race + 0xe5700));
-    Vol_ReadFileAsync(file, (void *)((int)race + 0x5d34));
+    Vol_ReadFileAsync(file + 1, (int *)rt::from_guest(((int)rt::to_guest(race) + 0xe5700)));
+    TimList_Upload((int *)rt::from_guest(((int)rt::to_guest(race) + 0xe5700)));
+    Vol_ReadFileAsync(file, (void *)rt::from_guest(((int)rt::to_guest(race) + 0x5d34)));
 }
 
 // Loads the course map image (CourseMap_GetFileId of the course's map id, Course_Get
@@ -376,8 +377,8 @@ void Race_LoadCourseMap(void *race, int course)
 
     pCVar1 = Course_Get(course);
     file = CourseMap_GetFileId(pCVar1->hash);
-    Vol_ReadFileAsync(file, (void *)((int)race + 0xe5700));
-    Tim_LoadClutAndImage((void *)((int)race + 0xe5700), &g_CourseMapClutRect, &g_CourseMapImageRect);
+    Vol_ReadFileAsync(file, (void *)rt::from_guest(((int)rt::to_guest(race) + 0xe5700)));
+    Tim_LoadClutAndImage((void *)rt::from_guest(((int)rt::to_guest(race) + 0xe5700)), &g_CourseMapClutRect, &g_CourseMapImageRect);
 }
 
 // Loads a course: the map image, the course textures (g_VolBootIds[0x6c] + course * 2
@@ -391,7 +392,7 @@ void Race_LoadCourse(void *race, int course)
 
     Race_LoadCourseMap(race, course);
     pCVar1 = Course_Get(course);
-    course_00 = (CourseData *)((int)race + 0xb534);
+    course_00 = (CourseData *)rt::from_guest(((int)rt::to_guest(race) + 0xb534));
     file = (unsigned int)g_VolBootIds[0x6c] + course *2;
     Vol_ReadFileAsync(file + 1, course_00);
     TimList_Upload((int *)course_00);
@@ -409,7 +410,7 @@ void Race_LoadCourseTims(void *race)
     int kind;
 
     VolId_ReadFile((VolBootId)0x6d, buf);
-    Hud_LoadCluts((char *)race + 0x450c, (int)buf);
+    Hud_LoadCluts((char *)race + 0x450c, (int)rt::to_guest(buf));
     {
         char *tim = buf + *(int *)(buf + 0x10);
         short *clut = (short *)(tim + 8);
@@ -553,10 +554,10 @@ void Race_LoadBanners(void *race, int index)
 // Once per race context: loads the course, its TIMs and the banners.
 void Race_LoadCourseOnce(RaceMem *race)
 {
-    if (*(char *)((int)race + 0x11d700) == 0) {
+    if (*(char *)rt::from_guest(((int)rt::to_guest(race) + 0x11d700)) == 0) {
         RaceWorld *world = &((RaceMem *)race)->world;
 
-        *(unsigned char *)((int)race + 0x11d700) = 1;
+        *(unsigned char *)rt::from_guest(((int)rt::to_guest(race) + 0x11d700)) = 1;
         Race_LoadCourse(race, WORLD_COURSE(world));
         Race_LoadCourseTims(race);
         Race_LoadBanners(race, WORLD_COURSE(world));

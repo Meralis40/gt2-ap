@@ -7,23 +7,24 @@
 
 extern "C" {
 // Pointers into g_OVL4_SharedBuffer.
-extern void *g_OVL4_WorkBuffer;     // TIM loads and the screen loops' packets (0x10000 bytes)
-extern void *g_OVL4_PreviewBuffer;  // car preview
-extern void *g_OVL4_UniStrBuffer;   // unistrdb strings
-extern void *g_OVL4_IconBuffer;     // menu icons (GTMenuView.assets0)
-extern void *g_OVL4_MenuDataBuffer; // menu data (GTMenuView.assets1)
-extern unsigned char g_OVL4_OrderingTable[];
-extern unsigned char g_Battle_PacketBuf[];
-extern unsigned char D_800A9040[];
-extern GTMenuPreviewParams D_80050918;
-extern GameState g_GameState;
-extern ShopTxn g_ShopTxn;
-extern MenuCarList g_GarageList;
-extern MenuCarList g_UsedCarList;
+extern game_pointer<void> (&g_OVL4_WorkBuffer);     // TIM loads and the screen loops' packets (0x10000 bytes)
+extern game_pointer<void> (&g_OVL4_PreviewBuffer);  // car preview
+extern game_pointer<void> (&g_OVL4_UniStrBuffer);   // unistrdb strings
+extern game_pointer<void> (&g_OVL4_IconBuffer);     // menu icons (GTMenuView.assets0)
+extern game_pointer<void> (&g_OVL4_MenuDataBuffer); // menu data (GTMenuView.assets1)
+extern unsigned char (&g_OVL4_OrderingTable)[];
+extern unsigned char (&g_Battle_PacketBuf)[];
+extern unsigned char (&D_800A9040)[];
+extern GTMenuPreviewParams (&D_80050918);
+extern GameState (&g_GameState);
+extern ShopTxn (&g_ShopTxn);
+extern MenuCarList (&g_GarageList);
+extern MenuCarList (&g_UsedCarList);
 }
 
 GTMenu::GTMenu()
 {
+    vptr.address = 0x80022ca4;  // GTMenu's vtable
     SetVideoMode(0x26);
     PacketBuffer_Init(&packets, g_OVL4_WorkBuffer, 0x10000);
     ViewDrawContext_Init(&draw, g_OVL4_OrderingTable, 0x2340);
@@ -56,7 +57,7 @@ GTMenu::~GTMenu()
 // cursor on the default element.
 void GTMenu::Enter()
 {
-    void *assets[3];
+    game_pointer<void> assets[3];  // copied as ViewAssets
     GTMenuPreviewConfig preview;
 
     psxViewLoop::Enter();
@@ -309,11 +310,11 @@ void GTMenu_QueueCarPreview(GTMenu *menu, int delay, int baseCarId, int carId, i
 }
 
 // A garage's cars, credits and current car, from D_801CD554.
-extern unsigned char D_801CD554[];
-extern short D_800A8D62;            // the car highlighted in the garage list
-extern unsigned char g_MenuPageAttr;
-extern char g_GtMenu_SelectedEvent[];
-extern FlowMenuState g_Flow_IntroShown;
+extern unsigned char (&D_801CD554)[];
+extern short (&D_800A8D62);            // the car highlighted in the garage list
+extern unsigned char (&g_MenuPageAttr);
+extern char (&g_GtMenu_SelectedEvent)[];
+extern FlowMenuState (&g_Flow_IntroShown);
 
 #define GARAGE_CAR(slot) ((Car *)(D_801CD554 + 4 + (slot) * 0xa4))
 #define GARAGE_CREDITS (*(int *)(D_801CD554 + 0x4014))
@@ -612,6 +613,7 @@ wheels:
 
 GTLoadingMenu::GTLoadingMenu()
 {
+    vptr.address = 0x80022c5c;  // GTLoadingMenu's vtable
     noDrawSync = 1;
 }
 
