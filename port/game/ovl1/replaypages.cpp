@@ -6,7 +6,7 @@
 
 extern "C" {
 extern game_pointer<BaseMenu> (&g_CurrentMenu);
-extern pointer (&g_OVL1_EndFontInfo);
+extern game_pointer<char> (&g_OVL1_EndFontInfo);  // the work area after the font
 extern game_pointer<KanjiFont> (&g_OVL1_KanjiFont);
 extern short (&g_CardSlotStatus)[];
 extern CardMenuConfig (&g_OVL1_CardMenuConfig);
@@ -213,7 +213,7 @@ void ReplayTheaterMenu_Draw(DrawLayer *layer)
 void LoadReplay_Enter(int back)
 {
     g_OVL1_CardMenuConfig.slotStatus = g_CardSlotStatus;
-    g_OVL1_CardMenuConfig.work = (CardMenu *)((char *)g_OVL1_EndFontInfo + 0x40000);
+    g_OVL1_CardMenuConfig.work = (CardMenu *)(g_OVL1_EndFontInfo + 0x40000);
     g_OVL1_CardMenuConfig.kanjiFont = g_OVL1_KanjiFont;
     g_LoadReplay_CardMenu = CardMenu_Setup(&g_OVL1_CardMenuConfig);
     CardMenu_StartPlayReplay();
@@ -255,7 +255,7 @@ void LoadReplay_Draw(DrawLayer *layer)
 void RenameDeleteReplay_Enter(int back)
 {
     g_OVL1_CardMenuConfig.slotStatus = g_CardSlotStatus;
-    g_OVL1_CardMenuConfig.work = (CardMenu *)((char *)g_OVL1_EndFontInfo + 0x40000);
+    g_OVL1_CardMenuConfig.work = (CardMenu *)(g_OVL1_EndFontInfo + 0x40000);
     g_OVL1_CardMenuConfig.kanjiFont = g_OVL1_KanjiFont;
     g_RenameDeleteReplay_CardMenu = CardMenu_Setup(&g_OVL1_CardMenuConfig);
     CardMenu_StartEditReplay();
@@ -502,7 +502,7 @@ void SaveGameRoot_Draw(DrawLayer *layer)
 void SaveGameCard_Enter(int back)
 {
     g_OVL1_CardMenuConfig.slotStatus = g_CardSlotStatus;
-    g_OVL1_CardMenuConfig.work = (CardMenu *)((char *)g_OVL1_EndFontInfo + 0x40000);
+    g_OVL1_CardMenuConfig.work = (CardMenu *)(g_OVL1_EndFontInfo + 0x40000);
     g_OVL1_CardMenuConfig.kanjiFont = g_OVL1_KanjiFont;
     CardMenu_Setup(&g_OVL1_CardMenuConfig);
     CardMenu_StartSave(0);
@@ -573,7 +573,7 @@ void LoadGameRoot_Draw(DrawLayer *layer)
 void LoadGameCard_Enter(int back)
 {
     g_OVL1_CardMenuConfig.slotStatus = g_CardSlotStatus;
-    g_OVL1_CardMenuConfig.work = (CardMenu *)((char *)g_OVL1_EndFontInfo + 0x40000);
+    g_OVL1_CardMenuConfig.work = (CardMenu *)(g_OVL1_EndFontInfo + 0x40000);
     g_OVL1_CardMenuConfig.kanjiFont = g_OVL1_KanjiFont;
     CardMenu_Setup(&g_OVL1_CardMenuConfig);
     CardMenu_StartLoad(0);
