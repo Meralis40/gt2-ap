@@ -135,10 +135,9 @@ enum {
 // and m first, then the offset of the entries.
 #define DIR_ENTRY(m, i)     ((ReplayDirEntry *)((char *)(m) + (i) * sizeof(ReplayDirEntry) + __builtin_offsetof(CardMenu, dir.entries)))
 
-// This file's .rodata, in the game's order: the empty line, CardState_CheckSlot's three
-// jump tables, the default replay title and CardMenu_Update's jump table.
-extern const char D_8008FAC8[8];
-const char D_8008FAC8[8] = { 0 }; // braces: a string initializer is emitted again as a literal
+// The empty line, in the game's .rodata: menu lines are guest pointers, so it has to be
+// the guest's copy, not one in the port's own data.
+extern const char (&D_8008FAC8)[8];
 #define EMPTY ((char *)D_8008FAC8)
 enum { CARD_EXIT = 0x27, CARD_REPLAY_LOADED = 0x28 }; // what a state returns to leave
 extern game_pointer<CardMenu> (&g_CardMenu);

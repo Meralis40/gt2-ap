@@ -60,6 +60,60 @@ void describe(char *out, std::size_t size, std::uintptr_t address)
     std::snprintf(out, size, "%p", reinterpret_cast<void *>(address));
 }
 
+#if defined(_WIN64)
+// Clang's frame pointer on Windows x64 points into the frame, not at the saved one, so
+// frames are walked with the unwind tables (the system's too), naming each module. Raw
+// output: a wild write may have hit the C library's own state.
+void printUnwound(CONTEXT walk)
+{
+    char at[80], line[MAX_PATH + 120];
+    DWORD written;
+
+    for (int i = 0; i < 24 && walk.Rip; i++) {
+        DWORD64 imageBase;
+        PRUNTIME_FUNCTION entry = RtlLookupFunctionEntry(walk.Rip, &imageBase, nullptr);
+        char module[MAX_PATH] = "?";
+        HMODULE handle;
+        if (GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                               reinterpret_cast<LPCSTR>(walk.Rip), &handle)) {
+            GetModuleFileNameA(handle, module, sizeof module);
+        }
+        describe(at, sizeof at, walk.Rip);
+        const char *name = std::strrchr(module, '\\');
+        int size = wsprintfA(line, "  %s +%lx %s\r\n", at, static_cast<unsigned long>(walk.Rip - imageBase),
+                             name ? name + 1 : module);
+        WriteFile(GetStdHandle(STD_ERROR_HANDLE), line, size, &written, nullptr);
+        if (!entry) {
+            walk.Rip = *reinterpret_cast<DWORD64 *>(walk.Rsp);  // a leaf: the return address is on top
+            walk.Rsp += 8;
+            continue;
+        }
+        void *handlerData;
+        DWORD64 establisher;
+        RtlVirtualUnwind(UNW_FLAG_NHANDLER, imageBase, walk.Rip, entry, &walk, &handlerData, &establisher, nullptr);
+    }
+}
+
+// The callers of whoever calls this, from its caller's frame on.
+[[gnu::noinline]] void printBacktrace(std::uintptr_t)
+{
+    std::fflush(stderr);
+    CONTEXT context;
+    RtlCaptureContext(&context);
+    for (int i = 0; i < 2; i++) {  // this function's frame, then its caller's
+        DWORD64 imageBase;
+        PRUNTIME_FUNCTION entry = RtlLookupFunctionEntry(context.Rip, &imageBase, nullptr);
+        if (!entry) {
+            return;
+        }
+        void *handlerData;
+        DWORD64 establisher;
+        RtlVirtualUnwind(UNW_FLAG_NHANDLER, imageBase, context.Rip, entry, &context, &handlerData, &establisher,
+                         nullptr);
+    }
+    printUnwound(context);
+}
+#else
 // Frame pointers are on: walks them and prints the return addresses, for llvm-symbolizer.
 void printBacktrace(std::uintptr_t frame)
 {
@@ -75,6 +129,7 @@ void printBacktrace(std::uintptr_t frame)
         frame = words[0];
     }
 }
+#endif
 
 void onAbort(int)
 {
@@ -119,31 +174,7 @@ LONG CALLBACK onFault(EXCEPTION_POINTERS *info)
                          info->ExceptionRecord->ExceptionInformation[0] == 1 ? "writing" : "reading", accessed);
     WriteFile(GetStdHandle(STD_ERROR_HANDLE), line, size, &written, nullptr);
 #if RT_WINDOW
-    // x64 code has unwind tables, the system's too: walk with them, naming each module.
-    CONTEXT walk = *info->ContextRecord;
-    for (int i = 0; i < 24 && walk.Rip; i++) {
-        DWORD64 imageBase;
-        PRUNTIME_FUNCTION entry = RtlLookupFunctionEntry(walk.Rip, &imageBase, nullptr);
-        char module[MAX_PATH] = "?";
-        HMODULE handle;
-        if (GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-                               reinterpret_cast<LPCSTR>(walk.Rip), &handle)) {
-            GetModuleFileNameA(handle, module, sizeof module);
-        }
-        describe(at, sizeof at, walk.Rip);
-        const char *name = std::strrchr(module, '\\');
-        size = wsprintfA(line, "  %s +%lx %s\r\n", at, static_cast<unsigned long>(walk.Rip - imageBase),
-                         name ? name + 1 : module);
-        WriteFile(GetStdHandle(STD_ERROR_HANDLE), line, size, &written, nullptr);
-        if (!entry) {
-            walk.Rip = *reinterpret_cast<DWORD64 *>(walk.Rsp);  // a leaf: the return address is on top
-            walk.Rsp += 8;
-            continue;
-        }
-        void *handlerData;
-        DWORD64 establisher;
-        RtlVirtualUnwind(UNW_FLAG_NHANDLER, imageBase, walk.Rip, entry, &walk, &handlerData, &establisher, nullptr);
-    }
+    printUnwound(*info->ContextRecord);
     TerminateProcess(GetCurrentProcess(), 3);
 #endif
     auto frame = static_cast<std::uintptr_t>(info->ContextRecord->REG_FP);
