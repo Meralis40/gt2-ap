@@ -19,8 +19,10 @@ extern "C" {
 void TextItem_Init(TextItem *item, TextStyle *style, char *text)
 {
     *(TextStyle *)item = *style;
-    // Some menus leave a row without a label: the PlayStation can read address 0.
-    item->text = text != 0 ? text : (char *)"";
+    // Some menus leave a row without a label: the PlayStation can read address 0. The
+    // text is a guest pointer, so the empty string stands in guest memory.
+    static char *const empty = rt::guestString("");
+    item->text = text != 0 ? text : empty;
     item->brightness = 0x80;
     item->anim = -1;
 }
