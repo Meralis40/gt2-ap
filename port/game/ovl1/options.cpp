@@ -675,8 +675,8 @@ void OptionsRoot_Enter(int back)
     BaseMenuPage *pMVar1;
 
     pMVar1 = g_CurrentMenu->activePage;
-    pMVar1[1].enter = (MenuPageEnterFn *)rt::from_guest(0x10);
-    pMVar1[1].update = (MenuPageUpdateFn *)rt::from_guest(back);
+    ((RootMenuPage *)pMVar1)->delay = 0x10;
+    ((RootMenuPage *)pMVar1)->back = back;
 }
 
 // After the delay: pushes the options page, or leaves the menu (4) coming back.
@@ -706,7 +706,7 @@ void OptionsRoot_Draw(DrawLayer *layer)
 // Unreferenced page: 16-frame delay, MainMenu_StopMusic.
 void OptionsUnusedWait_Enter(int back)
 {
-    g_CurrentMenu->activePage[1].enter = (MenuPageEnterFn *)rt::from_guest(0x10);
+    ((RootMenuPage *)g_CurrentMenu->activePage)->delay = 0x10;
     MainMenu_StopMusic();
 }
 

@@ -118,6 +118,13 @@ std::uint32_t functionAddress(void *function)
     if (it != t.addedAddresses.end()) {
         return it->second;
     }
+#if __UINTPTR_MAX__ != 0xffffffffu
+    // Guest memory holds no code: a number or a data address stored in a function word.
+    uptr offset = reinterpret_cast<uptr>(function) - base;
+    if (offset < (uptr{1} << 32)) {
+        Rt_Fatal("guest address %08x stored as a function", static_cast<unsigned>(offset));
+    }
+#endif
     std::uint32_t address = kAddedBase + static_cast<std::uint32_t>(t.added.size()) * 4;
     t.added.push_back(function);
     t.addedAddresses.emplace(function, address);
