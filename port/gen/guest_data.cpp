@@ -414,6 +414,7 @@ std::uintptr_t D_8008FA68;
 std::uintptr_t D_8008FA70;
 std::uintptr_t D_8008FA74;
 std::uintptr_t D_8008FAAC;
+std::uintptr_t D_8008FAC8;
 std::uintptr_t D_8008FB38;
 std::uintptr_t D_8008FB3C;
 std::uintptr_t D_8008FDB8;
@@ -1887,6 +1888,7 @@ const rt::GuestData rt::kGuestData[] = {
     {&D_8008FA70, 0x8008fa70},
     {&D_8008FA74, 0x8008fa74},
     {&D_8008FAAC, 0x8008faac},
+    {&D_8008FAC8, 0x8008fac8},
     {&D_8008FB38, 0x8008fb38},
     {&D_8008FB3C, 0x8008fb3c},
     {&D_8008FDB8, 0x8008fdb8},
