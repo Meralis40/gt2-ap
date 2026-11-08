@@ -39,8 +39,8 @@ void ReplayTheaterRoot_Enter(int back)
     BaseMenuPage *pMVar1;
 
     pMVar1 = g_CurrentMenu->activePage;
-    pMVar1[1].enter = (MenuPageEnterFn *)rt::from_guest(0x14);
-    pMVar1[1].update = (MenuPageUpdateFn *)rt::from_guest(back);
+    ((RootMenuPage *)pMVar1)->delay = 0x14;
+    ((RootMenuPage *)pMVar1)->back = back;
     if (back == 0) {
         DemoReplay_Count(g_OVL1_EndFontInfo);
     }
@@ -75,7 +75,7 @@ void ReplayTheaterRoot_Draw(DrawLayer *layer)
 // delay and stops the music (MainMenu_StopMusic).
 void StartReplayWait_Enter(int back)
 {
-    g_CurrentMenu->activePage[1].enter = (MenuPageEnterFn *)rt::from_guest(0x14);
+    ((RootMenuPage *)g_CurrentMenu->activePage)->delay = 0x14;
     MainMenu_StopMusic();
 }
 
@@ -439,7 +439,7 @@ void DemoStart_Enter(int back)
     BaseMenu *pBVar1;
 
     pBVar1 = g_CurrentMenu;
-    g_CurrentMenu->activePage[1].enter = (MenuPageEnterFn *)rt::from_guest(0x14);
+    ((RootMenuPage *)g_CurrentMenu->activePage)->delay = 0x14;
     pBVar1->result = '\x01';
 }
 
@@ -469,8 +469,8 @@ void SaveGameRoot_Enter(int back)
     BaseMenuPage *pMVar1;
 
     pMVar1 = g_CurrentMenu->activePage;
-    pMVar1[1].update = (MenuPageUpdateFn *)rt::from_guest(back);
-    pMVar1[1].enter = (MenuPageEnterFn *)rt::from_guest(0x14);
+    ((RootMenuPage *)pMVar1)->back = back;
+    ((RootMenuPage *)pMVar1)->delay = 0x14;
     MainMenu_PlayMusic(7);
 }
 
@@ -540,8 +540,8 @@ void LoadGameRoot_Enter(int back)
     BaseMenuPage *pMVar1;
 
     pMVar1 = g_CurrentMenu->activePage;
-    pMVar1[1].update = (MenuPageUpdateFn *)rt::from_guest(back);
-    pMVar1[1].enter = (MenuPageEnterFn *)rt::from_guest(0x14);
+    ((RootMenuPage *)pMVar1)->back = back;
+    ((RootMenuPage *)pMVar1)->delay = 0x14;
     MainMenu_PlayMusic(7);
 }
 

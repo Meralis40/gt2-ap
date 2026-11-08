@@ -58,8 +58,8 @@ void DataTransferRoot_Enter(int back)
     BaseMenuPage *pMVar1;
 
     pMVar1 = g_CurrentMenu->activePage;
-    pMVar1[1].update = (MenuPageUpdateFn *)rt::from_guest(back);
-    pMVar1[1].enter = (MenuPageEnterFn *)rt::from_guest(0x14);
+    ((RootMenuPage *)pMVar1)->back = back;
+    ((RootMenuPage *)pMVar1)->delay = 0x14;
     MainMenu_PlayMusic(7);
 }
 
@@ -90,7 +90,7 @@ void DataTransferRoot_Draw(DrawLayer *layer)
 // Unreferenced page: 20-frame delay, MainMenu_StopMusic.
 void DataTransferUnusedWait_Enter(int back)
 {
-    g_CurrentMenu->activePage[1].enter = (MenuPageEnterFn *)rt::from_guest(0x14);
+    ((RootMenuPage *)g_CurrentMenu->activePage)->delay = 0x14;
     MainMenu_StopMusic();
 }
 
