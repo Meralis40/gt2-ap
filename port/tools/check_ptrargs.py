@@ -8,6 +8,9 @@ pointer is a host address (rt::base + the guest address), so a caller that passe
 guest address as an int hands the callee a wrong pointer. Same for return types. Reads
 Clang's AST of every source of port/game; lists each mismatch with its declarations.
 
+Also lists the guest data names (extern references, bound to guest memory) whose type
+holds a raw pointer: 8 bytes on x86-64 over a 4-byte slot. They need game_pointer.
+
     check_ptrargs.py <compile_commands.json>      (from WSL, any python3)
 """
 import json
@@ -63,8 +66,22 @@ def split_params(t):
     return ret, parts
 
 
+WRAPPED = re.compile(r"game_(pointer|function)<[^<>]*>")
+
+
+def host_pointer(t):
+    """True when the referenced type of an extern reference holds a raw pointer."""
+    while WRAPPED.search(t):
+        t = WRAPPED.sub("G", t)
+    return "&" in t and "*" in t
+
+
 def walk(node, out, linkage_c=False):
     if isinstance(node, dict):
+        if node.get("kind") == "VarDecl" and node.get("storageClass") == "extern" and "name" in node:
+            out.append(("ref:" + node["name"], node["type"]["qualType"]))
+        if node.get("kind") in ("TypedefDecl", "TypeAliasDecl") and "name" in node and "type" in node:
+            out.append(("typedef:" + node["name"], node["type"]["qualType"]))
         if node.get("kind") == "LinkageSpecDecl" and node.get("language") == "C":
             linkage_c = True
         if node.get("kind") == "FunctionDecl" and linkage_c and "name" in node:
@@ -85,7 +102,16 @@ def decls_of(entry, cwd):
         return entry["file"], []
     found = []
     walk(json.loads(r.stdout), found)
-    return entry["file"], found
+    # Clang leaves a reference's typedefs unexpanded ("pointer (&)"): expand them here.
+    typedefs = {n[8:]: t for n, t in found if n.startswith("typedef:")}
+    decls = [(n, t) for n, t in found if not n.startswith(("typedef:", "ref:"))]
+    for n, t in found:
+        if n.startswith("ref:"):
+            for _ in range(8):
+                t = re.sub(r"\b\w+\b",lambda m: f"({typedefs[m[0]]})" if m[0] in typedefs else m[0], t)
+            if host_pointer(t):
+                decls.append(("var:" + n[4:], t))
+    return entry["file"], decls
 
 
 def main():
@@ -99,7 +125,11 @@ def main():
             for name, t in decls:
                 seen[name][t].add(Path(file).name)
     bad = 0
-    for name in sorted(seen):
+    for name in sorted(n for n in seen if n.startswith("var:")):
+        bad += 1
+        for t, files in sorted(seen[name].items()):
+            print(f"{name[4:]}: host pointer in guest data: {t}    ({', '.join(sorted(files))})")
+    for name in sorted(n for n in seen if not n.startswith("var:")):
         types = seen[name]
         if len(types) < 2:
             continue
@@ -118,7 +148,7 @@ def main():
             print(f"{name}: {', '.join(problems)}")
             for t, files in sorted(types.items()):
                 print(f"    {t}    ({', '.join(sorted(files)[:4])}{'...' if len(files) > 4 else ''})")
-    print(f"{bad} functions with an int and a pointer in the same place")
+    print(f"{bad} guest names holding a host pointer or functions with an int and a pointer in one place")
 
 
 if __name__ == "__main__":
