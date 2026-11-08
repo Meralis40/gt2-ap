@@ -43,6 +43,14 @@ static int ApConnect_Update(int active)
         return 0;
     }
     if (state == AP_PAGE_CONNECTED) {
+        McPort *port = &Card_Get()->ports[0];
+
+        // The seed's card replaced gt2ap.mcd, but the driver still holds that card's
+        // directory and a ready state: the autoload would look there and find nothing.
+        // A new card's state (menu status 1) makes it wait, and dirty 0 has the driver
+        // read the directory again even on a check that started before the swap.
+        port->state = 2;
+        port->dirty = 0;
         Ap_PageClose();
         return 3;
     }
