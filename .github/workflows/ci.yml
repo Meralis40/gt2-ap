@@ -9,37 +9,6 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    name: ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up MSVC environment
-        if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1
-
-      - name: Install Ninja (Linux)
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y ninja-build
-
-      - name: Install Ninja (macOS)
-        if: runner.os == 'macOS'
-        run: brew install ninja
-
-      - name: Configure
-        run: cmake --preset release
-
-      - name: Build
-        run: cmake --build --preset release
-
-      - name: Test
-        run: ctest --preset release
-
   package:
     uses: ./.github/workflows/package.yml
     with:
