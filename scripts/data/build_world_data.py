@@ -1,10 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 # Builds the data file of the AP world (world/gt2/data/gt2.json) from the dumps in docs/game ids:
-# events.json, dealers.json and parts.json. Only what the world logic needs is kept.
+# events.json, dealers.json, cars.json and opponents.json. Only what the world logic needs is kept.
 #
 #   python scripts/data/build_world_data.py "docs/game ids" world/gt2/data/gt2.json
 
 import json
+import statistics
 import sys
 from pathlib import Path
 
@@ -46,6 +47,8 @@ def main():
     dealers = json.loads((src / "dealers.json").read_text(encoding="utf-8"))["cars"]
     cars_info = {c["code"]: c for c in
                  json.loads((src / "cars.json").read_text(encoding="utf-8"))["cars"]}
+    opponents = {e["code"]: e["powers"] for e in
+                 json.loads((src / "opponents.json").read_text(encoding="utf-8"))["events"]}
 
     cars = {}
     for c in dealers:
@@ -75,6 +78,9 @@ def main():
     for e in events:
         if e["kind"] not in ("race", "event_synthesizer") or e["unreachable"]:
             continue
+        # The median power of the opponent list. The Event Synthesizer's free races draw their
+        # opponents around the player's power instead.
+        powers = opponents[e["code"]] if e["kind"] == "race" else []
         out_events.append({
             "index": e["index"],
             "code": e["code"],
@@ -86,13 +92,14 @@ def main():
             "turbo": e["turbo"],
             "racingMod": e["racingMod"],
             "maxPower": e["maxPower"],
+            "opponentPower": statistics.median_low(powers) if powers else None,
             "allowedCars": e["allowedCars"],
             "prize": e["prizes"][0],
         })
 
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"events": out_events, "cars": cars}, indent=0,
-                              ensure_ascii=False) + "\n", encoding="utf-8")
+                              ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
 
 
 if __name__ == "__main__":

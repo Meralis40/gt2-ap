@@ -1,4 +1,4 @@
-from ..data import EVENTS
+from ..data import EVENTS, EVENTS_BY_CODE
 from ..rules import event_logic
 from . import GT2TestBase
 
@@ -9,6 +9,14 @@ class TestLogic(GT2TestBase):
     def test_every_event_has_a_car(self) -> None:
         for event in EVENTS:
             self.assertTrue(event_logic(event).cars, event.name)
+
+    def test_opponent_targets(self) -> None:
+        # Events without a power limit follow their opponents: 98 PS, then 198 and 248 PS
+        targets = [event_logic(EVENTS_BY_CODE[code]).target for code in ("SND0001", "SND0002", "SND0003")]
+        self.assertEqual(targets, [98, 198, 248])
+        self.assertEqual(event_logic(EVENTS_BY_CODE["FREERACE01"]).target, 0)
+        # Under a power limit too: 4WD Challenge Race 1 (350 PS limit) has opponents of 248 PS
+        self.assertEqual(event_logic(EVENTS_BY_CODE["4WD0001"]).target, 248)
 
     def test_start_events(self) -> None:
         # Only the starting manufacturer: the B tests and the no-license races

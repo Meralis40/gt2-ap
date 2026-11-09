@@ -51,6 +51,7 @@ class Event:
     turbo: Optional[str]  # no_turbo, turbo_required
     racing_mod: Optional[str]  # no_racing_mod, racing_mod_required
     max_power: Optional[int]
+    opponent_power: Optional[int]  # median power of the opponent list
     allowed_cars: tuple[str, ...] = field(default=())
     prize: int = 0
 
@@ -64,7 +65,8 @@ CARS: dict[str, Car] = {
 
 EVENTS: list[Event] = [
     Event(e["index"], e["code"], e["name"], e["category"], e["league"], e["tier"], e["drive"],
-          e["turbo"], e["racingMod"], e["maxPower"], tuple(e["allowedCars"]), e["prize"])
+          e["turbo"], e["racingMod"], e["maxPower"],
+          e["opponentPower"], tuple(e["allowedCars"]), e["prize"])
     for e in _DATA["events"]
 ]
 EVENTS_BY_CODE: dict[str, Event] = {e.code: e for e in EVENTS}
