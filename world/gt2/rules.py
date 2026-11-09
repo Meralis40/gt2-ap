@@ -5,9 +5,10 @@ cars is in reach: its manufacturer is unlocked, it costs no more than the price 
 licenses held, and with the unlocked tuning parts it reaches the event's power target.
 
 The price cap keeps the logic from expecting a lot of grinding at each license level. The power
-target is a share of the event's power limit, or a flat value per license for events without a
-limit. Power is estimated as the stock power plus the gain of each part on its own (from
-dump_dealers.py), scaled down a little since the gains don't add up exactly.
+target is the median power of the event's opponents (from dump_opponents.py), and at most a
+share of the event's power limit. Power is estimated as the stock power plus the
+gain of each part on its own (from dump_dealers.py), scaled down a little since the gains don't
+add up exactly.
 """
 
 import dataclasses
@@ -33,8 +34,8 @@ PRICE_CAPS: list[Optional[int]] = [10_000, 25_000, 50_000, 100_000, 250_000, Non
 START_BUDGET = PRICE_CAPS[0]  # the game starts with 10,000 Cr
 # Power target, as a share of the event's power limit
 POWER_RATIO = 0.9
-# Power target of the events without a limit, by license tier
-TIER_TARGETS = [140, 200, 250, 330, 420, 520, 520]
+# Power target of the events without a limit, as a share of the median opponent power
+OPPONENT_RATIO = 1.0
 # Share of the summed part gains the logic counts on
 GAIN_FACTOR = 0.9
 # Best stock power under START_BUDGET that makes a manufacturer a normal (not hard) start
@@ -147,11 +148,15 @@ def event_logic(event: Event) -> EventLogic:
     for car in cars:
         if not any(dominates(k, car) for k in kept):
             kept = [k for k in kept if not dominates(car, k)] + [car]
-    if event.category in ("one_make", "synthesizer"):
-        # One-make opponents drive the same models; synthesizer opponents follow the player's power
+    if event.category == "synthesizer":
+        # Free races: the opponents are drawn around the player's power
         target = 0.0
     else:
-        target = POWER_RATIO * event.max_power if event.max_power else TIER_TARGETS[event.tier]
+        assert event.opponent_power is not None, event.name
+        target = OPPONENT_RATIO * event.opponent_power
+        if event.max_power:
+            # The opponents usually stay well under the limit
+            target = min(target, POWER_RATIO * event.max_power)
         # Never above what the best allowed car reaches with every part
         best = max((car_power(c, ALL_PARTS, None, turbo_kits=event.turbo != "no_turbo",
                               racing_mod=event.racing_mod != "no_racing_mod") for c in kept),

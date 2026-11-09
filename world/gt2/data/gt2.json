@@ -11,6 +11,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 350,
+"opponentPower": 248,
 "allowedCars": [],
 "prize": 5000
 },
@@ -25,6 +26,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 400,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 6000
 },
@@ -39,6 +41,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 700,
+"opponentPower": 499,
 "allowedCars": [],
 "prize": 15000
 },
@@ -53,6 +56,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 386,
 "allowedCars": [
 "ld7cn",
 "ld7vn"
@@ -70,6 +74,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 444,
 "allowedCars": [
 "ld7cn",
 "ld7vn"
@@ -87,6 +92,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 200,
+"opponentPower": 147,
 "allowedCars": [],
 "prize": 7000
 },
@@ -101,6 +107,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 350,
+"opponentPower": 248,
 "allowedCars": [],
 "prize": 7000
 },
@@ -115,6 +122,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 350,
+"opponentPower": 248,
 "allowedCars": [],
 "prize": 8000
 },
@@ -129,6 +137,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 400,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 8000
 },
@@ -143,6 +152,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 400,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 10000
 },
@@ -157,6 +167,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 62,
 "allowedCars": [
 "a2azn",
 "a2aan"
@@ -174,6 +185,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 263,
 "allowedCars": [
 "a222n",
 "afr7n",
@@ -206,6 +218,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 98,
 "allowedCars": [
 "ademn",
 "adgln",
@@ -227,6 +240,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 148,
 "allowedCars": [
 "ademn",
 "adgln",
@@ -248,6 +262,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 131,
 "allowedCars": [
 "an16n",
 "av16n",
@@ -275,6 +290,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 163,
 "allowedCars": [
 "an16n",
 "av16n",
@@ -299,6 +315,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 147,
 "allowedCars": [
 "bmmgn"
 ],
@@ -315,6 +332,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 183,
 "allowedCars": [
 "bmmgn"
 ],
@@ -331,6 +349,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 60,
 "allowedCars": [
 "brmin",
 "brmcn"
@@ -348,6 +367,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 92,
 "allowedCars": [
 "brmin",
 "brmcn",
@@ -366,6 +386,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 148,
 "allowedCars": [],
 "prize": 5000
 },
@@ -380,6 +401,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 248,
 "allowedCars": [],
 "prize": 6000
 },
@@ -394,6 +416,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 7000
 },
@@ -408,6 +431,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 353,
 "allowedCars": [
 "cc67n",
 "c427n",
@@ -429,6 +453,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 449,
 "allowedCars": [
 "cc67n",
 "c427n",
@@ -450,6 +475,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 151,
 "allowedCars": [
 "dcnan",
 "dcnrn"
@@ -467,6 +493,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 198,
 "allowedCars": [
 "dcnan",
 "dcnrn"
@@ -484,6 +511,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 393,
 "allowedCars": [],
 "prize": 10000
 },
@@ -498,6 +526,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 8000
 },
@@ -512,6 +541,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 297,
 "allowedCars": [],
 "prize": 5000
 },
@@ -526,6 +556,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 467,
 "allowedCars": [],
 "prize": 10000
 },
@@ -540,6 +571,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 467,
 "allowedCars": [],
 "prize": 8000
 },
@@ -554,6 +586,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 5000
 },
@@ -568,6 +601,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 434,
 "allowedCars": [],
 "prize": 10000
 },
@@ -582,6 +616,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 467,
 "allowedCars": [],
 "prize": 10000
 },
@@ -596,6 +631,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 5000
 },
@@ -610,6 +646,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 798,
 "allowedCars": [],
 "prize": 25000
 },
@@ -624,6 +661,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 995,
 "allowedCars": [],
 "prize": 25000
 },
@@ -638,6 +676,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 384,
 "allowedCars": [],
 "prize": 5000
 },
@@ -652,6 +691,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 483,
 "allowedCars": [],
 "prize": 10000
 },
@@ -666,6 +706,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 8000
 },
@@ -680,6 +721,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 278,
 "allowedCars": [],
 "prize": 5000
 },
@@ -694,6 +736,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 426,
 "allowedCars": [],
 "prize": 10000
 },
@@ -708,6 +751,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 8000
 },
@@ -722,6 +766,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 5000
 },
@@ -736,6 +781,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 278,
 "allowedCars": [],
 "prize": 10000
 },
@@ -750,6 +796,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 8000
 },
@@ -764,6 +811,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 306,
 "allowedCars": [],
 "prize": 5000
 },
@@ -778,6 +826,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 467,
 "allowedCars": [],
 "prize": 10000
 },
@@ -792,6 +841,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 301,
 "allowedCars": [],
 "prize": 8000
 },
@@ -806,6 +856,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 5000
 },
@@ -820,6 +871,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 532,
 "allowedCars": [],
 "prize": 10000
 },
@@ -834,6 +886,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 5000
 },
@@ -848,6 +901,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 5000
 },
@@ -862,6 +916,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 470,
 "allowedCars": [
 "dvpgn",
 "dvprn"
@@ -879,6 +934,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 550,
 "allowedCars": [
 "dvpgn",
 "dvprn",
@@ -899,6 +955,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 128,
 "allowedCars": [
 "effgn",
 "effzn"
@@ -916,6 +973,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 60,
 "allowedCars": [
 "efkan"
 ],
@@ -932,6 +990,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 92,
 "allowedCars": [
 "efkan"
 ],
@@ -948,6 +1007,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 700,
+"opponentPower": 449,
 "allowedCars": [],
 "prize": 500000
 },
@@ -962,6 +1022,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 680,
 "allowedCars": [],
 "prize": 350000
 },
@@ -976,6 +1037,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 600,
+"opponentPower": 464,
 "allowedCars": [],
 "prize": 10000
 },
@@ -990,6 +1052,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 600,
+"opponentPower": 464,
 "allowedCars": [],
 "prize": 10000
 },
@@ -1004,6 +1067,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 600,
+"opponentPower": 464,
 "allowedCars": [],
 "prize": 10000
 },
@@ -1018,6 +1082,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 600,
+"opponentPower": 348,
 "allowedCars": [],
 "prize": 500000
 },
@@ -1032,6 +1097,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 682,
 "allowedCars": [],
 "prize": 300000
 },
@@ -1046,6 +1112,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 642,
 "allowedCars": [],
 "prize": 350000
 },
@@ -1060,6 +1127,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 600,
+"opponentPower": 449,
 "allowedCars": [],
 "prize": 150000
 },
@@ -1074,6 +1142,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 300,
+"opponentPower": 198,
 "allowedCars": [],
 "prize": 150000
 },
@@ -1088,6 +1157,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 120,
 "allowedCars": [
 "fcs6n"
 ],
@@ -1104,6 +1174,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 158,
 "allowedCars": [
 "fcs6n"
 ],
@@ -1120,6 +1191,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 300,
+"opponentPower": 178,
 "allowedCars": [],
 "prize": 5000
 },
@@ -1134,6 +1206,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 350,
+"opponentPower": 228,
 "allowedCars": [],
 "prize": 6000
 },
@@ -1148,6 +1221,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 400,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 7000
 },
@@ -1162,6 +1236,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 125,
 "allowedCars": [
 "fp1rn",
 "fp1sn"
@@ -1179,6 +1254,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 157,
 "allowedCars": [
 "fp1rn",
 "fp1sn"
@@ -1196,6 +1272,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 300,
+"opponentPower": 198,
 "allowedCars": [],
 "prize": 5000
 },
@@ -1210,6 +1287,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 450,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 6000
 },
@@ -1224,6 +1302,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 500,
+"opponentPower": 399,
 "allowedCars": [],
 "prize": 7000
 },
@@ -1238,6 +1317,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": null,
 "allowedCars": [],
 "prize": 10000
 },
@@ -1252,6 +1332,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": null,
 "allowedCars": [],
 "prize": 10000
 },
@@ -1266,6 +1347,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": null,
 "allowedCars": [],
 "prize": 10000
 },
@@ -1280,6 +1362,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": null,
 "allowedCars": [],
 "prize": 10000
 },
@@ -1294,6 +1377,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": null,
 "allowedCars": [],
 "prize": 10000
 },
@@ -1308,6 +1392,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": null,
 "allowedCars": [],
 "prize": 7000
 },
@@ -1322,6 +1407,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": null,
 "allowedCars": [],
 "prize": 8000
 },
@@ -1336,6 +1422,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": null,
 "allowedCars": [],
 "prize": 10000
 },
@@ -1350,6 +1437,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 251,
 "allowedCars": [
 "frcsn"
 ],
@@ -1366,6 +1454,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 300,
 "allowedCars": [
 "frcsn"
 ],
@@ -1382,6 +1471,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 223,
 "allowedCars": [
 "gattn"
 ],
@@ -1398,6 +1488,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 267,
 "allowedCars": [
 "gattn",
 "gatlr"
@@ -1415,6 +1506,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 200,
+"opponentPower": 133,
 "allowedCars": [],
 "prize": 4000
 },
@@ -1429,6 +1521,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 350,
+"opponentPower": 250,
 "allowedCars": [],
 "prize": 5000
 },
@@ -1443,6 +1536,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 400,
+"opponentPower": 348,
 "allowedCars": [],
 "prize": 7000
 },
@@ -1457,6 +1551,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 187,
 "allowedCars": [
 "gb0cn",
 "gbc3n",
@@ -1477,6 +1572,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 250,
+"opponentPower": 148,
 "allowedCars": [],
 "prize": 4000
 },
@@ -1491,6 +1587,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 250,
+"opponentPower": 148,
 "allowedCars": [],
 "prize": 4000
 },
@@ -1505,6 +1602,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 300,
+"opponentPower": 198,
 "allowedCars": [],
 "prize": 4000
 },
@@ -1519,6 +1617,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 250,
+"opponentPower": 148,
 "allowedCars": [],
 "prize": 4000
 },
@@ -1533,6 +1632,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 300,
+"opponentPower": 248,
 "allowedCars": [],
 "prize": 5000
 },
@@ -1547,6 +1647,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 220,
+"opponentPower": 150,
 "allowedCars": [],
 "prize": 4000
 },
@@ -1561,6 +1662,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 300,
+"opponentPower": 250,
 "allowedCars": [],
 "prize": 5000
 },
@@ -1575,6 +1677,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 450,
+"opponentPower": 360,
 "allowedCars": [],
 "prize": 7000
 },
@@ -1589,6 +1692,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 200,
+"opponentPower": 130,
 "allowedCars": [],
 "prize": 4000
 },
@@ -1603,6 +1707,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 300,
+"opponentPower": 227,
 "allowedCars": [],
 "prize": 5000
 },
@@ -1617,6 +1722,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 200,
+"opponentPower": 112,
 "allowedCars": [],
 "prize": 4000
 },
@@ -1631,6 +1737,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 300,
+"opponentPower": 210,
 "allowedCars": [],
 "prize": 5000
 },
@@ -1645,6 +1752,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 350,
+"opponentPower": 278,
 "allowedCars": [],
 "prize": 7000
 },
@@ -1659,6 +1767,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 198,
 "allowedCars": [
 "gmsln"
 ],
@@ -1675,6 +1784,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 240,
 "allowedCars": [
 "gmsln"
 ],
@@ -1691,6 +1801,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 104,
 "allowedCars": [
 "gotin"
 ],
@@ -1707,6 +1818,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 133,
 "allowedCars": [
 "gotin",
 "goiir"
@@ -1724,6 +1836,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 600,
+"opponentPower": 400,
 "allowedCars": [],
 "prize": 15000
 },
@@ -1738,6 +1851,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 600,
+"opponentPower": 400,
 "allowedCars": [],
 "prize": 15000
 },
@@ -1752,6 +1866,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 600,
+"opponentPower": 400,
 "allowedCars": [],
 "prize": 15000
 },
@@ -1766,6 +1881,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 600,
+"opponentPower": 400,
 "allowedCars": [],
 "prize": 15000
 },
@@ -1780,6 +1896,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 600,
+"opponentPower": 400,
 "allowedCars": [],
 "prize": 15000
 },
@@ -1794,6 +1911,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 680,
 "allowedCars": [],
 "prize": 50000
 },
@@ -1808,6 +1926,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 680,
 "allowedCars": [],
 "prize": 50000
 },
@@ -1822,6 +1941,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 680,
 "allowedCars": [],
 "prize": 50000
 },
@@ -1836,6 +1956,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 680,
 "allowedCars": [],
 "prize": 50000
 },
@@ -1850,6 +1971,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 680,
 "allowedCars": [],
 "prize": 50000
 },
@@ -1864,6 +1986,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 649,
 "allowedCars": [],
 "prize": 50000
 },
@@ -1878,6 +2001,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 649,
 "allowedCars": [],
 "prize": 50000
 },
@@ -1892,6 +2016,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 649,
 "allowedCars": [],
 "prize": 50000
 },
@@ -1906,6 +2031,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 649,
 "allowedCars": [],
 "prize": 50000
 },
@@ -1920,6 +2046,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 649,
 "allowedCars": [],
 "prize": 50000
 },
@@ -1934,6 +2061,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 400,
+"opponentPower": 348,
 "allowedCars": [],
 "prize": 10000
 },
@@ -1948,6 +2076,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 500,
+"opponentPower": 449,
 "allowedCars": [],
 "prize": 20000
 },
@@ -1962,6 +2091,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 600,
+"opponentPower": 500,
 "allowedCars": [],
 "prize": 30000
 },
@@ -1976,6 +2106,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 649,
 "allowedCars": [],
 "prize": 25000
 },
@@ -1990,6 +2121,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 649,
 "allowedCars": [],
 "prize": 25000
 },
@@ -2004,6 +2136,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 649,
 "allowedCars": [],
 "prize": 25000
 },
@@ -2018,6 +2151,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 649,
 "allowedCars": [],
 "prize": 25000
 },
@@ -2032,6 +2166,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 649,
 "allowedCars": [],
 "prize": 25000
 },
@@ -2046,6 +2181,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 250,
+"opponentPower": 150,
 "allowedCars": [],
 "prize": 4000
 },
@@ -2060,6 +2196,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 300,
+"opponentPower": 238,
 "allowedCars": [],
 "prize": 5000
 },
@@ -2074,6 +2211,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 400,
+"opponentPower": 328,
 "allowedCars": [],
 "prize": 7000
 },
@@ -2088,6 +2226,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 114,
 "allowedCars": [
 "gvnbn"
 ],
@@ -2104,6 +2243,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 150,
 "allowedCars": [
 "gv4gn",
 "gv45n",
@@ -2123,6 +2263,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 183,
 "allowedCars": [
 "gv4gn",
 "gv45n",
@@ -2142,6 +2283,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 151,
 "allowedCars": [
 "gvnbn",
 "gvbgr"
@@ -2159,6 +2301,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 248,
 "allowedCars": [
 "h2s2n",
 "h2ssn"
@@ -2176,6 +2319,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 277,
 "allowedCars": [
 "h2s2n",
 "h2l2r"
@@ -2193,6 +2337,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 62,
 "allowedCars": [
 "h2ben",
 "h2bfn",
@@ -2212,6 +2357,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 173,
 "allowedCars": [
 "hcvon",
 "hcfon",
@@ -2238,6 +2384,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 208,
 "allowedCars": [
 "hcvon",
 "hcfon",
@@ -2261,6 +2408,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 277,
 "allowedCars": [
 "hnsxn",
 "hnsrn",
@@ -2286,6 +2434,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 248,
 "allowedCars": [
 "hnsrn",
 "hinrn",
@@ -2314,6 +2463,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 250,
+"opponentPower": 151,
 "allowedCars": [],
 "prize": 7000
 },
@@ -2328,6 +2478,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 300,
+"opponentPower": 198,
 "allowedCars": [],
 "prize": 7000
 },
@@ -2342,6 +2493,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 400,
+"opponentPower": 348,
 "allowedCars": [],
 "prize": 8000
 },
@@ -2356,6 +2508,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 187,
 "allowedCars": [
 "ia56n",
 "ia54n",
@@ -2374,6 +2527,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 223,
 "allowedCars": [
 "ia56n",
 "ia54n",
@@ -2393,6 +2547,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 54,
 "allowedCars": [
 "ii50n",
 "iio5n"
@@ -2410,6 +2565,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 84,
 "allowedCars": [
 "ii50n",
 "iio5n"
@@ -2427,6 +2583,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 208,
 "allowedCars": [
 "ilden",
 "ildvn",
@@ -2445,6 +2602,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 268,
 "allowedCars": [
 "ildvn",
 "ils4r"
@@ -2462,6 +2620,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 127,
 "allowedCars": [
 "ios2n",
 "ios4n",
@@ -2480,6 +2639,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 154,
 "allowedCars": [
 "io13n",
 "io11n",
@@ -2501,6 +2661,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 198,
 "allowedCars": [
 "io13n",
 "io11n",
@@ -2521,6 +2682,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 153,
 "allowedCars": [
 "ios2n",
 "ios4n"
@@ -2538,6 +2700,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 193,
 "allowedCars": [
 "k2zzn"
 ],
@@ -2554,6 +2717,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 227,
 "allowedCars": [
 "k2zzn"
 ],
@@ -2570,6 +2734,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 278,
 "allowedCars": [
 "m2g2n",
 "mlnon",
@@ -2592,6 +2757,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 173,
 "allowedCars": [
 "mmgon",
 "mmgrn",
@@ -2612,6 +2778,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 208,
 "allowedCars": [
 "mmgon",
 "mmgrn",
@@ -2632,6 +2799,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 350,
+"opponentPower": 198,
 "allowedCars": [],
 "prize": 5000
 },
@@ -2646,6 +2814,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 500,
+"opponentPower": 346,
 "allowedCars": [],
 "prize": 6000
 },
@@ -2660,6 +2829,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 600,
+"opponentPower": 449,
 "allowedCars": [],
 "prize": 15000
 },
@@ -2674,6 +2844,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 400,
 "allowedCars": [],
 "prize": 7000
 },
@@ -2688,6 +2859,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 400,
 "allowedCars": [],
 "prize": 8000
 },
@@ -2702,6 +2874,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 400,
 "allowedCars": [],
 "prize": 10000
 },
@@ -2716,6 +2889,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 234,
 "allowedCars": [
 "nq13n",
 "ns13n",
@@ -2747,6 +2921,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 267,
 "allowedCars": [
 "nq13n",
 "ns13n",
@@ -2780,6 +2955,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 281,
 "allowedCars": [
 "nr02n",
 "nr32n",
@@ -2817,6 +2993,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 334,
 "allowedCars": [
 "nr02n",
 "nr32n",
@@ -2853,6 +3030,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 112,
 "allowedCars": [
 "n2mtn",
 "n2man"
@@ -2870,6 +3048,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 147,
 "allowedCars": [
 "n2mtn",
 "n2man"
@@ -2887,6 +3066,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 197,
 "allowedCars": [
 "n2p1n",
 "n2pvn",
@@ -2905,6 +3085,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 281,
 "allowedCars": [
 "n234n",
 "n24rn",
@@ -2923,6 +3104,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 550,
+"opponentPower": 399,
 "allowedCars": [],
 "prize": 10000
 },
@@ -2937,6 +3119,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 550,
+"opponentPower": 399,
 "allowedCars": [],
 "prize": 10000
 },
@@ -2951,6 +3134,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 550,
+"opponentPower": 399,
 "allowedCars": [],
 "prize": 10000
 },
@@ -2965,6 +3149,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 400,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 7000
 },
@@ -2979,6 +3164,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 450,
+"opponentPower": 347,
 "allowedCars": [],
 "prize": 8000
 },
@@ -2993,6 +3179,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 600,
+"opponentPower": 497,
 "allowedCars": [],
 "prize": 10000
 },
@@ -3007,6 +3194,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 34,
 "allowedCars": [
 "q2min"
 ],
@@ -3023,6 +3211,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 62,
 "allowedCars": [
 "q2mon",
 "q2txn",
@@ -3041,6 +3230,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 98,
 "allowedCars": [
 "q2mon",
 "q2txn",
@@ -3059,6 +3249,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 98,
 "allowedCars": [
 "q2stn",
 "q2s4n",
@@ -3077,6 +3268,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 133,
 "allowedCars": [
 "q2stn",
 "q2s4n",
@@ -3096,6 +3288,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 237,
 "allowedCars": [
 "ssvxn",
 "ssv4n"
@@ -3113,6 +3306,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 277,
 "allowedCars": [
 "ssvxn",
 "ssv4n"
@@ -3130,6 +3324,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 296,
 "allowedCars": [
 "sipzn",
 "sipwn",
@@ -3169,6 +3364,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 400,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 5000
 },
@@ -3183,6 +3379,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 500,
+"opponentPower": 399,
 "allowedCars": [],
 "prize": 6000
 },
@@ -3197,6 +3394,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 600,
+"opponentPower": 500,
 "allowedCars": [],
 "prize": 10000
 },
@@ -3211,6 +3409,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 98,
 "allowedCars": [],
 "prize": 3000
 },
@@ -3225,6 +3424,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 198,
 "allowedCars": [],
 "prize": 4000
 },
@@ -3239,6 +3439,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 248,
 "allowedCars": [],
 "prize": 5000
 },
@@ -3253,6 +3454,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 500,
+"opponentPower": 347,
 "allowedCars": [],
 "prize": 15000
 },
@@ -3267,6 +3469,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 500,
+"opponentPower": 347,
 "allowedCars": [],
 "prize": 15000
 },
@@ -3281,6 +3484,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 500,
+"opponentPower": 347,
 "allowedCars": [],
 "prize": 15000
 },
@@ -3295,6 +3499,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 500,
+"opponentPower": 347,
 "allowedCars": [],
 "prize": 15000
 },
@@ -3309,6 +3514,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 500,
+"opponentPower": 347,
 "allowedCars": [],
 "prize": 15000
 },
@@ -3323,6 +3529,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 214,
 "allowedCars": [
 "t291n",
 "t292n",
@@ -3342,6 +3549,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 248,
 "allowedCars": [
 "t291n",
 "t292n",
@@ -3362,6 +3570,7 @@
 "turbo": "no_turbo",
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 50000
 },
@@ -3376,6 +3585,7 @@
 "turbo": "no_turbo",
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 50000
 },
@@ -3390,6 +3600,7 @@
 "turbo": "no_turbo",
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 50000
 },
@@ -3404,6 +3615,7 @@
 "turbo": "turbo_required",
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 599,
 "allowedCars": [],
 "prize": 50000
 },
@@ -3418,6 +3630,7 @@
 "turbo": "turbo_required",
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 599,
 "allowedCars": [],
 "prize": 50000
 },
@@ -3432,6 +3645,7 @@
 "turbo": "turbo_required",
 "racingMod": null,
 "maxPower": null,
+"opponentPower": 599,
 "allowedCars": [],
 "prize": 50000
 },
@@ -3446,6 +3660,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 214,
 "allowedCars": [
 "tceln",
 "tcegn",
@@ -3473,6 +3688,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 263,
 "allowedCars": [
 "tceln",
 "tcegn",
@@ -3500,6 +3716,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 137,
 "allowedCars": [
 "t2msn"
 ],
@@ -3516,6 +3733,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 143,
 "allowedCars": [
 "tstln",
 "t2svn",
@@ -3535,6 +3753,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 68,
 "allowedCars": [
 "t2vzn"
 ],
@@ -3551,6 +3770,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 98,
 "allowedCars": [
 "t2vzn"
 ],
@@ -3567,6 +3787,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 367,
 "allowedCars": [
 "vst6n"
 ],
@@ -3583,6 +3804,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 421,
 "allowedCars": [
 "vst6n"
 ],
@@ -3599,6 +3821,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 400,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 5000
 },
@@ -3613,6 +3836,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 400,
+"opponentPower": 297,
 "allowedCars": [],
 "prize": 6000
 },
@@ -3627,6 +3851,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 400,
+"opponentPower": 298,
 "allowedCars": [],
 "prize": 7000
 },
@@ -3641,6 +3866,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 150,
+"opponentPower": 78,
 "allowedCars": [],
 "prize": 5000
 },
@@ -3655,6 +3881,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 100,
+"opponentPower": 78,
 "allowedCars": [],
 "prize": 6000
 },
@@ -3669,6 +3896,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 100,
+"opponentPower": 78,
 "allowedCars": [],
 "prize": 7000
 },
@@ -3683,6 +3911,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 250,
+"opponentPower": 148,
 "allowedCars": [],
 "prize": 7000
 },
@@ -3697,6 +3926,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 350,
+"opponentPower": 267,
 "allowedCars": [],
 "prize": 8000
 },
@@ -3711,6 +3941,7 @@
 "turbo": null,
 "racingMod": null,
 "maxPower": 600,
+"opponentPower": 449,
 "allowedCars": [],
 "prize": 15000
 },
@@ -3725,6 +3956,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 62,
 "allowedCars": [
 "x2aln",
 "x2azn",
@@ -3744,6 +3976,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 98,
 "allowedCars": [
 "x2aln",
 "x2azn",
@@ -3763,6 +3996,7 @@
 "turbo": null,
 "racingMod": "no_racing_mod",
 "maxPower": null,
+"opponentPower": 62,
 "allowedCars": [
 "x2cpn"
 ],
@@ -3779,6 +4013,7 @@
 "turbo": null,
 "racingMod": "racing_mod_required",
 "maxPower": null,
+"opponentPower": 98,
 "allowedCars": [
 "x2cpn"
 ],
