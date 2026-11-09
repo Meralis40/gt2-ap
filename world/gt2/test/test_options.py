@@ -15,7 +15,8 @@ class TestDefault(GT2TestBase):
 
     def test_optional_events_left_out(self) -> None:
         names = {loc.name for loc in self.multiworld.get_locations(self.player)}
-        for group in ("Rally Events", "Endurance Events", "One-Make Events", "Event Synthesizer"):
+        for group in ("Rally Events", "Endurance Events", "One-Make Events", "Event Synthesizer",
+                      "Finish Checks"):
             self.assertFalse(names & LOCATION_GROUPS[group], group)
 
     def test_trophies(self) -> None:
@@ -31,6 +32,17 @@ class TestAllEvents(GT2TestBase):
         names = {loc.name for loc in self.multiworld.get_locations(self.player)}
         for group in ("Rally Events", "Endurance Events", "One-Make Events", "Event Synthesizer"):
             self.assertTrue(LOCATION_GROUPS[group] <= names, group)
+
+
+class TestFinishChecks(GT2TestBase):
+    options = {"finish_checks": True, "one_make_events": True}
+
+    def test_one_finish_per_event(self) -> None:
+        names = {loc.name for loc in self.multiworld.get_locations(self.player)}
+        finished = names & LOCATION_GROUPS["Finish Checks"]
+        self.assertTrue(finished)
+        self.assertEqual({n.removesuffix(" Finished") for n in finished},
+                         names & (LOCATION_GROUPS["Races"] | LOCATION_GROUPS["One-Make Events"]))
 
 
 class TestNoTrophies(GT2TestBase):

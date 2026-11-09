@@ -23,8 +23,10 @@ void Ap_SayPartLocked(int part);
 // Each frame of the GT menus: the first one lists the manufacturers held.
 void Ap_GtMenuFrame(void);
 
-// Remembers the event of each race in a championship, then a win of race index.
+// Remembers the event of each race in a championship, then a finish (any place) or a win of
+// race index.
 void Ap_SetRaceEvent(int race, int eventIndex);
+void Ap_RaceFinished(int race);
 void Ap_RaceWon(int race);
 void Ap_LicenseTestPassed(int license, int test);
 void Ap_LicenseEarned(int license);

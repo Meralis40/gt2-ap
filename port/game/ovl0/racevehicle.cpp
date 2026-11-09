@@ -561,8 +561,11 @@ void RaceVehicle_OnLapDone(RaceVehicle *v, int lap, unsigned int time, int total
                     short order[6];
                     int i;
 
-                    if (v->controlType == 2 && (signed char)v->phys.racePos == 1) {
-                        Ap_RaceWon(list->unk00);
+                    if (v->controlType == 2) {
+                        Ap_RaceFinished(list->unk00);
+                        if ((signed char)v->phys.racePos == 1) {
+                            Ap_RaceWon(list->unk00);
+                        }
                     }
                     for (i = 0; i < 6; i++) {
                         order[i] = -1;

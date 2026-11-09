@@ -45,3 +45,18 @@ class TestLogic(GT2TestBase):
         self.assertFalse(self.can_reach_location("Gran Turismo World League Race 1"))
         self.collect(trophies[11:])
         self.assertTrue(self.can_reach_location("Gran Turismo World League Race 1"))
+
+
+class TestFinishChecks(GT2TestBase):
+    options = {"finish_checks": True, "hard_start": True}
+
+    def test_finish_needs_no_power(self) -> None:
+        # Any start enters the Sunday Cup with a stock car under 10,000 Cr
+        self.assertTrue(self.can_reach_location("Sunday Cup Race 1 Finished"))
+        self.assertFalse(self.can_reach_location("UK Nationals Race 1 Finished"))
+
+    def test_finish_follows_entry(self) -> None:
+        self.collect_all_but(["Progressive License"])
+        self.assertFalse(self.can_reach_location("Japan Nationals Race 1 Finished"))
+        self.collect(self.get_items_by_name("Progressive License")[:4])
+        self.assertTrue(self.can_reach_location("Japan Nationals Race 1 Finished"))

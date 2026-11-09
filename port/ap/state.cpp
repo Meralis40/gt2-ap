@@ -26,7 +26,8 @@ namespace {
 using Clock = std::chrono::steady_clock;
 
 constexpr long long kItemLicense = 1, kItemTrophy = 2, kItemManufacturers = 100, kItemParts = 200, kItemCredits = 300;
-constexpr long long kLocationEvents = 1000, kLocationTests = 2000, kLocationLicenses = 2100;
+constexpr long long kLocationEvents = 1000, kLocationTests = 2000, kLocationLicenses = 2100,
+                    kLocationFinished = 3000;
 constexpr int kCredits[] = {3000, 5000, 10000, 20000, 35000, 50000, 75000};
 constexpr int kManufacturers = 64;
 constexpr int kParts = 64;
@@ -460,6 +461,14 @@ void Ap_GtMenuFrame(void)
     toast("Manufacturers you can use:");
     for (const std::string &line : lines) {
         toast(line);
+    }
+}
+
+// Sent whether the slot has finish checks or not: the server ignores the IDs it doesn't have.
+void Ap_RaceFinished(int race)
+{
+    if (g_RaceEvents[race] >= 0) {
+        location(kLocationFinished + g_RaceEvents[race]);
     }
 }
 

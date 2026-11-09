@@ -59,6 +59,13 @@ class OneMakeEvents(Toggle):
     display_name = "One-Make Events"
 
 
+class FinishChecks(Toggle):
+    """Add a second location for every event location, checked by finishing the race at any
+    position. Its logic only needs to enter the race: the license, the league and an allowed car
+    under the price cap, without the power target of a win."""
+    display_name = "Finish Checks"
+
+
 @dataclass
 class GT2Options(PerGameCommonOptions):
     league_trophies: LeagueTrophies
@@ -69,14 +76,16 @@ class GT2Options(PerGameCommonOptions):
     endurance_events: EnduranceEvents
     event_synthesizer: EventSynthesizer
     one_make_events: OneMakeEvents
+    finish_checks: FinishChecks
 
 
 OPTION_GROUPS = [
     OptionGroup("Leagues", [LeagueTrophies, ProLeagueTrophies, WorldLeagueTrophies]),
-    OptionGroup("Events", [RallyEvents, EnduranceEvents, EventSynthesizer, OneMakeEvents]),
+    OptionGroup("Events", [RallyEvents, EnduranceEvents, EventSynthesizer, OneMakeEvents,
+                                  FinishChecks]),
 ]
 
 # Options sent to the client and used by the tracker to regenerate the world
 SLOT_DATA_OPTIONS = ["league_trophies", "pro_league_trophies", "world_league_trophies",
                      "hard_start", "rally_events", "endurance_events", "event_synthesizer",
-                     "one_make_events"]
+                     "one_make_events", "finish_checks"]
