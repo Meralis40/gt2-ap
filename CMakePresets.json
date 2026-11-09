@@ -82,14 +82,10 @@
     }
   ],
   "buildPresets": [
-    { "name": "debug", "configurePreset": "debug" },
-    { "name": "release", "configurePreset": "release" },
     { "name": "port-windows", "configurePreset": "port-windows", "targets": ["gt2ap"] },
     { "name": "port-windows64", "configurePreset": "port-windows64", "targets": ["gt2ap"] },
     { "name": "port-linux", "configurePreset": "port-linux", "targets": ["gt2ap"] },
-    { "name": "port-linux64", "configurePreset": "port-linux64", "targets": ["gt2ap"] },
-    { "name": "vs-debug", "configurePreset": "vs", "configuration": "Debug" },
-    { "name": "vs-release", "configurePreset": "vs", "configuration": "RelWithDebInfo" }
+    { "name": "port-linux64", "configurePreset": "port-linux64", "targets": ["gt2ap"] }
   ],
   "testPresets": [
     { "name": "debug", "configurePreset": "debug", "output": { "outputOnFailure": true } },

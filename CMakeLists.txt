@@ -13,14 +13,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(GT2AP_BUILD_TESTS "Build unit tests" ${PROJECT_IS_TOP_LEVEL})
 option(GT2AP_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
-option(GT2AP_BUILD_PORT "Build the native game (32-bit toolchains only)" OFF)
+option(GT2AP_BUILD_PORT "Build the native game" OFF)
 
 include(cmake/CompilerWarnings.cmake)
 
 add_subdirectory(src/discio)
-if(NOT GT2AP_BUILD_PORT)
-    add_subdirectory(src/client)
-endif()
 add_subdirectory(tools/discinfo)
 if(GT2AP_BUILD_PORT)
     add_subdirectory(port)
