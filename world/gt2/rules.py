@@ -86,7 +86,8 @@ class EventLogic:
     cars: tuple[Car, ...]
     target: float
 
-    def car_ok(self, event: Event, car: Car, counts: dict[str, int], cap: Optional[int]) -> bool:
+    def car_ok(self, event: Event, car: Car, counts: dict[str, int], cap: Optional[int],
+               power: bool = True) -> bool:
         if not affordable(car.price, cap):
             return False
         if event.category == "rally" and not (counts[DIRT_TIRES] and affordable(car.dirt_price, cap)):
@@ -98,7 +99,7 @@ class EventLogic:
                 pid in car.parts and affordable(car.parts[pid][0], cap)
                 for pid in TURBO_KITS[:counts[TURBO_ITEM]]):
             return False
-        if self.target <= 0:
+        if not power or self.target <= 0:
             return True
         return car_power(car, counts, cap, turbo_kits=event.turbo != "no_turbo",
                          racing_mod=event.racing_mod != "no_racing_mod") >= self.target
@@ -175,19 +176,22 @@ def price_text(cap: Optional[int]) -> str:
 @dataclasses.dataclass()
 class CarForEvent(Rule["GT2World"], game="Gran Turismo 2"):
     """A car allowed in the event, of an unlocked manufacturer, under the price cap of the licenses
-    held, and with the unlocked parts reaching the event's power target."""
+    held, and with the unlocked parts reaching the event's power target (unless power is False:
+    only finishing the race, not winning it)."""
 
     event_code: str
+    power: bool = True
 
     @override
     def _instantiate(self, world: "GT2World") -> Rule.Resolved:
         if not event_logic(EVENTS_BY_CODE[self.event_code]).cars:
             raise ValueError(f"no car can enter {EVENTS_BY_CODE[self.event_code].name}")
-        return self.Resolved(self.event_code, player=world.player,
+        return self.Resolved(self.event_code, self.power, player=world.player,
                              caching_enabled=getattr(world, "rule_caching_enabled", False))
 
     class Resolved(Rule.Resolved):
         event_code: str
+        power: bool
 
         def find_car(self, state: CollectionState) -> Optional[Car]:
             event = EVENTS_BY_CODE[self.event_code]
@@ -196,7 +200,7 @@ class CarForEvent(Rule["GT2World"], game="Gran Turismo 2"):
             cap = PRICE_CAPS[min(items[PROGRESSIVE_LICENSE], len(PRICE_CAPS) - 1)]
             counts = {name: items[name] for name in LOGIC_ITEMS}
             return next((car for car in logic.cars if items[manufacturer_item(car.maker)]
-                         and logic.car_ok(event, car, counts, cap)), None)
+                         and logic.car_ok(event, car, counts, cap, self.power)), None)
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
@@ -210,7 +214,7 @@ class CarForEvent(Rule["GT2World"], game="Gran Turismo 2"):
 
         @override
         def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
-            target = event_logic(EVENTS_BY_CODE[self.event_code]).target
+            target = event_logic(EVENTS_BY_CODE[self.event_code]).target if self.power else 0.0
             power = f" reaching {target:.0f} PS" if target > 0 else ""
             if state is None:
                 return [{"type": "text", "text": f"An allowed car{power}"}]
@@ -244,15 +248,16 @@ def league_rule(world: "GT2World", event: Event) -> Rule["GT2World"]:
     return And(*(CanReachLocation(e.name) for e in EVENTS if e.league == previous))
 
 
-def event_rule(world: "GT2World", event: Event) -> Rule["GT2World"]:
-    return Has(PROGRESSIVE_LICENSE, count=event.tier) & league_rule(world, event) & CarForEvent(event.code)
+def event_rule(world: "GT2World", event: Event, power: bool = True) -> Rule["GT2World"]:
+    return (Has(PROGRESSIVE_LICENSE, count=event.tier) & league_rule(world, event)
+            & CarForEvent(event.code, power))
 
 
 def set_all_rules(world: "GT2World") -> None:
     for loc in world.get_locations():
         data = world.location_data[loc.name]
         if data.event is not None:
-            world.set_rule(loc, event_rule(world, data.event))
+            world.set_rule(loc, event_rule(world, data.event, power=not data.finish))
         else:
             world.set_rule(loc, Has(PROGRESSIVE_LICENSE, count=data.tier))
     world.set_completion_rule(And(*(CanReachLocation(e.name) for e in EVENTS if e.league == "world")))
