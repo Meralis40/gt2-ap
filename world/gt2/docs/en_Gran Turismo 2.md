@@ -70,7 +70,14 @@ in it is within reach:
 
 Prize cars are not counted by the logic.
 
-## Can I play with a hard start?
+## Can I choose the starting manufacturer?
 
-The Hard Start option adds Daihatsu, FIAT, Subaru and Suzuki to the possible starting
-manufacturers. Their cars under 10,000 Cr have 64 PS at most, so the start needs more tuning.
+The Starting Manufacturer option picks the manufacturer unlocked from the start, among those with
+a car under 10,000 Cr:
+
+- Standard (the default): Honda, Mazda, Mitsubishi, Nissan or Toyota, which all have a car of
+  195 PS or more under 10,000 Cr;
+- Hard: Daihatsu, FIAT, Subaru or Suzuki. Their cars under 10,000 Cr have 64 PS at most, so the
+  start needs more tuning;
+- All: any of the nine;
+- or one of the nine by name.

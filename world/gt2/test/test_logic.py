@@ -56,7 +56,7 @@ class TestLogic(GT2TestBase):
 
 
 class TestFinishChecks(GT2TestBase):
-    options = {"finish_checks": True, "hard_start": True}
+    options = {"finish_checks": True, "starting_manufacturer": "hard"}
 
     def test_finish_needs_no_power(self) -> None:
         # Any start enters the Sunday Cup with a stock car under 10,000 Cr

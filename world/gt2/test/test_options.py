@@ -2,7 +2,8 @@ from Options import OptionError
 
 from ..data import CARS
 from ..locations import LOCATION_GROUPS
-from ..rules import START_BUDGET
+from ..options import StartingManufacturer
+from ..rules import START_BUDGET, start_manufacturers
 from . import GT2TestBase
 
 
@@ -26,12 +27,35 @@ class TestDefault(GT2TestBase):
 
 class TestAllEvents(GT2TestBase):
     options = {"rally_events": True, "endurance_events": True, "event_synthesizer": True,
-               "one_make_events": True, "hard_start": True}
+               "one_make_events": True, "starting_manufacturer": "all"}
 
     def test_events_present(self) -> None:
         names = {loc.name for loc in self.multiworld.get_locations(self.player)}
         for group in ("Rally Events", "Endurance Events", "One-Make Events", "Event Synthesizer"):
             self.assertTrue(LOCATION_GROUPS[group] <= names, group)
+
+
+class TestStartingManufacturer(GT2TestBase):
+    auto_construct = False
+
+    def check(self, choice: str, expected: set[str]) -> None:
+        self.options = {"starting_manufacturer": choice}
+        self.world_setup()
+        self.assertIn(self.world.start_manufacturer, expected, choice)
+        self.assertEqual(set(start_manufacturers(choice)), expected, choice)
+
+    def test_groups(self) -> None:
+        hard = {"Daihatsu", "FIAT", "Subaru", "Suzuki"}
+        standard = {"Honda", "Mazda", "Mitsubishi", "Nissan", "Toyota"}
+        self.check("hard", hard)
+        self.check("standard", standard)
+        self.check("all", hard | standard)
+
+    def test_by_name(self) -> None:
+        for maker in ("FIAT", "Toyota"):
+            self.check(maker.lower(), {maker})
+        self.assertEqual(StartingManufacturer.get_option_name(StartingManufacturer.option_fiat),
+                         "FIAT")
 
 
 class TestFinishChecks(GT2TestBase):

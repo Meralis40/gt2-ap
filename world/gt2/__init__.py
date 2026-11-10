@@ -57,7 +57,7 @@ class GT2World(CachedRuleBuilderWorld):
             self.start_manufacturer = passthrough["start_manufacturer"]
         else:
             self.start_manufacturer = self.random.choice(
-                rules.start_manufacturers(bool(self.options.hard_start)))
+                rules.start_manufacturers(self.options.starting_manufacturer.current_key))
         self.multiworld.push_precollected(self.create_item(items.manufacturer_item(self.start_manufacturer)))
 
         self.location_data = {loc.name: loc for loc in locations.enabled_locations(self)}

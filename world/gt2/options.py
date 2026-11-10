@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from Options import DefaultOnToggle, OptionGroup, PerGameCommonOptions, Range, Toggle
+from Options import Choice, DefaultOnToggle,OptionGroup, PerGameCommonOptions, Range, Toggle
 
 
 class LeagueTrophies(DefaultOnToggle):
@@ -40,11 +40,32 @@ class ExtraTrophies(Range):
     default = 0
 
 
-class HardStart(Toggle):
-    """Allow the starting manufacturer to be one whose cheap cars are weak (Daihatsu, FIAT,
-    Subaru, Suzuki: 64 PS at most under 10,000 Cr). Off, the start is Honda, Mazda, Mitsubishi,
-    Nissan or Toyota, which all have a car of about 150 PS or more under 10,000 Cr."""
-    display_name = "Hard Start"
+class StartingManufacturer(Choice):
+    """The manufacturer unlocked from the start, among those with a car under 10,000 Cr.
+
+    Standard: one of Honda, Mazda, Mitsubishi, Nissan and Toyota, which all have a car of 195 PS
+    or more under 10,000 Cr.
+    Hard: one of Daihatsu, FIAT, Subaru and Suzuki, whose cars under 10,000 Cr have 64 PS at most.
+    All: any of the nine.
+    Or one of them by name."""
+    display_name = "Starting Manufacturer"
+    option_standard = 0
+    option_hard = 1
+    option_all = 2
+    option_daihatsu = 3
+    option_fiat = 4
+    option_honda = 5
+    option_mazda = 6
+    option_mitsubishi = 7
+    option_nissan = 8
+    option_subaru = 9
+    option_suzuki = 10
+    option_toyota = 11
+    default = option_standard
+
+    @classmethod
+    def get_option_name(cls, value: int) -> str:
+        return "FIAT" if value == cls.option_fiat else super().get_option_name(value)
 
 
 class RallyEvents(Toggle):
@@ -82,7 +103,7 @@ class GT2Options(PerGameCommonOptions):
     pro_league_trophies: ProLeagueTrophies
     world_league_trophies: WorldLeagueTrophies
     extra_trophies: ExtraTrophies
-    hard_start: HardStart
+    starting_manufacturer: StartingManufacturer
     rally_events: RallyEvents
     endurance_events: EnduranceEvents
     event_synthesizer: EventSynthesizer
@@ -99,5 +120,5 @@ OPTION_GROUPS = [
 
 # Options sent to the client and used by the tracker to regenerate the world
 SLOT_DATA_OPTIONS = ["league_trophies", "pro_league_trophies", "world_league_trophies",
-                     "extra_trophies", "hard_start", "rally_events", "endurance_events",
+                     "extra_trophies", "starting_manufacturer","rally_events", "endurance_events",
                      "event_synthesizer", "one_make_events", "finish_checks"]

@@ -165,13 +165,21 @@ def event_logic(event: Event) -> EventLogic:
     return EventLogic(tuple(sorted(kept, key=lambda c: c.price)), target)
 
 
-def start_manufacturers(hard_start: bool) -> list[str]:
-    """Manufacturers with a car under the starting budget; with a strong one unless hard_start."""
+def start_manufacturers(choice: str) -> list[str]:
+    """Manufacturers with a car under the starting budget for a Starting Manufacturer choice (its
+    option key): the strong ones ("standard"), the weak ones ("hard"), all of them, or one by
+    name."""
     best: dict[str, int] = {}
     for car in CARS.values():
         if car.price <= START_BUDGET:
             best[car.maker] = max(best.get(car.maker, 0), car.power)
-    return sorted(m for m, power in best.items() if hard_start or power >= NORMAL_START_POWER)
+    if choice == "standard":
+        return sorted(m for m, power in best.items() if power >= NORMAL_START_POWER)
+    if choice == "hard":
+        return sorted(m for m, power in best.items() if power < NORMAL_START_POWER)
+    if choice == "all":
+        return sorted(best)
+    return [m for m in best if m.lower() == choice]
 
 
 def price_text(cap: Optional[int]) -> str:
