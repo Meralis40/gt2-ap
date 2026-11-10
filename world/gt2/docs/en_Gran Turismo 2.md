@@ -36,6 +36,11 @@ right away, so you may see it during the finish. Licenses, manufacturers, parts 
 from then on, but you can only use them back in the GT mode menus. Credits are only added there:
 if the save you reload is older, the credits received since are added again, so none are lost.
 
+Checks the server already has, from another game on your slot or `/send_location`, show in your
+save once you're in the GT mode menus: a race won as 1st place, a race finished as 6th, and a
+license test as a Kid's prize. A championship shows as won once all its races are. You don't get
+their prize money or cars.
+
 ## What is the goal?
 
 Win every race of the Gran Turismo World League.
