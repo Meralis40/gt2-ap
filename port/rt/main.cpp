@@ -4,12 +4,15 @@
 //
 // Usage: gt2ap [<disc .cue>] [--vblanks <n>] [--dump <every> <dir>] [--input <vblank> <buttons>]...
 //              [--record <file>] [--replay <file>] [--connect <server> <slot> [<password>]]
+//              [--renderer hardware [--scale <n>]]
 // With no disc it takes the one saved in gt2ap.cfg, or asks for one and saves it.
 // --vblanks stops after n vblanks, without waiting for real time; --dump writes a frame
 // every <every> vblanks to <dir>; --input holds buttons from a vblank on; --record saves the
 // memory card and every vblank's buttons to a file, and --replay plays one back; --connect
 // joins an Archipelago room without the connection page. Test runs, recordings and replays
-// don't show that page, since none of them can type on it.
+// don't show that page, since none of them can type on it. A test run with --renderer hardware
+// [--scale <n>] draws with the hardware renderer, with no window, and dumps its frames: for
+// looking at, since the replay checks compare the software renderer's.
 #include "ap.h"
 #include "ap_host.h"
 #include "config.h"
@@ -228,6 +231,8 @@ int main(int argc, char **argv)
         const char *recordPath = nullptr;
         const char *replayPath = nullptr;
         bool connecting = false;
+        bool hardware = false;
+        int scale = 1;
         for (int i = 1; i < argc; i++) {
             if (std::strcmp(argv[i], "--vblanks") == 0 && i + 1 < argc) {
                 maxVblanks = std::strtoul(argv[++i], nullptr, 0);
@@ -239,6 +244,10 @@ int main(int argc, char **argv)
                 dumpDir = argv[++i];
             } else if (std::strcmp(argv[i], "--audio") == 0 && i + 1 < argc) {
                 Hw_SpuDumpTo(argv[++i]);
+            } else if (std::strcmp(argv[i], "--renderer") == 0 && i + 1 < argc) {
+                hardware = std::strcmp(argv[++i], "hardware") == 0;
+            } else if (std::strcmp(argv[i], "--scale") == 0 && i + 1 < argc) {
+                scale = std::atoi(argv[++i]);
             } else if (std::strcmp(argv[i], "--record") == 0 && i + 1 < argc) {
                 recordPath = argv[++i];
             } else if (std::strcmp(argv[i], "--replay") == 0 && i + 1 < argc) {
@@ -266,8 +275,11 @@ int main(int argc, char **argv)
         if (replayPath != nullptr && connecting) {
             Ap_ConnectNow();
         }
+        // Dumped frames are the software renderer's, whose output the replay checks compare.
         if (maxVblanks == 0) {
-            Host_Open();
+            Host_Open(dumpEvery == 0);
+        } else if (hardware) {
+            Host_OpenOffscreen(scale);
         }
         std::filesystem::path disc;
         Bytes exe;

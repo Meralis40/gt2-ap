@@ -74,16 +74,29 @@ To release, set `world_version` in `world/gt2/archipelago.json` and `VERSION` in
 
 Run it with `gt2ap [<disc.cue>]`, which opens on the Archipelago connection page (below). With no disc it uses the `disc` line of `gt2ap.cfg`, or asks for the image with a file dialog and saves it there; the image must hold the NTSC-U 1.2 executable (its SHA-1 is checked). A test run with no disc and none saved stops with the usage. `--vblanks <n>` stops after n vblanks with no window and no pacing, and `--dump <every> <dir>` writes a frame every so many vblanks as a PPM file. `--audio <file>` saves the sound.
 
+## Renderers
+
+The GPU's command decoding (`hw/gpu.cpp`) hands primitives to one of two renderers:
+
+- **Hardware** (the default, `hw/gpu_hw.cpp`): SDL_GPU, Direct3D 12 or Vulkan, at 1 to 8 times the console's resolution. VRAM is a texture N times the size, drawn into by `hw/shaders/vram.hlsl` by the software rasterizer's rules: 5-bit colour, the four blend modes (two passes for textured semi-transparency), dithering at the console's dot size. Textures and CLUTs are sampled from a second texture, VRAM at 1x as the CPU has it, since the game uploads its textures and never draws into what it then samples. It logs once if it ever does, if the mask bit is used, or if VRAM is read back. Copies within VRAM (the quick menu's, the race-load bands) run on the scaled texture. 24-bit pictures (the movies) are shown from the CPU's VRAM.
+- **Software** (`hw/gpu_soft.cpp`): the rasterizer, dot for dot. It's the fallback when there's no GPU device (a toast says so), and draws every frame `--dump` writes, so the replay checks are unchanged.
+
+Options has a sixth tab, **Display**, for the renderer and the resolution. Both apply at once and are kept in `gt2ap.cfg` (`renderer=hardware|software`, `scale=1..8`), not the save. The same file can also set `output=integer` (the picture at a whole number of window pixels to a line), `filter=linear` and `dither=off`.
+
+The shaders are checked in compiled, in `hw/shaders/gen/`: after changing one, run `port/tools/build_shaders.py`, which needs the Vulkan SDK's dxc for SPIR-V and the Windows SDK's for signed DXIL.
+
+A test run with `--renderer hardware [--scale <n>]` draws with the hardware renderer, with no window, and `--dump` then writes its frames at that scale: for looking at, not for the replay checks.
+
 ## The tree
 
 | Path | What |
 |---|---|
 | `port/game` | The forked sources, edited by hand. `FORK_REPORT.txt` is what `fork.py` left to convert, and is out of date since those edits |
 | `port/rt` | Runtime: guest memory, loading, the setjmp point, the pump (`irq.cpp`), stubs (`stubs.cpp`) |
-| `port/hw` | The hardware: GPU, GTE, CD, memory card, pad, and the SDL3 window (`host.cpp`) |
+| `port/hw` | The hardware: GPU (`gpu.cpp`, with the renderers in `gpu_soft.cpp` and `gpu_hw.cpp`), GTE, CD, memory card, pad, and the SDL3 window (`host.cpp`) |
 | `port/gen` | Generated and checked in: `guest_data.cpp` binds data names to guest addresses, `functions_<unit>.cpp` gives each function's PlayStation address, `vtables.cpp` the classes' tables |
 | `port/ap` | The Archipelago client: `ws.cpp` (websocket, mbedTLS), `session.cpp` (protocol, on its own thread), `state.cpp` (items, locations, a seed's files) |
-| `port/tools` | `fork.py`, `gen_syms.py`, `update_syms.sh`, `gen_functions.py`, `check_protos.py`, `check_argorder.py`, `check_layout.py`, `check_ptrargs.py`, `fake_ap_server.py`, and the one-off conversions above |
+| `port/tools` | `build_shaders.py`, `fork.py`, `gen_syms.py`, `update_syms.sh`, `gen_functions.py`, `check_protos.py`, `check_argorder.py`, `check_layout.py`, `check_ptrargs.py`, `fake_ap_server.py`, and the one-off conversions above |
 
 `gen_syms.py` takes the names the objects leave undefined. It reports function names instead of binding them: those are for the port to define. `gen_functions.py` lists every function the port defines that the symbol files give an address, per unit. The 333 words of guest data that hold one (menu pages, state tables, callbacks) are declared as `game_function` members. `Overlay_StartAt`'s default entries are host functions in `overlay.cpp`; they never enter guest memory.
 

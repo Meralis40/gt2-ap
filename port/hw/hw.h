@@ -9,6 +9,15 @@ extern "C" {
 
 // On or off for the connection page: the keyboard types, and stops being the controller.
 void Host_TextMode(int on);
+// The display settings the Options menu shows: which renderer draws, and the hardware one's
+// resolution, 1 to 8 times the console's. Setting one applies it at once and saves it.
+#ifndef HOST_DISPLAY_OPTIONS
+#define HOST_DISPLAY_OPTIONS  // in both hw.h, the runtime's and the game's
+enum { HOST_DISPLAY_RENDERER, HOST_DISPLAY_SCALE };
+enum { HOST_RENDERER_HARDWARE, HOST_RENDERER_SOFTWARE };
+int Host_DisplayOption(int option);
+void Host_SetDisplayOption(int option, int value);
+#endif
 
 void Hw_Gp0(unsigned int word);
 void Hw_Gp1(unsigned int word);

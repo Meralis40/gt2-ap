@@ -1,11 +1,16 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // The window and the controls, through SDL3. The picture is the PlayStation's 4:3 frame,
-// whatever its resolution; the keyboard and the first gamepad are controller 1, a digital
-// controller or, with a gamepad, a DualShock. Tab or the right stick's click pauses the game
+// whatever its resolution, drawn by the hardware renderer (gpu_hw.cpp) or the software one,
+// filling the window or at a whole multiple of its height (gt2ap.cfg: output=integer). The
+// keyboard and the first gamepad are controller 1, a digital controller or, with a gamepad,
+// a DualShock. Tab or the right stick's click pauses the game
 // on the tracker, which is drawn here over the picture, not in the game's menus: it has to
 // open anywhere, races included.
 #include "ap.h"
 #include "ap_host.h"
+#include "config.h"
+#include "gpu_backend.h"
+#include "gpu_hw.h"
 #include "host.h"
 #include "hw.h"
 #include "rt.h"
@@ -79,6 +84,41 @@ std::vector<unsigned int> g_Pixels(kFrameWidth * kFrameHeight);
 bool g_TextMode;
 bool g_TrackerOpen;
 
+// The display settings, from gt2ap.cfg. The renderer is the one that runs, which is the
+// software one if the hardware one can't, or mustn't: --dump writes the software one's frames.
+struct Display {
+    bool hardware = true;
+    int scale = 4;
+    bool integer = false;
+    bool linear = false;
+    bool dither = true;
+} g_Display;
+bool g_HardwareAllowed;
+// The picture's height in VRAM lines, for integer scaling.
+int g_PictureHeight = kFrameHeight / 2;
+
+void loadDisplaySettings()
+{
+    g_Display.hardware = Cfg_Get("renderer") != "software";
+    std::string scale = Cfg_Get("scale");
+    if (!scale.empty()) {
+        g_Display.scale = std::clamp(std::atoi(scale.c_str()), 1, gpu::hw::kMaxScale);
+    }
+    g_Display.integer = Cfg_Get("output") == "integer";
+    g_Display.linear = Cfg_Get("filter") == "linear";
+    g_Display.dither = Cfg_Get("dither") != "off";
+}
+
+// Starts the hardware renderer: false if it can't run.
+bool startHardware()
+{
+    if (!g_HardwareAllowed || SDL_GetGPURendererDevice(g_Renderer) == nullptr) {
+        return false;
+    }
+    gpu::hw::setDither(g_Display.dither);
+    return gpu::hw::open(g_Renderer, g_Display.scale);
+}
+
 // A stick past the gamepad's dead zone starts just past the game's, or the first third of its
 // travel would do nothing.
 int stickByte(SDL_GamepadAxis axis)
@@ -145,7 +185,8 @@ void readControls()
     Hw_PadSetButtons(held);
 }
 
-// The largest 4:3 picture that fits the window.
+// The largest 4:3 picture that fits the window: with integer output, a whole number of
+// window pixels to a line, unless not even one fits.
 SDL_FRect pictureArea()
 {
     int width, height;
@@ -157,7 +198,14 @@ SDL_FRect pictureArea()
     } else {
         h = w * 3 / 4;
     }
-    return {(width - w) / 2, (height - h) / 2, w, h};
+    if (g_Display.integer && g_PictureHeight > 0) {
+        int lines = static_cast<int>(h) / g_PictureHeight;
+        if (lines >= 1) {
+            h = static_cast<float>(lines * g_PictureHeight);
+            w = h * 4 / 3;
+        }
+    }
+    return {SDL_floorf((static_cast<float>(width) - w) / 2), SDL_floorf((static_cast<float>(height) - h) / 2), w, h};
 }
 
 // Only in a session: nothing is tracked without one.
@@ -358,13 +406,14 @@ void handleEvents()
     }
 }
 
-void present(const SDL_FRect &source)
+void present(SDL_Texture *texture, const SDL_FRect &source)
 {
     SDL_FRect target = pictureArea();
 
     SDL_SetRenderDrawColor(g_Renderer, 0, 0, 0, 255);
     SDL_RenderClear(g_Renderer);
-    SDL_RenderTexture(g_Renderer, g_Texture, &source, &target);
+    SDL_SetTextureScaleMode(texture, g_Display.linear ? SDL_SCALEMODE_LINEAR : SDL_SCALEMODE_NEAREST);
+    SDL_RenderTexture(g_Renderer, texture, &source, &target);
     if (g_TrackerOpen) {
         drawTracker(target);
     } else {
@@ -394,6 +443,26 @@ void SDLCALL onDiscPicked(void *data, const char *const *files, int)
 }
 
 }  // namespace
+
+void Host_OpenOffscreen(int scale)
+{
+    if (!SDL_Init(SDL_INIT_VIDEO)) {
+        Rt_Fatal("SDL_Init: %s", SDL_GetError());
+    }
+    g_Renderer = SDL_CreateGPURenderer(nullptr, nullptr);
+    if (g_Renderer == nullptr || !gpu::hw::open(g_Renderer, scale)) {
+        Rt_Fatal("no hardware renderer: %s", SDL_GetError());
+    }
+}
+
+void Host_DumpFrame(std::vector<unsigned int> &pixels, int &width, int &height)
+{
+    if (gpu::hw::active() && gpu::hw::readDisplay(pixels, width, height)) {
+        return;
+    }
+    pixels.resize(kFrameWidth * kFrameHeight);
+    Hw_GpuFrame(pixels.data(), &width, &height);
+}
 
 std::string Host_PickDisc()
 {
@@ -441,14 +510,37 @@ extern "C" void Host_TextMode(int on)
     }
 }
 
-void Host_Open()
+void Host_Open(bool hardware)
 {
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD | SDL_INIT_AUDIO)) {
         Rt_Fatal("SDL_Init: %s", SDL_GetError());
     }
-    if (!SDL_CreateWindowAndRenderer("Gran Turismo 2", kFrameWidth * kWindowScale, kFrameHeight * kWindowScale,
-                                     SDL_WINDOW_RESIZABLE, &g_Window, &g_Renderer)) {
-        Rt_Fatal("SDL_CreateWindowAndRenderer: %s", SDL_GetError());
+    g_Window = SDL_CreateWindow("Gran Turismo 2", kFrameWidth * kWindowScale, kFrameHeight * kWindowScale,
+                                SDL_WINDOW_RESIZABLE);
+    if (g_Window == nullptr) {
+        Rt_Fatal("SDL_CreateWindow: %s", SDL_GetError());
+    }
+    // A GPU renderer, so that the hardware renderer can start at any time; any other if there's
+    // none.
+    loadDisplaySettings();
+    g_HardwareAllowed = hardware;
+    if (hardware) {
+        g_Renderer = SDL_CreateGPURenderer(nullptr, g_Window);
+        if (g_Renderer == nullptr) {
+            Rt_Log("no GPU renderer: %s", SDL_GetError());
+        }
+    }
+    if (g_Renderer == nullptr) {
+        g_Renderer = SDL_CreateRenderer(g_Window, nullptr);
+    }
+    if (g_Renderer == nullptr) {
+        Rt_Fatal("SDL_CreateRenderer: %s", SDL_GetError());
+    }
+    if (!hardware) {
+        g_Display.hardware = false;
+    } else if (g_Display.hardware && !startHardware()) {
+        g_Display.hardware = false;
+        Ap_Toast("The hardware renderer can't run here: using the software one.");
     }
     g_Texture = SDL_CreateTexture(g_Renderer, SDL_PIXELFORMAT_XBGR8888, SDL_TEXTUREACCESS_STREAMING, kFrameWidth,
                                   kFrameHeight);
@@ -476,16 +568,88 @@ void Host_Audio(const short *samples, int count)
     }
 }
 
-void Host_Frame()
+// The frame, from the hardware renderer's VRAM, or from the CPU's: the software renderer's,
+// and 24-bit pictures (the movies), which are only ever uploaded.
+static void showFrame(SDL_Texture *&texture, SDL_FRect &source)
 {
-    handleEvents();
+    SDL_Texture *vram = gpu::hw::submit();
+    gpu::Display d = gpu::display();
 
+    g_PictureHeight = d.height;
+    if (vram != nullptr && d.on && !d.truecolor) {
+        float n = static_cast<float>(gpu::hw::scale());
+        texture = vram;
+        source = {static_cast<float>(d.x) * n, static_cast<float>(d.y) * n, static_cast<float>(d.width) * n,
+                  static_cast<float>(d.height) * n};
+        return;
+    }
     int width, height;
     Hw_GpuFrame(g_Pixels.data(), &width, &height);
     SDL_Rect updated{0, 0, width, height};
     SDL_UpdateTexture(g_Texture, &updated, g_Pixels.data(), width * 4);
-    SDL_FRect source{0, 0, static_cast<float>(width), static_cast<float>(height)};
-    present(source);
+    texture = g_Texture;
+    source = {0, 0, static_cast<float>(width), static_cast<float>(height)};
+}
+
+extern "C" int Host_DisplayOption(int option)
+{
+    switch (option) {
+    case HOST_DISPLAY_RENDERER:
+        if (g_Window == nullptr) {
+            return Cfg_Get("renderer") == "software" ? HOST_RENDERER_SOFTWARE : HOST_RENDERER_HARDWARE;
+        }
+        return g_Display.hardware ? HOST_RENDERER_HARDWARE : HOST_RENDERER_SOFTWARE;
+    case HOST_DISPLAY_SCALE:
+        if (g_Window == nullptr) {
+            std::string scale = Cfg_Get("scale");
+            return scale.empty() ? Display{}.scale : std::clamp(std::atoi(scale.c_str()), 1, gpu::hw::kMaxScale);
+        }
+        return g_Display.scale;
+    default:
+        return 0;
+    }
+}
+
+// Applies at once, and is remembered. Test runs have no window, and change nothing.
+extern "C" void Host_SetDisplayOption(int option, int value)
+{
+    if (g_Window == nullptr) {
+        return;
+    }
+    switch (option) {
+    case HOST_DISPLAY_RENDERER: {
+        bool hardware = value == HOST_RENDERER_HARDWARE;
+        if (hardware == g_Display.hardware) {
+            return;
+        }
+        if (!hardware) {
+            gpu::hw::close();
+        } else if (!startHardware()) {
+            Ap_Toast("The hardware renderer can't run here.");
+            return;
+        }
+        g_Display.hardware = hardware;
+        Cfg_Set("renderer", hardware ? "hardware" : "software");
+        break;
+    }
+    case HOST_DISPLAY_SCALE:
+        g_Display.scale = std::clamp(value, 1, gpu::hw::kMaxScale);
+        gpu::hw::setScale(g_Display.scale);
+        Cfg_Set("scale", std::to_string(g_Display.scale));
+        break;
+    default:
+        break;
+    }
+}
+
+void Host_Frame()
+{
+    handleEvents();
+
+    SDL_Texture *texture;
+    SDL_FRect source;
+    showFrame(texture, source);
+    present(texture, source);
 
     // The game waits here, on no vblank, so a recording doesn't see the pause.
     while (g_TrackerOpen) {
@@ -494,7 +658,7 @@ void Host_Frame()
         Rt_StillAlive();
         Ap_Poll();
         handleEvents();
-        present(source);
+        present(texture, source);
     }
     readControls();
 }

@@ -9,15 +9,16 @@ set(SDL_SHARED OFF CACHE BOOL "" FORCE)
 set(SDL_STATIC ON CACHE BOOL "" FORCE)
 set(SDL_TEST_LIBRARY OFF CACHE BOOL "" FORCE)
 if(NOT WIN32)
-    # X11 and PulseAudio or ALSA, and the software renderer, are all the game uses.
+    # X11 and PulseAudio or ALSA, and Vulkan for the GPU renderer (or the software one without
+    # it), are all the game uses. Vulkan is loaded when it runs: nothing more to link.
     foreach(option SDL_WAYLAND SDL_PIPEWIRE SDL_JACK SDL_SNDIO SDL_KMSDRM SDL_RPI SDL_VIVANTE SDL_OPENGL SDL_OPENGLES
-                   SDL_VULKAN SDL_LIBUDEV SDL_DBUS SDL_IBUS)
+                   SDL_LIBUDEV SDL_DBUS SDL_IBUS)
         set(${option} OFF CACHE BOOL "" FORCE)
     endforeach()
 endif()
 FetchContent_Declare(SDL3
     GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-    GIT_TAG release-3.2.8
+    GIT_TAG release-3.4.20
     GIT_SHALLOW TRUE)
 FetchContent_MakeAvailable(SDL3)
 # SDL takes Clang for a Unix compiler and links libm, which Windows doesn't have.
@@ -93,6 +94,8 @@ add_executable(gt2ap
     hw/card.cpp
     hw/cd.cpp
     hw/gpu.cpp
+    hw/gpu_hw.cpp
+    hw/gpu_soft.cpp
     hw/gte.cpp
     hw/host.cpp
     hw/pad.cpp
