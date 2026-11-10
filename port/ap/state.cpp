@@ -330,6 +330,11 @@ void Ap_PageBackspace()
     }
 }
 
+void Ap_Toast(const std::string &text)
+{
+    toast(text);
+}
+
 std::string Ap_ToastLine(int index)
 {
     return index < static_cast<int>(g_Toasts.size()) ? g_Toasts[index].text : std::string();

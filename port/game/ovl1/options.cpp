@@ -4,6 +4,7 @@
 #include "gptr.h"
 #include "common.h"
 #include "gamestate.h"
+#include "hw.h"
 
 // An option row (0x14 bytes). type: 0 choices, 1 a bar of 16 steps, 2 a balance,
 // 3 a lap count.
@@ -336,6 +337,104 @@ void Option_Draw(OptionItem *item, void *ot, int x, int y, int brightness, int a
     }
 }
 
+// The port's own tab, after the game's five: which renderer draws, and the hardware one's
+// resolution. They're the client's settings, kept in gt2ap.cfg rather than the save, and
+// apply at once.
+enum { DISPLAY_TAB = 5, DISPLAY_ROW_RENDERER = 0, DISPLAY_ROW_SCALE, DISPLAY_ROWS };
+static const int kDisplayLabelX = -0x80;
+static const int kDisplayValueX = 0x10;
+static const int kDisplayChoiceStep = 0x58;
+static const int kDisplayRowY = 0x50;
+static const int kDisplayRowStep = 0x22;
+static const int kDisplayMaxScale = 8;
+static char s_DisplayTitle[] = "DISPLAY OPTIONS";  // the title font has only capitals
+static char s_DisplayRenderer[] = "Renderer";
+static char s_DisplayHardware[] = "Hardware";
+static char s_DisplaySoftware[] = "Software";
+static char s_DisplayScale[] = "Resolution";
+static char s_DisplayScaleNote[] = "Hardware renderer only";
+
+// The row being changed, -1 when the tab isn't entered.
+static int g_Display_Row = -1;
+
+// Up and Down pick a row, Left and Right change it: 0 when the tab is left.
+static int Display_Update(PadState *pad)
+{
+    unsigned int buttons;
+    int value;
+
+    if (pad == 0 || g_Display_Row < 0) {
+        return 1;
+    }
+    if ((pad->pressed & (PAD_TRIANGLE | PAD_SQUARE)) != 0) {
+        g_Display_Row = -1;
+        return 0;
+    }
+    buttons = pad->pressed | pad->repeat;
+    if ((buttons & (PAD_UP | PAD_DOWN)) != 0) {
+        g_Display_Row = (g_Display_Row + ((buttons & PAD_UP) != 0 ? DISPLAY_ROWS - 1 : 1)) % DISPLAY_ROWS;
+        Sfx_PlayMenu(6);
+        return 1;
+    }
+    if ((buttons & (PAD_LEFT | PAD_RIGHT)) == 0) {
+        return 1;
+    }
+    int step = (buttons & PAD_LEFT) != 0 ? -1 : 1;
+    if (g_Display_Row == DISPLAY_ROW_RENDERER) {
+        value = Host_DisplayOption(HOST_DISPLAY_RENDERER) == HOST_RENDERER_HARDWARE ? HOST_RENDERER_SOFTWARE
+                                                                                    : HOST_RENDERER_HARDWARE;
+        Host_SetDisplayOption(HOST_DISPLAY_RENDERER, value);
+        Sfx_PlayMenu(5);
+    } else {
+        int scale = Host_DisplayOption(HOST_DISPLAY_SCALE);
+        value = scale + step;
+        if (value >= 1 && value <= kDisplayMaxScale) {
+            Host_SetDisplayOption(HOST_DISPLAY_SCALE, value);
+            Sfx_PlayMenu(5);
+        }
+    }
+    return 1;
+}
+
+static void Display_DrawText(TextCtx *c, const char *s, unsigned int rgb, int brightness, int x, int y)
+{
+    c->rgb = Rgb_Lerp(D_8004BCCC, (unsigned char *)&rgb, brightness, 0x80);
+    Text_DrawStringMonoDigits(c, (signed char *)s, x, y, 1, -2, 0);
+}
+
+static void Display_Draw(uint *ot, int x, int y, int brightness)
+{
+    TextCtx ctx;
+    TextCtx *c = &ctx;
+    char scale[16];
+    int hardware = Host_DisplayOption(HOST_DISPLAY_RENDERER) == HOST_RENDERER_HARDWARE;
+    int value = Host_DisplayOption(HOST_DISPLAY_SCALE);
+    int row;
+
+    Text_Init(c, 0x1e);
+    *(uint *)&c->clut = (*(uint *)&c->clut & 0xff9fffff) | 0x200000;
+    c->ot = ot;
+    Text_SetFont(c, &g_OVL1_FontMedium);
+    for (row = 0; row < DISPLAY_ROWS; row++) {
+        int ry = y + kDisplayRowY + row * kDisplayRowStep;
+        // As the game's option lists do: the others dimmed while a row is being changed.
+        int b = g_Display_Row >= 0 && row != g_Display_Row ? brightness >> 1 : brightness;
+        Display_DrawText(c, row == DISPLAY_ROW_RENDERER ? s_DisplayRenderer : s_DisplayScale,
+                         row == g_Display_Row ? D_8004BCD4 : D_8004BCD0, b, x + kDisplayLabelX, ry);
+        if (row == DISPLAY_ROW_RENDERER) {
+            Display_DrawText(c, s_DisplayHardware, hardware ? D_8004BCDC : D_8004BCD8, b, x + kDisplayValueX, ry);
+            Display_DrawText(c, s_DisplaySoftware, hardware ? D_8004BCD8 : D_8004BCDC, b,
+                             x + kDisplayValueX + kDisplayChoiceStep, ry);
+        } else {
+            sprintf(scale, "%s%dx%s", value > 1 ? "< " : "  ", value, value < kDisplayMaxScale ? " >" : "");
+            Display_DrawText(c, scale, D_8004BCDC, b, x + kDisplayValueX, ry);
+            if (!hardware) {
+                Display_DrawText(c, s_DisplayScaleNote, D_8004BCD8, b, x + kDisplayValueX, ry + 0x12);
+            }
+        }
+    }
+}
+
 // Left and Right step the selected row; the buttons of bits 4 and 12 add to the step.
 int OptionList_ItemCallback(MenuListEventId event, MenuListEvent *ev, int index)
 {
@@ -442,6 +541,9 @@ int OptionsMenu_TabCallback(int event, TabEvent *ev, int tab)
                 tabs->skipInput = 1;
                 return 0;
             }
+            break;
+        case DISPLAY_TAB:
+            g_Display_Row = DISPLAY_ROW_RENDERER;
             break;
         default:
             return 0;
@@ -550,6 +652,13 @@ int OptionsMenu_TabCallback(int event, TabEvent *ev, int tab)
                 break;
             }
             break;
+        case DISPLAY_TAB:
+            if (Display_Update(pad) == 0) {
+                Sfx_PlayMenu(1);
+                tabs->active = 0;
+                tabs->skipInput = 1;
+            }
+            break;
         }
         WipeBar_Update(&g_Options_IconView);
         WipeBar_Update(&g_Options_IconSound);
@@ -559,7 +668,8 @@ int OptionsMenu_TabCallback(int event, TabEvent *ev, int tab)
         break;
     case 1:
         c->rgb = Rgb_Lerp(D_8004BCCC, D_8004BCE0, brightness, tabs->active != 0 ? 0x200 : 0x80);
-        Text_DrawCentered(c, g_Options_TabTitles[tab], x, y + 0x14, 0);
+        Text_DrawCentered(c, tab < DISPLAY_TAB ? (signed char *)g_Options_TabTitles[tab] : (signed char *)s_DisplayTitle,
+                          x, y + 0x14, 0);
         switch (tab) {
         case 0:
             g_Options_GlobalList.list.y = y + 0x2e;
@@ -606,6 +716,9 @@ int OptionsMenu_TabCallback(int event, TabEvent *ev, int tab)
         case 4:
             AnalogSettings_Draw(&g_AnalogSettings2P, ot, x, y + 0x2e, brightness);
             break;
+        case DISPLAY_TAB:
+            Display_Draw(ot, x, y, brightness);
+            break;
         }
         break;
     }
@@ -617,6 +730,8 @@ void OptionsMenu_Enter(int back)
 {
     TabSelector_Init(&g_Options_Tabs, (void *)OptionsMenu_TabCallback, 0);
     TabSelector_Open(&g_Options_Tabs);
+    g_Options_Tabs.count = DISPLAY_TAB + 1;
+    g_Display_Row = -1;
     MenuList_Init(&g_Options_GlobalList.list, OptionList_ItemCallback, g_Options_GlobalItems);
     g_Options_GlobalList.rows = &g_Options_GlobalRows;
     MenuList_Open(&g_Options_GlobalList.list);

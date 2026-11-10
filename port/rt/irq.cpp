@@ -62,10 +62,10 @@ std::uint16_t &timer(int index)
 
 void dumpFrame()
 {
-    static std::vector<unsigned int> pixels(640 * 480);
+    static std::vector<unsigned int> pixels;
     int width, height;
 
-    Hw_GpuFrame(pixels.data(), &width, &height);
+    Host_DumpFrame(pixels, width, height);
     auto path = g_DumpDir / ("frame" + std::to_string(g_Vblanks) + ".ppm");
     FILE *out = std::fopen(path.string().c_str(), "wb");
     if (out == nullptr) {

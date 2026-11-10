@@ -17,6 +17,8 @@ void Ap_PageText(const char *text);
 void Ap_PageBackspace();
 // Recent messages for the screen, oldest first, one line each.
 std::string Ap_ToastLine(int index);
+// One more of them, from the client itself.
+void Ap_Toast(const std::string &text);
 
 // What the tracker page shows. An entry has `have` of its `total` copies.
 struct ApTrackerEntry {
