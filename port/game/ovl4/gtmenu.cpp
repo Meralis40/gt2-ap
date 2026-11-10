@@ -131,6 +131,28 @@ int GTMenu::Update()
             Garage_AddCredits(&g_GameState.garages[0], credits);
         }
     }
+    // Checks the server has, from this save or not: a win, 6th place for a finish, and a
+    // Kid's prize for a test. Only ever raised, so a better result in the save stays.
+    if (Ap_Active()) {
+        int event, license, test;
+
+        for (event = 0; event < (int)sizeof(g_GameState.stats.eventResults) * 2; event++) {
+            int place = Ap_EventChecked(event);
+
+            if (place != 0) {
+                PlayerStats_SetEventResult(&g_GameState.stats, event, place);
+            }
+        }
+        for (license = 0; license < 6; license++) {
+            for (test = 0; test < 10; test++) {
+                LicenseTest *record = &g_GameState.licenses[license][test];
+
+                if ((signed char)record->medal == MEDAL_NONE && Ap_TestChecked(license, test)) {
+                    record->medal = MEDAL_KIDS;
+                }
+            }
+        }
+    }
     if (blankFrames > 0) {
         blankFrames--;
     }

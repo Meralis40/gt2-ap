@@ -33,6 +33,9 @@ constexpr int kManufacturers = 64;
 constexpr int kParts = 64;
 constexpr int kTiers = 6;  // tier 1 is license B, whose LicenseId is 5
 constexpr int kGoalEvents[] = {137, 138, 139, 140, 141};  // the GT World League
+// The first race of each championship: Event Synthesizer Expert, GT300, GT500, GT World League.
+constexpr int kChampionships[] = {83, 119, 124, 137};
+constexpr int kChampionshipRaces = 5;
 constexpr int kMaxToasts = 4;
 constexpr std::size_t kToastWidth = 60;
 constexpr auto kToastTime = std::chrono::seconds(8);
@@ -501,6 +504,40 @@ int Ap_NextCredits(unsigned short *applied)
     }
     toast("Added " + std::to_string(kCredits[tier]) + " Cr");
     return kCredits[tier];
+}
+
+// A championship's result is in its first race's slot, and its other races have none: it
+// counts as won once all its races are, and finished once all are finished or won.
+int Ap_EventChecked(int eventIndex)
+{
+    if (!g_Active) {
+        return 0;
+    }
+    int races = 1;
+    for (int first : kChampionships) {
+        if (eventIndex > first && eventIndex < first + kChampionshipRaces) {
+            return 0;
+        }
+        if (eventIndex == first) {
+            races = kChampionshipRaces;
+        }
+    }
+    int place = 1;
+    for (int race = eventIndex; race < eventIndex + races; race++) {
+        if (g_Done.count(kLocationEvents + race) != 0) {
+            continue;
+        }
+        if (g_Done.count(kLocationFinished + race) == 0) {
+            return 0;
+        }
+        place = 6;
+    }
+    return place;
+}
+
+int Ap_TestChecked(int license, int test)
+{
+    return g_Active && g_Done.count(kLocationTests + (kTiers - license) * 10 + test) != 0;
 }
 
 int Ap_PageWanted(void)

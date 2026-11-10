@@ -35,6 +35,12 @@ void Ap_LicenseEarned(int license);
 // 0 for an item that isn't credits, -1 when there's none left.
 int Ap_NextCredits(unsigned short *applied);
 
+// What the server has checked, here or by another client on this slot, so the save can show
+// it: 1 for an event won, 6 for one finished, 0 for neither (a championship as a whole, in
+// its first race's slot); whether a license test is passed.
+int Ap_EventChecked(int eventIndex);
+int Ap_TestChecked(int license, int test);
+
 // The connection page. It needs a keyboard, so test runs and recordings go without it.
 int Ap_PageWanted(void);
 void Ap_PageOpen(void);
