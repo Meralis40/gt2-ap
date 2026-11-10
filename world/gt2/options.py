@@ -22,12 +22,22 @@ class ProLeagueTrophies(Range):
 
 class WorldLeagueTrophies(Range):
     """Trophies needed to enter the GT World League. This is also the number of Trophies in the
-    item pool. It can't be lower than Pro League Trophies, and must fit in the locations left after
-    the other progression items, or generation fails."""
+    item pool, with Extra Trophies added. It can't be lower than Pro League Trophies, and the
+    Trophies must fit in the locations left after the other progression items, or generation
+    fails."""
     display_name = "World League Trophies"
     range_start = 1
     range_end = 250
     default = 22
+
+
+class ExtraTrophies(Range):
+    """Trophies added to the item pool beyond the World League Trophies, so the leagues open
+    before every Trophy is found."""
+    display_name = "Extra Trophies"
+    range_start = 0
+    range_end = 250
+    default = 0
 
 
 class HardStart(Toggle):
@@ -71,6 +81,7 @@ class GT2Options(PerGameCommonOptions):
     league_trophies: LeagueTrophies
     pro_league_trophies: ProLeagueTrophies
     world_league_trophies: WorldLeagueTrophies
+    extra_trophies: ExtraTrophies
     hard_start: HardStart
     rally_events: RallyEvents
     endurance_events: EnduranceEvents
@@ -80,12 +91,13 @@ class GT2Options(PerGameCommonOptions):
 
 
 OPTION_GROUPS = [
-    OptionGroup("Leagues", [LeagueTrophies, ProLeagueTrophies, WorldLeagueTrophies]),
+    OptionGroup("Leagues", [LeagueTrophies, ProLeagueTrophies, WorldLeagueTrophies,
+                                   ExtraTrophies]),
     OptionGroup("Events", [RallyEvents, EnduranceEvents, EventSynthesizer, OneMakeEvents,
                                   FinishChecks]),
 ]
 
 # Options sent to the client and used by the tracker to regenerate the world
 SLOT_DATA_OPTIONS = ["league_trophies", "pro_league_trophies", "world_league_trophies",
-                     "hard_start", "rally_events", "endurance_events", "event_synthesizer",
-                     "one_make_events", "finish_checks"]
+                     "extra_trophies", "hard_start", "rally_events", "endurance_events",
+                     "event_synthesizer", "one_make_events", "finish_checks"]

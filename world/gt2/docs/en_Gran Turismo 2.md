@@ -16,7 +16,9 @@ licenses, the manufacturers and the tuning parts become items:
   kits, and so on).
 - **Trophy** (with League Trophies on): the Pacific League and Euro League need a number of
   Trophies (11 by default) instead of every regional league race won, and the GT World League
-  needs more (22 by default) instead of every Pacific and Euro League race won.
+  needs more (22 by default) instead of every Pacific and Euro League race won. Extra Trophies
+  adds more Trophies to the pool than the World League needs, so the leagues open before every
+  Trophy is found.
 - **Credits** ("5,000 Cr" and so on) fill the remaining locations. Their amounts follow the license
   levels of the locations, to cut down the grinding.
 
