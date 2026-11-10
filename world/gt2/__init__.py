@@ -67,11 +67,13 @@ class GT2World(CachedRuleBuilderWorld):
             if pro > world:
                 raise OptionError(f"{self.player_name}: Pro League Trophies ({pro}) can't be more "
                                   f"than World League Trophies ({world})")
+            count = world + self.options.extra_trophies.value
             room = len(self.location_data) - len(items.progression_item_names(self))
-            if world > room:
-                raise OptionError(f"{self.player_name}: World League Trophies is {world}, but only "
-                                  f"{room} locations are left for Trophies with these options")
-            self.trophy_count = world
+            if count > room:
+                raise OptionError(f"{self.player_name}: {count} Trophies (World League Trophies "
+                                  f"{world} + Extra Trophies {count - world}), but only {room} "
+                                  f"locations are left for Trophies with these options")
+            self.trophy_count = count
 
     def create_regions(self) -> None:
         region = Region(self.origin_region_name, self.player, self.multiworld)

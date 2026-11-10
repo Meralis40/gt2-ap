@@ -45,6 +45,18 @@ class TestFinishChecks(GT2TestBase):
                          names & (LOCATION_GROUPS["Races"] | LOCATION_GROUPS["One-Make Events"]))
 
 
+class TestExtraTrophies(GT2TestBase):
+    options = {"extra_trophies": 8}
+
+    def test_pool(self) -> None:
+        self.assertEqual(len(self.get_items_by_name("Trophy")), 30)
+
+    def test_leagues_open_early(self) -> None:
+        self.collect_all_but(["Trophy"])
+        self.collect(self.get_items_by_name("Trophy")[:22])
+        self.assertTrue(self.can_reach_location("Gran Turismo World League Race 1"))
+
+
 class TestNoTrophies(GT2TestBase):
     options = {"league_trophies": False}
 
@@ -63,6 +75,11 @@ class TestTrophyErrors(GT2TestBase):
 
     def test_too_many_trophies(self) -> None:
         self.options = {"world_league_trophies": 200}
+        with self.assertRaises(OptionError):
+            self.world_setup()
+
+    def test_too_many_extra_trophies(self) -> None:
+        self.options = {"world_league_trophies": 100, "extra_trophies": 100}
         with self.assertRaises(OptionError):
             self.world_setup()
 
