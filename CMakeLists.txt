@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(gt2ap
-    VERSION 0.1.2
+    VERSION 0.2.0
     DESCRIPTION "Gran Turismo 2 client for Archipelago"
     LANGUAGES CXX)
 
